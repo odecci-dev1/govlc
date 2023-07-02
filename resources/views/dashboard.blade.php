@@ -1,5 +1,4 @@
-@extends('layouts.app') 
-@section('content')
+<x-app-layout>  
     <!-- * Dashboard Container 1 -->
             <div class="md-con-1">
                 <div class="wrapper">
@@ -151,4 +150,4 @@
                         </div>
                     </div>
                 </div>
-@endsection
+                </x-app-layout>

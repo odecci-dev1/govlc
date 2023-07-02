@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Livewire\Users\UserRegister;
 use App\Http\Livewire\Transactions\Application\CreateApplication;
+use App\Http\Livewire\Transactions\Application\CreditInvestigationApplication;
+use App\Http\Livewire\Transactions\Application\ApprovalApplication;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,4 +37,6 @@ Route::get('/register', UserRegister::class)->name('user.register');
 
 //transactions
 Route::get('/tranactions/application/create', CreateApplication::class)->name('application.create');
+Route::get('/tranactions/application/credit/investigation', CreditInvestigationApplication::class)->name('application.credit.investigation');
+Route::get('/tranactions/application/approval', ApprovalApplication::class)->name('application.approval');
 //transactions

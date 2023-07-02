@@ -1428,6 +1428,16 @@ body {
 .main-dashboard .m-con-2 .table-container table tr {
   counter-increment: row-num;
 }
+.main-dashboard .m-con-2 .table-container table .tr-loan-type th:nth-of-type(-n+5) {
+  text-align: left;
+}
+.main-dashboard .m-con-2 .table-container table .tr-loan-type th:nth-of-type(6) {
+  text-align: center;
+}
+.main-dashboard .m-con-2 .table-container table .tr-loan-type .td-btns {
+  width: 20%;
+  text-align: center;
+}
 .main-dashboard .m-con-2 .table-container table th {
   padding: 2rem 0;
   text-align: center;
@@ -3345,7 +3355,7 @@ body {
   margin-right: 1.5rem;
 }
 .main-dashboard .na-form-con .nm-container-4 {
-  display: none;
+  /* display: none; */
   height: 100% 200%;
   width: 100%;
   padding: 2rem;
@@ -4918,3 +4928,9 @@ body {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
   gap: 0px 2rem;
 }/*# sourceMappingURL=app.css.map */
+
+/* jumz css */
+
+.text-required{
+  color:#ff0000!important;
+}

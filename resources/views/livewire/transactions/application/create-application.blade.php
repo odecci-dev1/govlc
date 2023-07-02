@@ -1,133 +1,4 @@
-<div>
-    <!-- * New Application Modal -->
-    <dialog class="na-modal" data-new-application-modal>
-
-<div class="modal-container">
-    <!-- * Exit Button -->
-    <button class="exit-button" id="data-close-new-application-modal">
-        <img src="../res/assets/icons/x-circle.svg" alt="exit">
-    </button>
-
-    <!-- * Choose Type of Loan -->
-    <div class="rowspan">
-        <h3>Choose Type of Loan</h3>
-
-        <!-- * Type Of Loan Dropdown Menu -->
-        <div class="loan-type-dropdown" data-bor-dropdown>
-
-            <!-- * Gender -->
-            <div class="input-wrapper">
-                <div class="select-box">
-                    <select name="typeOfLoan" id="typeOfLoan">
-                        <option disabled selected value></option>
-                        <option value="Individual Loan">Individual Loan</option>
-                        <option value="Group Loan">Group Loan</option>
-                        <option value="Sample Loan">Sample Loan</option>
-                    </select>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- * Search for existing member -->
-    <div class="rowspan">
-
-        <!-- * Search for existing member -->
-        <h3>Search for existing member</h3>
-
-        <div class="wrapper">
-
-            <!-- * Search Bar -->
-            <div class="search-wrap">
-                <input type="search" id="search" name="search" placeholder="Search name or member ID">
-                <img src="../res/assets/icons/magnifyingglass.svg" alt="search">
-            </div>
-
-            <!-- * Create New Button -->
-            <button class="button">Create New</button>
-
-        </div>
-
-
-    </div>
-
-    <!-- * Table -->
-    <div class="rowspan">
-
-        <!-- * Container: Table and Pagination -->
-        <div class="na-table-con">
-
-            <!-- * Table Container -->
-            <div class="table-container">
-
-                <!-- * Members Table -->
-                <table>
-
-                    <!-- * Table Header -->
-                    <tr>
-
-                        <!-- * Checkbox ALl
-                        <th><input type="checkbox" id="allCheckbox" onchange="checkAll(this)"></th> -->
-
-                        <!-- * Header Name -->
-                        <th><span class="th-name">Name</span></th>
-
-                        <!-- * Header Member ID -->
-                        <th><span class="th-name">Member ID</span></th>
-
-                    </tr>
-
-
-                    <!-- * Members Data -->
-                    <tr>
-
-                        <!-- * Checkbox Opt
-                        <td><input type="checkbox" id="checkbox" data-checkbox></td> -->
-
-                        <td>
-
-                            <!-- * Data Name-->
-                            <span class="td-name">Dela Cruz, Juana</span>
-
-                        </td>
-
-                        <td>
-
-                            <!-- * Data Member ID-->
-                            <span class="td-name">778 8596 2125</span>
-
-                        </td>
-
-
-                    </tr>
-
-                </table>
-
-            </div>
-
-            <!-- * Pagination Container -->
-            <div class="pagination-container">
-
-                <!-- * Pagination Links -->
-                <a href="#"><img src="../res/assets/icons/caret-left.svg" alt="caret-left"></a>
-                <a href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">4</a>
-                <a href="#">5</a>
-                <a href="#"><img src="../res/assets/icons/caret-right.svg" alt="caret-right"></a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-</dialog>
+<div>   
 
 <!-- * New-Application-Form-Container -->
 <form action="" class="na-form-con" autocomplete="off">
@@ -186,7 +57,7 @@
                 <div class="btn-wrapper">
 
                     <!-- * Save -->
-                    <button type="button" id="saveBtn" class="button" data-save>Save</button>
+                    <button wire:click="store" type="button" id="saveBtn" class="button" data-save>Save</button>
 
                     <!-- * Save & Apply for loan  -->
                     <a href="new-application-credit-investigation.html">
@@ -203,25 +74,28 @@
                 <!-- * First Name -->
                 <div class="input-wrapper">
                     <span>First Name</span>
-                    <input autocomplete="off" type="text" id="fName" name="fName">
+                    <input wire:model="member.Fname" autocomplete="off" type="text" id="fName" name="fName">
+                    @error('member.Fname') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Middle Name -->
                 <div class="input-wrapper">
                     <span>Middle Name</span>
-                    <input autocomplete="off" type="text" id="midName" name="midName">
+                    <input wire:model="member.Mname" autocomplete="off" type="text" id="midName" name="midName">
+                    @error('member.Mname') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Last Name -->
                 <div class="input-wrapper">
                     <span>Last Name</span>
-                    <input autocomplete="off" type="text" id="lName" name="lName">
+                    <input wire:model="member.Lname" autocomplete="off" type="text" id="lName" name="lName">
+                    @error('member.Lname') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Suffix -->
                 <div class="input-wrapper">
                     <span>Suffix</span>
-                    <input autocomplete="off" type="text" id="suffix" name="suffix">
+                    <input wire:model="member.Suffix" autocomplete="off" type="text" id="suffix" name="suffix">
                 </div>
 
             </div>
@@ -233,43 +107,48 @@
                 <div class="input-wrapper">
                     <span>Gender</span>
                     <div class="select-box">
-                        <select name="Gender" id="gender">
-                        <option value="0"></option>
-                        <option value="1">Male</option>
-                        <option value="2">Female</option>
-                    </select>
+                        <select wire:model="member.Gender" name="Gender" id="gender">
+                            <option value=""></option>
+                            <option value="1">Male</option>
+                            <option value="2">Female</option>
+                        </select>
                     </div>
+                    @error('member.Gender') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Date Of Birth -->
                 <div class="input-wrapper">
                     <span>Date Of Birth</span>
-                    <input autocomplete="off" type="text" id="doBirth" name="doBirth">
+                    <input wire:model="member.DOB" autocomplete="off" type="date" id="doBirth" name="doBirth">
+                    @error('member.DOB') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Age -->
                 <div class="input-wrapper">
                     <span>Age</span>
-                    <input autocomplete="off" type="number" id="age" name="age">
+                    <input wire:model="member.Age" autocomplete="off" type="number" id="age" name="age">
+                    @error('member.Age') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Place Of Birth -->
                 <div class="input-wrapper">
                     <span>Place Of Birth</span>
-                    <input autocomplete="off" type="text" id="poBirth" name="poBirth">
+                    <input wire:model="member.POB" autocomplete="off" type="text" id="poBirth" name="poBirth">
+                    @error('member.POB') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Civil Status -->
                 <div class="input-wrapper">
                     <span>Civil Status</span>
                     <div class="select-box">
-                        <select name="Civil Status" id="civStat" data-civil-status>
+                        <select wire:model.defer="member.Civil_Status" name="Civil Status" id="civStat" data-civil-status>
                             <option value="0"></option>
                             <option value="Widow">Widow</option>
                             <option value="Married">Married</option>
                             <option value="Single">Single</option>
                         </select>
                     </div>
+                    @error('member.Civil_Status') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -281,7 +160,8 @@
                 <div class="input-wrapper">
                     <div class="input-wrapper">
                         <span>Contact Number</span>
-                        <input autocomplete="off" type="number" id="conNum" name="conNum">
+                        <input wire:model="member.Cno" autocomplete="off" type="number" id="conNum" name="conNum">
+                        @error('member.Cno') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
                 </div>
 
@@ -289,7 +169,8 @@
                 <div class="input-wrapper">
                     <div class="input-wrapper">
                         <span>Email Address</span>
-                        <input autocomplete="off" type="email" id="eMail" name="eMail">
+                        <input wire:model="member.EmailAddress" autocomplete="off" type="email" id="eMail" name="eMail">
+                        @error('member.EmailAddress') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
                 </div>
 
@@ -306,29 +187,30 @@
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
                             <span>Rented</span>
-                            <input autocomplete="off" type="radio" name="radio" value="rented" id="rented">
+                            <input wire:model="member.House_Stats" autocomplete="off" type="radio" name="radio" value="1" id="rented">
                         </div>
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
                             <span>Owned</span>
-                            <input autocomplete="off" type="radio" name="radio" value="owned" id="owned">
+                            <input wire:model="member.House_Stats" autocomplete="off" type="radio" name="radio" value="2" id="owned">
                         </div>
 
                         <!-- * Free Use -->
                         <div class="radio-btn-wrapper">
                             <span>Free Use</span>
-                            <input autocomplete="off" type="radio" name="radio" value="freeUse" id="freeUse">
+                            <input wire:model="member.House_Stats" autocomplete="off" type="radio" name="radio" value="3" id="freeUse">
                         </div>
-
+                        
                     </div>
-
+                    @error('member.House_Stats') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * House No./ Bldg. No./ Room No./ Subdivision/ Street -->
                 <div class="input-wrapper">
                     <span>House No./ Bldg. No./ Room No./ Subdivision/ Street</span>
-                    <input autocomplete="off" type="text" id="houseAdd" name="houseAdd">
+                    <input wire:model="member.HouseNo" autocomplete="off" type="text" id="houseAdd" name="houseAdd">
+                    @error('member.HouseNo') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -339,25 +221,29 @@
                 <!-- * Barangay -->
                 <div class="input-wrapper">
                     <span>Barangay</span>
-                    <input autocomplete="off" type="text" id="brgy" name="brgy">
+                    <input wire:model="member.Barangay" autocomplete="off" type="text" id="brgy" name="brgy">
+                    @error('member.Barangay') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * City / Municipality -->
                 <div class="input-wrapper">
                     <span>City / Municipality</span>
-                    <input autocomplete="off" type="text" id="city" name="city">
+                    <input wire:model="member.City" autocomplete="off" type="text" id="city" name="city">
+                    @error('member.City') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Province / Region -->
                 <div class="input-wrapper">
                     <span>Province / Region</span>
-                    <input autocomplete="off" type="text" id="province" name="province">
+                    <input wire:model="member.Province" autocomplete="off" type="text" id="province" name="province">
+                    @error('member.Province') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Country -->
                 <div class="input-wrapper">
                     <span>Country</span>
-                    <input autocomplete="off" type="text" id="country" name="country">
+                    <input wire:model="member.Country" autocomplete="off" type="text" id="country" name="country">
+                    @error('member.Country') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
 
@@ -369,13 +255,14 @@
                 <!-- * Zip Code -->
                 <div class="input-wrapper">
                     <span>Zip Code</span>
-                    <input type="number" id="zipCode" name="zipCode">
+                    <input wire:model="member.ZipCode" type="number" id="zipCode" name="zipCode">
                 </div>
 
                 <!-- * Years Of Stay -->
                 <div class="input-wrapper">
                     <span>Years of stay on the mentioned address</span>
-                    <input type="number" id="yoStay" name="yoStay">
+                    <input wire:model="member.YearsStay" type="number" id="yoStay" name="yoStay">
+                    @error('member.YearsStay') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -400,7 +287,7 @@
 
                     <!-- * Upload Image -->
                     <div class="input-wrapper">
-                        <input type="image" src="../res/assets/icons/upload-image.svg" alt="upload-image">
+                        <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
                     </div>
 
                     <!-- * Upload Button -->
@@ -463,7 +350,7 @@
         <!-- * Button Wrapper -->
         <div class="button-wrapper">
             <button type="button" id="data-close-loan-details">
-                <img src="../res/assets/icons/x-circle.svg" alt="close">
+                <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="close">
             </button>
         </div>
 
@@ -697,7 +584,7 @@
 
 <!-- * Imported from New Member Application -->
 <!-- * Container 4(a): Family Background Information (Married)-->
-<div class="nm-container-4" data-family-background-married>
+<div class="nm-container-4" data-family-background-married style="display: {{ $member['Civil_Status'] == 'Married' ? 'block' : 'none' }};"> 
 
     <!-- * Small Container -->
     <div class="small-con-3" data-child-container>
@@ -820,7 +707,7 @@
         </div>
 
         <!-- * Rowspan 7: Subheader - Children(s) Information -->
-        <div class="rowspan">
+        <div class="rowspan" data-child-sibling>
 
             <!-- * Family Background Information -->
             <div class="input-wrapper">
@@ -835,25 +722,25 @@
             <!-- * First Name -->
             <div class="input-wrapper">
                 <span>First Name</span>
-                <input autocomplete="off" type="text" id="fName" name="fName">
+                <input autocomplete="off" type="text" id="childFName" name="fName">
             </div>
 
             <!-- * Middle Name -->
             <div class="input-wrapper">
                 <span>Middle Name</span>
-                <input autocomplete="off" type="text" id="midName" name="midName">
+                <input autocomplete="off" type="text" id="childMidName" name="midName">
             </div>
 
             <!-- * Last Name -->
             <div class="input-wrapper">
                 <span>Last Name</span>
-                <input autocomplete="off" type="text" id="lName" name="lName">
+                <input autocomplete="off" type="text" id="childLName" name="lName">
             </div>
 
             <!-- * Age -->
             <div class="input-wrapper">
                 <span>Age</span>
-                <input autocomplete="off" type="number" id="age" name="age">
+                <input autocomplete="off" type="number" id="childAge" name="age">
             </div>
 
             <!-- * Name Of School -->
@@ -868,7 +755,6 @@
                 <button type="button" onclick="subChild()">-</button>
             </div>
 
-
         </div>
 
     </div>
@@ -876,7 +762,7 @@
 </div>
 
 <!-- * Container 4(b): Family Background Information (Single)-->
-<div class="nm-container-4" data-family-background-single>
+<div class="nm-container-4" data-family-background-single style="display: {{ $member['Civil_Status'] == 'Single' ? 'block' : 'none' }};">
 
     <!-- * Small Container -->
     <div class="small-con-3" data-child-container-2>
@@ -1223,13 +1109,13 @@
             <div class="pagination-container">
 
                 <!-- * Pagination Links -->
-                <a href="#"><img src="../res/assets/icons/caret-left.svg" alt="caret-left"></a>
+                <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
                 <a href="#">1</a>
                 <a href="#">2</a>
                 <a href="#">3</a>
                 <a href="#">4</a>
                 <a href="#">5</a>
-                <a href="#"><img src="../res/assets/icons/caret-right.svg" alt="caret-right"></a>
+                <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
 
             </div>
 
@@ -1762,7 +1648,7 @@
 
                             <!-- * Upload Image -->
                             <div class="input-wrapper">
-                                <input type="image" src="../res/assets/icons/upload-image.svg" alt="upload-image">
+                                <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
                             </div>
 
                             <!-- * Upload Button -->
@@ -1972,5 +1858,7 @@
     </div>
 
 </div>
-</form>
+@push('scripts')
+    
+@endpush
 </div>

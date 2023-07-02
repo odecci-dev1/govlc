@@ -166,7 +166,7 @@
                     <!-- * Submenu -->
                     <ul class="sub-menu">
 
-                        <a href="{{ URL::to('/') }}/tranactions/application/create" id="data-open-new-application-modal" data-nav-link>
+                        <a href="#" id="data-open-new-application-modal" data-nav-link>
 
                             <li>
                                 <!-- * New Application -->
@@ -176,7 +176,7 @@
 
                         </a>
 
-                        <a href="../KC/new-application-credit-investigation.html" data-nav-link>
+                        <a href="{{ URL::to('/') }}/tranactions/application/credit/investigation" data-nav-link>
                             <li>
                                 <!-- * Credit Investigation  -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/credit-investigation.svg" alt="credit-investigation" />
@@ -192,7 +192,7 @@
                             </li>
                         </a>
 
-                        <a href="../KC/approval.html" data-nav-link>
+                        <a href="{{ URL::to('/') }}/tranactions/application/approval" data-nav-link>
                             <li>
                                 <!-- * Approval  -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/approval.svg" alt="approval" />
@@ -300,10 +300,13 @@
         </div>
     </div>
 
+    <!-- modals -->
+    <livewire:modals.new-application-modal  :type="''" :mid="isset($id) ? $id : ''"/> 
+    <!-- modals -->
+    
     <!-- * Main Dashboard -->
-    <div class="main-dashboard">    
-        @yield('content')
-        {{ $slot }}  
+    <div class="main-dashboard">  
+    {{ $slot }}  
     </div>
 
     </main>
