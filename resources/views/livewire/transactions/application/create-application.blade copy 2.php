@@ -167,7 +167,7 @@
 
                                 <div class="option" data-option-item2>
 
-                                    <input wire:model.lazy="member.Civil_Status" type="radio" class="radio" name="category" id="Widow" value="Widow" />
+                                    <input wire:model.defer="member.Civil_Status" type="radio" class="radio" name="category" id="Widow" value="Widow" />
                                     <label for="Widow">
                                         <h4>Widow</h4>
                                     </label>
@@ -176,7 +176,7 @@
 
                                 <div class="option" data-option-item2>
 
-                                    <input wire:model.lazy="member.Civil_Status" type="radio" class="radio" name="category" id="Married" value="Married"/>
+                                    <input wire:model.defer="member.Civil_Status" type="radio" class="radio" name="category" id="Married" value="Married"/>
                                     <label for="Married">
                                         <h4>Married</h4>
                                     </label>
@@ -185,7 +185,7 @@
 
                                 <div class="option" data-option-item2>
 
-                                    <input wire:model.lazy="member.Civil_Status" type="radio" class="radio" name="category" id="Single" value="Single"/>
+                                    <input wire:model.defer="member.Civil_Status" type="radio" class="radio" name="category" id="Single" value="Single"/>
                                     <label for="Single">
                                         <h4>Single</h4>
                                     </label>
@@ -608,12 +608,12 @@
                 <div class="input-wrapper">
                     <span>Employment Status</span>
                     <div class="select-box">
-                        <!-- dito -->
+
                         <div class="options-container" data-option-con3>
 
                             <div class="option" data-option-item3>
 
-                                <input wire:model.lazy="jobinfo.EmpStatus" type="radio" class="radio" name="category" id="Employed" value="Employed" />
+                                <input type="radio" class="radio" name="category" value="Employed" />
                                 <label for="Employed">
                                     <h4>Employed</h4>
                                 </label>
@@ -622,7 +622,7 @@
 
                             <div class="option" data-option-item3>
 
-                                <input wire:model.lazy="jobinfo.EmpStatus" type="radio" class="radio" name="category" id="Unemployed" value="Unemployed"/>
+                                <input type="radio" class="radio" name="category" value="Unemployed"/>
                                 <label for="Unemployed">
                                     <h4>Unemployed</h4>
                                 </label>
@@ -631,8 +631,7 @@
 
                         </div>
                         
-                        <div class="selected" style="font-weight: bold;" data-option-select3>
-                            {{ isset($jobinfo['EmpStatus']) ? $jobinfo['EmpStatus'] : '' }}
+                        <div class="selected" data-option-select3>
                         </div>
 
                     </div>
@@ -642,12 +641,12 @@
                 <div class="input-wrapper">
 
                     <!-- * Current Job -->
-                    <span style="display: {{ $jobinfo['EmpStatus'] == 'Employed' || $jobinfo['EmpStatus'] == ''  ? 'block' : 'none' }};" data-current-job>Current Job / Position</span>
-                    <input style="display: {{ $jobinfo['EmpStatus'] == 'Employed' || $jobinfo['EmpStatus'] == '' ? 'block' : 'none' }};" type="text" id="currentJob" name="currentJob" data-current-job>
+                    <span data-current-job>Current Job / Position</span>
+                    <input type="text" id="currentJob" name="currentJob" data-current-job>
 
                     <!-- * Previous Job -->
-                    <span style="display: {{ $jobinfo['EmpStatus'] == 'Unemployed' ? 'block' : 'none' }};" data-previous-job>Previous Job / Position</span>
-                    <input style="display: {{ $jobinfo['EmpStatus'] == 'Unemployed' ? 'block' : 'none' }};" type="text" id="previousJob" name="previousJob" data-previous-job>
+                    <span data-previous-job>Previous Job / Position</span>
+                    <input type="text" id="previousJob" name="previousJob" data-previous-job>
 
                 </div>
 
@@ -718,7 +717,7 @@
 
     <!-- * Imported from New Member Application -->
     <!-- * Container 4(a): Family Background Information (Married)-->
-    <div class="nm-container-4" data-family-background-married style="display: {{ $member['Civil_Status'] == 'Married' ? 'block' : 'none' }};">
+    <div class="nm-container-4" data-family-background-married >
 
         <!-- * Small Container -->
         <div class="small-con-3" data-child-container>
@@ -924,7 +923,7 @@
     </div>
 
     <!-- * Container 4(b): Family Background Information (Single)-->
-    <div class="nm-container-4" data-family-background-single  style="display: {{ $member['Civil_Status'] == 'Single' ? 'block' : 'none' }};">
+    <div class="nm-container-4" data-family-background-single  >
 
         <!-- * Small Container -->
         <div class="small-con-3" data-child-container-2>
@@ -2180,7 +2179,8 @@
                 optionsContainer2.classList.remove("active");
             });
         });
- 
+
+
         // ** Select Dropdown 3
         const selectedOpt3 = document.querySelector('[data-option-select3]');
         const optionsContainer3 = document.querySelector('[data-option-con3]');
@@ -2198,26 +2198,26 @@
         });
 
         // * Borrower Job Information
-        // const previousJob = document.querySelectorAll('[data-previous-job]')
-        // const currentJob = document.querySelectorAll('[data-current-job]')
+        const previousJob = document.querySelectorAll('[data-previous-job]')
+        const currentJob = document.querySelectorAll('[data-current-job]')
 
-        // for (const previousJobItems of previousJob) {
-        //     previousJobItems.style.display = 'none'
+        for (const previousJobItems of previousJob) {
+            previousJobItems.style.display = 'none'
 
-        //     for (const currentJobItems of currentJob) {
+            for (const currentJobItems of currentJob) {
 
-        //         optionsContainer3.firstElementChild.addEventListener('click', () => {
-        //             previousJobItems.style.display = 'none'
-        //             currentJobItems.style.display = 'block'                    
-        //         })
+                optionsContainer3.firstElementChild.addEventListener('click', () => {
+                    previousJobItems.style.display = 'none'
+                    currentJobItems.style.display = 'block'
+                })
 
-        //         optionsContainer3.lastElementChild.addEventListener('click', () => {
-        //             previousJobItems.style.display = 'block'
-        //             currentJobItems.style.display = 'none'
-        //         })
+                optionsContainer3.lastElementChild.addEventListener('click', () => {
+                    previousJobItems.style.display = 'block'
+                    currentJobItems.style.display = 'none'
+                })
 
-        //     }
-        // }
+            }
+        }
 
 
         // ** Select Dropdown 4

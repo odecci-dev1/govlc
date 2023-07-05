@@ -10,6 +10,7 @@ class CreateApplication extends Component
 {
 
     public $member;
+    public $jobinfo;
 
     public function rules(){                
         $rules = [];      
@@ -33,6 +34,8 @@ class CreateApplication extends Component
         $rules['member.YearsStay'] = 'required'; 
         $rules['member.ZipCode'] = ''; 
         $rules['member.Status'] = ''; 
+
+        $rules['jobinfo.EmpStatus'] = '';
         return  $rules;
     }
 
@@ -61,30 +64,7 @@ class CreateApplication extends Component
     public function store(){               
         try {     
             $input = $this->validate();
-            $input['member']['status'] = '1';
-            //$data = $input['member'];                             
-            // $data = [ 
-            //             'Fname' => $input['member']['Fname'], 
-            //             'Lname' => $input['member']['Lname'], 
-            //             'Mname' => $input['member']['Mname'], 
-            //             'Suffix' => $input['member']['Suffix'], 
-            //             'Age' => $input['member']['Age'], 
-            //             'Barangay' => $input['member']['Barangay'], 
-            //             'City' => $input['member']['City'], 
-            //             'Civil_Status' => $input['member']['Civil_Status'], 
-            //             'Cno' => $input['member']['Cno'], 
-            //             'Country' => $input['member']['Country'],      
-            //             'DOB' => $input['member']['DOB'],                          
-            //             'EmailAddress' => $input['member']['EmailAddress'], 
-            //             'Gender' => $input['member']['Gender'], 
-            //             'HouseNo' => $input['member']['HouseNo'],   
-            //             'House_Stats' => $input['member']['House_Stats'],                                                        
-            //             'POB' => $input['member']['POB'],   
-            //             'Province' => $input['member']['Province'], 
-            //             'YearsStay' => $input['member']['YearsStay'],        
-            //             'ZipCode' => $input['member']['ZipCode'],     
-            //             'Status' => '1',               
-            //         ];
+            $input['member']['status'] = '1';            
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveMember',  $input['member'] );
             dd( $crt );
         }
@@ -93,8 +73,14 @@ class CreateApplication extends Component
         }
     }
 
+    public function mount(){
+        $this->member['Civil_Status'] = '';       
+        $this->jobinfo['EmpStatus'] = '';
+    }
+
     public function render()
     {
+        
         return view('livewire.transactions.application.create-application');
     }
 }
