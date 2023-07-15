@@ -73,28 +73,28 @@
                     <!-- * First Name -->
                     <div class="input-wrapper">
                         <span>First Name</span>
-                        <input wire:model.defer="member.Fname" autocomplete="off" type="text" id="fName" name="fName">
-                        @error('member.Fname') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.fname" autocomplete="off" type="text">
+                        @error('member.fname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
-                        <input wire:model.defer="member.Mname" autocomplete="off" type="text" id="midName" name="midName">
-                        @error('member.Mname') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.mname" autocomplete="off" type="text">
+                        @error('member.mname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
-                        <input wire:model.defer="member.Lname"  autocomplete="off" type="text" id="lName" name="lName">
-                        @error('member.Lname') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.lname"  autocomplete="off" type="text">
+                        @error('member.lname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
-                        <input wire:model.defer="member.Suffix" autocomplete="off" type="text" id="suffix" name="suffix">
+                        <input wire:model.defer="member.suffix" autocomplete="off" type="text">
                     </div>
 
                 </div>
@@ -111,7 +111,7 @@
 
                                 <div class="option"  data-option-item1>
 
-                                    <input type="radio"  wire:model.defer="member.Gender" class="radio" id="Male" name="category" value="Male" />
+                                    <input type="radio"  wire:model.defer="member.gender" class="radio" id="Male" value="Male" />
                                     <label for="Male">
                                         <h4>Male</h4>
                                     </label>
@@ -120,7 +120,7 @@
 
                                 <div class="option"  data-option-item1>
 
-                                    <input type="radio" wire:model.defer="member.Gender" class="radio"   id="Female" name="category" value="Female"/>
+                                    <input type="radio" wire:model.defer="member.gender" class="radio" id="Female" value="Female"/>
                                     <label for="Female">
                                         <h4>Female</h4>
                                     </label>
@@ -130,45 +130,45 @@
                             </div>
                             
                             <div class="selected" style="font-weight: bold;" data-option-select1>
-                                {{ isset($member['Gender']) ? $member['Gender'] : '' }}
+                                {{ isset($member['gender']) ? $member['gender'] : '' }}
                             </div>
 
                         </div>
-                        @error('member.Gender') <span class="text-required">{{ $message }}</span>@enderror
+                        @error('member.gender') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.defer="member.DOB" autocomplete="off" type="text" id="doBirth" name="doBirth">
-                        @error('member.DOB') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.dob" autocomplete="off" type="date"  >
+                        @error('member.dob') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.defer="member.Age" autocomplete="off" type="number" id="age" name="age">
-                        @error('member.Age') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.age" autocomplete="off" type="number"  >
+                        @error('member.age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Place Of Birth -->
                     <div class="input-wrapper">
                         <span>Place Of Birth</span>
-                        <input wire:model.defer="member.POB" autocomplete="off" type="text" id="poBirth" name="poBirth">
-                        @error('member.POB') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.pob" autocomplete="off" type="text"  >
+                        @error('member.pob') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Civil Status -->
                     <div class="input-wrapper">
-                        <span>Civil Status {{ isset($member['Civil_Status']) ? $member['Civil_Status'] : '' }}</span>
+                        <span>Civil Status {{ isset($member['civil_Status']) ? $member['civil_Status'] : '' }}</span>
                         <div class="select-box">
 
                             <div class="options-container" data-option-con2>
 
                                 <div class="option" data-option-item2>
 
-                                    <input wire:model.lazy="member.Civil_Status" type="radio" class="radio" name="category" id="Widow" value="Widow" />
-                                    <label for="Widow">
+                                    <input wire:model="member.civil_Status" type="radio" class="radio" id="mem_Widow" value="Widow" />
+                                    <label for="mem_Widow">
                                         <h4>Widow</h4>
                                     </label>
 
@@ -176,8 +176,8 @@
 
                                 <div class="option" data-option-item2>
 
-                                    <input wire:model.lazy="member.Civil_Status" type="radio" class="radio" name="category" id="Married" value="Married"/>
-                                    <label for="Married">
+                                    <input wire:model="member.civil_Status" type="radio" class="radio" id="mem_Married" value="Married"/>
+                                    <label for="mem_Married">
                                         <h4>Married</h4>
                                     </label>
 
@@ -185,8 +185,8 @@
 
                                 <div class="option" data-option-item2>
 
-                                    <input wire:model.lazy="member.Civil_Status" type="radio" class="radio" name="category" id="Single" value="Single"/>
-                                    <label for="Single">
+                                    <input wire:model="member.civil_Status" type="radio" class="radio" id="mem_Single" value="Single"/>
+                                    <label for="mem_Single">
                                         <h4>Single</h4>
                                     </label>
 
@@ -195,11 +195,11 @@
                             </div>
                             
                             <div class="selected" style="font-weight: bold;" data-option-select2>
-                                {{ isset($member['Civil_Status']) ? $member['Civil_Status'] : '' }}
+                                {{ isset($member['civil_Status']) ? $member['civil_Status'] : '' }}
                             </div>
 
                         </div>
-                        @error('member.Civil_Status') <span class="text-required">{{ $message }}</span>@enderror
+                        @error('member.civil_Status') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                 </div>
@@ -211,8 +211,8 @@
                     <div class="input-wrapper">
                         <div class="input-wrapper">
                             <span>Contact Number</span>
-                            <input wire:model.defer="member.Cno" autocomplete="off" type="number" id="conNum" name="conNum">
-                            @error('member.Cno') <span class="text-required">{{ $message }}</span>@enderror
+                            <input wire:model.defer="member.cno" autocomplete="off" type="number">
+                            @error('member.cno') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
 
@@ -220,8 +220,8 @@
                     <div class="input-wrapper">
                         <div class="input-wrapper">
                             <span>Email Address</span>
-                            <input wire:model.defer="member.EmailAddress" autocomplete="off" type="email" id="eMail" name="eMail">
-                            @error('member.EmailAddress') <span class="text-required">{{ $message }}</span>@enderror
+                            <input wire:model.defer="member.emailAddress" autocomplete="off" type="email">
+                            @error('member.emailAddress') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
 
@@ -238,30 +238,30 @@
                             <!-- * Rented -->
                             <div class="radio-btn-wrapper">
                                 <span>Rented</span>
-                                <input  wire:model.defer="member.House_Stats" autocomplete="off" type="radio" name="radio" value="rented" id="rented">
+                                <input  wire:model.defer="member.house_Stats" autocomplete="off" type="radio" value="rented" name="house_Stats" id="mem_rented">
                             </div>
 
                             <!-- * Owned -->
                             <div class="radio-btn-wrapper">
                                 <span>Owned</span>
-                                <input  wire:model.defer="member.House_Stats" autocomplete="off" type="radio" name="radio" value="owned" id="owned">
+                                <input  wire:model.defer="member.house_Stats" autocomplete="off" type="radio" value="owned" name="house_Stats" id="mem_owned">
                             </div>
 
                             <!-- * Free Use -->
                             <div class="radio-btn-wrapper">
                                 <span>Free Use</span>
-                                <input  wire:model.defer="member.House_Stats" autocomplete="off" type="radio" name="radio" value="freeUse" id="freeUse">
+                                <input  wire:model.defer="member.house_Stats" autocomplete="off" type="radio" value="freeUse" name="house_Stats" id="mem_freeUse">
                             </div>
 
                         </div>
-                        @error('member.House_Stats') <span class="text-required">{{ $message }}</span>@enderror
+                        @error('member.house_Stats') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * House No./ Bldg. No./ Room No./ Subdivision/ Street -->
                     <div class="input-wrapper">
                         <span>House No./ Bldg. No./ Room No./ Subdivision/ Street</span>
-                        <input wire:model.defer="member.HouseNo" autocomplete="off" type="text" id="houseAdd" name="houseAdd">
-                        @error('member.HouseNo') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.houseNo" autocomplete="off" type="text">
+                        @error('member.houseNo') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                 </div>
@@ -272,29 +272,29 @@
                     <!-- * Barangay -->
                     <div class="input-wrapper">
                         <span>Barangay</span>
-                        <input wire:model.defer="member.Barangay" autocomplete="off" type="text" id="brgy" name="brgy">
-                        @error('member.Barangay') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.barangay" autocomplete="off" type="text" >
+                        @error('member.barangay') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * City / Municipality -->
                     <div class="input-wrapper">
                         <span>City / Municipality</span>
-                        <input wire:model.defer="member.City" autocomplete="off" type="text" id="city" name="city">
-                        @error('member.City') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.city" autocomplete="off" type="text">
+                        @error('member.city') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Province / Region -->
                     <div class="input-wrapper">
                         <span>Province / Region</span>
-                        <input wire:model.defer="member.Province" autocomplete="off" type="text" id="province" name="province">
-                        @error('member.Province') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.province" autocomplete="off" type="text">
+                        @error('member.province') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Country -->
                     <div class="input-wrapper">
                         <span>Country</span>
-                        <input wire:model.defer="member.Country" autocomplete="off" type="text" id="country" name="country">
-                        @error('member.Country') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.country" autocomplete="off" type="text" id="country" name="country">
+                        @error('member.country') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
 
@@ -306,14 +306,14 @@
                     <!-- * Zip Code -->
                     <div class="input-wrapper">
                         <span>Zip Code</span>
-                        <input wire:model.defer="member.ZipCode" type="number" id="zipCode" name="zipCode">
+                        <input wire:model.defer="member.zipCode" type="number" id="zipCode" name="zipCode">
                     </div>
 
                     <!-- * Years Of Stay -->
                     <div class="input-wrapper">
                         <span>Years of stay on the mentioned address</span>
-                        <input wire:model.defer="member.YearsStay" type="number" id="yoStay" name="yoStay">
-                        @error('member.YearsStay') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.defer="member.yearsStay" type="number" id="yoStay" name="yoStay">
+                        @error('member.yearsStay') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                 </div>
@@ -361,25 +361,29 @@
                         <!-- * Electricity Bill -->
                         <div class="input-wrapper">
                             <span>Electricity Bill</span>
-                            <input type="number" id="elecBill" name="elecBill">
+                            <input wire:model.defer="member.electricBill" type="number" id="elecBill" name="elecBill">
+                            @error('member.electricBill') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Water Bill -->
                         <div class="input-wrapper">
                             <span>Water Bill</span>
-                            <input type="number" id="waterBill" name="waterBill">
+                            <input wire:model.defer="member.waterBill" type="number" id="waterBill" name="waterBill">
+                            @error('member.waterBill') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Other Bills -->
                         <div class="input-wrapper">
                             <span>Other Bills</span>
-                            <input type="number" id="otherBill" name="otherBill">
+                            <input wire:model.defer="member.otherBills" type="number" id="otherBill" name="otherBill">
+                            @error('member.otherBills') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Daily Expenses -->
                         <div class="input-wrapper">
                             <span>Daily Expenses</span>
-                            <input type="number" id="dailyExp" name="dailyExp">
+                            <input wire:model.defer="member.dailyExpenses" type="number" id="dailyExp" name="dailyExp">
+                            @error('member.dailyExpenses') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                     </div>
@@ -607,13 +611,12 @@
                 <!-- * Employment Status -->
                 <div class="input-wrapper">
                     <span>Employment Status</span>
-                    <div class="select-box">
-                        <!-- dito -->
+                    <div class="select-box">                   
                         <div class="options-container" data-option-con3>
 
                             <div class="option" data-option-item3>
 
-                                <input wire:model.lazy="jobinfo.EmpStatus" type="radio" class="radio" name="category" id="Employed" value="Employed" />
+                                <input wire:model.lazy="member.emp_Status" type="radio" class="radio" id="Employed" value="Employed" />
                                 <label for="Employed">
                                     <h4>Employed</h4>
                                 </label>
@@ -622,7 +625,7 @@
 
                             <div class="option" data-option-item3>
 
-                                <input wire:model.lazy="jobinfo.EmpStatus" type="radio" class="radio" name="category" id="Unemployed" value="Unemployed"/>
+                                <input wire:model.lazy="member.emp_Status" type="radio" class="radio" id="Unemployed" value="Unemployed"/>
                                 <label for="Unemployed">
                                     <h4>Unemployed</h4>
                                 </label>
@@ -632,7 +635,7 @@
                         </div>
                         
                         <div class="selected" style="font-weight: bold;" data-option-select3>
-                            {{ isset($jobinfo['EmpStatus']) ? $jobinfo['EmpStatus'] : '' }}
+                            {{ isset($member['emp_Status']) ? $member['emp_Status'] : '' }}
                         </div>
 
                     </div>
@@ -642,25 +645,33 @@
                 <div class="input-wrapper">
 
                     <!-- * Current Job -->
-                    <span style="display: {{ $jobinfo['EmpStatus'] == 'Employed' || $jobinfo['EmpStatus'] == ''  ? 'block' : 'none' }};" data-current-job>Current Job / Position</span>
-                    <input style="display: {{ $jobinfo['EmpStatus'] == 'Employed' || $jobinfo['EmpStatus'] == '' ? 'block' : 'none' }};" type="text" id="currentJob" name="currentJob" data-current-job>
+                    @if(isset($member['emp_Status']))
+                        @if($member['emp_Status'] == 'Employed' || $member['emp_Status'] == '')
+                            <span data-current-job>Current Job / Position</span>
+                            <input wire:model.defer="member.jobDescription"  type="text" id="currentJob" name="currentJob" data-current-job>
+                        @endif
+                    @endif
 
                     <!-- * Previous Job -->
-                    <span style="display: {{ $jobinfo['EmpStatus'] == 'Unemployed' ? 'block' : 'none' }};" data-previous-job>Previous Job / Position</span>
-                    <input style="display: {{ $jobinfo['EmpStatus'] == 'Unemployed' ? 'block' : 'none' }};" type="text" id="previousJob" name="previousJob" data-previous-job>
+                    @if(isset($member['emp_Status']))
+                        @if($member['emp_Status'] == 'Unemployed')
+                        <span  data-previous-job>Previous Job / Position</span>
+                        <input wire:model.defer="member.jobDescription" type="text" id="previousJob" name="previousJob" data-previous-job>
+                        @endif
+                    @endif
 
                 </div>
 
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input type="text" id="yoService" name="yoService">
+                    <input wire:model.defer="member.yos" type="text" id="yoService" name="yoService">
                 </div>
 
                 <!-- * Company Name -->
                 <div class="input-wrapper">
                     <span>Company Name</span>
-                    <input type="text" id="compName" name="compName">
+                    <input wire:model.defer="member.companyName" type="text" id="compName" name="compName">
                 </div>
 
             </div>
@@ -671,19 +682,19 @@
                 <!-- * Company Address -->
                 <div class="input-wrapper">
                     <span>Company Address</span>
-                    <input type="text" id="compAddr" name="compAddr">
+                    <input wire:model.defer="member.companyID" type="text" id="compAddr" name="compAddr">
                 </div>
 
                 <!-- * Monthly Salary -->
                 <div class="input-wrapper">
                     <span>Monthly Salary</span>
-                    <input type="number" id="monthSal" name="monthSal">
+                    <input wire:model.defer="member.monthlySalary" type="number" id="monthSal" name="monthSal">
                 </div>
 
                 <!-- * Other Source Of Income -->
                 <div class="input-wrapper">
                     <span>Other Source Of Income</span>
-                    <input type="text" id="othSorOfInc" name="othSorOfInc">
+                    <input  wire:model.defer="member.otherSOC" type="text" id="othSorOfInc" name="othSorOfInc">
                 </div>
 
                 <!-- * Do you own a Business?  -->
@@ -696,13 +707,13 @@
 
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
-                            <input autocomplete="off" type="radio" name="formToggle" value="formToggleYes" id="formToggleYes">
+                            <input  wire:model="member.bO_Status" autocomplete="off" type="radio" name="mem_bO_Status" value="1" >
                             <span>Yes</span>
                         </div>
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
-                            <input autocomplete="off" type="radio" name="formToggle" value="formToggleNo" id="formToggleNo">
+                            <input  wire:model="member.bO_Status" autocomplete="off" type="radio" name="mem_bO_Status" value="0">
                             <span>No</span>
                         </div>
 
@@ -718,421 +729,490 @@
 
     <!-- * Imported from New Member Application -->
     <!-- * Container 4(a): Family Background Information (Married)-->
-    <div class="nm-container-4" data-family-background-married style="display: {{ $member['Civil_Status'] == 'Married' ? 'block' : 'none' }};">
+    @if(isset($member['civil_Status']))
+        @if($member['civil_Status'] == 'Married')
+        <div class="nm-container-4" data-family-background-married>            
+            <!-- * Small Container -->
+            <div class="small-con-3" data-child-container>
 
-        <!-- * Small Container -->
-        <div class="small-con-3" data-child-container>
+                <!-- * Rowspan 1: Header -->
+                <div class="rowspan">
 
-            <!-- * Rowspan 1: Header -->
-            <div class="rowspan">
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h2>Family Background Information</h2>
+                    </div>
 
-                <!-- * Family Background Information -->
-                <div class="input-wrapper">
-                    <h2>Family Background Information</h2>
                 </div>
 
-            </div>
+                <!-- * Rowspan 2: Subheader - Spouse Information -->
+                <div class="rowspan">
 
-            <!-- * Rowspan 2: Subheader - Spouse Information -->
-            <div class="rowspan">
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h3>Spouse Information</h3>
+                    </div>
 
-                <!-- * Family Background Information -->
-                <div class="input-wrapper">
-                    <h3>Spouse Information</h3>
                 </div>
 
-            </div>
+                <!-- * Rowspan 3: First Name, Middle Name, Last Name, Suffix, Date Of Birth and Age -->
+                <div class="rowspan">
 
-            <!-- * Rowspan 3: First Name, Middle Name, Last Name, Suffix, Date Of Birth and Age -->
-            <div class="rowspan">
+                    <!-- * First Name -->
+                    <div class="input-wrapper">
+                        <span>First Name</span>
+                        <input wire:model.defer="member.f_Fname" autocomplete="off" type="text">
+                    </div>
 
-                <!-- * First Name -->
-                <div class="input-wrapper">
-                    <span>First Name</span>
-                    <input autocomplete="off" type="text" id="fName" name="fName">
+                    <!-- * Middle Name -->
+                    <div class="input-wrapper">
+                        <span>Middle Name</span>
+                        <input wire:model.defer="member.f_Mname" autocomplete="off" type="text" >
+                    </div>
+
+                    <!-- * Last Name -->
+                    <div class="input-wrapper">
+                        <span>Last Name</span>
+                        <input wire:model.defer="member.f_Lname" autocomplete="off" type="text">
+                    </div>
+
+                    <!-- * Suffix -->
+                    <div class="input-wrapper">
+                        <span>Suffix</span>
+                        <input wire:model.defer="member.f_Suffix" autocomplete="off" type="text">
+                    </div>
+
+
+                    <!-- * Date Of Birth -->
+                    <div class="input-wrapper">
+                        <span>Date Of Birth</span>
+                        <input wire:model.defer="member.f_DOB" autocomplete="off" type="text">
+                    </div>
+
+                    <!-- * Age -->
+                    <div class="input-wrapper">
+                        <span>Age</span>
+                        <input wire:model.defer="member.f_Age" autocomplete="off" type="number">
+                    </div>
+
                 </div>
 
-                <!-- * Middle Name -->
-                <div class="input-wrapper">
-                    <span>Middle Name</span>
-                    <input autocomplete="off" type="text" id="midName" name="midName">
-                </div>
+                <!-- * Rowspan 4: Employment Status, Current Job / Position, Years Of Service and Company Name -->
+                <div class="rowspan">                 
+                    <!-- * Employment Status -->
+                    <div class="input-wrapper">
+                        <span>Employment Status</span>
+                        <div class="select-box">
 
-                <!-- * Last Name -->
-                <div class="input-wrapper">
-                    <span>Last Name</span>
-                    <input autocomplete="off" type="text" id="lName" name="lName">
-                </div>
+                            <div class="options-container" data-option-con7>
 
-                <!-- * Suffix -->
-                <div class="input-wrapper">
-                    <span>Suffix</span>
-                    <input autocomplete="off" type="text" id="suffix" name="suffix">
-                </div>
+                                <div class="option" data-option-item7>
 
+                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Employed" value="Employed" />
+                                    <label for="f_mem_Employed">
+                                        <h4>Employed</h4>
+                                    </label>
 
-                <!-- * Date Of Birth -->
-                <div class="input-wrapper">
-                    <span>Date Of Birth</span>
-                    <input autocomplete="off" type="text" id="doBirth" name="doBirth">
-                </div>
+                                </div>
 
-                <!-- * Age -->
-                <div class="input-wrapper">
-                    <span>Age</span>
-                    <input autocomplete="off" type="number" id="age" name="age">
-                </div>
+                                <div class="option" data-option-item7>
 
-            </div>
+                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Unemployed" value="Unemployed"/>
+                                    <label for="f_mem_Unemployed">
+                                        <h4>Unemployed</h4>
+                                    </label>
 
-            <!-- * Rowspan 4: Employment Status, Current Job / Position, Years Of Service and Company Name -->
-            <div class="rowspan">
-
-                <!-- * Employment Status -->
-                <div class="input-wrapper">
-                    <span>Employment Status</span>
-                    <div class="select-box">
-
-                        <div class="options-container" data-option-con7>
-
-                            <div class="option" data-option-item7>
-
-                                <input type="radio" class="radio" name="category" value="Employed" />
-                                <label for="Employed">
-                                    <h4>Employed</h4>
-                                </label>
+                                </div>
 
                             </div>
-
-                            <div class="option" data-option-item7>
-
-                                <input type="radio" class="radio" name="category" value="Unemployed"/>
-                                <label for="Unemployed">
-                                    <h4>Unemployed</h4>
-                                </label>
-
+                            
+                            <div class="selected" style="font-weight: bold;" data-option-select7>
+                                {{ isset($member['f_Emp_Status']) ? $member['f_Emp_Status'] : '' }}
                             </div>
 
                         </div>
-                        
-                        <div class="selected" data-option-select7>
-                        </div>
+                    </div>
+
+                    <script>
+                        // ** Select Dropdown 7
+                        const selectedOpt7 = document.querySelector('[data-option-select7]');
+                        const optionsContainer7 = document.querySelector('[data-option-con7]');
+                        const optionsList7 = document.querySelectorAll('[data-option-item7]');  
+                        selectedOpt7.addEventListener("click", () => {                              
+                            optionsContainer7.classList.toggle("active");
+                        });
+
+                        optionsList7.forEach(option => {
+                            option.addEventListener("click", () => {
+                                selectedOpt7.innerHTML = option.querySelector("label").innerHTML;
+                                optionsContainer7.classList.remove("active");
+                            });
+                        });
+                       
+                    </script>
+
+                    <!-- * Current Job / Position -->
+                    <div class="input-wrapper">
+
+                        <!-- * Current Job -->
+                        @if(isset($member['f_Emp_Status']))
+                            @if($member['f_Emp_Status'] == 'Employed' || $member['f_Emp_Status'] == '')
+                            <span data-spouse-current-job>Current Job / Position</span>
+                            <input wire:model.defer="member.f_Job" type="text" data-spouse-current-job>
+                            @endif
+                        @endif
+
+                        @if(isset($member['f_Emp_Status']))
+                            @if($member['f_Emp_Status'] == 'Unemployed')
+                            <!-- * Previous Job -->
+                            <span data-spouse-previous-job>Previous Job / Position</span>
+                            <input wire:model.defer="member.f_Job" type="text" data-spouse-previous-job>
+                            @endif
+                        @endif
 
                     </div>
+
+                    <!-- * Years Of Service -->
+                    <div class="input-wrapper">
+                        <span>Years Of Service</span>
+                        <input wire:model.defer="member.f_YOS" type="text">
+                    </div>
+
+                    <!-- * Company Name -->
+                    <div class="input-wrapper">
+                        <span>Company Name</span>
+                        <input wire:model.defer="member.f_CompanyName" type="text">
+                    </div>
+
+                    <!-- * Empty Input Wrapper -->
+                    <div class="input-wrapper">
+                    </div>
+
                 </div>
 
-                <!-- * Current Job / Position -->
-                <div class="input-wrapper">
+                <!-- * Rowspan 5: Number Of Dependants -->
+                <div class="rowspan">
 
-                    <!-- * Current Job -->
-                    <span data-spouse-current-job>Current Job / Position</span>
-                    <input type="text" id="currentJob" name="currentJob" data-spouse-current-job>
-
-                    <!-- * Previous Job -->
-                    <span data-spouse-previous-job>Previous Job / Position</span>
-                    <input type="text" id="previousJob" name="previousJob" data-spouse-previous-job>
+                    <!-- * Current Job / Position -->
+                    <div class="input-wrapper">
+                        <span>Number Of Dependants</span>
+                        <input  wire:model.defer="member.f_NOD" type="number">
+                    </div>
 
                 </div>
 
-                <!-- * Years Of Service -->
-                <div class="input-wrapper">
-                    <span>Years Of Service</span>
-                    <input type="text" id="yoService" name="yoService">
+                <!-- * Rowspan 6: Empty Rowspan -->
+                <div class="rowspan">
+
                 </div>
 
-                <!-- * Company Name -->
-                <div class="input-wrapper">
-                    <span>Company Name</span>
-                    <input type="text" id="compName" name="compName">
+                <!-- * Rowspan 7: Subheader - Children(s) Information -->
+                <div class="rowspan" data-child-sibling>
+
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h3>Children(s) Information</h3>
+                    </div>
+
                 </div>
 
-                <!-- * Empty Input Wrapper -->
-                <div class="input-wrapper">
-                </div>
+                <!-- * Rowspan 8: First Name, Middle Name , Last Name, Age, Name Of School and Add/Subtract Button -->
+                @if(count($cntmemchild) > 0)    
+                    @foreach($cntmemchild as $cntchild)
+                    <div class="rowspan child" data-child>                    
+                            <!-- * First Name -->
+                            <div class="input-wrapper">
+                                <span>First Name</span>
+                                <input autocomplete="off" type="text" >
+                            </div>
 
-            </div>
+                            <!-- * Middle Name -->
+                            <div class="input-wrapper">
+                                <span>Middle Name</span>
+                                <input autocomplete="off" type="text">
+                            </div>
 
-            <!-- * Rowspan 5: Number Of Dependants -->
-            <div class="rowspan">
+                            <!-- * Last Name -->
+                            <div class="input-wrapper">
+                                <span>Last Name</span>
+                                <input autocomplete="off" type="text">
+                            </div>
 
-                <!-- * Current Job / Position -->
-                <div class="input-wrapper">
-                    <span>Number Of Dependants</span>
-                    <input type="number" id="numOfDependants" name="numOfDependants">
-                </div>
+                            <!-- * Age -->
+                            <div class="input-wrapper">
+                                <span>Age</span>
+                                <input autocomplete="off" type="number">
+                            </div>
 
-            </div>
+                            <!-- * Name Of School -->
+                            <div class="input-wrapper">
+                                <span>Name Of School</span>
+                                <input autocomplete="off" type="text">
+                            </div>
 
-            <!-- * Rowspan 6: Empty Rowspan -->
-            <div class="rowspan">
-
-            </div>
-
-            <!-- * Rowspan 7: Subheader - Children(s) Information -->
-            <div class="rowspan" data-child-sibling>
-
-                <!-- * Family Background Information -->
-                <div class="input-wrapper">
-                    <h3>Children(s) Information</h3>
-                </div>
-
-            </div>
-
-            <!-- * Rowspan 8: First Name, Middle Name , Last Name, Age, Name Of School and Add/Subtract Button -->
-            <div class="rowspan child" data-child>
-
-                <!-- * First Name -->
-                <div class="input-wrapper">
-                    <span>First Name</span>
-                    <input autocomplete="off" type="text" id="childFName" name="fName">
-                </div>
-
-                <!-- * Middle Name -->
-                <div class="input-wrapper">
-                    <span>Middle Name</span>
-                    <input autocomplete="off" type="text" id="childMidName" name="midName">
-                </div>
-
-                <!-- * Last Name -->
-                <div class="input-wrapper">
-                    <span>Last Name</span>
-                    <input autocomplete="off" type="text" id="childLName" name="lName">
-                </div>
-
-                <!-- * Age -->
-                <div class="input-wrapper">
-                    <span>Age</span>
-                    <input autocomplete="off" type="number" id="childAge" name="age">
-                </div>
-
-                <!-- * Name Of School -->
-                <div class="input-wrapper">
-                    <span>Name Of School</span>
-                    <input autocomplete="off" type="text" id="nameOfSchool" name="nameOfSchool">
-                </div>
-
-                <!-- * Add and Subtract Button  -->
-                <div class="input-wrapper">
-                    <button type="button" onclick="addChild()">+</button>
-                    <button type="button" onclick="subChild()">-</button>
-                </div>
+                            <!-- * Add and Subtract Button  -->
+                            <div class="input-wrapper">
+                                @if($cntchild == 1)
+                                <button type="button" wire:click="addChild">+</button>
+                                @else
+                                <button type="button" wire:click="subChild({{ $cntchild }})">-</button>
+                                @endif
+                            </div>                        
+                    </div>
+                    @endforeach
+                @endif
 
             </div>
 
         </div>
+        @endif
+    @endif
 
-    </div>
+    @if(isset($member['civil_Status']))
+        @if($member['civil_Status'] == 'Single')
+        <!-- * Container 4(b): Family Background Information (Single)-->
+        <div class="nm-container-4" data-family-background-single>
 
-    <!-- * Container 4(b): Family Background Information (Single)-->
-    <div class="nm-container-4" data-family-background-single  style="display: {{ $member['Civil_Status'] == 'Single' ? 'block' : 'none' }};">
+            <!-- * Small Container -->
+            <div class="small-con-3" data-child-container-2>
 
-        <!-- * Small Container -->
-        <div class="small-con-3" data-child-container-2>
+                <!-- * Rowspan 1: Header -->
+                <div class="rowspan">
 
-            <!-- * Rowspan 1: Header -->
-            <div class="rowspan">
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h2>Family Background Information</h2>
+                    </div>
 
-                <!-- * Family Background Information -->
-                <div class="input-wrapper">
-                    <h2>Family Background Information</h2>
                 </div>
 
-            </div>
+                <!-- * Rowspan 2: Subheader - First degree relative information -->
+                <div class="rowspan">
 
-            <!-- * Rowspan 2: Subheader - First degree relative information -->
-            <div class="rowspan">
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h3>First degree relative information</h3>
+                    </div>
 
-                <!-- * Family Background Information -->
-                <div class="input-wrapper">
-                    <h3>First degree relative information</h3>
                 </div>
 
-            </div>
+                <!-- * Rowspan 3: First Name, Middle Name, Last Name, Suffix, Date Of Birth and Age -->
+                <div class="rowspan">
 
-            <!-- * Rowspan 3: First Name, Middle Name, Last Name, Suffix, Date Of Birth and Age -->
-            <div class="rowspan">
+                    <!-- * First Name -->
+                    <div class="input-wrapper">
+                        <span>First Name</span>
+                        <input wire:model.defer="member.f_Fname" autocomplete="off" type="text">
+                    </div>
 
-                <!-- * First Name -->
-                <div class="input-wrapper">
-                    <span>First Name</span>
-                    <input autocomplete="off" type="text" id="fName" name="fName">
+                    <!-- * Middle Name -->
+                    <div class="input-wrapper">
+                        <span>Middle Name</span>
+                        <input wire:model.defer="member.f_Mname" autocomplete="off" type="text">
+                    </div>
+
+                    <!-- * Last Name -->
+                    <div class="input-wrapper">
+                        <span>Last Name</span>
+                        <input wire:model.defer="member.f_Lname" autocomplete="off" type="text">
+                    </div>
+
+                    <!-- * Suffix -->
+                    <div class="input-wrapper">
+                        <span>Suffix</span>
+                        <input wire:model.defer="member.f_Suffix" autocomplete="off" type="text">
+                    </div>
+
+
+                    <!-- * Date Of Birth -->
+                    <div class="input-wrapper">
+                        <span>Date Of Birth</span>
+                        <input wire:model.defer="member.f_DOB" autocomplete="off" type="text">
+                    </div>
+
+                    <!-- * Age -->
+                    <div class="input-wrapper">
+                        <span>Age</span>
+                        <input wire:model.defer="member.f_Age" autocomplete="off" type="number">
+                    </div>
+
                 </div>
 
-                <!-- * Middle Name -->
-                <div class="input-wrapper">
-                    <span>Middle Name</span>
-                    <input autocomplete="off" type="text" id="midName" name="midName">
-                </div>
+                <!-- * Rowspan 4: Employment Status, Current Job / Position, Years Of Service and Company Name -->
+                <div class="rowspan">
 
-                <!-- * Last Name -->
-                <div class="input-wrapper">
-                    <span>Last Name</span>
-                    <input autocomplete="off" type="text" id="lName" name="lName">
-                </div>
+                    <!-- * Employment Status -->
+                    <div class="input-wrapper">
+                        <span>Employment Status</span>
+                        <div class="select-box">
 
-                <!-- * Suffix -->
-                <div class="input-wrapper">
-                    <span>Suffix</span>
-                    <input autocomplete="off" type="text" id="suffix" name="suffix">
-                </div>
+                            <div class="options-container" data-option-con8>
 
+                                <div class="option" data-option-item8>
 
-                <!-- * Date Of Birth -->
-                <div class="input-wrapper">
-                    <span>Date Of Birth</span>
-                    <input autocomplete="off" type="text" id="doBirth" name="doBirth">
-                </div>
+                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Employed" value="Employed" />
+                                    <label for="f_mem_Employed">
+                                        <h4>Employed</h4>
+                                    </label>
 
-                <!-- * Age -->
-                <div class="input-wrapper">
-                    <span>Age</span>
-                    <input autocomplete="off" type="number" id="age" name="age">
-                </div>
+                                </div>
 
-            </div>
+                                <div class="option" data-option-item8>
 
-            <!-- * Rowspan 4: Employment Status, Current Job / Position, Years Of Service and Company Name -->
-            <div class="rowspan">
+                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Unemployed" value="Unemployed"/>
+                                    <label for="f_mem_Unemployed">
+                                        <h4>Unemployed</h4>
+                                    </label>
 
-                <!-- * Employment Status -->
-                <div class="input-wrapper">
-                    <span>Employment Status</span>
-                    <div class="select-box">
-
-                        <div class="options-container" data-option-con8>
-
-                            <div class="option" data-option-item8>
-
-                                <input type="radio" class="radio" name="category" value="Employed" />
-                                <label for="Employed">
-                                    <h4>Employed</h4>
-                                </label>
+                                </div>
 
                             </div>
-
-                            <div class="option" data-option-item8>
-
-                                <input type="radio" class="radio" name="category" value="Unemployed"/>
-                                <label for="Unemployed">
-                                    <h4>Unemployed</h4>
-                                </label>
-
+                            
+                            <div class="selected" style="font-weight: bold;" data-option-select8>
+                                {{ isset($member['f_Emp_Status']) ? $member['f_Emp_Status'] : '' }}
                             </div>
 
                         </div>
-                        
-                        <div class="selected" data-option-select8>
-                        </div>
+                    </div>
+
+                    <script>
+                        const selectedOpt8 = document.querySelector('[data-option-select8]');
+                        const optionsContainer8 = document.querySelector('[data-option-con8]');
+                        const optionsList8 = document.querySelectorAll('[data-option-item8]');
+
+                        selectedOpt8.addEventListener("click", () => {
+                            optionsContainer8.classList.toggle("active");
+                        });
+
+                        optionsList8.forEach(option => {
+                            option.addEventListener("click", () => {
+                                selectedOpt8.innerHTML = option.querySelector("label").innerHTML;
+                                optionsContainer8.classList.remove("active");
+                            });
+                        });
+                    </script>
+
+                    <!-- * Current Job / Position -->
+                    <div class="input-wrapper">
+
+                        @if(isset($member['f_Emp_Status']))
+                            @if($member['f_Emp_Status'] == 'Employed' || $member['f_Emp_Status'] == '')
+                            <!-- * Current Job -->
+                            <span data-fdr-current-job>Current Job / Position</span>
+                            <input wire:model.defer="member.f_Job" type="text"  data-fdr-current-job>
+                            @endif
+                        @endif    
+
+                        @if(isset($member['f_Emp_Status']))
+                            @if($member['f_Emp_Status'] == 'Unemployed')
+                            <!-- * Previous Job -->
+                            <span data-fdr-previous-job>Previous Job / Position</span>
+                            <input wire:model.defer="member.f_Job" type="text" data-fdr-previous-job>
+                            @endif
+                        @endif
 
                     </div>
+
+                    <!-- * Years Of Service -->
+                    <div class="input-wrapper">
+                        <span>Years Of Service</span>
+                        <input wire:model.defer="member.f_YOS" type="text" id="yoService" name="yoService">
+                    </div>
+
+                    <!-- * Company Name -->
+                    <div class="input-wrapper">
+                        <span>Company Name</span>
+                        <input wire:model.defer="member.f_CompanyName" type="text" id="compName" name="compName">
+                    </div>
+
+                    <!-- * Empty Input Wrapper -->
+                    <div class="input-wrapper">
+                    </div>
+
                 </div>
 
+                <!-- * Rowspan 5: Number Of Dependants -->
+                <div class="rowspan">
 
-                <!-- * Current Job / Position -->
-                <div class="input-wrapper">
-
-                    <!-- * Current Job -->
-                    <span data-fdr-current-job>Current Job / Position</span>
-                    <input type="text" id="fdrCurrentJob" name="currentJob" data-fdr-current-job>
-
-                    <!-- * Previous Job -->
-                    <span data-fdr-previous-job>Previous Job / Position</span>
-                    <input type="text" id="fdrPreviousJob" name="previousJob" data-fdr-previous-job>
+                    <!-- * Number Of Dependants -->
+                    <div class="input-wrapper">
+                        <span>Number Of Dependants</span>
+                        <input wire:model.defer="member.f_NOD" type="number" id="numOfDependants" name="numOfDependants">
+                    </div>
 
                 </div>
 
-                <!-- * Years Of Service -->
-                <div class="input-wrapper">
-                    <span>Years Of Service</span>
-                    <input type="text" id="yoService" name="yoService">
+                <!-- * Rowspan 6: Empty Rowspan -->
+                <div class="rowspan">
+
                 </div>
 
-                <!-- * Company Name -->
-                <div class="input-wrapper">
-                    <span>Company Name</span>
-                    <input type="text" id="compName" name="compName">
+                <!-- * Rowspan 7: Subheader - Children(s) Information -->
+                <div class="rowspan">
+
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h3>Children(s) Information</h3>
+                    </div>
+
                 </div>
 
-                <!-- * Empty Input Wrapper -->
-                <div class="input-wrapper">
-                </div>
+                <!-- * Rowspan 8: First Name, Middle Name , Last Name, Age, Name Of School and Add/Subtract Button -->
+                @if(count($cntmemchild) > 0)    
+                    @foreach($cntmemchild as $cntchild)
+                    <div class="rowspan child" data-child-2>
 
-            </div>
+                        <!-- * First Name -->
+                        <div class="input-wrapper">
+                            <span>First Name</span>
+                            <input autocomplete="off" type="text">
+                        </div>
 
-            <!-- * Rowspan 5: Number Of Dependants -->
-            <div class="rowspan">
+                        <!-- * Middle Name -->
+                        <div class="input-wrapper">
+                            <span>Middle Name</span>
+                            <input autocomplete="off" type="text" >
+                        </div>
 
-                <!-- * Number Of Dependants -->
-                <div class="input-wrapper">
-                    <span>Number Of Dependants</span>
-                    <input type="number" id="numOfDependants" name="numOfDependants">
-                </div>
+                        <!-- * Last Name -->
+                        <div class="input-wrapper">
+                            <span>Last Name</span>
+                            <input autocomplete="off" type="text" >
+                        </div>
 
-            </div>
+                        <!-- * Age -->
+                        <div class="input-wrapper">
+                            <span>Age</span>
+                            <input autocomplete="off" type="number">
+                        </div>
 
-            <!-- * Rowspan 6: Empty Rowspan -->
-            <div class="rowspan">
+                        <!-- * Name Of School -->
+                        <div class="input-wrapper">
+                            <span>Name Of School</span>
+                            <input autocomplete="off" type="text">
+                        </div>
 
-            </div>
-
-            <!-- * Rowspan 7: Subheader - Children(s) Information -->
-            <div class="rowspan">
-
-                <!-- * Family Background Information -->
-                <div class="input-wrapper">
-                    <h3>Children(s) Information</h3>
-                </div>
-
-            </div>
-
-            <!-- * Rowspan 8: First Name, Middle Name , Last Name, Age, Name Of School and Add/Subtract Button -->
-            <div class="rowspan child" data-child-2>
-
-                <!-- * First Name -->
-                <div class="input-wrapper">
-                    <span>First Name</span>
-                    <input autocomplete="off" type="text" id="fName" name="fName">
-                </div>
-
-                <!-- * Middle Name -->
-                <div class="input-wrapper">
-                    <span>Middle Name</span>
-                    <input autocomplete="off" type="text" id="midName" name="midName">
-                </div>
-
-                <!-- * Last Name -->
-                <div class="input-wrapper">
-                    <span>Last Name</span>
-                    <input autocomplete="off" type="text" id="lName" name="lName">
-                </div>
-
-                <!-- * Age -->
-                <div class="input-wrapper">
-                    <span>Age</span>
-                    <input autocomplete="off" type="number" id="age" name="age">
-                </div>
-
-                <!-- * Name Of School -->
-                <div class="input-wrapper">
-                    <span>Name Of School</span>
-                    <input autocomplete="off" type="text" id="nameOfSchool" name="nameOfSchool">
-                </div>
-
-                <!-- * Add and Subtract Button  -->
-                <div class="input-wrapper">
-                    <button type="button" onclick="addChildSingle()">+</button>
-                    <button type="button" onclick="subChildSingle()">-</button>
-                </div>
-
+                        <!-- * Add and Subtract Button  -->
+                        <div class="input-wrapper">
+                            @if($cntchild == 1)
+                                <button type="button" wire:click="addChild">+</button>
+                            @else
+                                <button type="button" wire:click="subChild({{ $cntchild }})">-</button>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                @endif
 
             </div>
 
         </div>
-
-    </div>
-
+    @endif
+@endif
     <!-- * Imported from New Member Application -->
     <!-- * Container 5: Business Information -->
+    @if(isset($member['bO_Status']))
+    @if($member['bO_Status'] == 1)
     <div class="nm-container-5" data-business-form>
 
         <!-- * Small Container -->
@@ -1154,19 +1234,19 @@
                 <!-- * Business Name -->
                 <div class="input-wrapper">
                     <span>Business Name</span>
-                    <input type="text" id="busName" name="busName">
+                    <input wire:model.defer="membusinfo.businessName" type="text" >
                 </div>
 
                 <!-- * Business Type -->
                 <div class="input-wrapper">
                     <span>Business Type</span>
-                    <input type="text" id="busType" name="busType">
+                    <input wire:model.defer="membusinfo.businessType" type="text"  >
                 </div>
 
                 <!-- * Business Address -->
                 <div class="input-wrapper">
                     <span>Business Address</span>
-                    <input type="text" id="busAddr" name="busAddr">
+                    <input wire:model.defer="membusinfo.businessAddress" type="text">
                 </div>
 
             </div>
@@ -1181,13 +1261,13 @@
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
                             <span>Rented</span>
-                            <input autocomplete="off" type="radio" name="radio" value="rented" id="rented">
+                            <input wire:model.defer="membusinfo.b_status" autocomplete="off" type="radio" name="mem_b_status" value="rented">
                         </div>
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
                             <span>Owned</span>
-                            <input autocomplete="off" type="radio" name="radio" value="owned" id="owned">
+                            <input wire:model.defer="membusinfo.b_status" autocomplete="off" type="radio" name="mem_b_status" value="owned">
                         </div>
 
                     </div>
@@ -1197,31 +1277,31 @@
                 <!-- * Years Of Business -->
                 <div class="input-wrapper">
                     <span>Years Of Business</span>
-                    <input type="text" id="yearsOfBus" name="yearsOfBus">
+                    <input  wire:model.defer="membusinfo.yob" type="text">
                 </div>
 
                 <!-- * Number Of Employees -->
                 <div class="input-wrapper">
                     <span>Number Of Employees</span>
-                    <input type="number" id="numOfEmploy" name="numOfEmploy">
+                    <input wire:model.defer="membusinfo.noe" type="number">
                 </div>
 
                 <!-- * Salary / Day -->
                 <div class="input-wrapper">
                     <span>Salary / Day</span>
-                    <input type="text" id="salDay" name="salDay">
+                    <input wire:model.defer="membusinfo.salary" type="text">
                 </div>
 
                 <!-- * Value Of Stocks -->
                 <div class="input-wrapper">
                     <span>Value Of Stocks</span>
-                    <input type="number" id="valOfStocks" name="valOfStocks">
+                    <input wire:model.defer="membusinfo.vos" type="number">
                 </div>
 
                 <!-- * Amount Of Sales / Day -->
                 <div class="input-wrapper">
                     <span>Amount Of Sales / Day</span>
-                    <input type="text" id="amtSalDay" name="amtSalDay">
+                    <input wire:model.defer="membusinfo.aos" type="text">
                 </div>
 
             </div>
@@ -1233,10 +1313,10 @@
                 <div class="btn-wrapper">
 
                     <!-- * Add Business -->
-                    <button>Add Business</button>
+                    <button wire:click="addBusinessInfo" type="button">Add Business</button>
 
                     <!-- * Attach Files -->
-                    <button>Attach Files</button>
+                    <button type="button">Attach Files</button>
 
                 </div>
 
@@ -1253,41 +1333,23 @@
                         <th>Years of Business</th>
                         <th>Action</th>
                     </tr>
-                    <tr>
-                        <td>Baskin'</td>
-                        <td>Sole Proprietorship</td>
-                        <td>Germany</td>
-                        <td>2</td>
-
-                        <!-- * Table Edit and Delete Button -->
-                        <td class="td-btns">
-
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-edit">Edit</button>
-                                <button class="a-btn-delete">Delete</button>
-                            </div>
-
-                        </td>
-
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-
-                        <!-- * Table Edit and Delete Button -->
-                        <td class="td-btns">
-
-                            <!-- <div class="td-btn-wrapper">
-                                <button class="a-btn-edit">Edit</button>
-                                <button class="a-btn-delete">Delete</button>
-                            </div> -->
-
-                        </td>
-
-                    </tr>
-
+                    @if(count($businfo) > 0)
+                        @foreach($businfo as $key => $value)
+                            <tr>
+                                <td>{{ $value['business_name'] }}</td>
+                                <td>{{ $value['business_type'] }}</td>
+                                <td>{{ $value['business_address'] }}</td>
+                                <td>{{ $value['year_of_business'] }}</td>
+                                <!-- * Table Edit and Delete Button -->
+                                <td class="td-btns">
+                                    <div class="td-btn-wrapper">
+                                        <button class="a-btn-edit">Edit</button>
+                                        <button class="a-btn-delete">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>     
+                        @endforeach
+                    @endif              
                 </table>
 
 
@@ -1295,10 +1357,8 @@
 
             <!-- * Rowspan 6: Pagination -->
             <div class="rowspan">
-
                 <!-- * Pagination Container -->
                 <div class="pagination-container">
-
                     <!-- * Pagination Links -->
                     <a href="#"><img src="../res/assets/icons/caret-left.svg" alt="caret-left"></a>
                     <a href="#">1</a>
@@ -1307,15 +1367,14 @@
                     <a href="#">4</a>
                     <a href="#">5</a>
                     <a href="#"><img src="../res/assets/icons/caret-right.svg" alt="caret-right"></a>
-
                 </div>
-
             </div>
 
         </div>
 
     </div>
-
+    @endif
+    @endif                    
     <!-- * Container 6: (Wrapper): Assets and Properties, Appliances and Bank Accounts -->
     <div class="na-container-wrapper-3">
 
@@ -1351,13 +1410,13 @@
 
                                 <!-- * Yes -->
                                 <div class="radio-btn-wrapper">
-                                    <input autocomplete="off" type="radio" name="formToggle" value="formToggleYes" id="vehicleFormToggleYes">
+                                    <input wire:model="hasvehicle" name="hasvehicle" autocomplete="off" type="radio"  value="1">
                                     <span>Yes</span>
                                 </div>
 
                                 <!-- * No -->
                                 <div class="radio-btn-wrapper">
-                                    <input autocomplete="off" type="radio" name="formToggle" value="formToggleNo" id="vehicleFormToggleNo">
+                                    <input wire:model="hasvehicle" name="hasvehicle" autocomplete="off" type="radio"   value="0">
                                     <span>No</span>
                                 </div>
 
@@ -1371,21 +1430,27 @@
                             <div class="input-wrapper" data-vehicle >
                                 <span>If yes please specify,</span>
 
-                                <div class="rowspan-2 child">
+                                @if(count($vehicle) > 0)
+                                    @foreach($vehicle as $key => $value)
+                                    <div class="rowspan-2 child" style="{{ isset($hasvehicle) ? ($hasvehicle == 1 ? '' : 'pointer-events: none; opacity: 0.4;') : 'pointer-events: none; opacity: 0.4;' }}">
+                                        <!-- * Vehicle Input Field -->
+                                        <div class="input-wrapper">
+                                            <input wire:model="inpvehicle.vehicle{{ $key }}" autocomplete="off" type="text">
+                                        </div>
+                                        <!-- dito -->
+                                        <!-- * Add and Subtract Button  -->
+                                        <div class="input-wrapper">
+                                            @if($key == 1)
+                                            <button type="button" wire:click="addVehicle">+</button>
+                                            @else
+                                            <button type="button" wire:click="subVehicle({{ $key }})">-</button>
+                                            @endif
+                                        </div>
 
-
-                                    <!-- * Vehicle Input Field -->
-                                    <div class="input-wrapper">
-                                        <input autocomplete="off" type="text" id="ownVehicle" name="ownVehicle" value="">
                                     </div>
-
-                                    <!-- * Add and Subtract Button  -->
-                                    <div class="input-wrapper">
-                                        <button type="button" onclick="addVehicle()">+</button>
-                                        <button type="button" onclick="subVehicle()">-</button>
-                                    </div>
-
-                                </div>
+                                    @endforeach
+                                @endif           
+                                                               
                             </div>
                         </div>
 
@@ -1409,13 +1474,13 @@
 
                                 <!-- * Yes -->
                                 <div class="radio-btn-wrapper">
-                                    <input autocomplete="off" type="radio" name="formToggle" value="formToggleYes" id="propertyFormToggleYes">
+                                    <input wire:model="hasproperties" autocomplete="off" type="radio" name="hasproperties" value="1" >
                                     <span>Yes</span>
                                 </div>
 
                                 <!-- * No -->
                                 <div class="radio-btn-wrapper">
-                                    <input autocomplete="off" type="radio" name="formToggle" value="formToggleNo" id="propertyFormToggleNo">
+                                    <input wire:model="hasproperties" autocomplete="off" type="radio" name="hasproperties" value="0">
                                     <span>No</span>
                                 </div>
 
@@ -1429,20 +1494,27 @@
 
 
                                 <!-- * Rowspan 5: Property Input Field -->
-                                <div class="rowspan-2 child">
+                                @if(count($properties) > 0)
+                                    @foreach($properties as $key => $value)
+                                        <div class="rowspan-2 child"  style="{{ isset($hasproperties) ? ($hasproperties == 1 ? '' : 'pointer-events: none; opacity: 0.4;') : 'pointer-events: none; opacity: 0.4;' }}">
 
-                                    <!-- * Vehicle Input Field -->
-                                    <div class="input-wrapper">
-                                        <input autocomplete="off" type="text" id="nameOfSchool" name="nameOfSchool">
-                                    </div>
+                                            <!-- * Vehicle Input Field -->
+                                            <div class="input-wrapper">
+                                                <input wire:model="inpproperties.property{{ $key }}"  autocomplete="off" type="text">
+                                            </div>
 
-                                    <!-- * Add and Subtract Button  -->
-                                    <div class="input-wrapper">
-                                        <button type="button" onclick="addProperty()">+</button>
-                                        <button type="button" onclick="subProperty()">-</button>
-                                    </div>
+                                            <!-- * Add and Subtract Button  -->
+                                            <div class="input-wrapper">
+                                            @if($key == 1)
+                                                <button type="button" wire:click="addProperty">+</button>
+                                            @else
+                                                <button type="button" wire:click="subProperty({{ $key }})">-</button>
+                                            @endif
+                                            </div>
 
-                                </div>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
 
@@ -1474,28 +1546,32 @@
 
                     <!-- * Rowspan 2: Appliances and Brand / Model -->
                     <div class="box-wrap-2" data-appliances-container>
-                        <div class="rowspan child" data-appliances>
+                        @if(count($appliances) > 0)
+                            @foreach($appliances as $key => $value)
+                            <div class="rowspan child" data-appliances>
+                                <!-- * Appliances -->
+                                <div class="input-wrapper">
+                                    <span>Appliances</span>
+                                    <input wire:model="inpappliances.applaince{{ $key }}" autocomplete="off" type="text">
+                                </div>
 
-                            <!-- * Appliances -->
-                            <div class="input-wrapper">
-                                <span>Appliances</span>
-                                <input autocomplete="off" type="number" id="appliances" name="appliances">
+                                <!-- * Brand / Model -->
+                                <div class="input-wrapper">
+                                    <span>Brand / Model</span>
+                                    <input wire:model="inpappliances.brand{{ $key }}" autocomplete="off" type="text">
+                                </div>
+
+                                <!-- * Add and Subtract Button  -->
+                                <div class="input-wrapper">
+                                    @if($key == 1)
+                                    <button type="button" wire:click="addAppliances">+</button>
+                                    @else
+                                    <button type="button" wire:click="subAppliances({{ $key }})">-</button>
+                                    @endif
+                                </div>
                             </div>
-
-                            <!-- * Brand / Model -->
-                            <div class="input-wrapper">
-                                <span>Brand / Model</span>
-                                <input autocomplete="off" type="text" id="brandModel" name="brandModel">
-                            </div>
-
-                            <!-- * Add and Subtract Button  -->
-                            <div class="input-wrapper">
-                                <button type="button" onclick="addAppliances()">+</button>
-                                <button type="button" onclick="subAppliances()">-</button>
-                            </div>
-
-
-                        </div>
+                            @endforeach
+                        @endif
                     </div>
 
                 </div>
@@ -1520,28 +1596,35 @@
 
                     <!-- * Rowspan 4: Bank account and Address -->
                     <div class="box-wrap-2" data-bank-container>
-                        <div class="rowspan child" data-bank>
+                        @if(count($bank) > 0)
+                                @foreach($bank as $key => $value)
+                                <div class="rowspan child" data-bank>
 
-                            <!-- * Bank account -->
-                            <div class="input-wrapper">
-                                <span>Bank account</span>
-                                <input autocomplete="off" type="bankAcc" id="bankAcc" name="appliances">
-                            </div>
+                                    <!-- * Bank account -->
+                                    <div class="input-wrapper">
+                                        <span>Bank account</span>
+                                        <input wire:model="inpbank.account{{ $key }}" autocomplete="off" type="bankAcc">
+                                    </div>
 
-                            <!-- * Address -->
-                            <div class="input-wrapper">
-                                <span>Address</span>
-                                <input autocomplete="off" type="bankAddr" id="bankAddr" name="brandModel">
-                            </div>
+                                    <!-- * Address -->
+                                    <div class="input-wrapper">
+                                        <span>Address</span>
+                                        <input wire:model="inpbank.address{{ $key }}" autocomplete="off" type="bankAddr">
+                                    </div>
 
-                            <!-- * Add and Subtract Button  -->
-                            <div class="input-wrapper">
-                                <button type="button" onclick="addBank()">+</button>
-                                <button type="button" onclick="subBank()">-</button>
-                            </div>
+                                    <!-- * Add and Subtract Button  -->
+                                    <div class="input-wrapper">
+                                        @if($key == 1)
+                                        <button type="button" wire:click="addBank">+</button>
+                                        @else
+                                        <button type="button" wire:click="subBank({{ $key }})">-</button>
+                                        @endif
+                                    </div>
 
 
-                        </div>
+                                </div>
+                                @endforeach
+                        @endif        
                     </div>
 
                 </div>
@@ -1657,7 +1740,7 @@
 
                                     <div class="option"  data-option-item4>
 
-                                        <input type="radio" class="radio" name="category" value="Male" />
+                                        <input type="radio" class="radio" value="Male" />
                                         <label for="Male">
                                             <h4>Male</h4>
                                         </label>
@@ -1666,7 +1749,7 @@
 
                                     <div class="option"  data-option-item4>
 
-                                        <input type="radio" class="radio" name="category" value="Female"/>
+                                        <input type="radio" class="radio" value="Female"/>
                                         <label for="Female">
                                             <h4>Female</h4>
                                         </label>
@@ -1708,7 +1791,7 @@
 
                                     <div class="option" data-option-item5>
 
-                                        <input type="radio" class="radio" name="category" value="Widow" />
+                                        <input type="radio" class="radio" value="Widow" />
                                         <label for="Widow">
                                             <h4>Widow</h4>
                                         </label>
@@ -1717,7 +1800,7 @@
 
                                     <div class="option" data-option-item5>
 
-                                        <input type="radio" class="radio" name="category" value="Married"/>
+                                        <input type="radio" class="radio" value="Married"/>
                                         <label for="Married">
                                             <h4>Married</h4>
                                         </label>
@@ -1726,7 +1809,7 @@
 
                                     <div class="option" data-option-item5>
 
-                                        <input type="radio" class="radio" name="category" value="Single"/>
+                                        <input type="radio" class="radio" value="Single"/>
                                         <label for="Single">
                                             <h4>Single</h4>
                                         </label>
@@ -1921,7 +2004,7 @@
 
                             <div class="option" data-option-item6>
 
-                                <input type="radio" class="radio" name="category" value="Employed" />
+                                <input type="radio" class="radio" value="Employed" />
                                 <label for="Employed">
                                     <h4>Employed</h4>
                                 </label>
@@ -1930,7 +2013,7 @@
 
                             <div class="option" data-option-item6>
 
-                                <input type="radio" class="radio" name="category" value="Unemployed"/>
+                                <input type="radio" class="radio" value="Unemployed"/>
                                 <label for="Unemployed">
                                     <h4>Unemployed</h4>
                                 </label>
@@ -2289,106 +2372,53 @@
 
 
         // * Co-Borrower Job Information
-        const cbPreviousJob = document.querySelectorAll('[data-cb-previous-job]')
-        const cbCurrentJob = document.querySelectorAll('[data-cb-current-job]')
+        // const cbPreviousJob = document.querySelectorAll('[data-cb-previous-job]')
+        // const cbCurrentJob = document.querySelectorAll('[data-cb-current-job]')
 
 
-        for (const cbPreviousJobItems of cbPreviousJob) {
-            cbPreviousJobItems.style.display = 'none'
+        // for (const cbPreviousJobItems of cbPreviousJob) {
+        //     cbPreviousJobItems.style.display = 'none'
 
-            for (const cbCurrentJobItems of cbCurrentJob) {
+        //     for (const cbCurrentJobItems of cbCurrentJob) {
 
-                optionsContainer6.firstElementChild.addEventListener('click', () => {
-                    cbPreviousJobItems.style.display = 'none'
-                    cbCurrentJobItems.style.display = 'block'
-                })
+        //         optionsContainer6.firstElementChild.addEventListener('click', () => {
+        //             cbPreviousJobItems.style.display = 'none'
+        //             cbCurrentJobItems.style.display = 'block'
+        //         })
 
-                optionsContainer6.lastElementChild.addEventListener('click', () => {
-                    cbPreviousJobItems.style.display = 'block'
-                    cbCurrentJobItems.style.display = 'none'
-                })
+        //         optionsContainer6.lastElementChild.addEventListener('click', () => {
+        //             cbPreviousJobItems.style.display = 'block'
+        //             cbCurrentJobItems.style.display = 'none'
+        //         })
 
-            }
-        }
+        //     }
+        // }
+        
 
 
-        // ** Select Dropdown 7
-        const selectedOpt7 = document.querySelector('[data-option-select7]');
-        const optionsContainer7 = document.querySelector('[data-option-con7]');
-        const optionsList7 = document.querySelectorAll('[data-option-item7]');
-
-        selectedOpt7.addEventListener("click", () => {
-            optionsContainer7.classList.toggle("active");
-        });
-
-        optionsList7.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt7.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer7.classList.remove("active");
-            });
-        });
+        // ** Select Dropdown 8       
 
         // * Spouse Job Information
-        const spousePreviousJob = document.querySelectorAll('[data-spouse-previous-job]')
-        const spouseCurrentJob = document.querySelectorAll('[data-spouse-current-job]')
+        // const fdrPreviousJob = document.querySelectorAll('[data-fdr-previous-job]')
+        // const fdrCurrentJob = document.querySelectorAll('[data-fdr-current-job]')
 
-        for (const spousePreviousJobItems of spousePreviousJob) {
-            spousePreviousJobItems.style.display = 'none'
+        // for (const fdrPreviousJobItems of fdrPreviousJob) {
+        //     fdrPreviousJobItems.style.display = 'none'
 
-            for (const spouseCurrentJobItems of spouseCurrentJob) {
+        //     for (const fdrCurrentJobItems of fdrCurrentJob) {
 
-                optionsContainer7.firstElementChild.addEventListener('click', () => {
-                    spousePreviousJobItems.style.display = 'none'
-                    spouseCurrentJobItems.style.display = 'block'
-                })
+        //         optionsContainer8.firstElementChild.addEventListener('click', () => {
+        //             fdrPreviousJobItems.style.display = 'none'
+        //             fdrCurrentJobItems.style.display = 'block'
+        //         })
 
-                optionsContainer7.lastElementChild.addEventListener('click', () => {
-                    spousePreviousJobItems.style.display = 'block'
-                    spouseCurrentJobItems.style.display = 'none'
-                })
+        //         optionsContainer8.lastElementChild.addEventListener('click', () => {
+        //             fdrPreviousJobItems.style.display = 'block'
+        //             fdrCurrentJobItems.style.display = 'none'
+        //         })
 
-            }
-        }
-
-
-        // ** Select Dropdown 8
-        const selectedOpt8 = document.querySelector('[data-option-select8]');
-        const optionsContainer8 = document.querySelector('[data-option-con8]');
-        const optionsList8 = document.querySelectorAll('[data-option-item8]');
-
-        selectedOpt8.addEventListener("click", () => {
-            optionsContainer8.classList.toggle("active");
-        });
-
-        optionsList8.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt8.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer8.classList.remove("active");
-            });
-        });
-
-
-        // * Spouse Job Information
-        const fdrPreviousJob = document.querySelectorAll('[data-fdr-previous-job]')
-        const fdrCurrentJob = document.querySelectorAll('[data-fdr-current-job]')
-
-        for (const fdrPreviousJobItems of fdrPreviousJob) {
-            fdrPreviousJobItems.style.display = 'none'
-
-            for (const fdrCurrentJobItems of fdrCurrentJob) {
-
-                optionsContainer8.firstElementChild.addEventListener('click', () => {
-                    fdrPreviousJobItems.style.display = 'none'
-                    fdrCurrentJobItems.style.display = 'block'
-                })
-
-                optionsContainer8.lastElementChild.addEventListener('click', () => {
-                    fdrPreviousJobItems.style.display = 'block'
-                    fdrCurrentJobItems.style.display = 'none'
-                })
-
-            }
-        }
+        //     }
+        // }
 
 
         // ****** Child Form Toggle ***** //
@@ -2504,75 +2534,75 @@
 
 
         // * Business Information Form Toggle
-        const yesToggle = document.getElementById('formToggleYes')
-        const noToggle = document.getElementById('formToggleNo')
+        // const yesToggle = document.getElementById('formToggleYes')
+        // const noToggle = document.getElementById('formToggleNo')
 
-        yesToggle.addEventListener('click', _ => {
+        // yesToggle.addEventListener('click', _ => {
 
-            const businessForm = document.querySelector('[data-business-form]')
+        //     const businessForm = document.querySelector('[data-business-form]')
 
-            if (yesToggle.checked) {
-                businessForm.style.display = 'block'
-            }
+        //     if (yesToggle.checked) {
+        //         businessForm.style.display = 'block'
+        //     }
 
-            noToggle.addEventListener('click', _ => {
-                if (noToggle.checked) {
-                    businessForm.style.display = 'none'
-                }
-            })
+        //     noToggle.addEventListener('click', _ => {
+        //         if (noToggle.checked) {
+        //             businessForm.style.display = 'none'
+        //         }
+        //     })
 
-        })
+        // })
 
         // ***** Assets and Properties ***** //
-        const vehicleFormToggleYes = document.getElementById('vehicleFormToggleYes')
-        const vehicleFormToggleNo = document.getElementById('vehicleFormToggleNo')
-        const vehicleContainer = document.querySelector('[data-vehicle-container]')
+        // const vehicleFormToggleYes = document.getElementById('vehicleFormToggleYes')
+        // const vehicleFormToggleNo = document.getElementById('vehicleFormToggleNo')
+        // const vehicleContainer = document.querySelector('[data-vehicle-container]')
         
-        vehicleContainer.style.opacity = '.4'
-        vehicleContainer.style.pointerEvents = 'none'
+        // vehicleContainer.style.opacity = '.4'
+        // vehicleContainer.style.pointerEvents = 'none'
 
-        vehicleFormToggleYes.addEventListener('change', () => {
+        // vehicleFormToggleYes.addEventListener('change', () => {
 
-            if (vehicleFormToggleYes) {
-                vehicleContainer.style.opacity = '1'
-                vehicleContainer.style.pointerEvents = 'auto'
-            } 
+        //     if (vehicleFormToggleYes) {
+        //         vehicleContainer.style.opacity = '1'
+        //         vehicleContainer.style.pointerEvents = 'auto'
+        //     } 
 
-            vehicleFormToggleNo.addEventListener('change', () => {
-                const vehicle = document.getElementById('ownVehicle')
-                if (vehicleFormToggleNo) {
-                    vehicleContainer.style.opacity = '.4'
-                    vehicleContainer.style.pointerEvents = 'none'
-                    vehicle.value = ''
-                } 
-            })
+        //     vehicleFormToggleNo.addEventListener('change', () => {
+        //         const vehicle = document.getElementById('ownVehicle')
+        //         if (vehicleFormToggleNo) {
+        //             vehicleContainer.style.opacity = '.4'
+        //             vehicleContainer.style.pointerEvents = 'none'
+        //             vehicle.value = ''
+        //         } 
+        //     })
 
-        })
+        // })
 
-        const propertyFormToggleYes = document.getElementById('propertyFormToggleYes')
-        const propertyFormToggleNo = document.getElementById('propertyFormToggleNo')
-        const propertyContainer = document.querySelector('[data-property-container]')
+        // const propertyFormToggleYes = document.getElementById('propertyFormToggleYes')
+        // const propertyFormToggleNo = document.getElementById('propertyFormToggleNo')
+        // const propertyContainer = document.querySelector('[data-property-container]')
         
-        propertyContainer.style.opacity = '.4'
-        propertyContainer.style.pointerEvents = 'none'
+        // propertyContainer.style.opacity = '.4'
+        // propertyContainer.style.pointerEvents = 'none'
 
-        propertyFormToggleYes.addEventListener('change', () => {
+        // propertyFormToggleYes.addEventListener('change', () => {
 
-            if (propertyFormToggleYes) {
-                propertyContainer.style.opacity = '1'
-                propertyContainer.style.pointerEvents = 'auto'
-            } 
+        //     if (propertyFormToggleYes) {
+        //         propertyContainer.style.opacity = '1'
+        //         propertyContainer.style.pointerEvents = 'auto'
+        //     } 
 
-            propertyFormToggleNo.addEventListener('change', () => {
-                const property = document.getElementById('ownProperty')
-                if (propertyFormToggleNo) {
-                    propertyContainer.style.opacity = '.4'
-                    propertyContainer.style.pointerEvents = 'none'
-                    property.value = ''
-                } 
-            })
+        //     propertyFormToggleNo.addEventListener('change', () => {
+        //         const property = document.getElementById('ownProperty')
+        //         if (propertyFormToggleNo) {
+        //             propertyContainer.style.opacity = '.4'
+        //             propertyContainer.style.pointerEvents = 'none'
+        //             property.value = ''
+        //         } 
+        //     })
 
-        })
+        // })
 
 
         // ***** Add and Subtract Vehicle ***** //
@@ -2620,134 +2650,6 @@
 
         // ***** Add and Subtract Property ***** //
 
-        // * Add Property
-        function addProperty() {
-
-            const propertyForm = document.querySelector('[data-property]')
-
-            propertyForm.setAttribute('id', 'property-1')
-
-            // * Clone the original element
-            const clonedChild = propertyForm.cloneNode(true)
-
-            // * Increment the clone count and modify the ID
-            cloneCount++
-            const newId = `property-${cloneCount}`
-            clonedChild.id = newId
-
-            // * Hide the increment button
-            clonedChild.lastElementChild.children[1].children[0].style.visibility = 'hidden'
-
-
-            // * Append the cloned element to the target container
-            propertyContainer.appendChild(clonedChild)
-
-        }
-
-        // * Subtract Property
-        function subProperty() {
-
-            const propertyContainer = document.querySelector('[data-property-container]')
-
-            // * Reset cloneCount when decrement
-            cloneCount = 1
-
-            // * Remove the the next sibling of property-1
-            if (propertyContainer.firstElementChild.nextElementSibling !== null) {
-                propertyContainer.lastElementChild.remove()
-            }
-
-        }
-
-        // ***** END ---- Add and Subtract Property ***** //
-
-
-        // ***** Add and Subtract Appliances ***** //
-
-        // * Add Appliances
-        function addAppliances() {
-
-            const appliancesForm = document.querySelector('[data-appliances]')
-            const appliancesContainer = document.querySelector('[data-appliances-container]')
-
-            appliancesForm.setAttribute('id', 'property-1')
-
-            // * Clone the original element
-            const clonedChild = appliancesForm.cloneNode(true)
-
-            // * Increment the clone count and modify the ID
-            cloneCount++
-            const newId = `property-${cloneCount}`
-            clonedChild.id = newId
-
-            // * Hide the increment button
-            clonedChild.lastElementChild.children[0].style.visibility = 'hidden'
-
-
-            // * Append the cloned element to the target container
-            appliancesContainer.appendChild(clonedChild)
-
-        }
-
-        // * Subtract Appliances
-        function subAppliances() {
-
-            const appliancesContainer = document.querySelector('[data-appliances-container]')
-
-            // * Reset cloneCount when decrement
-            cloneCount = 1
-
-            // * Remove the the next sibling of appliance-1
-            if (appliancesContainer.firstElementChild.nextElementSibling !== null) {
-                appliancesContainer.lastElementChild.remove()
-            }
-
-        }
-
-        // ***** END ---- Add and Subtract Appliances ***** //
-
-
-        // ***** Add and Subtract Bank ***** //
-
-        // * Add Bank
-        function addBank() {
-
-            const bankForm = document.querySelector('[data-bank]')
-            const bankContainer = document.querySelector('[data-bank-container]')
-
-            bankForm.setAttribute('id', 'bank-1')
-
-            // * Clone the original element
-            const clonedChild = bankForm.cloneNode(true)
-
-            // * Increment the clone count and modify the ID
-            cloneCount++
-            const newId = `bank-${cloneCount}`
-            clonedChild.id = newId
-
-            // * Hide the increment button
-            clonedChild.lastElementChild.children[0].style.visibility = 'hidden'
-
-
-            // * Append the cloned element to the target container
-            bankContainer.appendChild(clonedChild)
-
-        }
-
-        // * Subtract Bank
-        function subBank() {
-
-            const bankContainer = document.querySelector('[data-bank-container]')
-
-            // * Reset cloneCount when decrement
-            cloneCount = 1
-
-            // * Remove the the next sibling of appliance-1
-            if (bankContainer.firstElementChild.nextElementSibling !== null) {
-                bankContainer.lastElementChild.remove()
-            }
-
-
-        }
+        
     </script>
 </div>

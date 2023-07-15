@@ -17,11 +17,11 @@
         <div class="login-container">
 
             <!-- * Login Form Wrapper -->
-            <form class="login-wrapper" action="dashboard.html">
-
+            <form class="login-wrapper" method="POST" action="{{ route('login') }}">
+                @csrf
                 <!-- * Logo -->
                 <div class="logo-container">
-                    <img src="../res/assets/icons/logo.svg" alt="GOVL logo" class="avatar" />
+                    <img src="{{ URL::to('/') }}/assets/icons/logo.svg" alt="GOVL logo" class="avatar" />
                 </div>
 
                 <!-- * Form Container -->

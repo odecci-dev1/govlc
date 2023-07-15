@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RegisterUserController;
+use App\Http\Controllers\LoginController;
 use App\Http\Livewire\Users\UserRegister;
 use App\Http\Livewire\Transactions\Application\CreateApplication;
 use App\Http\Livewire\Transactions\Application\CreditInvestigationApplication;
@@ -20,7 +20,8 @@ use App\Http\Livewire\Transactions\Application\ApprovalApplication;
 */
 
 Route::get('/', function () {
-    return redirect()->intended(route('dashboard'));
+    // return redirect()->intended(route('dashboard'));
+    return view('login');
 });
 
 Route::get('/dashboard', function(){
@@ -33,6 +34,7 @@ Route::get('/posttest', [DashboardController::class, 'posttest']);
 
 //user registration
 Route::get('/register', UserRegister::class)->name('user.register');
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 //user registration
 
 //transactions
