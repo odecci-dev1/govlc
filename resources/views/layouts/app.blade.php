@@ -166,12 +166,22 @@
                     <!-- * Submenu -->
                     <ul class="sub-menu">
 
-                        <a href="#" id="data-open-new-application-modal" data-nav-link>
+                        <a href="#" id="data-open-new-application-modals" data-nav-link>
 
                             <li>
                                 <!-- * New Application -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/new-application.svg" alt="new-member" />
                                 <span>New Application</span>
+                            </li>
+
+                        </a>
+
+                        <a href="{{ URL::to('/') }}/tranactions/application/list" data-nav-link>
+
+                            <li>
+                                <!-- * New Application -->
+                                <img src="{{ URL::to('/') }}/assets/icons/sub-menu/new-application.svg" alt="new-member" />
+                                <span>Applications</span>
                             </li>
 
                         </a>
@@ -300,8 +310,7 @@
         </div>
     </div>
 
-    <!-- modals -->
-    <livewire:modals.new-application-modal  :type="''" :mid="isset($id) ? $id : ''"/> 
+    <!-- modals -->    
     <!-- modals -->
     
     <!-- * Main Dashboard -->

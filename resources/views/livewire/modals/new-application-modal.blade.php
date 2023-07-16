@@ -10,25 +10,54 @@
 
         <!-- * Choose Type of Loan -->
         <div class="rowspan">
-            <h3>Choose Type of Loan</h3>
+                    <h3>Choose Type of Loan</h3>
 
-            <!-- * Type Of Loan Dropdown Menu -->
-            <div class="loan-type-dropdown" data-bor-dropdown>
+                    <!-- * Type Of Loan Dropdown Menu -->
+                    <div class="loan-type-dropdown">
 
-                <!-- * Gender -->
-                <div class="input-wrapper">
-                    <div class="select-box">
-                        <select name="typeOfLoan" id="typeOfLoan">
-                            <option disabled selected value></option>
-                            <option value="Individual Loan">Individual Loan</option>
-                            <option value="Group Loan">Group Loan</option>
-                            <option value="Sample Loan">Sample Loan</option>
-                        </select>
+                        <!-- * Type Of Loan -->
+                        <div class="input-wrapper">
+
+                            <div class="select-box">
+
+                                <div class="options-container" data-type-opt-con>
+
+                                    <div class="option" data-type-loan-opt data-individual-loan-link>
+
+                                        <input type="radio" class="radio" name="category" />
+                                        <label for="Individual Loan">
+                                            <h4>Individual Loan</h4>
+                                        </label>
+
+                                    </div>
+
+                                    <div class="option" data-type-loan-opt data-group-loan-link>
+
+                                        <input type="radio" class="radio" name="category" />
+                                        <label for="Group Loan">
+                                            <h4>Group Loan</h4>
+                                        </label>
+
+                                    </div>
+
+                                    <div class="option" data-type-loan-opt>
+
+                                        <input type="radio" class="radio" name="category" />
+                                        <label for="Sample Loan">
+                                            <h4>Sample Loan</h4>
+                                        </label>
+
+                                    </div>
+
+                                </div>
+                                
+                                <div class="selected" data-type-loan-select>
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
-                </div>
-
-            </div>
-
         </div>
 
         <!-- * Search for existing member -->

@@ -49,7 +49,7 @@
                     <!-- * Header Wrapper -->
                     <div class="header-wrapper">
                         <h2>Borrower Information</h2>
-                        <button type="button" id="data-open-loan-details">View loan & payment history</button>
+                        <button type="button" class="viewLoanDetailsButton" id="data-open-loan-details">View loan & payment history</button>
                     </div>
 
                     <!-- * Buttons -->
@@ -73,28 +73,28 @@
                     <!-- * First Name -->
                     <div class="input-wrapper">
                         <span>First Name</span>
-                        <input wire:model.defer="member.fname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.fname" autocomplete="off" type="text">
                         @error('member.fname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
-                        <input wire:model.defer="member.mname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.mname" autocomplete="off" type="text">
                         @error('member.mname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
-                        <input wire:model.defer="member.lname"  autocomplete="off" type="text">
+                        <input wire:model.lazy="member.lname"  autocomplete="off" type="text">
                         @error('member.lname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
-                        <input wire:model.defer="member.suffix" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.suffix" autocomplete="off" type="text">
                     </div>
 
                 </div>
@@ -111,7 +111,7 @@
 
                                 <div class="option"  data-option-item1>
 
-                                    <input type="radio"  wire:model.defer="member.gender" class="radio" id="Male" value="Male" />
+                                    <input type="radio"  wire:model.lazy="member.gender" class="radio" id="Male" value="Male" />
                                     <label for="Male">
                                         <h4>Male</h4>
                                     </label>
@@ -120,7 +120,7 @@
 
                                 <div class="option"  data-option-item1>
 
-                                    <input type="radio" wire:model.defer="member.gender" class="radio" id="Female" value="Female"/>
+                                    <input type="radio" wire:model.lazy="member.gender" class="radio" id="Female" value="Female"/>
                                     <label for="Female">
                                         <h4>Female</h4>
                                     </label>
@@ -140,21 +140,21 @@
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.defer="member.dob" autocomplete="off" type="date"  >
+                        <input wire:model.lazy="member.dob" autocomplete="off" type="date"  >
                         @error('member.dob') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.defer="member.age" autocomplete="off" type="number"  >
+                        <input wire:model.lazy="member.age" autocomplete="off" type="number"  >
                         @error('member.age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Place Of Birth -->
                     <div class="input-wrapper">
                         <span>Place Of Birth</span>
-                        <input wire:model.defer="member.pob" autocomplete="off" type="text"  >
+                        <input wire:model.lazy="member.pob" autocomplete="off" type="text"  >
                         @error('member.pob') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -211,7 +211,7 @@
                     <div class="input-wrapper">
                         <div class="input-wrapper">
                             <span>Contact Number</span>
-                            <input wire:model.defer="member.cno" autocomplete="off" type="number">
+                            <input wire:model.lazy="member.cno" autocomplete="off" type="number">
                             @error('member.cno') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -220,7 +220,7 @@
                     <div class="input-wrapper">
                         <div class="input-wrapper">
                             <span>Email Address</span>
-                            <input wire:model.defer="member.emailAddress" autocomplete="off" type="email">
+                            <input wire:model.lazy="member.emailAddress" autocomplete="off" type="email">
                             @error('member.emailAddress') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -238,19 +238,19 @@
                             <!-- * Rented -->
                             <div class="radio-btn-wrapper">
                                 <span>Rented</span>
-                                <input  wire:model.defer="member.house_Stats" autocomplete="off" type="radio" value="rented" name="house_Stats" id="mem_rented">
+                                <input  wire:model.lazy="member.house_Stats" autocomplete="off" type="radio" value="1" name="house_Stats" id="mem_rented">
                             </div>
 
                             <!-- * Owned -->
                             <div class="radio-btn-wrapper">
                                 <span>Owned</span>
-                                <input  wire:model.defer="member.house_Stats" autocomplete="off" type="radio" value="owned" name="house_Stats" id="mem_owned">
+                                <input  wire:model.lazy="member.house_Stats" autocomplete="off" type="radio" value="2" name="house_Stats" id="mem_owned">
                             </div>
 
                             <!-- * Free Use -->
                             <div class="radio-btn-wrapper">
                                 <span>Free Use</span>
-                                <input  wire:model.defer="member.house_Stats" autocomplete="off" type="radio" value="freeUse" name="house_Stats" id="mem_freeUse">
+                                <input  wire:model.lazy="member.house_Stats" autocomplete="off" type="radio" value="3" name="house_Stats" id="mem_freeUse">
                             </div>
 
                         </div>
@@ -260,7 +260,7 @@
                     <!-- * House No./ Bldg. No./ Room No./ Subdivision/ Street -->
                     <div class="input-wrapper">
                         <span>House No./ Bldg. No./ Room No./ Subdivision/ Street</span>
-                        <input wire:model.defer="member.houseNo" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.houseNo" autocomplete="off" type="text">
                         @error('member.houseNo') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -272,28 +272,28 @@
                     <!-- * Barangay -->
                     <div class="input-wrapper">
                         <span>Barangay</span>
-                        <input wire:model.defer="member.barangay" autocomplete="off" type="text" >
+                        <input wire:model.lazy="member.barangay" autocomplete="off" type="text" >
                         @error('member.barangay') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * City / Municipality -->
                     <div class="input-wrapper">
                         <span>City / Municipality</span>
-                        <input wire:model.defer="member.city" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.city" autocomplete="off" type="text">
                         @error('member.city') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Province / Region -->
                     <div class="input-wrapper">
                         <span>Province / Region</span>
-                        <input wire:model.defer="member.province" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.province" autocomplete="off" type="text">
                         @error('member.province') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Country -->
                     <div class="input-wrapper">
                         <span>Country</span>
-                        <input wire:model.defer="member.country" autocomplete="off" type="text" id="country" name="country">
+                        <input wire:model.lazy="member.country" autocomplete="off" type="text">
                         @error('member.country') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -306,13 +306,13 @@
                     <!-- * Zip Code -->
                     <div class="input-wrapper">
                         <span>Zip Code</span>
-                        <input wire:model.defer="member.zipCode" type="number" id="zipCode" name="zipCode">
+                        <input wire:model.lazy="member.zipCode" type="number">
                     </div>
 
                     <!-- * Years Of Stay -->
                     <div class="input-wrapper">
                         <span>Years of stay on the mentioned address</span>
-                        <input wire:model.defer="member.yearsStay" type="number" id="yoStay" name="yoStay">
+                        <input wire:model.lazy="member.yearsStay" type="number">
                         @error('member.yearsStay') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -338,7 +338,7 @@
 
                         <!-- * Upload Image -->
                         <div class="input-wrapper">
-                            <input type="image" src="../res/assets/icons/upload-image.svg" alt="upload-image">
+                            <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
                         </div>
 
                         <!-- * Upload Button -->
@@ -361,28 +361,28 @@
                         <!-- * Electricity Bill -->
                         <div class="input-wrapper">
                             <span>Electricity Bill</span>
-                            <input wire:model.defer="member.electricBill" type="number" id="elecBill" name="elecBill">
+                            <input wire:model.lazy="member.electricBill" type="number">
                             @error('member.electricBill') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Water Bill -->
                         <div class="input-wrapper">
                             <span>Water Bill</span>
-                            <input wire:model.defer="member.waterBill" type="number" id="waterBill" name="waterBill">
+                            <input wire:model.lazy="member.waterBill" type="number">
                             @error('member.waterBill') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Other Bills -->
                         <div class="input-wrapper">
                             <span>Other Bills</span>
-                            <input wire:model.defer="member.otherBills" type="number" id="otherBill" name="otherBill">
+                            <input wire:model.lazy="member.otherBills" type="number">
                             @error('member.otherBills') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Daily Expenses -->
                         <div class="input-wrapper">
                             <span>Daily Expenses</span>
-                            <input wire:model.defer="member.dailyExpenses" type="number" id="dailyExp" name="dailyExp">
+                            <input wire:model.lazy="member.dailyExpenses" type="number">
                             @error('member.dailyExpenses') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -405,7 +405,7 @@
             <!-- * Button Wrapper -->
             <div class="button-wrapper">
                 <button type="button" id="data-close-loan-details">
-                    <img src="../res/assets/icons/x-circle.svg" alt="close">
+                    <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="close">
                 </button>
             </div>
 
@@ -616,7 +616,7 @@
 
                             <div class="option" data-option-item3>
 
-                                <input wire:model.lazy="member.emp_Status" type="radio" class="radio" id="Employed" value="Employed" />
+                                <input wire:model.lazy="member.emp_Status" type="radio" class="radio" id="Employed" value="1" />
                                 <label for="Employed">
                                     <h4>Employed</h4>
                                 </label>
@@ -625,7 +625,7 @@
 
                             <div class="option" data-option-item3>
 
-                                <input wire:model.lazy="member.emp_Status" type="radio" class="radio" id="Unemployed" value="Unemployed"/>
+                                <input wire:model.lazy="member.emp_Status" type="radio" class="radio" id="Unemployed" value="0"/>
                                 <label for="Unemployed">
                                     <h4>Unemployed</h4>
                                 </label>
@@ -635,7 +635,7 @@
                         </div>
                         
                         <div class="selected" style="font-weight: bold;" data-option-select3>
-                            {{ isset($member['emp_Status']) ? $member['emp_Status'] : '' }}
+                            {{ $member['emp_Status'] != '' ? ($member['emp_Status'] == 1 ? 'Employed' : 'Unemployed') : '' }}
                         </div>
 
                     </div>
@@ -646,17 +646,17 @@
 
                     <!-- * Current Job -->
                     @if(isset($member['emp_Status']))
-                        @if($member['emp_Status'] == 'Employed' || $member['emp_Status'] == '')
+                        @if($member['emp_Status'] == '1' || $member['emp_Status'] == '')
                             <span data-current-job>Current Job / Position</span>
-                            <input wire:model.defer="member.jobDescription"  type="text" id="currentJob" name="currentJob" data-current-job>
+                            <input wire:model.lazy="member.jobDescription"  type="text" data-current-job>
                         @endif
                     @endif
 
                     <!-- * Previous Job -->
                     @if(isset($member['emp_Status']))
-                        @if($member['emp_Status'] == 'Unemployed')
+                        @if($member['emp_Status'] == '0')
                         <span  data-previous-job>Previous Job / Position</span>
-                        <input wire:model.defer="member.jobDescription" type="text" id="previousJob" name="previousJob" data-previous-job>
+                        <input wire:model.lazy="member.jobDescription" type="text" data-previous-job>
                         @endif
                     @endif
 
@@ -665,13 +665,13 @@
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input wire:model.defer="member.yos" type="text" id="yoService" name="yoService">
+                    <input wire:model.lazy="member.yos" type="text">
                 </div>
 
                 <!-- * Company Name -->
                 <div class="input-wrapper">
                     <span>Company Name</span>
-                    <input wire:model.defer="member.companyName" type="text" id="compName" name="compName">
+                    <input wire:model.lazy="member.companyName" type="text">
                 </div>
 
             </div>
@@ -682,19 +682,19 @@
                 <!-- * Company Address -->
                 <div class="input-wrapper">
                     <span>Company Address</span>
-                    <input wire:model.defer="member.companyID" type="text" id="compAddr" name="compAddr">
+                    <input wire:model.lazy="member.companyID" type="text">
                 </div>
 
                 <!-- * Monthly Salary -->
                 <div class="input-wrapper">
                     <span>Monthly Salary</span>
-                    <input wire:model.defer="member.monthlySalary" type="number" id="monthSal" name="monthSal">
+                    <input wire:model.lazy="member.monthlySalary" type="number">
                 </div>
 
                 <!-- * Other Source Of Income -->
                 <div class="input-wrapper">
                     <span>Other Source Of Income</span>
-                    <input  wire:model.defer="member.otherSOC" type="text" id="othSorOfInc" name="othSorOfInc">
+                    <input  wire:model.lazy="member.otherSOC" type="text">
                 </div>
 
                 <!-- * Do you own a Business?  -->
@@ -761,38 +761,38 @@
                     <!-- * First Name -->
                     <div class="input-wrapper">
                         <span>First Name</span>
-                        <input wire:model.defer="member.f_Fname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Fname" autocomplete="off" type="text">
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
-                        <input wire:model.defer="member.f_Mname" autocomplete="off" type="text" >
+                        <input wire:model.lazy="member.f_Mname" autocomplete="off" type="text" >
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
-                        <input wire:model.defer="member.f_Lname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Lname" autocomplete="off" type="text">
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
-                        <input wire:model.defer="member.f_Suffix" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Suffix" autocomplete="off" type="text">
                     </div>
 
 
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.defer="member.f_DOB" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_DOB" autocomplete="off" type="text">
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.defer="member.f_Age" autocomplete="off" type="number">
+                        <input wire:model.lazy="member.f_Age" autocomplete="off" type="number">
                     </div>
 
                 </div>
@@ -808,7 +808,7 @@
 
                                 <div class="option" data-option-item7>
 
-                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Employed" value="Employed" />
+                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Employed" value="1" />
                                     <label for="f_mem_Employed">
                                         <h4>Employed</h4>
                                     </label>
@@ -817,7 +817,7 @@
 
                                 <div class="option" data-option-item7>
 
-                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Unemployed" value="Unemployed"/>
+                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Unemployed" value="0"/>
                                     <label for="f_mem_Unemployed">
                                         <h4>Unemployed</h4>
                                     </label>
@@ -827,7 +827,7 @@
                             </div>
                             
                             <div class="selected" style="font-weight: bold;" data-option-select7>
-                                {{ isset($member['f_Emp_Status']) ? $member['f_Emp_Status'] : '' }}
+                                {{ $member['f_Emp_Status'] != '' ? ($member['f_Emp_Status'] == 1 ? 'Employed' : 'Unemployed') : '' }}
                             </div>
 
                         </div>
@@ -856,17 +856,17 @@
 
                         <!-- * Current Job -->
                         @if(isset($member['f_Emp_Status']))
-                            @if($member['f_Emp_Status'] == 'Employed' || $member['f_Emp_Status'] == '')
+                            @if($member['f_Emp_Status'] == '1' || $member['f_Emp_Status'] == '')
                             <span data-spouse-current-job>Current Job / Position</span>
-                            <input wire:model.defer="member.f_Job" type="text" data-spouse-current-job>
+                            <input wire:model.lazy="member.f_Job" type="text" data-spouse-current-job>
                             @endif
                         @endif
 
                         @if(isset($member['f_Emp_Status']))
-                            @if($member['f_Emp_Status'] == 'Unemployed')
+                            @if($member['f_Emp_Status'] == '0')
                             <!-- * Previous Job -->
                             <span data-spouse-previous-job>Previous Job / Position</span>
-                            <input wire:model.defer="member.f_Job" type="text" data-spouse-previous-job>
+                            <input wire:model.lazy="member.f_Job" type="text" data-spouse-previous-job>
                             @endif
                         @endif
 
@@ -875,13 +875,13 @@
                     <!-- * Years Of Service -->
                     <div class="input-wrapper">
                         <span>Years Of Service</span>
-                        <input wire:model.defer="member.f_YOS" type="text">
+                        <input wire:model.lazy="member.f_YOS" type="text">
                     </div>
 
                     <!-- * Company Name -->
                     <div class="input-wrapper">
                         <span>Company Name</span>
-                        <input wire:model.defer="member.f_CompanyName" type="text">
+                        <input wire:model.lazy="member.f_CompanyName" type="text">
                     </div>
 
                     <!-- * Empty Input Wrapper -->
@@ -896,7 +896,7 @@
                     <!-- * Current Job / Position -->
                     <div class="input-wrapper">
                         <span>Number Of Dependants</span>
-                        <input  wire:model.defer="member.f_NOD" type="number">
+                        <input  wire:model.lazy="member.f_NOD" type="number">
                     </div>
 
                 </div>
@@ -911,7 +911,7 @@
 
                     <!-- * Family Background Information -->
                     <div class="input-wrapper">
-                        <h3>Children(s) Information</h3>
+                        <h3>Children(s) Information married</h3>
                     </div>
 
                 </div>
@@ -923,31 +923,31 @@
                             <!-- * First Name -->
                             <div class="input-wrapper">
                                 <span>First Name</span>
-                                <input autocomplete="off" type="text" >
+                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" autocomplete="off" type="text" >
                             </div>
 
                             <!-- * Middle Name -->
                             <div class="input-wrapper">
                                 <span>Middle Name</span>
-                                <input autocomplete="off" type="text">
+                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" autocomplete="off" type="text">
                             </div>
 
                             <!-- * Last Name -->
                             <div class="input-wrapper">
                                 <span>Last Name</span>
-                                <input autocomplete="off" type="text">
+                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" autocomplete="off" type="text">
                             </div>
 
                             <!-- * Age -->
                             <div class="input-wrapper">
                                 <span>Age</span>
-                                <input autocomplete="off" type="number">
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" autocomplete="off" type="number">
                             </div>
 
                             <!-- * Name Of School -->
                             <div class="input-wrapper">
                                 <span>Name Of School</span>
-                                <input autocomplete="off" type="text">
+                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" autocomplete="off" type="text">
                             </div>
 
                             <!-- * Add and Subtract Button  -->
@@ -1002,38 +1002,38 @@
                     <!-- * First Name -->
                     <div class="input-wrapper">
                         <span>First Name</span>
-                        <input wire:model.defer="member.f_Fname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Fname" autocomplete="off" type="text">
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
-                        <input wire:model.defer="member.f_Mname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Mname" autocomplete="off" type="text">
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
-                        <input wire:model.defer="member.f_Lname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Lname" autocomplete="off" type="text">
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
-                        <input wire:model.defer="member.f_Suffix" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Suffix" autocomplete="off" type="text">
                     </div>
 
 
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.defer="member.f_DOB" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_DOB" autocomplete="off" type="text">
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.defer="member.f_Age" autocomplete="off" type="number">
+                        <input wire:model.lazy="member.f_Age" autocomplete="off" type="number">
                     </div>
 
                 </div>
@@ -1050,7 +1050,7 @@
 
                                 <div class="option" data-option-item8>
 
-                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Employed" value="Employed" />
+                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Employed" value="1" />
                                     <label for="f_mem_Employed">
                                         <h4>Employed</h4>
                                     </label>
@@ -1059,7 +1059,7 @@
 
                                 <div class="option" data-option-item8>
 
-                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Unemployed" value="Unemployed"/>
+                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Unemployed" value="0"/>
                                     <label for="f_mem_Unemployed">
                                         <h4>Unemployed</h4>
                                     </label>
@@ -1069,7 +1069,7 @@
                             </div>
                             
                             <div class="selected" style="font-weight: bold;" data-option-select8>
-                                {{ isset($member['f_Emp_Status']) ? $member['f_Emp_Status'] : '' }}
+                                {{ $member['f_Emp_Status'] != '' ? ($member['f_Emp_Status'] == 1 ? 'Employed' : 'Unemployed') : '' }}
                             </div>
 
                         </div>
@@ -1096,18 +1096,18 @@
                     <div class="input-wrapper">
 
                         @if(isset($member['f_Emp_Status']))
-                            @if($member['f_Emp_Status'] == 'Employed' || $member['f_Emp_Status'] == '')
+                            @if($member['f_Emp_Status'] == '1' || $member['f_Emp_Status'] == '')
                             <!-- * Current Job -->
                             <span data-fdr-current-job>Current Job / Position</span>
-                            <input wire:model.defer="member.f_Job" type="text"  data-fdr-current-job>
+                            <input wire:model.lazy="member.f_Job" type="text"  data-fdr-current-job>
                             @endif
                         @endif    
 
                         @if(isset($member['f_Emp_Status']))
-                            @if($member['f_Emp_Status'] == 'Unemployed')
+                            @if($member['f_Emp_Status'] == '0')
                             <!-- * Previous Job -->
                             <span data-fdr-previous-job>Previous Job / Position</span>
-                            <input wire:model.defer="member.f_Job" type="text" data-fdr-previous-job>
+                            <input wire:model.lazy="member.f_Job" type="text" data-fdr-previous-job>
                             @endif
                         @endif
 
@@ -1116,13 +1116,13 @@
                     <!-- * Years Of Service -->
                     <div class="input-wrapper">
                         <span>Years Of Service</span>
-                        <input wire:model.defer="member.f_YOS" type="text" id="yoService" name="yoService">
+                        <input wire:model.lazy="member.f_YOS" type="text" >
                     </div>
 
                     <!-- * Company Name -->
                     <div class="input-wrapper">
                         <span>Company Name</span>
-                        <input wire:model.defer="member.f_CompanyName" type="text" id="compName" name="compName">
+                        <input wire:model.lazy="member.f_CompanyName" type="text">
                     </div>
 
                     <!-- * Empty Input Wrapper -->
@@ -1137,7 +1137,7 @@
                     <!-- * Number Of Dependants -->
                     <div class="input-wrapper">
                         <span>Number Of Dependants</span>
-                        <input wire:model.defer="member.f_NOD" type="number" id="numOfDependants" name="numOfDependants">
+                        <input wire:model.lazy="member.f_NOD" type="number">
                     </div>
 
                 </div>
@@ -1234,19 +1234,19 @@
                 <!-- * Business Name -->
                 <div class="input-wrapper">
                     <span>Business Name</span>
-                    <input wire:model.defer="membusinfo.businessName" type="text" >
+                    <input wire:model.lazy="membusinfo.businessName" type="text" >
                 </div>
 
                 <!-- * Business Type -->
                 <div class="input-wrapper">
                     <span>Business Type</span>
-                    <input wire:model.defer="membusinfo.businessType" type="text"  >
+                    <input wire:model.lazy="membusinfo.businessType" type="text"  >
                 </div>
 
                 <!-- * Business Address -->
                 <div class="input-wrapper">
                     <span>Business Address</span>
-                    <input wire:model.defer="membusinfo.businessAddress" type="text">
+                    <input wire:model.lazy="membusinfo.businessAddress" type="text">
                 </div>
 
             </div>
@@ -1261,13 +1261,13 @@
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
                             <span>Rented</span>
-                            <input wire:model.defer="membusinfo.b_status" autocomplete="off" type="radio" name="mem_b_status" value="rented">
+                            <input wire:model.lazy="membusinfo.b_status" autocomplete="off" type="radio" name="mem_b_status" value="5">
                         </div>
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
                             <span>Owned</span>
-                            <input wire:model.defer="membusinfo.b_status" autocomplete="off" type="radio" name="mem_b_status" value="owned">
+                            <input wire:model.lazy="membusinfo.b_status" autocomplete="off" type="radio" name="mem_b_status" value="6">
                         </div>
 
                     </div>
@@ -1277,31 +1277,31 @@
                 <!-- * Years Of Business -->
                 <div class="input-wrapper">
                     <span>Years Of Business</span>
-                    <input  wire:model.defer="membusinfo.yob" type="text">
+                    <input  wire:model.lazy="membusinfo.yob" type="text">
                 </div>
 
                 <!-- * Number Of Employees -->
                 <div class="input-wrapper">
                     <span>Number Of Employees</span>
-                    <input wire:model.defer="membusinfo.noe" type="number">
+                    <input wire:model.lazy="membusinfo.noe" type="number">
                 </div>
 
                 <!-- * Salary / Day -->
                 <div class="input-wrapper">
                     <span>Salary / Day</span>
-                    <input wire:model.defer="membusinfo.salary" type="text">
+                    <input wire:model.lazy="membusinfo.salary" type="text">
                 </div>
 
                 <!-- * Value Of Stocks -->
                 <div class="input-wrapper">
                     <span>Value Of Stocks</span>
-                    <input wire:model.defer="membusinfo.vos" type="number">
+                    <input wire:model.lazy="membusinfo.vos" type="number">
                 </div>
 
                 <!-- * Amount Of Sales / Day -->
                 <div class="input-wrapper">
                     <span>Amount Of Sales / Day</span>
-                    <input wire:model.defer="membusinfo.aos" type="text">
+                    <input wire:model.lazy="membusinfo.aos" type="text">
                 </div>
 
             </div>
@@ -1336,10 +1336,10 @@
                     @if(count($businfo) > 0)
                         @foreach($businfo as $key => $value)
                             <tr>
-                                <td>{{ $value['business_name'] }}</td>
-                                <td>{{ $value['business_type'] }}</td>
-                                <td>{{ $value['business_address'] }}</td>
-                                <td>{{ $value['year_of_business'] }}</td>
+                                <td>{{ $value['businessName'] }}</td>
+                                <td>{{ $value['businessType'] }}</td>
+                                <td>{{ $value['businessAddress'] }}</td>
+                                <td>{{ $value['yob'] }}</td>
                                 <!-- * Table Edit and Delete Button -->
                                 <td class="td-btns">
                                     <div class="td-btn-wrapper">
@@ -1360,13 +1360,13 @@
                 <!-- * Pagination Container -->
                 <div class="pagination-container">
                     <!-- * Pagination Links -->
-                    <a href="#"><img src="../res/assets/icons/caret-left.svg" alt="caret-left"></a>
+                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
                     <a href="#">1</a>
                     <a href="#">2</a>
                     <a href="#">3</a>
                     <a href="#">4</a>
                     <a href="#">5</a>
-                    <a href="#"><img src="../res/assets/icons/caret-right.svg" alt="caret-right"></a>
+                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
                 </div>
             </div>
 
@@ -1435,9 +1435,8 @@
                                     <div class="rowspan-2 child" style="{{ isset($hasvehicle) ? ($hasvehicle == 1 ? '' : 'pointer-events: none; opacity: 0.4;') : 'pointer-events: none; opacity: 0.4;' }}">
                                         <!-- * Vehicle Input Field -->
                                         <div class="input-wrapper">
-                                            <input wire:model="inpvehicle.vehicle{{ $key }}" autocomplete="off" type="text">
-                                        </div>
-                                        <!-- dito -->
+                                            <input wire:model.lazy="inpvehicle.vehicle{{ $key }}" autocomplete="off" type="text">
+                                        </div>                                       
                                         <!-- * Add and Subtract Button  -->
                                         <div class="input-wrapper">
                                             @if($key == 1)
@@ -1659,19 +1658,19 @@
                 <!-- * Applied Loan Amount -->
                 <div class="input-wrapper">
                     <span>Applied Loan Amount</span>
-                    <input type="text" id="appLoanAmnt" name="appLoanAmnt">
+                    <input wire:model.lazy="member.loanAmount" type="number">
                 </div>
 
                 <!-- * Terms Of Payment -->
                 <div class="input-wrapper">
                     <span>Terms Of Payment</span>
-                    <input type="text" id="top" name="top">
+                    <input wire:model.lazy="member.termsOfPayment" type="text" >
                 </div>
 
                 <!-- * Purpose -->
                 <div class="input-wrapper">
                     <span>Purpose</span>
-                    <input type="text" id="purpose" name="purpose">
+                    <input wire:model.lazy="member.purpose" type="text">
                 </div>
 
             </div>
@@ -1705,25 +1704,25 @@
                         <!-- * First Name -->
                         <div class="input-wrapper">
                             <span>First Name</span>
-                            <input autocomplete="off" type="text" id="fName" name="fName">
+                            <input wire:model.lazy="comaker.co_Fname" autocomplete="off" type="text" id="fName" name="fName">
                         </div>
 
                         <!-- * Middle Name -->
                         <div class="input-wrapper">
                             <span>Middle Name</span>
-                            <input autocomplete="off" type="text" id="midName" name="midName">
+                            <input wire:model.lazy="comaker.co_Mname" autocomplete="off" type="text" id="midName" name="midName">
                         </div>
 
                         <!-- * Last Name -->
                         <div class="input-wrapper">
                             <span>Last Name</span>
-                            <input autocomplete="off" type="text" id="lName" name="lName">
+                            <input wire:model.lazy="comaker.co_Lname" autocomplete="off" type="text" id="lName" name="lName">
                         </div>
 
                         <!-- * Suffix -->
                         <div class="input-wrapper">
                             <span>Suffix</span>
-                            <input autocomplete="off" type="text" id="suffix" name="suffix">
+                            <input wire:model.lazy="comaker.co_Suffix" autocomplete="off" type="text" id="suffix" name="suffix">
                         </div>
 
                     </div>
@@ -1740,8 +1739,8 @@
 
                                     <div class="option"  data-option-item4>
 
-                                        <input type="radio" class="radio" value="Male" />
-                                        <label for="Male">
+                                        <input type="radio" wire:model="comaker.co_Gender" id="comakerGendermale" class="radio" value="Male" />
+                                        <label for="comakerGendermale">
                                             <h4>Male</h4>
                                         </label>
 
@@ -1749,8 +1748,8 @@
 
                                     <div class="option"  data-option-item4>
 
-                                        <input type="radio" class="radio" value="Female"/>
-                                        <label for="Female">
+                                        <input type="radio" wire:model="comaker.co_Gender" id="comakerGenderfemale" class="radio" value="Female"/>
+                                        <label for="comakerGenderfemale">
                                             <h4>Female</h4>
                                         </label>
 
@@ -1758,7 +1757,8 @@
 
                                 </div>
                                 
-                                <div class="selected" data-option-select4>
+                                <div class="selected" style="font-weight: bold;" data-option-select4>
+                                    {{ isset($comaker['co_Gender']) ? $comaker['co_Gender'] : '' }}
                                 </div>
 
                             </div>
@@ -1767,19 +1767,19 @@
                         <!-- * Date Of Birth -->
                         <div class="input-wrapper">
                             <span>Date Of Birth</span>
-                            <input autocomplete="off" type="text" id="doBirth" name="doBirth">
+                            <input wire:model.lazy="comaker.co_DOB" autocomplete="off" type="date">
                         </div>
 
                         <!-- * Age -->
                         <div class="input-wrapper">
                             <span>Age</span>
-                            <input autocomplete="off" type="number" id="age" name="age">
+                            <input wire:model.lazy="comaker.co_Age" autocomplete="off" type="number" id="age" name="age">
                         </div>
 
                         <!-- * Place Of Birth -->
                         <div class="input-wrapper">
                             <span>Place Of Birth</span>
-                            <input autocomplete="off" type="text" id="poBirth" name="poBirth">
+                            <input wire:model.lazy="comaker.co_POB" autocomplete="off" type="text" id="poBirth" name="poBirth">
                         </div>
 
                         <!-- * Civil Status -->
@@ -1791,8 +1791,8 @@
 
                                     <div class="option" data-option-item5>
 
-                                        <input type="radio" class="radio" value="Widow" />
-                                        <label for="Widow">
+                                        <input wire:model="comaker.co_Civil_Status" type="radio" id="comakerWidow" name="co_Civil_Status" class="radio" value="Widow" />
+                                        <label for="comakerWidow">
                                             <h4>Widow</h4>
                                         </label>
 
@@ -1800,8 +1800,8 @@
 
                                     <div class="option" data-option-item5>
 
-                                        <input type="radio" class="radio" value="Married"/>
-                                        <label for="Married">
+                                        <input wire:model="comaker.co_Civil_Status" type="radio" id="comakerMarried" name="co_Civil_Status" class="radio" value="Married"/>
+                                        <label for="comakerMarried">
                                             <h4>Married</h4>
                                         </label>
 
@@ -1809,8 +1809,8 @@
 
                                     <div class="option" data-option-item5>
 
-                                        <input type="radio" class="radio" value="Single"/>
-                                        <label for="Single">
+                                        <input wire:model="comaker.co_Civil_Status" type="radio" id="comakerSingle" name="co_Civil_Status" class="radio" value="Single"/>
+                                        <label for="comakerSingle">
                                             <h4>Single</h4>
                                         </label>
 
@@ -1818,7 +1818,8 @@
 
                                 </div>
                                 
-                                <div class="selected" data-option-select5>
+                                <div class="selected" style="font-weight: bold;" data-option-select5>
+                                    {{ isset($comaker['co_Civil_Status']) ? $comaker['co_Civil_Status'] : '' }}
                                 </div>
 
                             </div>
@@ -1833,7 +1834,7 @@
                         <div class="input-wrapper">
                             <div class="input-wrapper">
                                 <span>Contact Number</span>
-                                <input autocomplete="off" type="number" id="conNum" name="conNum">
+                                <input wire:model.lazy="comaker.co_Cno" autocomplete="off" type="number">
                             </div>
                         </div>
 
@@ -1841,7 +1842,7 @@
                         <div class="input-wrapper">
                             <div class="input-wrapper">
                                 <span>Email Address</span>
-                                <input autocomplete="off" type="email" id="eMail" name="eMail">
+                                <input wire:model.lazy="comaker.co_EmailAddress" autocomplete="off" type="email">
                             </div>
                         </div>
 
@@ -1858,19 +1859,19 @@
                                 <!-- * Rented -->
                                 <div class="radio-btn-wrapper">
                                     <span>Rented</span>
-                                    <input autocomplete="off" type="radio" name="radio" value="rented" id="rented">
+                                    <input wire:model.lazy="comaker.co_House_Stats" autocomplete="off" type="radio" name="co_House_Stats" value="1">
                                 </div>
 
                                 <!-- * Owned -->
                                 <div class="radio-btn-wrapper">
                                     <span>Owned</span>
-                                    <input autocomplete="off" type="radio" name="radio" value="owned" id="owned">
+                                    <input wire:model.lazy="comaker.co_House_Stats" autocomplete="off" type="radio" name="co_House_Stats" value="2">
                                 </div>
 
                                 <!-- * Free Use -->
                                 <div class="radio-btn-wrapper">
                                     <span>Free Use</span>
-                                    <input autocomplete="off" type="radio" name="radio" value="freeUse" id="freeUse">
+                                    <input wire:model.lazy="comaker.co_House_Stats" autocomplete="off" type="radio" name="co_House_Stats" value="3">
                                 </div>
 
                             </div>
@@ -1880,7 +1881,7 @@
                         <!-- * House No./ Bldg. No./ Room No./ Subdivision/ Street -->
                         <div class="input-wrapper">
                             <span>House No./ Bldg. No./ Room No./ Subdivision/ Street</span>
-                            <input autocomplete="off" type="text" id="houseAdd" name="houseAdd">
+                            <input  wire:model.lazy="comaker.co_HouseNo" autocomplete="off" type="text">
                         </div>
 
                     </div>
@@ -1891,25 +1892,25 @@
                         <!-- * Barangay -->
                         <div class="input-wrapper">
                             <span>Barangay</span>
-                            <input autocomplete="off" type="text" id="brgy" name="brgy">
+                            <input  wire:model.lazy="comaker.co_Barangay" autocomplete="off" type="text">
                         </div>
 
                         <!-- * City / Municipality -->
                         <div class="input-wrapper">
                             <span>City / Municipality</span>
-                            <input autocomplete="off" type="text" id="city" name="city">
+                            <input  wire:model.lazy="comaker.co_City" autocomplete="off" type="text">
                         </div>
 
                         <!-- * Province / Region -->
                         <div class="input-wrapper">
                             <span>Province / Region</span>
-                            <input autocomplete="off" type="text" id="province" name="province">
+                            <input  wire:model.lazy="comaker.co_Province" autocomplete="off" type="text" >
                         </div>
 
                         <!-- * Country -->
                         <div class="input-wrapper">
                             <span>Country</span>
-                            <input autocomplete="off" type="text" id="country" name="country">
+                            <input  wire:model.lazy="comaker.co_Country" autocomplete="off" type="text">
                         </div>
 
 
@@ -1921,13 +1922,13 @@
                         <!-- * Zip Code -->
                         <div class="input-wrapper">
                             <span>Zip Code</span>
-                            <input type="number" id="zipCode" name="zipCode">
+                            <input wire:model.lazy="comaker.co_ZipCode" type="number" id="zipCode" name="zipCode">
                         </div>
 
                         <!-- * Years Of Stay -->
                         <div class="input-wrapper">
                             <span>Years of stay on the mentioned address</span>
-                            <input type="number" id="yoStay" name="yoStay">
+                            <input wire:model.lazy="comaker.co_YearsStay" type="number" id="yoStay" name="yoStay">
                         </div>
 
                     </div>
@@ -1951,7 +1952,7 @@
 
                                 <!-- * Upload Image -->
                                 <div class="input-wrapper">
-                                    <input type="image" src="../res/assets/icons/upload-image.svg" alt="upload-image">
+                                    <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
                                 </div>
 
                                 <!-- * Upload Button -->
@@ -1999,58 +2000,63 @@
                 <div class="input-wrapper">
                     <span>Employment Status</span>
                     <div class="select-box">
-
+                        <!-- dito -->
                         <div class="options-container" data-option-con6>
-
+                           
                             <div class="option" data-option-item6>
-
-                                <input type="radio" class="radio" value="Employed" />
-                                <label for="Employed">
+                                <input wire:model.lazy="comaker.co_Emp_Status" type="radio"  id="comakerEmployed"  class="radio" value="1" />
+                                <label for="comakerEmployed">
                                     <h4>Employed</h4>
                                 </label>
-
-                            </div>
-
+                            </div>                              
+                           
                             <div class="option" data-option-item6>
-
-                                <input type="radio" class="radio" value="Unemployed"/>
-                                <label for="Unemployed">
+                                <input wire:model.lazy="comaker.co_Emp_Status" type="radio"  id="comakerUnemployed"  class="radio" value="0"/>
+                                <label for="comakerUnemployed">
                                     <h4>Unemployed</h4>
                                 </label>
-
                             </div>
 
                         </div>
                         
-                        <div class="selected" data-option-select6>
+                        <div class="selected" style="font-weight: bold;" data-option-select6>                           
+                            {{ $comaker['co_Emp_Status'] != '' ? ($comaker['co_Emp_Status'] == 1 ? 'Employed' : 'Unemployed') : '' }}
                         </div>
 
                     </div>
-                </div>
+                </div>                
 
                 <!-- * Current Job / Position -->
                 <div class="input-wrapper">
 
-                    <!-- * Current Job -->
-                    <span data-cb-current-job>Current Job / Position</span>
-                    <input type="text" id="cbCurrentJob" name="currentJob" data-cb-current-job>
+                    @if(isset($comaker['co_Emp_Status']))
+                        @if($comaker['co_Emp_Status'] == '1' || $comaker['co_Emp_Status'] == '')
+                        <!-- * Current Job -->
+                        <span data-cb-current-job>Current Job / Position</span>
+                        <input wire:model.lazy="comaker.co_JobDescription" type="text"  data-cb-current-job>
+                        @endif
+                    @endif    
 
-                    <!-- * Previous Job -->
-                    <span data-cb-previous-job>Previous Job / Position</span>
-                    <input type="text" id="cbPreviousJob" name="previousJob" data-cb-previous-job>
+                    @if(isset($comaker['co_Emp_Status']))
+                        @if($comaker['co_Emp_Status'] == '0')
+                        <!-- * Previous Job -->
+                        <span data-cb-previous-job>Previous Job / Position</span>
+                        <input wire:model.lazy="comaker.co_JobDescription" type="text" data-cb-previous-job>
+                        @endif
+                    @endif
 
                 </div>
 
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input type="text" id="yoService" name="yoService">
+                    <input wire:model.lazy="comaker.co_YOS" type="text" id="yoService" name="yoService">
                 </div>
 
                 <!-- * Company Name -->
                 <div class="input-wrapper">
                     <span>Company Name</span>
-                    <input type="text" id="compName" name="compName">
+                    <input wire:model.lazy="comaker.co_CompanyName" type="text" id="compName" name="compName">
                 </div>
 
             </div>
@@ -2062,19 +2068,19 @@
                 <!-- * Company Address -->
                 <div class="input-wrapper">
                     <span>Company Address</span>
-                    <input type="text" id="compAddr" name="compAddr">
+                    <input wire:model.lazy="comaker.co_CompanyID" type="text" id="compAddr" name="compAddr">
                 </div>
 
                 <!-- * Monthly Salary -->
                 <div class="input-wrapper">
                     <span>Monthly Salary</span>
-                    <input type="number" id="monthSal" name="monthSal">
+                    <input wire:model.lazy="comaker.co_MonthlySalary" type="number" id="monthSal" name="monthSal">
                 </div>
 
                 <!-- * Other Source Of Income -->
                 <div class="input-wrapper">
                     <span>Other Source Of Income</span>
-                    <input type="text" id="othSorOfInc" name="othSorOfInc">
+                    <input wire:model.lazy="comaker.co_OtherSOC" type="text" id="othSorOfInc" name="othSorOfInc">
                 </div>
 
                 <!-- * Do you own a Business?  -->
@@ -2087,13 +2093,13 @@
 
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
-                            <input autocomplete="off" type="radio" name="formToggle" value="formToggleYes" id="formToggleYes">
+                            <input wire:model.lazy="comaker.co_BO_Status" autocomplete="off" type="radio" name="co_BO_Status" value="1">
                             <span>Yes</span>
                         </div>
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
-                            <input autocomplete="off" type="radio" name="formToggle" value="formToggleNo" id="formToggleNo">
+                            <input  wire:model.lazy="comaker.co_BO_Status" autocomplete="off" type="radio" name="co_BO_Status" value="0">
                             <span>No</span>
                         </div>
 
