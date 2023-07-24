@@ -381,17 +381,7 @@
                     selected.innerHTML = option.querySelector("label").innerHTML;
                     optionsContainer.classList.remove("active");
                 });
-            });
-
-            // * Linked to Group Loan
-            const groupLoanOpt = document.querySelector('[data-group-loan-link]')
-
-            groupLoanOpt.addEventListener('click', () => {
-
-                const url = '/KC/transactions/new-group-application.html'
-                window.location = url
-
-            })
+            });          
 
             // * Linked to Individual Loan
             const individualLoanOpt = document.querySelector('[data-individual-loan-link]')

@@ -8,7 +8,7 @@
 
             <!-- * New Application Registration Level 1 -->
             <div class="level level1 active">
-                <span>Registration</span>
+                <span>Registration {{ $test }}</span>
             </div>
 
             <!-- * New Application Credit Investigation Level 2 -->
@@ -56,12 +56,16 @@
                     <div class="btn-wrapper">
 
                         <!-- * Save -->
+                        @if($type == 1)
                         <button wire:click="store" type="button" id="saveBtn" class="button" data-save>Save</button>
 
                         <!-- * Save & Apply for loan  -->
                         <a href="new-application-credit-investigation.html">
                             <button type="button" id="proceedToCI" class="button" onclick="activeProgressButton()" data-proceed-to-ci>Save & Proceed to CI</button>
                         </a>
+                        @else
+                        <button wire:click="store" type="button" class="button" data-save>Add To Group</button>
+                        @endif
 
                     </div>
 
@@ -446,53 +450,7 @@
                                 <td>Lorem ipsum dolor sit.</td>
                                 <td>Lorem ipsum dolor sit.</td>
                                 <td>Lorem ipsum dolor sit.</td>
-                            </tr>
-                            <tr>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                            </tr>
-                            <tr>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                            </tr>
-                            <tr>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                            </tr>
-                            <tr>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                            </tr>
-                            <tr>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                                <td>Lorem ipsum dolor sit.</td>
-                            </tr>
-                            
+                            </tr>                           
 
                         </table>
 
@@ -523,7 +481,6 @@
 
                     <!-- * Rowspan 2: Payment History Table -->
                     <div class="rowspan">
-
                         <table>
                             <tr>
                                 <th>Loan Amount</th>
@@ -542,51 +499,14 @@
                                 <td>Lorem ipsum dolor sit amet.</td>
                                 <td>Lorem ipsum dolor sit amet.</td>
                                 <td>Lorem ipsum dolor sit amet.</td>
-                            </tr>
-                            <tr>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                            </tr>
-                            <tr>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                            </tr>
-                            <tr>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                                <td>Lorem ipsum dolor sit amet.</td>
-                            </tr>
-                            
-                            
-
+                            </tr>                                                       
                         </table>
 
 
                     </div>
-
                 </div>
-
-
-
             </div>
-
         </div>
-
-
     </dialog>
 
     <!-- * Container 3: Job Information Input Fields -->
@@ -639,6 +559,7 @@
                         </div>
 
                     </div>
+                    @error('member.emp_Status') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Current Job / Position -->
@@ -659,19 +580,21 @@
                         <input wire:model.lazy="member.jobDescription" type="text" data-previous-job>
                         @endif
                     @endif
-
+                    @error('member.jobDescription') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
                     <input wire:model.lazy="member.yos" type="text">
+                    @error('member.yos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Company Name -->
                 <div class="input-wrapper">
                     <span>Company Name</span>
                     <input wire:model.lazy="member.companyName" type="text">
+                    @error('member.companyName') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -683,18 +606,21 @@
                 <div class="input-wrapper">
                     <span>Company Address</span>
                     <input wire:model.lazy="member.companyID" type="text">
+                    @error('member.companyID') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Monthly Salary -->
                 <div class="input-wrapper">
                     <span>Monthly Salary</span>
                     <input wire:model.lazy="member.monthlySalary" type="number">
+                    @error('member.monthlySalary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Other Source Of Income -->
                 <div class="input-wrapper">
                     <span>Other Source Of Income</span>
                     <input  wire:model.lazy="member.otherSOC" type="text">
+                    @error('member.otherSOC') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Do you own a Business?  -->
@@ -718,7 +644,7 @@
                         </div>
 
                     </div>
-
+                    @error('member.bO_Status') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -762,37 +688,43 @@
                     <div class="input-wrapper">
                         <span>First Name</span>
                         <input wire:model.lazy="member.f_Fname" autocomplete="off" type="text">
+                        @error('member.f_Fname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
                         <input wire:model.lazy="member.f_Mname" autocomplete="off" type="text" >
+                        @error('member.f_Mname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
                         <input wire:model.lazy="member.f_Lname" autocomplete="off" type="text">
+                        @error('member.f_Lname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
                         <input wire:model.lazy="member.f_Suffix" autocomplete="off" type="text">
+                        @error('member.f_Suffix') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
 
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.f_DOB" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_DOB" autocomplete="off" type="date">
+                        @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
                         <input wire:model.lazy="member.f_Age" autocomplete="off" type="number">
+                        @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                 </div>
@@ -831,6 +763,7 @@
                             </div>
 
                         </div>
+                        @error('member.f_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <script>
@@ -869,19 +802,21 @@
                             <input wire:model.lazy="member.f_Job" type="text" data-spouse-previous-job>
                             @endif
                         @endif
-
+                        @error('member.f_Job') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Years Of Service -->
                     <div class="input-wrapper">
                         <span>Years Of Service</span>
                         <input wire:model.lazy="member.f_YOS" type="text">
+                        @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Company Name -->
                     <div class="input-wrapper">
                         <span>Company Name</span>
                         <input wire:model.lazy="member.f_CompanyName" type="text">
+                        @error('member.f_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Empty Input Wrapper -->
@@ -897,6 +832,7 @@
                     <div class="input-wrapper">
                         <span>Number Of Dependants</span>
                         <input  wire:model.lazy="member.f_NOD" type="number">
+                        @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                 </div>
@@ -917,6 +853,7 @@
                 </div>
 
                 <!-- * Rowspan 8: First Name, Middle Name , Last Name, Age, Name Of School and Add/Subtract Button -->
+                <!-- dito -->
                 @if(count($cntmemchild) > 0)    
                     @foreach($cntmemchild as $cntchild)
                     <div class="rowspan child" data-child>                    
@@ -924,30 +861,35 @@
                             <div class="input-wrapper">
                                 <span>First Name</span>
                                 <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" autocomplete="off" type="text" >
+                                @error('inpchild.fname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Middle Name -->
                             <div class="input-wrapper">
                                 <span>Middle Name</span>
                                 <input wire:model.lazy="inpchild.mname{{ $cntchild }}" autocomplete="off" type="text">
+                                @error('inpchild.mname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Last Name -->
                             <div class="input-wrapper">
                                 <span>Last Name</span>
                                 <input wire:model.lazy="inpchild.lname{{ $cntchild }}" autocomplete="off" type="text">
+                                @error('inpchild.lname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Age -->
                             <div class="input-wrapper">
                                 <span>Age</span>
                                 <input wire:model.lazy="inpchild.age{{ $cntchild }}" autocomplete="off" type="number">
+                                @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Name Of School -->
                             <div class="input-wrapper">
                                 <span>Name Of School</span>
                                 <input wire:model.lazy="inpchild.school{{ $cntchild }}" autocomplete="off" type="text">
+                                @error('inpchild.school'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Add and Subtract Button  -->
@@ -1003,37 +945,43 @@
                     <div class="input-wrapper">
                         <span>First Name</span>
                         <input wire:model.lazy="member.f_Fname" autocomplete="off" type="text">
+                        @error('member.f_Fname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
                         <input wire:model.lazy="member.f_Mname" autocomplete="off" type="text">
+                        @error('member.f_Mname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
                         <input wire:model.lazy="member.f_Lname" autocomplete="off" type="text">
+                        @error('member.f_Lname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
                         <input wire:model.lazy="member.f_Suffix" autocomplete="off" type="text">
+                        @error('member.f_Suffix') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
 
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.f_DOB" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_DOB" autocomplete="off" type="date">
+                        @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
                         <input wire:model.lazy="member.f_Age" autocomplete="off" type="number">
+                        @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                 </div>
@@ -1071,7 +1019,7 @@
                             <div class="selected" style="font-weight: bold;" data-option-select8>
                                 {{ $member['f_Emp_Status'] != '' ? ($member['f_Emp_Status'] == 1 ? 'Employed' : 'Unemployed') : '' }}
                             </div>
-
+                            @error('member.f_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
 
@@ -1110,19 +1058,21 @@
                             <input wire:model.lazy="member.f_Job" type="text" data-fdr-previous-job>
                             @endif
                         @endif
-
+                        @error('member.f_Job') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Years Of Service -->
                     <div class="input-wrapper">
                         <span>Years Of Service</span>
                         <input wire:model.lazy="member.f_YOS" type="text" >
+                        @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Company Name -->
                     <div class="input-wrapper">
                         <span>Company Name</span>
                         <input wire:model.lazy="member.f_CompanyName" type="text">
+                        @error('member.f_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Empty Input Wrapper -->
@@ -1138,6 +1088,7 @@
                     <div class="input-wrapper">
                         <span>Number Of Dependants</span>
                         <input wire:model.lazy="member.f_NOD" type="number">
+                        @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                 </div>
@@ -1161,45 +1112,50 @@
                 @if(count($cntmemchild) > 0)    
                     @foreach($cntmemchild as $cntchild)
                     <div class="rowspan child" data-child-2>
+                        <!-- dito -->
+                            <!-- * First Name -->
+                            <div class="input-wrapper">
+                                <span>First Name</span>
+                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" autocomplete="off" type="text" >
+                                @error('inpchild.fname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
 
-                        <!-- * First Name -->
-                        <div class="input-wrapper">
-                            <span>First Name</span>
-                            <input autocomplete="off" type="text">
-                        </div>
+                            <!-- * Middle Name -->
+                            <div class="input-wrapper">
+                                <span>Middle Name</span>
+                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" autocomplete="off" type="text">
+                                @error('inpchild.mname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
 
-                        <!-- * Middle Name -->
-                        <div class="input-wrapper">
-                            <span>Middle Name</span>
-                            <input autocomplete="off" type="text" >
-                        </div>
+                            <!-- * Last Name -->
+                            <div class="input-wrapper">
+                                <span>Last Name</span>
+                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" autocomplete="off" type="text">
+                                @error('inpchild.lname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
 
-                        <!-- * Last Name -->
-                        <div class="input-wrapper">
-                            <span>Last Name</span>
-                            <input autocomplete="off" type="text" >
-                        </div>
+                            <!-- * Age -->
+                            <div class="input-wrapper">
+                                <span>Age</span>
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" autocomplete="off" type="number">
+                                @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
 
-                        <!-- * Age -->
-                        <div class="input-wrapper">
-                            <span>Age</span>
-                            <input autocomplete="off" type="number">
-                        </div>
+                            <!-- * Name Of School -->
+                            <div class="input-wrapper">
+                                <span>Name Of School</span>
+                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" autocomplete="off" type="text">
+                                @error('inpchild.school'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
 
-                        <!-- * Name Of School -->
-                        <div class="input-wrapper">
-                            <span>Name Of School</span>
-                            <input autocomplete="off" type="text">
-                        </div>
-
-                        <!-- * Add and Subtract Button  -->
-                        <div class="input-wrapper">
-                            @if($cntchild == 1)
+                            <!-- * Add and Subtract Button  -->
+                            <div class="input-wrapper">
+                                @if($cntchild == 1)
                                 <button type="button" wire:click="addChild">+</button>
-                            @else
+                                @else
                                 <button type="button" wire:click="subChild({{ $cntchild }})">-</button>
-                            @endif
-                        </div>
+                                @endif
+                            </div>                             
                     </div>
                     @endforeach
                 @endif
@@ -1235,18 +1191,21 @@
                 <div class="input-wrapper">
                     <span>Business Name</span>
                     <input wire:model.lazy="membusinfo.businessName" type="text" >
+                    @error('membusinfo.businessName') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Business Type -->
                 <div class="input-wrapper">
                     <span>Business Type</span>
                     <input wire:model.lazy="membusinfo.businessType" type="text"  >
+                    @error('membusinfo.businessType') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Business Address -->
                 <div class="input-wrapper">
                     <span>Business Address</span>
                     <input wire:model.lazy="membusinfo.businessAddress" type="text">
+                    @error('membusinfo.businessAddress') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -1261,7 +1220,7 @@
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
                             <span>Rented</span>
-                            <input wire:model.lazy="membusinfo.b_status" autocomplete="off" type="radio" name="mem_b_status" value="5">
+                            <input wire:model.lazy="membusinfo.b_status" autocomplete="off" type="radio" name="mem_b_status" value="5">                            
                         </div>
 
                         <!-- * Owned -->
@@ -1271,37 +1230,42 @@
                         </div>
 
                     </div>
-
+                    @error('membusinfo.b_status') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Years Of Business -->
                 <div class="input-wrapper">
                     <span>Years Of Business</span>
                     <input  wire:model.lazy="membusinfo.yob" type="text">
+                    @error('membusinfo.yob') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Number Of Employees -->
                 <div class="input-wrapper">
                     <span>Number Of Employees</span>
                     <input wire:model.lazy="membusinfo.noe" type="number">
+                    @error('membusinfo.noe') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Salary / Day -->
                 <div class="input-wrapper">
                     <span>Salary / Day</span>
                     <input wire:model.lazy="membusinfo.salary" type="text">
+                    @error('membusinfo.salary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Value Of Stocks -->
                 <div class="input-wrapper">
                     <span>Value Of Stocks</span>
                     <input wire:model.lazy="membusinfo.vos" type="number">
+                    @error('membusinfo.vos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Amount Of Sales / Day -->
                 <div class="input-wrapper">
                     <span>Amount Of Sales / Day</span>
                     <input wire:model.lazy="membusinfo.aos" type="text">
+                    @error('membusinfo.aos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -1436,6 +1400,7 @@
                                         <!-- * Vehicle Input Field -->
                                         <div class="input-wrapper">
                                             <input wire:model.lazy="inpvehicle.vehicle{{ $key }}" autocomplete="off" type="text">
+                                            @error('inpvehicle.vehicle'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                         </div>                                       
                                         <!-- * Add and Subtract Button  -->
                                         <div class="input-wrapper">
@@ -1496,10 +1461,10 @@
                                 @if(count($properties) > 0)
                                     @foreach($properties as $key => $value)
                                         <div class="rowspan-2 child"  style="{{ isset($hasproperties) ? ($hasproperties == 1 ? '' : 'pointer-events: none; opacity: 0.4;') : 'pointer-events: none; opacity: 0.4;' }}">
-
                                             <!-- * Vehicle Input Field -->
                                             <div class="input-wrapper">
                                                 <input wire:model="inpproperties.property{{ $key }}"  autocomplete="off" type="text">
+                                                @error('inpproperties.property'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                             </div>
 
                                             <!-- * Add and Subtract Button  -->
@@ -1552,12 +1517,14 @@
                                 <div class="input-wrapper">
                                     <span>Appliances</span>
                                     <input wire:model="inpappliances.applaince{{ $key }}" autocomplete="off" type="text">
+                                    @error('inpappliances.applaince'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                 </div>
 
                                 <!-- * Brand / Model -->
                                 <div class="input-wrapper">
                                     <span>Brand / Model</span>
                                     <input wire:model="inpappliances.brand{{ $key }}" autocomplete="off" type="text">
+                                    @error('inpappliances.brand'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                 </div>
 
                                 <!-- * Add and Subtract Button  -->
@@ -1603,12 +1570,14 @@
                                     <div class="input-wrapper">
                                         <span>Bank account</span>
                                         <input wire:model="inpbank.account{{ $key }}" autocomplete="off" type="bankAcc">
+                                        @error('inpbank.account'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                     </div>
 
                                     <!-- * Address -->
                                     <div class="input-wrapper">
                                         <span>Address</span>
                                         <input wire:model="inpbank.address{{ $key }}" autocomplete="off" type="bankAddr">
+                                        @error('inpbank.address'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                     </div>
 
                                     <!-- * Add and Subtract Button  -->
@@ -1659,18 +1628,21 @@
                 <div class="input-wrapper">
                     <span>Applied Loan Amount</span>
                     <input wire:model.lazy="member.loanAmount" type="number">
+                    @error('member.loanAmount') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Terms Of Payment -->
                 <div class="input-wrapper">
                     <span>Terms Of Payment</span>
                     <input wire:model.lazy="member.termsOfPayment" type="text" >
+                    @error('member.termsOfPayment') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Purpose -->
                 <div class="input-wrapper">
                     <span>Purpose</span>
                     <input wire:model.lazy="member.purpose" type="text">
+                    @error('member.purpose') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -1705,24 +1677,28 @@
                         <div class="input-wrapper">
                             <span>First Name</span>
                             <input wire:model.lazy="comaker.co_Fname" autocomplete="off" type="text" id="fName" name="fName">
+                            @error('comaker.co_Fname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Middle Name -->
                         <div class="input-wrapper">
                             <span>Middle Name</span>
                             <input wire:model.lazy="comaker.co_Mname" autocomplete="off" type="text" id="midName" name="midName">
+                            @error('comaker.co_Mname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Last Name -->
                         <div class="input-wrapper">
                             <span>Last Name</span>
                             <input wire:model.lazy="comaker.co_Lname" autocomplete="off" type="text" id="lName" name="lName">
+                            @error('comaker.co_Lname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Suffix -->
                         <div class="input-wrapper">
                             <span>Suffix</span>
                             <input wire:model.lazy="comaker.co_Suffix" autocomplete="off" type="text" id="suffix" name="suffix">
+                            @error('comaker.co_Suffix') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                     </div>
@@ -1762,24 +1738,28 @@
                                 </div>
 
                             </div>
+                            @error('comaker.co_Gender') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Date Of Birth -->
                         <div class="input-wrapper">
                             <span>Date Of Birth</span>
                             <input wire:model.lazy="comaker.co_DOB" autocomplete="off" type="date">
+                            @error('comaker.co_DOB') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Age -->
                         <div class="input-wrapper">
                             <span>Age</span>
                             <input wire:model.lazy="comaker.co_Age" autocomplete="off" type="number" id="age" name="age">
+                            @error('comaker.co_Age') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Place Of Birth -->
                         <div class="input-wrapper">
                             <span>Place Of Birth</span>
                             <input wire:model.lazy="comaker.co_POB" autocomplete="off" type="text" id="poBirth" name="poBirth">
+                            @error('comaker.co_POB') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Civil Status -->
@@ -1823,6 +1803,7 @@
                                 </div>
 
                             </div>
+                            @error('comaker.co_Civil_Status') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                     </div>
@@ -1835,6 +1816,7 @@
                             <div class="input-wrapper">
                                 <span>Contact Number</span>
                                 <input wire:model.lazy="comaker.co_Cno" autocomplete="off" type="number">
+                                @error('comaker.co_Cno') <span class="text-required">{{ $message }}</span>@enderror
                             </div>
                         </div>
 
@@ -1843,6 +1825,7 @@
                             <div class="input-wrapper">
                                 <span>Email Address</span>
                                 <input wire:model.lazy="comaker.co_EmailAddress" autocomplete="off" type="email">
+                                @error('comaker.co_EmailAddress') <span class="text-required">{{ $message }}</span>@enderror
                             </div>
                         </div>
 
@@ -1875,13 +1858,14 @@
                                 </div>
 
                             </div>
-
+                            @error('comaker.co_House_Stats') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * House No./ Bldg. No./ Room No./ Subdivision/ Street -->
                         <div class="input-wrapper">
                             <span>House No./ Bldg. No./ Room No./ Subdivision/ Street</span>
                             <input  wire:model.lazy="comaker.co_HouseNo" autocomplete="off" type="text">
+                            @error('comaker.co_HouseNo') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                     </div>
@@ -1893,24 +1877,28 @@
                         <div class="input-wrapper">
                             <span>Barangay</span>
                             <input  wire:model.lazy="comaker.co_Barangay" autocomplete="off" type="text">
+                            @error('comaker.co_Barangay') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * City / Municipality -->
                         <div class="input-wrapper">
                             <span>City / Municipality</span>
                             <input  wire:model.lazy="comaker.co_City" autocomplete="off" type="text">
+                            @error('comaker.co_City') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Province / Region -->
                         <div class="input-wrapper">
                             <span>Province / Region</span>
                             <input  wire:model.lazy="comaker.co_Province" autocomplete="off" type="text" >
+                            @error('comaker.co_Province') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Country -->
                         <div class="input-wrapper">
                             <span>Country</span>
                             <input  wire:model.lazy="comaker.co_Country" autocomplete="off" type="text">
+                            @error('comaker.co_Country') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
 
@@ -1923,12 +1911,14 @@
                         <div class="input-wrapper">
                             <span>Zip Code</span>
                             <input wire:model.lazy="comaker.co_ZipCode" type="number" id="zipCode" name="zipCode">
+                            @error('comaker.co_ZipCode') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Years Of Stay -->
                         <div class="input-wrapper">
                             <span>Years of stay on the mentioned address</span>
                             <input wire:model.lazy="comaker.co_YearsStay" type="number" id="yoStay" name="yoStay">
+                            @error('comaker.co_YearsStay') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                     </div>
@@ -1999,8 +1989,7 @@
                 <!-- * Employment Status -->
                 <div class="input-wrapper">
                     <span>Employment Status</span>
-                    <div class="select-box">
-                        <!-- dito -->
+                    <div class="select-box">                      
                         <div class="options-container" data-option-con6>
                            
                             <div class="option" data-option-item6>
@@ -2024,6 +2013,7 @@
                         </div>
 
                     </div>
+                    @error('comaker.co_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
                 </div>                
 
                 <!-- * Current Job / Position -->
@@ -2044,19 +2034,21 @@
                         <input wire:model.lazy="comaker.co_JobDescription" type="text" data-cb-previous-job>
                         @endif
                     @endif
-
+                    @error('comaker.co_JobDescription') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
                     <input wire:model.lazy="comaker.co_YOS" type="text" id="yoService" name="yoService">
+                    @error('comaker.co_YOS') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Company Name -->
                 <div class="input-wrapper">
                     <span>Company Name</span>
                     <input wire:model.lazy="comaker.co_CompanyName" type="text" id="compName" name="compName">
+                    @error('comaker.co_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -2069,18 +2061,21 @@
                 <div class="input-wrapper">
                     <span>Company Address</span>
                     <input wire:model.lazy="comaker.co_CompanyID" type="text" id="compAddr" name="compAddr">
+                    @error('comaker.co_CompanyID') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Monthly Salary -->
                 <div class="input-wrapper">
                     <span>Monthly Salary</span>
                     <input wire:model.lazy="comaker.co_MonthlySalary" type="number" id="monthSal" name="monthSal">
+                    @error('comaker.co_MonthlySalary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Other Source Of Income -->
                 <div class="input-wrapper">
                     <span>Other Source Of Income</span>
                     <input wire:model.lazy="comaker.co_OtherSOC" type="text" id="othSorOfInc" name="othSorOfInc">
+                    @error('comaker.co_OtherSOC') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Do you own a Business?  -->
@@ -2104,7 +2099,7 @@
                         </div>
 
                     </div>
-
+                    @error('comaker.co_BO_Status') <span class="text-required">{{ $message }}</span>@enderror    
                 </div>
 
             </div>

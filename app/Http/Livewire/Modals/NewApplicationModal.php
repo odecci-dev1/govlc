@@ -14,6 +14,10 @@ class NewApplicationModal extends Component
         $this->memberlist = $value;
     }
 
+    public function redirectToGroupLoan(){
+        return redirect()->to('/tranactions/application/group/create');
+    }
+
     public function render()
     {
         //$data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', ['Fname' => 'test']);

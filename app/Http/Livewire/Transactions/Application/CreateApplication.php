@@ -9,6 +9,8 @@ use Livewire\Component;
 class CreateApplication extends Component
 {
 
+    public $test = 'hello';
+    public $type;
     public $member; 
     public $comaker;
 
@@ -34,85 +36,155 @@ class CreateApplication extends Component
     
     public function rules(){                
         $rules = [];      
-        $rules['member.fname'] = '';  
-        $rules['member.lname'] = '';  
-        $rules['member.mname'] = '';  
+        $rules['member.fname'] = 'required';  
+        $rules['member.lname'] = 'required';  
+        $rules['member.mname'] = 'required';  
         $rules['member.suffix'] = '';  
-        $rules['member.age'] = '';  
-        $rules['member.barangay'] = '';  
-        $rules['member.city'] = '';  
-        $rules['member.civil_Status'] = '';  
-        $rules['member.cno'] = ''; 
-        $rules['member.country'] = ''; 
-        $rules['member.dob'] = ''; 
-        $rules['member.emailAddress'] = ''; 
-        $rules['member.gender'] = ''; 
-        $rules['member.hender'] = ''; 
-        $rules['member.houseNo'] = ''; 
-        $rules['member.house_Stats'] = ''; 
-        $rules['member.pob'] = ''; 
-        $rules['member.province'] = ''; 
-        $rules['member.yearsStay'] = ''; 
+        $rules['member.age'] = 'required';  
+        $rules['member.barangay'] = 'required';  
+        $rules['member.city'] = 'required';  
+        $rules['member.civil_Status'] = 'required';  
+        $rules['member.cno'] = 'required'; 
+        $rules['member.country'] = 'required'; 
+        $rules['member.dob'] = 'required'; 
+        $rules['member.emailAddress'] = 'required'; 
+        $rules['member.gender'] = 'required';         
+        $rules['member.houseNo'] = 'required'; 
+        $rules['member.house_Stats'] = 'required'; 
+        $rules['member.pob'] = 'required'; 
+        $rules['member.province'] = 'required'; 
+        $rules['member.yearsStay'] = 'required'; 
         $rules['member.zipCode'] = ''; 
         $rules['member.status'] = ''; 
-        $rules['member.electricBill'] = '';
-        $rules['member.waterBill'] = '';
-        $rules['member.otherBills'] = '';
-        $rules['member.dailyExpenses'] = '';
-        $rules['member.jobDescription'] = '';
-        $rules['member.yos'] = '';
-        $rules['member.monthlySalary'] = '';
-        $rules['member.otherSOC'] = '';
-        $rules['member.bO_Status'] = '';
-        $rules['member.companyName'] = '';
-        $rules['member.emp_Status'] = '';
-        $rules['member.f_Fname'] = '';
-        $rules['member.f_Lname'] = '';
-        $rules['member.f_Mname'] = '';
-        $rules['member.f_Suffix'] = '';
-        $rules['member.f_DOB'] = '';
-        $rules['member.f_Age'] = '';
-        $rules['member.f_NOD'] = '';
-        $rules['member.f_YOS'] = '';
-        $rules['member.f_Emp_Status'] = '';
-        $rules['member.f_Job'] = '';
-        $rules['member.f_CompanyName'] = '';
+        $rules['member.electricBill'] = 'required';
+        $rules['member.waterBill'] = 'required';
+        $rules['member.otherBills'] = 'required';
+        $rules['member.dailyExpenses'] = 'required';
+        $rules['member.jobDescription'] = 'required';
+        $rules['member.yos'] = 'required';
+        $rules['member.monthlySalary'] = 'required';
+        $rules['member.otherSOC'] = 'required';
+        $rules['member.bO_Status'] = 'required';
+        $rules['member.companyName'] = 'required';
+        $rules['member.emp_Status'] = 'required';
+        $rules['member.f_Fname'] = 'required';
+        $rules['member.f_Lname'] = 'required';
+        $rules['member.f_Mname'] = 'required';
+        $rules['member.f_Suffix'] = 'required';
+        $rules['member.f_DOB'] = 'required';
+        $rules['member.f_Age'] = 'required';
+        $rules['member.f_NOD'] = 'required';
+        $rules['member.f_YOS'] = 'required';
+        $rules['member.f_Emp_Status'] = 'required';
+        $rules['member.f_Job'] = 'required';
+        $rules['member.f_CompanyName'] = 'required';
         $rules['member.f_RTTB'] = '';      
-        $rules['member.loanAmount'] = '';
-        $rules['member.termsOfPayment'] = '';
-        $rules['member.purpose'] = '';
+        $rules['member.loanAmount'] = 'required';
+        $rules['member.termsOfPayment'] = 'required';
+        $rules['member.purpose'] = 'required';
 
-        $rules['comaker.co_Fname'] = '';
-        $rules['comaker.co_Lname'] = '';
-        $rules['comaker.co_Mname'] = '';
-        $rules['comaker.co_Suffix'] = '';
-        $rules['comaker.co_Age'] = '';
-        $rules['comaker.co_Barangay'] = '';
-        $rules['comaker.co_City'] = '';
-        $rules['comaker.co_Civil_Status'] = '';
-        $rules['comaker.co_Cno'] = '';
-        $rules['comaker.co_Country'] = '';
-        $rules['comaker.co_DOB'] = '';
-        $rules['comaker.co_EmailAddress'] = '';
-        $rules['comaker.co_Gender'] = '';
-        $rules['comaker.co_HouseNo'] = '';
-        $rules['comaker.co_HouseNo'] = '';
-        $rules['comaker.co_House_Stats'] = '';
-        $rules['comaker.co_POB'] = '';
-        $rules['comaker.co_Province'] = '';
-        $rules['comaker.co_YearsStay'] = '';
-        $rules['comaker.co_ZipCode'] = '';
+        $rules['comaker.co_Fname'] = 'required';
+        $rules['comaker.co_Lname'] = 'required';
+        $rules['comaker.co_Mname'] = 'required';
+        $rules['comaker.co_Suffix'] = 'required';
+        $rules['comaker.co_Age'] = 'required';
+        $rules['comaker.co_Barangay'] = 'required';
+        $rules['comaker.co_City'] = 'required';
+        $rules['comaker.co_Civil_Status'] = 'required';
+        $rules['comaker.co_Cno'] = 'required';
+        $rules['comaker.co_Country'] = 'required';
+        $rules['comaker.co_DOB'] = 'required';
+        $rules['comaker.co_EmailAddress'] = 'required';
+        $rules['comaker.co_Gender'] = 'required';
+        $rules['comaker.co_HouseNo'] = 'required';
+        $rules['comaker.co_HouseNo'] = 'required';
+        $rules['comaker.co_House_Stats'] = 'required';
+        $rules['comaker.co_POB'] = 'required';
+        $rules['comaker.co_Province'] = 'required';
+        $rules['comaker.co_YearsStay'] = 'required';
+        $rules['comaker.co_ZipCode'] = 'required';
         $rules['comaker.co_RTTB'] = '';
         $rules['comaker.co_Status'] = '';
-        $rules['comaker.co_JobDescription'] = '';
-        $rules['comaker.co_YOS'] = '';
-        $rules['comaker.co_MonthlySalary'] = '';
-        $rules['comaker.co_OtherSOC'] = '';
-        $rules['comaker.co_BO_Status'] = '';
-        $rules['comaker.co_CompanyName'] = '';
+        $rules['comaker.co_JobDescription'] = 'required';
+        $rules['comaker.co_YOS'] = 'required';
+        $rules['comaker.co_MonthlySalary'] = 'required';
+        $rules['comaker.co_OtherSOC'] = 'required';
+        $rules['comaker.co_BO_Status'] = 'required';
+        $rules['comaker.co_CompanyName'] = 'required';
         $rules['comaker.co_CompanyID'] = '';
-        $rules['comaker.co_Emp_Status'] = '';
-        $rules['comaker.remarks'] = '';
+        $rules['comaker.co_Emp_Status'] = 'required';
+        $rules['comaker.remarks'] = '';      
+        
+
+        if(isset($this->member['civil_Status'])){
+            if($this->member['civil_Status'] == 'Married' || $this->member['civil_Status']=='Single'){
+                if(count($this->cntmemchild) > 1){
+                    foreach($this->cntmemchild as $cntchild){
+                        $rules['inpchild.fname'.$cntchild] = 'required';   
+                        $rules['inpchild.mname'.$cntchild] = 'required';      
+                        $rules['inpchild.lname'.$cntchild] = 'required';      
+                        $rules['inpchild.age'.$cntchild] = 'required';      
+                        $rules['inpchild.school'.$cntchild] = 'required';                  
+                    }            
+                }
+                else{
+                    //if(isset($this->inpchild['fname1']) || isset($this->inpchild['mname1']) || isset($this->inpchild['lname1']) || isset($this->inpchild['age1']) || isset($this->inpchild['school1'])){
+                    if((isset($this->inpchild['fname1']) ? $this->inpchild['fname1'] != '' : false)  || (isset($this->inpchild['mname1']) ? $this->inpchild['mname1'] != '' : false) || (isset($this->inpchild['lname1']) ? $this->inpchild['lname1'] != '' : false) || (isset($this->inpchild['age1']) ? $this->inpchild['age1'] != '' : false) || (isset($this->inpchild['school1']) ? $this->inpchild['school1'] != '' : false)){
+                        $rules['inpchild.fname1'] = 'required';      
+                        $rules['inpchild.mname1'] = 'required';      
+                        $rules['inpchild.lname1'] = 'required';      
+                        $rules['inpchild.age1'] = 'required';      
+                        $rules['inpchild.school1'] = 'required';      
+                    }
+                }
+            }
+        }
+
+        if($this->hasvehicle == 1){
+            if(count($this->vehicle) > 0){
+                foreach($this->vehicle as $key => $value){
+                    $rules['inpvehicle.vehicle'.$key] = 'required';               
+                }            
+            }
+        }
+
+        if($this->hasproperties == 1){
+            if(count($this->properties) > 0){
+                foreach($this->properties as $key => $value){
+                    $rules['inpproperties.property'.$key] = 'required';               
+                }            
+            }
+        }  
+    
+        // public $bank = [];
+        // public $inpbank;
+
+        if(count($this->appliances) > 1){
+            foreach($this->appliances as $key => $value){
+                $rules['inpappliances.applaince'.$key] = 'required';               
+                $rules['inpappliances.brand'.$key] = 'required';               
+            }            
+        }
+        else{            
+            if((isset($this->inpappliances['applaince1']) ? $this->inpappliances['applaince1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
+                $rules['inpappliances.applaince1'] = 'required';               
+                $rules['inpappliances.brand1'] = 'required';   
+            }
+        }
+
+        if(count($this->bank) > 1){
+            foreach($this->bank as $key => $value){
+                $rules['inpbank.account'.$key] = 'required';               
+                $rules['inpbank.address'.$key] = 'required';               
+            }            
+        }
+        else{            
+            if((isset($this->inpbank['account1']) ? $this->inpbank['account1'] != '' : false)  || (isset($this->inpbank['address1']) ? $this->inpbank['address1'] != '' : false)){
+                $rules['inpbank.account1'] = 'required';               
+                $rules['inpbank.address1'] = 'required';   
+            }
+        }
+
         return  $rules;                                    
     }
 
@@ -140,39 +212,38 @@ class CreateApplication extends Component
     }
 
     public function store(){               
-        try {                  
+        try {                            
             $input = $this->validate(); 
-
             //get child inputs
             $childs = [];
             $businesses = [];
             $appliances = [];
             $banks = [];
          
-            // if(count($this->cntmemchild) > 0){
-            //     foreach($this->cntmemchild as $cntmemchild){
-            //         $childs[] = [   'fname' => $this->inpchild['fname'.$cntmemchild] ??= '', 
-            //                         'mname' => $this->inpchild['mname'.$cntmemchild] ??= '',
-            //                         'lname' => $this->inpchild['lname'.$cntmemchild] ??= '',
-            //                         'age' => $this->inpchild['age'.$cntmemchild] ??= '0',
-            //                         'nos' => $this->inpchild['school'.$cntmemchild] ??= '',
-            //                         'famId' => null,    ];
-            //     }
-            // }
+            if(count($this->cntmemchild) > 0){
+                foreach($this->cntmemchild as $cntmemchild){
+                    $childs[] = [   'fname' => $this->inpchild['fname'.$cntmemchild] ??= '', 
+                                    'mname' => $this->inpchild['mname'.$cntmemchild] ??= '',
+                                    'lname' => $this->inpchild['lname'.$cntmemchild] ??= '',
+                                    'age' => $this->inpchild['age'.$cntmemchild] ??= '0',
+                                    'nos' => $this->inpchild['school'.$cntmemchild] ??= '',
+                                    'famId' => null,    ];
+                }
+            }
            
-            // if(count( $this->businfo) > 0){
-            //     foreach($this->businfo as $key => $value){
-            //         $businesses[] = [   'businessName' => $value['businessName'], 
-            //                         'businessType' => $value['businessType'],
-            //                         'businessAddress' => $value['businessAddress'],
-            //                         'b_status' => $value['b_status'],
-            //                         'yob' => $value['yob'],
-            //                         'noe' => $value['noe'],
-            //                         'salary' => $value['salary'],
-            //                         'vos' => $value['vos'],
-            //                         'aos' => $value['aos']    ];
-            //     }
-            // }
+            if(count( $this->businfo) > 0){
+                foreach($this->businfo as $key => $value){
+                    $businesses[] = [   'businessName' => $value['businessName'], 
+                                    'businessType' => $value['businessType'],
+                                    'businessAddress' => $value['businessAddress'],
+                                    'b_status' => $value['b_status'],
+                                    'yob' => $value['yob'],
+                                    'noe' => $value['noe'],
+                                    'salary' => $value['salary'],
+                                    'vos' => $value['vos'],
+                                    'aos' => $value['aos']    ];
+                }
+            }
 
             if(count( $this->appliances) > 0){
                 foreach($this->appliances as $key => $value){
@@ -277,9 +348,17 @@ class CreateApplication extends Component
                                 "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
                                 "remarks"=> ''
                     ]];
-                    // dd($data);            
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);                
-            dd($crt);
+                    // dd($data);      
+                 
+            if($this->type == 1){               
+                $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
+                // dd($crt);
+                return redirect()->to('/tranactions/application/list')->with('message', 'Loan successfully saved');                      
+            }
+            else{              
+                session()->push('memdata', $data[0]);
+                return redirect()->to('/tranactions/application/group/create');
+            }
         }
         catch (\Exception $e) {           
             throw $e;            
@@ -373,11 +452,12 @@ class CreateApplication extends Component
         $this->membusinfo['aos'] = '';
     }
 
-    public function mount(){
+    public function mount($type){
+        $this->type = $type;
         $this->member['civil_Status'] = '';       
         $this->member['emp_Status'] = '1';
         $this->member['f_Emp_Status'] = '';
-        $this->member['bO_Status'] = 1;
+        $this->member['bO_Status'] = '';
         $this->cntmemchild = [1];        
         $this->vehicle[1] = [  'vehicle' => '' ];
         $this->properties[1] = [  'property' => '' ];
@@ -389,7 +469,11 @@ class CreateApplication extends Component
 
     public function render()
     {
-        
-        return view('livewire.transactions.application.create-application');
+        if($this->type == 3){
+            return view('livewire.transactions.application.create-application-group');
+        }
+        else{
+            return view('livewire.transactions.application.create-application');
+        }
     }
 }

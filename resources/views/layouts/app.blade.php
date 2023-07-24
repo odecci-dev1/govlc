@@ -88,7 +88,7 @@
                             </li>
                         </a> -->
 
-                        <a href="../KC/maintenance-field-officer.html" data-nav-link>
+                        <a href="{{ URL::to('/') }}/maintenance/fieldofficer/list" data-nav-link>
                             <li>
                                 <!-- * Field Officer -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/field-officer.svg" alt="field-officer" />
@@ -291,13 +291,18 @@
         <div class="nav-con-2">
 
             <!-- * Nav Links Container -->
+            
             <ul class="nav-links">
-
+                <!-- * Link Wrapper -->                  
+                <a href="#" class="link" no-data-dropdown>
+                    <img src="{{ URL::to('/') }}/assets/icons/user.svg" alt="user" />
+                    <p>User</p>
+                </a>
                 <!-- * Link Wrapper -->
-                <li class="link" no-data-dropdown>
+                <a href="#" class="link" no-data-dropdown>
                     <img src="{{ URL::to('/') }}/assets/icons/settings.svg" alt="settings" />
                     <p>Settings</p>
-                </li>
+                </a>
             </ul>
         </div>
     </div>

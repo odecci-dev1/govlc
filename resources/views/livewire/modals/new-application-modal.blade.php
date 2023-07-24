@@ -24,8 +24,8 @@
 
                                     <div class="option" data-type-loan-opt data-individual-loan-link>
 
-                                        <input type="radio" class="radio" name="category" />
-                                        <label for="Individual Loan">
+                                        <input type="radio" class="radio" id="loan-type-individual" name="category" />
+                                        <label for="loan-type-individual">
                                             <h4>Individual Loan</h4>
                                         </label>
 
@@ -33,8 +33,8 @@
 
                                     <div class="option" data-type-loan-opt data-group-loan-link>
 
-                                        <input type="radio" class="radio" name="category" />
-                                        <label for="Group Loan">
+                                        <input type="radio" wire:click="redirectToGroupLoan" class="radio" id="loan-type-group" name="category" />
+                                        <label for="loan-type-group">
                                             <h4>Group Loan</h4>
                                         </label>
 
@@ -42,8 +42,8 @@
 
                                     <div class="option" data-type-loan-opt>
 
-                                        <input type="radio" class="radio" name="category" />
-                                        <label for="Sample Loan">
+                                        <input type="radio" class="radio" id="loan-type-sample" name="category" />
+                                        <label for="loan-type-sample">
                                             <h4>Sample Loan</h4>
                                         </label>
 
@@ -76,7 +76,7 @@
                 </div>
 
                 <!-- * Create New Button -->
-                <a href="{{ URL::to('/') }}/tranactions/application/create" class="button">Create New</a>
+                <a href="{{ URL::to('/') }}/tranactions/application/create/1" class="button">Create New</a>
 
             </div>
 
