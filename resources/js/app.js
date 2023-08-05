@@ -75,19 +75,18 @@ const closeNewApplicationButton = document.querySelector('#data-close-new-applic
 const newApplicationModal = document.querySelector('[data-new-application-modal]')
 
 
-openNewApplicationButton.addEventListener('click', () => {
-    console.log("hello")
-    newApplicationModal.showModal();
-});
+// openNewApplicationButton.addEventListener('click', () => {
+//     console.log("hello")
+//     newApplicationModal.showModal();
+// });
 
-closeNewApplicationButton.addEventListener('click', () => {
-    newApplicationModal.setAttribute("closing", "");
-    newApplicationModal.addEventListener("animationend", () => {
-        newApplicationModal.removeAttribute("closing");
-        newApplicationModal.close();
-    }, { once: true });
+// closeNewApplicationButton.addEventListener('click', () => {
+//     newApplicationModal.setAttribute("closing", "");
+//     newApplicationModal.addEventListener("animationend", () => {
+//         newApplicationModal.removeAttribute("closing");
+//         newApplicationModal.close();
+//     }, { once: true });
 
-});
+// });
 // *** END --- New Application Modal *** //
-
 

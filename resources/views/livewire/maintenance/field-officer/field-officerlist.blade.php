@@ -136,7 +136,7 @@
                                 <!-- * Action -->
                                 <td class="td-btns">
                                     <div class="td-btn-wrapper">
-                                        <button class="a-btn-view-2" data-maintenance-view-field-officer>View</button>
+                                        <a href="" class="a-btn-view-2" data-maintenance-view-field-officer>View</a>
                                         <button class="a-btn-trash-2">Trash</button>
                                     </div>
                                 </td>

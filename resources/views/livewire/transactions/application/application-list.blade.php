@@ -227,17 +227,17 @@
                         
                     <!-- * Borrower -->
                     <td>
-                       {{ $l['fullname'] }}
+                       {{ $l['borrower'] }}
                     </td>
 
                     <!-- * Borrower Contact Number -->
                     <td>
-                        {{ $l['cno'] }}
+                        {{ $l['co_Cno'] }}
                     </td>
                         
                     <!-- * Co-Borrower -->
                     <td>
-                        {{ $l['co_Fname'] . ' ' . $l['co_Mname'] . ' ' . $l['co_Lname'] }}
+                        {{ $l['coBorrower'] }}
                     </td>
 
                     <!-- * Co-Borrower Contact Number -->
@@ -263,7 +263,7 @@
                     <!-- * Table View and Trash Button -->
                     <td class="td-btns">
                         <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-view-application>View</button>
+                            <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $l['naid'] }}/4" class="a-btn-view-3" data-view-application>View</a>
                             <button class="a-btn-trash-5">Trash</button>
                         </div>
                     </td>

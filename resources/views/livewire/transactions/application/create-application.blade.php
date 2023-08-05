@@ -1,14 +1,18 @@
 <div >       
     <!-- * New-Application-Form-Container -->
     <form action="" class="na-form-con" autocomplete="off" >
-
+        @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
     <!-- * New Application Progress Bar Container -->
     <div class="na-progress-bar-container">
         <div class="progress-bar-level">
 
             <!-- * New Application Registration Level 1 -->
             <div class="level level1 active">
-                <span>Registration {{ $test }}</span>
+                <span>Registration</span>
             </div>
 
             <!-- * New Application Credit Investigation Level 2 -->
@@ -57,11 +61,11 @@
 
                         <!-- * Save -->
                         @if($type == 1)
-                        <button wire:click="store" type="button" id="saveBtn" class="button" data-save>Save</button>
+                        <button wire:click="store" type="button" wire:loading.attr="disabled" class="button" data-save>Save</button>
 
                         <!-- * Save & Apply for loan  -->
-                        <a href="new-application-credit-investigation.html">
-                            <button type="button" id="proceedToCI" class="button" onclick="activeProgressButton()" data-proceed-to-ci>Save & Proceed to CI</button>
+                        <a href="#">
+                            <button type="button"  wire:loading.attr="disabled" class="button" onclick="activeProgressButton()" data-proceed-to-ci>Save & Proceed to CI</button>
                         </a>
                         @else
                         <button wire:click="store" type="button" class="button" data-save>Add To Group</button>
@@ -144,14 +148,14 @@
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.dob" autocomplete="off" type="date"  >
+                        <input wire:model.lazy="member.dob" wire:change="getmemberAge" autocomplete="off" type="date"  >
                         @error('member.dob') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.lazy="member.age" autocomplete="off" type="number"  >
+                        <input wire:model.lazy="member.age" disabled="disabled"  autocomplete="off" type="number"  >
                         @error('member.age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -549,7 +553,6 @@
                                 <label for="Unemployed">
                                     <h4>Unemployed</h4>
                                 </label>
-
                             </div>
 
                         </div>

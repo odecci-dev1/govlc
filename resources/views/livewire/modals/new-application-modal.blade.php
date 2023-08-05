@@ -24,8 +24,8 @@
 
                                     <div class="option" data-type-loan-opt data-individual-loan-link>
 
-                                        <input type="radio" class="radio" id="loan-type-individual" name="category" />
-                                        <label for="loan-type-individual">
+                                        <input type="radio" wire:model.lazy="loantype" class="radio" value="Individual Loan" id="loantype1" name="loantype" />
+                                        <label for="loantype1">
                                             <h4>Individual Loan</h4>
                                         </label>
 
@@ -33,8 +33,8 @@
 
                                     <div class="option" data-type-loan-opt data-group-loan-link>
 
-                                        <input type="radio" wire:click="redirectToGroupLoan" class="radio" id="loan-type-group" name="category" />
-                                        <label for="loan-type-group">
+                                        <input type="radio" wire:model.lazy="loantype"  wire:click="redirectToGroupLoan" value="Group Loan" class="radio" id="loantype2" name="loantype" />
+                                        <label for="loantype2">
                                             <h4>Group Loan</h4>
                                         </label>
 
@@ -42,8 +42,8 @@
 
                                     <div class="option" data-type-loan-opt>
 
-                                        <input type="radio" class="radio" id="loan-type-sample" name="category" />
-                                        <label for="loan-type-sample">
+                                        <input type="radio" wire:model.lazy="loantype"  class="radio" id="loantype3" value="Sample Loan" name="loantype" />
+                                        <label for="loantype3">
                                             <h4>Sample Loan</h4>
                                         </label>
 
@@ -51,7 +51,8 @@
 
                                 </div>
                                 
-                                <div class="selected" data-type-loan-select>
+                                <div class="selected" style="font-weight: bold;" data-type-loan-select>
+                                    {{ $loantype != '' ? $loantype : '' }}
                                 </div>
 
                             </div>
@@ -114,18 +115,18 @@
                        
                         @if($memberlist)
                             @foreach($memberlist as $list)
-                            <tr>
+                            <tr onclick="createIndividualLoan('{{ $list['memId'] }}')">
                             <!-- * Checkbox Opt
                             <td><input type="checkbox" id="checkbox" data-checkbox></td> -->
                                 <td>
 
                                     <!-- * Data Name-->
-                                    <span class="td-name">Dela Cruz, Juana</span>
+                                    <span class="td-name">{{ $list['fullname'] }}</span>
 
                                 </td>
                                 <td>
                                     <!-- * Data Member ID-->
-                                    <span class="td-name">778 8596 2125</span>
+                                    <span class="td-name">{{ $list['memId'] }}</span>
                                 </td>
                             </tr>
                             @endforeach
@@ -156,4 +157,12 @@
     </div>
 
     </dialog>
+
+    <script>
+        document.addEventListener('livewire:load', function () {
+            window.createIndividualLoan = function($cmid){               
+                @this.call('createIndividualLoan', $cmid);
+            };     
+        });
+    </script>
 </div>

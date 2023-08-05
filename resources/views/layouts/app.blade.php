@@ -96,7 +96,7 @@
                             </li>
                         </a>
 
-                        <a href="../KC/maintenance-field-area.html" data-nav-link>
+                        <a href="{{ URL::to('/') }}/maintenance/fieldarea" data-nav-link>
                             <li>
                                 <!-- * Field Area -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/field-area.svg" alt="field-area" />
@@ -104,7 +104,7 @@
                             </li>
                         </a>
 
-                        <a href="../KC/maintenance-loan-type.html" data-nav-link>
+                        <a href="{{ URL::to('/') }}/maintenance/loantypes/list" data-nav-link>
                             <li>
                                 <!-- * Loan Type -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/loan-type.svg" alt="loan-type" />
@@ -112,7 +112,7 @@
                             </li>
                         </a>
 
-                        <a href="../KC/maintenance-holidays.html" data-nav-link>
+                        <a href="{{ URL::to('/') }}/maintenance/holiday/list" data-nav-link>
                             <li>
                                 <!-- * Holidays -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/holidays.svg" alt="loan-type" />
@@ -165,17 +165,7 @@
 
                     <!-- * Submenu -->
                     <ul class="sub-menu">
-
-                        <a href="#" id="data-open-new-application-modals" data-nav-link>
-
-                            <li>
-                                <!-- * New Application -->
-                                <img src="{{ URL::to('/') }}/assets/icons/sub-menu/new-application.svg" alt="new-member" />
-                                <span>New Application</span>
-                            </li>
-
-                        </a>
-
+                        
                         <a href="{{ URL::to('/') }}/tranactions/application/list" data-nav-link>
 
                             <li>
@@ -294,7 +284,7 @@
             
             <ul class="nav-links">
                 <!-- * Link Wrapper -->                  
-                <a href="#" class="link" no-data-dropdown>
+                <a href="{{ URL::to('/') }}/users" class="link" no-data-dropdown>
                     <img src="{{ URL::to('/') }}/assets/icons/user.svg" alt="user" />
                     <p>User</p>
                 </a>

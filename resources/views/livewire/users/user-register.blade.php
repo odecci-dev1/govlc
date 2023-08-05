@@ -29,6 +29,7 @@
                        wire:model.defer="username"
                       />
                     </div>
+                    @error('username') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
 
                   <div class="rowspan">
@@ -41,6 +42,7 @@
                         wire:model.defer="password"
                       />
                     </div>
+                    @error('password') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
 
                   <div class="rowspan">
@@ -53,6 +55,7 @@
                         wire:model.defer="password_confirmation"
                       />
                     </div>
+                    @error('password_confirmation') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
 
 
@@ -66,6 +69,7 @@
                         wire:model.defer="fname"
                       />
                     </div>
+                    @error('fname') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
 
                   <!-- * Rowspan 3: Middle Name -->
@@ -79,6 +83,7 @@
                         wire:model.defer="mname"
                       />
                     </div>
+                    @error('mname') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
 
                   <!-- * Rowspan 4: Last Name -->
@@ -92,6 +97,7 @@
                         wire:model.defer="lname"
                       />
                     </div>
+                    @error('lname') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
 
                   <!-- * Rowspan 5: Contact Number -->
@@ -107,6 +113,7 @@
                         />
                       </div>
                     </div>
+                    @error('cno') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
 
                   <!-- * Rowspan 6: Address -->
@@ -122,6 +129,7 @@
                         />
                       </div>
                     </div>
+                    @error('address') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
                 </div>
 
@@ -136,7 +144,7 @@
                         <div class="input-wrapper">
                           <input
                             type="image"
-                            src="../../res/assets/icons/upload-image.svg"
+                            src="{{ URL::to('/') }}/assets/icons/upload-image.svg"
                             alt="upload-image"
                           />
                         </div>
@@ -150,7 +158,7 @@
                           <button type="button" class="button" wire:click="register">Update</button>
 
                           <!-- * Cancel Button -->
-                          <button type="button" class="transparentButtonUnderline" data-back-to-user-list>Cancel</button>
+                          <a href="{{ URL::to('/') }}/users" type="button" class="transparentButtonUnderline" data-back-to-user-list>Cancel</a>
                         </div>
                       </div>
                     </div>
@@ -169,10 +177,13 @@
                   <!-- * All (Checkbox) -->
                   <div class="input-wrapper-checkbox">
                     <input
-                      type="checkbox"
+                      type="radio"
                       class="checkbox"
-                      id="checkbox"
+                      wire:model="usertype"
+                      value="1"
                       data-checkbox
+                      name="userlevel"
+                      id="userlevel1"
                     />
                     <span>All</span>
                   </div>
@@ -180,10 +191,12 @@
                   <!-- * Overview (Checkbox) -->
                   <div class="input-wrapper-checkbox">
                     <input
-                      type="checkbox"
+                      type="radio"
                       class="checkbox"
-                      id="checkbox"
+                      wire:model="usertype"
+                      value="2"
                       data-checkbox
+                      name="userlevel"
                     />
                     <span>Overview</span>
                   </div>
@@ -191,13 +204,16 @@
                   <!-- * Members (Checkbox) -->
                   <div class="input-wrapper-checkbox">
                     <input
-                      type="checkbox"
+                      type="radio"
                       class="checkbox"
-                      id="checkbox"
+                      wire:model="usertype"
+                      value="3"
                       data-checkbox
+                      name="userlevel"
                     />
                     <span>Members</span>
                   </div>
+                  @error('usertype') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Container 2: User Restrictions Table List -->
@@ -216,7 +232,8 @@
                               <input
                               type="checkbox"
                               class="checkbox"
-                              id="checkboxallCheckbox"
+                              wire:model="maintenanace"  
+                              value="1"                         
                               onchange="checkAll(this)"
                             />
                             <span>Maintenance</span>
@@ -229,7 +246,8 @@
                               <input
                               type="checkbox"
                               class="checkbox"
-                              id="checkboxallCheckbox"
+                              wire:model="collection"      
+                              value="1"                   
                               onchange="checkAll(this)"
                             />
                             <span>Collection</span>
@@ -242,7 +260,8 @@
                             <input
                             type="checkbox"
                             class="checkbox"
-                            id="checkboxallCheckbox"
+                            wire:model="transactions"  
+                            value="1"                       
                             onchange="checkAll(this)"
                           />
                           <span>Transactions</span>
@@ -255,7 +274,8 @@
                               <input
                               type="checkbox"
                               class="checkbox"
-                              id="checkboxallCheckbox"
+                              wire:model="reports"       
+                              value="1"                  
                               onchange="checkAll(this)"
                             />
                             <span>Reports</span>
@@ -274,8 +294,7 @@
                             <input
                               type="checkbox"
                               class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
+                              wire:model="maintenance."
                             />
                             <span>Field Officer</span>
                           </div>

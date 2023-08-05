@@ -28,12 +28,16 @@
                 <div class="container">
 
                     <div class="input-box">
-                        <input type="text" name="uname" required />
-                        <span>Username</span>
+                        <input type="text" name="username" required />
+                        <span>Username</span>                        
                     </div>
 
+                    @if(session('message'))
+                        <span style="font-size: 18px; color: #ff8080;"> {{ session('message') }}</span>
+                    @endif
+
                     <div class="input-box">
-                        <input type="password" name="psw" required />
+                        <input type="password" name="password" required />
                         <span>Password</span>
                     </div>
                     <!-- * Form Buttons -->

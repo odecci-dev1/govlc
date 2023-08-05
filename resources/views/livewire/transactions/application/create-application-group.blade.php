@@ -44,7 +44,7 @@
             <!-- * Group Name Input -->
             <div class="input-wrapper">
                 <h2>Group Name</h2>
-                <input type="text" id="appLoanAmnt" name="appLoanAmnt">
+                <input wire:model.lazy="groupname" type="text">
             </div>
 
         </div>
@@ -127,39 +127,7 @@
                     @endif
             <!-- * All Members Data -->
            
-            <tr>
-
-                <!-- * Checkbox -->
-                <td><input type="checkbox" class="checkbox" id=" checkbox" data-select-checkbox></td>
-
-                <!-- * Borrower Data-->
-                <td>
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-2.svg" alt="">
-                        <span class="td-num"></span>
-                        <span class="td-name">Beverly, Haily</span>
-                    </div>
-                </td>
-
-                <!-- * Co-Makers Data-->
-                <td>
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                        <span class="td-name">Barbosa, June</span>
-                    </div>
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-
-                    <div class="td-btn-wrapper">
-                        <button type="button" class="a-btn-view-2" data-view-group-member>View</button>
-                        <button type="button" class="a-btn-trash-2">Trash</button>
-                    </div>
-
-                </td>
-
-            </tr>
+           
 
         </table>
 
@@ -209,19 +177,19 @@
             <!-- * Applied Loan Amount -->
             <div class="input-wrapper">
                 <span>Applied Loan Amount</span>
-                <input type="text" id="appLoanAmnt" name="appLoanAmnt">
+                <input type="number"  wire:model.lazy="loandetails.loamamount">
             </div>
 
             <!-- * Terms Of Payment -->
             <div class="input-wrapper">
                 <span>Terms Of Payment</span>
-                <input type="text" id="top" name="top">
+                <input type="text"  wire:model.lazy="loandetails.paymentterms">
             </div>
 
             <!-- * Purpose -->
             <div class="input-wrapper">
                 <span>Purpose</span>
-                <input type="text" id="purpose" name="purpose">
+                <input type="text"  wire:model.lazy="loandetails.purpose">
             </div>
 
         </div>

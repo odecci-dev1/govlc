@@ -10,6 +10,8 @@ class CreateApplicationGroup extends Component
 
     public $test = 'hello';
     public $members = [];
+    public $groupname;
+    public $loandetails;
 
     public function mount(){
        
@@ -18,7 +20,15 @@ class CreateApplicationGroup extends Component
     }
 
     public function store(){
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', session('memdata'));  
+
+        $data = [
+                    'members' => session('memdata'),
+                    "groupName"=> $this->groupname,
+                    "groupId"=> "test"
+                ];
+        // dd( $data );        
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
+        dd($crt);
     }
 
     public function render()
