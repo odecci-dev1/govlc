@@ -90,3 +90,40 @@ const newApplicationModal = document.querySelector('[data-new-application-modal]
 // });
 // *** END --- New Application Modal *** //
 
+// * Deletion/ Dialog Modal
+const deletionYes = document.querySelector('[data-deletion-yes]')
+const deletionNo = document.querySelector('[data-deletion-no]')
+const deletionModal = document.querySelector('[data-deletion-modal]')
+const deletionSuccessfulModal = document.querySelector('[data-deletion-successful]')
+const closeDeletionSuccessModal = document.querySelector('[data-close-deletion-success-modal]')
+
+if (deletionModal) {
+
+    deletionYes.addEventListener('click', () => {
+        deletionSuccessfulModal.showModal()
+        deletionModal.setAttribute("closing", "")
+        deletionModal.addEventListener("animationend", () => {
+            deletionModal.removeAttribute("closing")
+            deletionModal.close()
+        }, { once: true })
+    })
+
+    deletionNo.addEventListener('click', () => {
+        deletionModal.setAttribute("closing", "");
+        deletionModal.addEventListener("animationend", () => {
+            deletionModal.removeAttribute("closing");
+            deletionModal.close();
+        }, { once: true });
+    })
+
+    closeDeletionSuccessModal.addEventListener("click", () => {
+        deletionSuccessfulModal.setAttribute("closing", "");
+        deletionSuccessfulModal.addEventListener("animationend", () => {
+            deletionSuccessfulModal.removeAttribute("closing");
+            deletionSuccessfulModal.close();
+        }, { once: true });
+    })
+
+}
+
+

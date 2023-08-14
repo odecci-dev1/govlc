@@ -29,7 +29,7 @@
                         <div class="btn-wrapper">
 
                             <!-- * Save -->
-                            <button type="button" id="saveBtn" class="button" data-save>Save</button>
+                            <button type="button" wire:click="store" class="button" data-save>Save</button>
 
                         </div>
 
@@ -61,7 +61,7 @@
                         <!-- * Loan Type Name -->
                         <div class="input-wrapper">
                             <span>Loan Type Name</span>
-                            <input autocomplete="off" type="text" id="doBirth" name="doBirth">
+                            <input autocomplete="off" type="text" wire:model.lazy="loanTypeName">
                         </div>
 
                     </div>
@@ -76,25 +76,23 @@
                                 <div class="wrapper">
                                     <span>Loan Amount + Interest</span>
                                     <span>&lt;</span>
-                                    <input autocomplete="off" type="number" id="conNum" name="conNum" placeholder="Value">
+                                    <input autocomplete="off" type="number" wire:model.lazy="loan_amount_Lessthan_Val" placeholder="Value">
                                     <div class="input-inner-select-wrapper">
                                         <div class="select-box">
 
                                             <div class="options-container" data-option-con1>
 
                                                 <div class="option" data-option-item1>
-
-                                                    <input type="radio" class="radio" name="category" value="Percent"/>
-                                                    <label for="Percent">
+                                                    <input type="radio"  wire:model.lazy="loan_amount_Lessthan_Per" class="radio" id="loan_amount_Lessthan_Per1" name="loan_amount_Lessthan_Per" value="1"/>
+                                                    <label for="loan_amount_Lessthan_Per1">
                                                         <h4>Percent</h4>
                                                     </label>
-
                                                 </div>
 
                                                 <div class="option" data-option-item1>
 
-                                                    <input type="radio" class="radio" name="category" value="Fixed"/>
-                                                    <label for="Fixed">
+                                                    <input type="radio" wire:model.lazy="loan_amount_Lessthan_Per" class="radio" name="loan_amount_Lessthan_Per" id="loan_amount_Lessthan_Per2" value="2"/>
+                                                    <label for="loan_amount_Lessthan_Per2">
                                                         <h4>Fixed</h4>
                                                     </label>
 
@@ -103,11 +101,11 @@
                                             </div>
 
                                             <div class="selected" data-option-select1>
-                                                <!-- Select Formula -->
+                                                {{ isset($loan_amount_Lessthan_Per) ? ($loan_amount_Lessthan_Per == 1 ? 'Percent' : 'Fixed') : '' }}
                                             </div>
 
                                         </div>
-                                        <input autocomplete="off" type="number" id="conNum" name="conNum" placeholder="Amount">
+                                        <input autocomplete="off" wire:model.lazy="loan_amount_Lessthan_Val" type="number" id="conNum" name="conNum" placeholder="Amount">
                                     </div>
                                 </div>
                             </div>

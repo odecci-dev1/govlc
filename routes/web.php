@@ -54,7 +54,7 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 //field officer
 Route::get('/maintenance/fieldofficer/list', FieldOfficerlist::class)->name('fieldofficer.list');
 Route::get('/maintenance/fieldofficer/create', FieldOfficer::class)->name('fieldofficer.create');
-Route::get('/maintenance/fieldofficer/view/{fullname}', FieldOfficer::class)->name('fieldofficer.create');
+Route::get('/maintenance/fieldofficer/view/{foid}', FieldOfficer::class)->name('fieldofficer.view');
 //field officer
 
 //holiday

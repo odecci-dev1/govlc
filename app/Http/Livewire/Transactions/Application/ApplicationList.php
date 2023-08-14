@@ -13,7 +13,7 @@ class ApplicationList extends Component
     public function render()
     {
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/IndividualList');  
-        $this->list = $data->json();      
+        $this->list = $data->json();        
         return view('livewire.transactions.application.application-list');
     }
 }

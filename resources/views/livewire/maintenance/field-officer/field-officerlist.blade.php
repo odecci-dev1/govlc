@@ -1,4 +1,10 @@
 <div>
+    @if($showDialog == 1)
+        <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
+    @endif
+    @if(session('mmessage'))
+        <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+    @endif
     <!-- * Maintenance' Containers -->
             <!-- * Container 1: Maintenance Header, Buttons, and Searchbar -->
             <div class="m-con-1">
@@ -32,7 +38,7 @@
 
                 <!-- * View Trash Button -->
                 <div class="btn-container">
-                    <button>View Trash</button>
+                    <button wire:click="showDialog" type="button">View Trash</button>
                 </div>
             </div>
 
@@ -136,8 +142,8 @@
                                 <!-- * Action -->
                                 <td class="td-btns">
                                     <div class="td-btn-wrapper">
-                                        <a href="" class="a-btn-view-2" data-maintenance-view-field-officer>View</a>
-                                        <button class="a-btn-trash-2">Trash</button>
+                                        <a href="{{ URL::to('/') }}/maintenance/fieldofficer/view/{{ $l['foid'] }}" class="a-btn-view-2" data-maintenance-view-field-officer>View</a>
+                                        <button type="button" onclick="showDialog('{{ $l['foid'] }}')" class="a-btn-trash-2">Trash</button>
                                     </div>
                                 </td>
 
@@ -166,3 +172,14 @@
 
             </div>
 </div>
+<script>
+    document.addEventListener('livewire:load', function () {
+        window.showDialog = function($mid){              
+            @this.call('showDialog', $mid);        
+        };
+
+        window.archive = function($mid){
+            @this.call('archive', $mid);       
+        };
+    })
+</script>

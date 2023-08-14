@@ -263,7 +263,12 @@
                     </div>
 
                     <!-- * Save Button -->
+                    @if($foid == '')
                     <button type="button" wire:click="store" class="button save-btn">Save</button>
+                    @else
+                    <button type="button" wire:click="update" class="button save-btn">Update</button>
+                    <button type="button" wire:click="archive('{{ $foid }}')" class="button save-btn">Trash</button>
+                    @endif
 
                 </div>
 

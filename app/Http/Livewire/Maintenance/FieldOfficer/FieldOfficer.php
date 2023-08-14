@@ -5,9 +5,16 @@ namespace App\Http\Livewire\Maintenance\FieldOfficer;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
+use App\Traits\Common;
+
+
 class FieldOfficer extends Component
 {   
+
+    use Common;
+    
     public $officer;
+    public $foid;
 
     public function rules(){                
         $rules = []; 
@@ -97,8 +104,83 @@ class FieldOfficer extends Component
         }
     }
 
+    public function update(){   
+        try {                  
+            $input = $this->validate(); 
+            $data = [
+                        "fname"=> $input['officer']['fname'] ??= '',
+                        "lname"=> $input['officer']['lname'] ??= '',
+                        "mname"=> $input['officer']['mname'] ??= '',
+                        "suffix"=> $input['officer']['mname'] ??= '',
+                        "gender"=> $input['officer']['mname'] ??= '',
+                        "dob"=> $input['officer']['dob'] ??= null,
+                        "age"=> $input['officer']['age'] ??= '0',
+                        "pob"=> $input['officer']['pob'] ??= '',
+                        "civilStatus"=> $input['officer']['civilStatus'] ??= '',
+                        "cno"=> $input['officer']['cno'] ??= '',
+                        "emailAddress"=> $input['officer']['emailAddress'] ??= '',
+                        "houseNo"=> $input['officer']['houseNo'] ??= '',
+                        "barangay"=> $input['officer']['barangay'] ??= '',
+                        "city"=> $input['officer']['city'] ??= '',
+                        "region"=> $input['officer']['region'] ??= '',
+                        "country"=> $input['officer']['country'] ??= '',
+                        "sss"=> $input['officer']['sss'] ??= '',
+                        "pagIbig"=> $input['officer']['pagIbig'] ??= '',
+                        "philHealth"=> $input['officer']['philHealth'] ??= '',
+                        "idNum"=> $input['officer']['idNum'] ??= null,
+                        "typeID"=> $input['officer']['typeID'] ??= '',
+                        "files" => [],
+                        "foid" => $this->foid,
+                    ];   
+                             
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/UpdateFieldOfficer', $data);  
+            //dd($crt );
+            return redirect()->to('/maintenance/fieldofficer/view/'.$this->foid)->with('message', 'Field officer successfully saved');    
+        }
+        catch (\Exception $e) {           
+            throw $e;            
+        }
+    }
+
+    public function archive($foid){       
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/DeleteFO', [ 'foid' => $foid ]);              
+        return redirect()->to('/maintenance/fieldofficer/list')->with('message', 'Filed officer has been archived');    
+    }
+    
+    public function mount($foid = ''){
+        if($foid != ''){
+            $this->foid = $foid;
+            $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFOID', [ 'foid' => $this->foid ]);     
+            $res = $data->json();
+            $res = $res[0];             
+            $this->officer['fname'] =  $res['fname'];
+            $this->officer['mname'] =  $res['mname'];
+            $this->officer['lname'] =  $res['lname'];
+            $this->officer['suffix'] =  $res['suffix'];
+            $this->officer['gender'] =  $res['gender'];
+            $this->officer['dob'] =  date('Y-m-d', strtotime($res['dob']));
+            $this->officer['age'] =  $res['age'];
+            $this->officer['pob'] =  $res['pob'];            
+            $this->officer['civilStatus'] =  $res['civilStatus'];
+            $this->officer['cno'] =  $res['cno'];
+            $this->officer['emailAddress'] =  $res['emailAddress'];
+
+            $this->officer['houseNo'] =  $res['houseNo'];
+            $this->officer['barangay'] =  $res['barangay'];
+            $this->officer['emailAddress'] =  $res['emailAddress'];
+            $this->officer['city'] =  $res['city'];
+            $this->officer['region'] =  $res['region'];
+            $this->officer['country'] =  $res['country'];
+            $this->officer['sss'] =  $res['sss'];
+            $this->officer['pagIbig'] =  $res['pagIbig'];
+            $this->officer['philHealth'] =  $res['philHealth'];
+            $this->officer['idNum'] =  $res['idNum'];
+            $this->officer['typeID'] =  $res['typeID'];
+        }
+    }   
+
     public function render()
-    {        
+    {         
         return view('livewire.maintenance.field-officer.field-officer');
     }
 }

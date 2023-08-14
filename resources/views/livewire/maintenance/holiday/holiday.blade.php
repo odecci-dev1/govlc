@@ -29,7 +29,12 @@
                         <div class="btn-wrapper">
 
                             <!-- * Save -->
+                            @if($holid == '')
                             <button type="button" wire:click="store" class="button" data-save>Save</button>
+                            @else
+                            <button type="button" wire:click="update" class="button" data-save>Update</button>
+                            <button type="button" wire:click="archive('{{ $holid }}')" class="button" data-save>Trash</button>
+                            @endif
 
                         </div>
 
@@ -81,21 +86,21 @@
                         <!-- * Month -->
                         <div class="input-wrapper">
                             <span>Month:</span>
-                            <input autocomplete="off" wire:model.lazy="month"  type="text" class="calendarSelect" id="formHolidayMonth" name="formHolidayMonth"  >
+                            <input autocomplete="off" disabled wire:model.lazy="month"  type="text" class="calendarSelect" id="formHolidayMonth" name="formHolidayMonth"  >
                             @error('month') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Day -->
                         <div class="input-wrapper">
                             <span>Day:</span>
-                            <input autocomplete="off" wire:model.lazy="day"  type="text" class="calendarSelect" id="formHolidayDay" name="formHolidayDay" >
+                            <input autocomplete="off" disabled wire:model.lazy="day"  type="text" class="calendarSelect" id="formHolidayDay" name="formHolidayDay" >
                             @error('day') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Year -->
                         <div class="input-wrapper">
                             <span>Year:</span>
-                            <input autocomplete="off" wire:model.lazy="year"  type="text" class="calendarSelect" id="formHolidayYear" name="formHolidayYear" >
+                            <input autocomplete="off" disabled wire:model.lazy="year"  type="text" class="calendarSelect" id="formHolidayYear" name="formHolidayYear" >
                             @error('year') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -147,7 +152,7 @@
             </div>
 
             <div class="cancel-btn-wrapper">
-                <a href="../maintenance/maintenance-holidays.html">
+                <a href="{{ URL::to('/') }}/maintenance/holiday/list">
                     <button type="button" class="transparentButtonUnderline">Cancel</button>
                 </a>
             </div>

@@ -168,7 +168,7 @@
 
                     <!-- * Civil Status -->
                     <div class="input-wrapper">
-                        <span>Civil Status {{ isset($member['civil_Status']) ? $member['civil_Status'] : '' }}</span>
+                        <span>Civil Status</span>
                         <div class="select-box">
 
                             <div class="options-container" data-option-con2>

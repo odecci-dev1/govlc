@@ -33,12 +33,14 @@
                         <!-- * Area Name -->
                         <div class="input-wrapper">
                             <span>Area Name</span>
-                            <input autocomplete="off" type="text" id="mAreaName" name="mAreaName" value="">
+                            <input autocomplete="off" wire:model.lazy="areaName">
                         </div>
 
                         <!-- * Location -->
                         <div class="input-wrapper">
-
+                            <textarea wire:model.defer="location" style="visibility: hidden;">
+                                   
+                            </textarea>
                             <span>Location</span>
                             <div class="locations-container">
                                 <div class="chip-container" id="mLocationContainer">
@@ -58,8 +60,9 @@
                             <span>Field Officer</span>
                             <!-- * Search Bar -->
                             <div class="search-wrap">
-                                <input type="search" id="mSearch" name="mSearch" placeholder="Search" value="">
-                                <img src="../../res/assets/icons/magnifyingglass.svg" alt="search">
+                                <input type="text" wire:model.lazy="foid" placeholder="field officer id" >
+                                <input type="search" wire:model.lazy="fullname" placeholder="Search" >
+                                <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                             </div>
 
                         </div>
@@ -71,7 +74,7 @@
 
                         <!-- * Save Button -->
                         <div class="input-wrapper">
-                            <button type="submit" class="button">Save</button>
+                            <button type="button" wire:click="store" class="button">Save</button>
                         </div>
 
                     </div>
@@ -96,8 +99,8 @@
 
                                 <!-- * Search Bar -->
                                 <div class="search-wrap">
-                                    <input type="search" id="search" name="areaSearch" placeholder="Search for Areas">
-                                    <img src="../../res/assets/icons/magnifyingglass.svg" alt="search">
+                                    <input type="search" wire:model="keyword" placeholder="Search for Areas">
+                                    <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                                 </div>
 
                             </div>
@@ -133,195 +136,41 @@
 
                                     </tr>
 
+                                    @if($list)              
+                                        @foreach($list as $l)
+                                        <tr data-area-maintenance>
 
-                                    <!-- * Field Maintenance Data -->
-                                    <tr data-area-maintenance>
+                                            <!-- * Checkbox Opt -->
+                                            <td>
+                                                <input type="checkbox" class="checkbox" data-select-checkbox>
+                                            </td>
 
-                                        <!-- * Checkbox Opt -->
-                                        <td>
-                                            <input type="checkbox" class="checkbox" data-select-checkbox>
-                                        </td>
+                                            <!-- * Data Area Name-->
+                                            <td class="td-name" data-area-name>
+                                               {{ $l['areaName'] }}
+                                            </td>
 
-                                        <!-- * Data Area Name-->
-                                        <td class="td-name" data-area-name>
-                                            Area 1
-                                        </td>
+                                            <!-- * Data Locations-->
+                                            <td class="td-name" data-area-location>
+                                                {{ $l['location'] }}
+                                            </td>
 
-                                        <!-- * Data Locations-->
-                                        <td class="td-name" data-area-location>
-                                            Pandi, Sta Maria, Malibo
-                                        </td>
+                                            <!-- * Data Field Officer-->
+                                            <td class="td-field-off" data-area-field-officer>
+                                                {{ $l['fullname'] }}
+                                            </td>
 
-                                        <!-- * Data Field Officer-->
-                                        <td class="td-field-off" data-area-field-officer>
-                                            Alisandro Villegas
-                                        </td>
+                                            <!-- * Table Trash Button -->
+                                            <td class="td-btns" data-area-button>
+                                                <div class="td-btn-wrapper">
+                                                    <!-- <button class="a-btn-view">View</button> -->
+                                                    <button class="a-btn-trash-2" data-area-trash-btn>Trash</button>
+                                                </div>
+                                            </td>
 
-                                        <!-- * Table Trash Button -->
-                                        <td class="td-btns" data-area-button>
-                                            <div class="td-btn-wrapper">
-                                                <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2" data-area-trash-btn>Trash</button>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-
-                                    <tr data-area-maintenance>
-                                        <!-- * Checkbox Opt -->
-                                        <td>
-                                            <input type="checkbox" class="checkbox" data-select-checkbox>
-                                        </td>
-
-                                        <!-- * Data Area Name-->
-                                        <td class="td-name" data-area-name>
-                                            Area 2
-                                        </td>
-
-                                        <!-- * Data Locations-->
-                                        <td class="td-name" data-area-location>
-                                            San Jose, Novaliches, Macapagal
-                                        </td>
-
-                                        <!-- * Data Field Officer-->
-                                        <td class="td-field-off" data-area-field-officer>
-                                            Lerjun Barasona
-                                        </td>
-
-                                        <!-- * Table Trash Button -->
-                                        <td class="td-btns">
-                                            <div class="td-btn-wrapper">
-                                                <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2" data-area-trash-btn>Trash</button>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                    <tr data-area-maintenance>
-
-                                        <!-- * Checkbox Opt -->
-                                        <td>
-                                            <input type="checkbox" class="checkbox" data-select-checkbox>
-                                        </td>
-
-                                        <!-- * Data Area Name-->
-                                        <td class="td-name" data-area-name>
-                                            Area 1
-                                        </td>
-
-                                        <!-- * Data Locations-->
-                                        <td class="td-name" data-area-location>
-                                            Pandi, Sta Maria, Malibo
-                                        </td>
-
-                                        <!-- * Data Field Officer-->
-                                        <td class="td-field-off" data-area-field-officer>
-                                            Alisandro Villegas
-                                        </td>
-
-                                        <!-- * Table Trash Button -->
-                                        <td class="td-btns" data-area-button>
-                                            <div class="td-btn-wrapper">
-                                                <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2" data-area-trash-btn>Trash</button>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-
-                                    <tr data-area-maintenance>
-                                        <!-- * Checkbox Opt -->
-                                        <td>
-                                            <input type="checkbox" class="checkbox" data-select-checkbox>
-                                        </td>
-
-                                        <!-- * Data Area Name-->
-                                        <td class="td-name" data-area-name>
-                                            Area 2
-                                        </td>
-
-                                        <!-- * Data Locations-->
-                                        <td class="td-name" data-area-location>
-                                            San Jose, Novaliches, Macapagal
-                                        </td>
-
-                                        <!-- * Data Field Officer-->
-                                        <td class="td-field-off" data-area-field-officer>
-                                            Lerjun Barasona
-                                        </td>
-
-                                        <!-- * Table Trash Button -->
-                                        <td class="td-btns">
-                                            <div class="td-btn-wrapper">
-                                                <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2" data-area-trash-btn>Trash</button>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                    <tr data-area-maintenance>
-
-                                        <!-- * Checkbox Opt -->
-                                        <td>
-                                            <input type="checkbox" class="checkbox" data-select-checkbox>
-                                        </td>
-
-                                        <!-- * Data Area Name-->
-                                        <td class="td-name" data-area-name>
-                                            Area 1
-                                        </td>
-
-                                        <!-- * Data Locations-->
-                                        <td class="td-name" data-area-location>
-                                            Pandi, Sta Maria, Malibo
-                                        </td>
-
-                                        <!-- * Data Field Officer-->
-                                        <td class="td-field-off" data-area-field-officer>
-                                            Alisandro Villegas
-                                        </td>
-
-                                        <!-- * Table Trash Button -->
-                                        <td class="td-btns" data-area-button>
-                                            <div class="td-btn-wrapper">
-                                                <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2" data-area-trash-btn>Trash</button>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-
-                                    <tr data-area-maintenance>
-                                        <!-- * Checkbox Opt -->
-                                        <td>
-                                            <input type="checkbox" class="checkbox" data-select-checkbox>
-                                        </td>
-
-                                        <!-- * Data Area Name-->
-                                        <td class="td-name" data-area-name>
-                                            Area 2
-                                        </td>
-
-                                        <!-- * Data Locations-->
-                                        <td class="td-name" data-area-location>
-                                            San Jose, Novaliches, Macapagal
-                                        </td>
-
-                                        <!-- * Data Field Officer-->
-                                        <td class="td-field-off" data-area-field-officer>
-                                            Lerjun Barasona
-                                        </td>
-
-                                        <!-- * Table Trash Button -->
-                                        <td class="td-btns">
-                                            <div class="td-btn-wrapper">
-                                                <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2" data-area-trash-btn>Trash</button>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-
+                                        </tr>
+                                        @endforeach
+                                    @endif                                       
                                 </table>
 
                             </div>
@@ -330,7 +179,7 @@
                             <div class="pagination-container">
 
                                 <!-- * Pagination Links -->
-                                <!-- <a href="#"><img src="../../res/assets/icons/caret-left.svg" alt="caret-left"></a> -->
+                                <!-- <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a> -->
                                 <a href="#">1</a>
                                 <a href="#">2</a>
                                 <a href="#">3</a>
@@ -339,7 +188,7 @@
                                 <a>.</a>
                                 <a>.</a>
                                 <a>.</a>
-                                <a href="#"><img src="../../res/assets/icons/caret-right.svg" alt="caret-right"></a>
+                                <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
 
                             </div>
                         </div>
@@ -365,8 +214,8 @@
 
                                 <!-- * Search Bar -->
                                 <div class="search-wrap">
-                                    <input type="search" id="search" name="unassignedLocSearch" placeholder="Search for Locations">
-                                    <img src="../../res/assets/icons/magnifyingglass.svg" alt="search">
+                                    <input type="search" wire:model="keywordunassigned"  placeholder="Search for Locations">
+                                    <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                                 </div>
 
                             </div>
@@ -401,7 +250,7 @@
 
                                             <!-- * Checkbox Opt -->
                                             <td>
-                                                <input wire:model="selectedunassigned" value="{{ $unkey }}" type="checkbox" class="checkbox" >
+                                                <input wire:model="selectedunassigned" wire:click="setLocationName" value="{{ $unkey }}" type="checkbox" class="checkbox" >
                                             </td>
 
                                             <!-- * Data Locations-->
@@ -422,7 +271,7 @@
                             <div class="pagination-container">
 
                                 <!-- * Pagination Links -->
-                                <!-- <a href="#"><img src="../../res/assets/icons/caret-left.svg" alt="caret-left"></a> -->
+                                <!-- <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a> -->
                                 <a href="#">1</a>
                                 <a href="#">2</a>
                                 <a href="#">3</a>
@@ -431,7 +280,7 @@
                                 <a>.</a>
                                 <a>.</a>
                                 <a>.</a>
-                                <a href="#"><img src="../../res/assets/icons/caret-right.svg" alt="caret-right"></a>
+                                <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
 
                             </div>
                         </div>
