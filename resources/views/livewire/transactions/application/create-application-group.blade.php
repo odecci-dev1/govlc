@@ -33,6 +33,19 @@
 </div>
 
 <!-- * Container 1: Add Group Name -->
+@if ($errors->any())
+<div class="na-container-group-1" style="font-size: 14px;">
+    <!-- * Small Container -->
+    <div class="small-con-3">
+        <ul>
+        @foreach ($errors->all() as $error)
+            <li class="text-required" style="padding-top: 5px;">* {{ $error }}.</li>
+        @endforeach
+        </ul>
+    </div>
+</div>
+@endif
+
 <div class="na-container-group-1">
 
     <!-- * Small Container -->
@@ -44,7 +57,7 @@
             <!-- * Group Name Input -->
             <div class="input-wrapper">
                 <h2>Group Name</h2>
-                <input wire:model.lazy="groupname" type="text">
+                <input wire:model.lazy="groupname" wire:blur="sessionGroupName" type="text">
             </div>
 
         </div>
@@ -52,7 +65,6 @@
     </div>
 
 </div>
-
 <!-- * Container 2: Group Table -->
 <div class="na-container-group-2">
 
@@ -62,7 +74,7 @@
         <!-- * Add Member Button -->
         <div class="btn-wrapper">
 
-            <button type="button" class="button" id="data-open-new-group-modal">Add Member</button>
+            <button type="button" wire:click="openAddMember" class="button" id="data-open-new-group-modal">Add Member</button>
             <button type="button" wire:click="store" class="button">Save</button>
 
         </div>
@@ -177,19 +189,19 @@
             <!-- * Applied Loan Amount -->
             <div class="input-wrapper">
                 <span>Applied Loan Amount</span>
-                <input type="number"  wire:model.lazy="loandetails.loamamount">
+                <input type="number" wire:blur="sessionLoanDetails"  wire:model.lazy="loandetails.loamamount">
             </div>
 
             <!-- * Terms Of Payment -->
             <div class="input-wrapper">
                 <span>Terms Of Payment</span>
-                <input type="text"  wire:model.lazy="loandetails.paymentterms">
+                <input type="text" wire:blur="sessionLoanDetails" wire:model.lazy="loandetails.paymentterms">
             </div>
 
             <!-- * Purpose -->
             <div class="input-wrapper">
                 <span>Purpose</span>
-                <input type="text"  wire:model.lazy="loandetails.purpose">
+                <input type="text" wire:blur="sessionLoanDetails"  wire:model.lazy="loandetails.purpose">
             </div>
 
         </div>
@@ -201,7 +213,7 @@
 </form>
 
 <!-- * New Group Application Modal -->
-<dialog class="ng-modal" data-new-group-modal>
+<dialog class="ng-modal" data-new-group-modal wire:ignore>
 
 <div class="modal-container">
 
@@ -214,13 +226,13 @@
     <div class="rowspan">
 
         <!-- * Search for existing member -->
-        <h3>Search for existing member</h3>
+        <h3>Search for existing members</h3>
 
         <div class="wrapper">
 
             <!-- * Search Bar -->
             <div class="search-wrap">
-                <input type="search" id="search" name="search" placeholder="Search name or member ID">
+                <input type="search" wire:model="searchkeyword" placeholder="Search name or member ID">
                 <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
             </div>
 
@@ -370,24 +382,29 @@
 
 </div>
 <script>
-    const dataNewGroupModal = document.querySelector('[data-new-group-modal]')
-    const openNewGroupModal = document.querySelector('#data-open-new-group-modal')
-    const closeNewGroupModal = document.querySelector('#data-close-new-group-modal')
-    const addNewGroupModal = document.querySelector('[data-add-new-group-modal]')
-    
-    openNewGroupModal.addEventListener('click', () => {
-    
-        dataNewGroupModal.showModal()
-    
-    })
+    document.addEventListener('livewire:load', function () {
+        const dataNewGroupModal = document.querySelector('[data-new-group-modal]')
+        const openNewGroupModal = document.querySelector('#data-open-new-group-modal')
+        const closeNewGroupModal = document.querySelector('#data-close-new-group-modal')
+        const addNewGroupModal = document.querySelector('[data-add-new-group-modal]')
 
-    closeNewGroupModal.addEventListener('click', () => {
-        dataNewGroupModal.setAttribute("closing", "");
-        dataNewGroupModal.addEventListener("animationend", () => {
-            dataNewGroupModal.removeAttribute("closing");
-            dataNewGroupModal.close();
-        }, { once: true });
+        closeNewGroupModal.addEventListener('click', () => {
+            dataNewGroupModal.setAttribute("closing", "");
+            dataNewGroupModal.addEventListener("animationend", () => {
+                dataNewGroupModal.removeAttribute("closing");
+                dataNewGroupModal.close();
+            }, { once: true });
+        })
 
-    })
+        window.livewire.on('openAddMemberModal', message => { 
+            dataNewGroupModal.showModal()         
+        });   
+       
+        // let input = document.getElementById('groupname');
+
+        // input.addEventListener('blur', () => {
+        //     @this.dispatch('your-event-name');
+        // });
+    }) 
 </script>
 </div>

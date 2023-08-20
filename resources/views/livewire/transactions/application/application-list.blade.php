@@ -247,7 +247,7 @@
 
                     <!-- * Applied Loan Amount -->
                     <td class="td-num">
-                        {{ number_format($l['loanAmount'], 2) }}
+                        {{ $l['loanAmount'] }}
                     </td>
 
                     <!-- * Loan type -->

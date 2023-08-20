@@ -472,7 +472,7 @@ class CreateApplication extends Component
                                 "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
                                 "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
                                 "remarks"=> '',
-                                "applicationStatus" => '0'
+                                "applicationStatus" => '7'
                     ]];
                     // dd($data);      
                  
@@ -596,6 +596,11 @@ class CreateApplication extends Component
         $this->bank[1] = [  'account' => '', 'address' => '' ];
 
         $this->comaker['co_Emp_Status'] = '';
+
+        $loandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
+        $this->member['loanAmount'] = isset($loandetails['loamamount']) ? $loandetails['loamamount'] : '';
+        $this->member['termsOfPayment'] = isset($loandetails['paymentterms']) ? $loandetails['paymentterms'] : '';
+        $this->member['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';
     }
 
     public function render()
@@ -606,7 +611,7 @@ class CreateApplication extends Component
         }
         else if($this->type == 4){
             $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->memId]);  
-            $resdata = $value->json();          
+            $resdata = $value->json();            
             $data =  $resdata[0];
            
             $this->member['fname'] = $data['fname'];  
