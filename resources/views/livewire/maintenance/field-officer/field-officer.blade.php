@@ -1,4 +1,7 @@
 <div>
+@if(session('mmessage'))
+        <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+@endif
 <!-- * New-Field-Officer-Container -->
 <form action="" class="no-form-con" autocomplete="off">
 
@@ -15,9 +18,7 @@
 
             <!-- * Rowspan 1: Rowspan Header: Header and Buttons -->
             <div class="rowspan">
-
                 <h2>New Field Officer</h2>
-
             </div>
 
             <!-- * Rowspan 2: First Name, Middle Name , Last Name, and Suffix -->
@@ -94,14 +95,14 @@
                 <!-- * Date Of Birth -->
                 <div class="input-wrapper">
                     <span>Date Of Birth</span>
-                    <input wire:model.lazy="officer.dob" autocomplete="off" type="date" >
+                    <input wire:model.lazy="officer.dob" wire:change="getofficerAge" autocomplete="off" type="date" >
                     @error('officer.dob') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Age -->
                 <div class="input-wrapper">
                     <span>Age</span>
-                    <input wire:model.lazy="officer.age" autocomplete="off" type="number" >
+                    <input wire:model.lazy="officer.age" disabled autocomplete="off" type="number" >
                     @error('officer.age') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -306,37 +307,23 @@
 
                     <div class="options-container" data-option-con3>
 
-                        <div class="option" data-option-item3>
+                        @if(count($idtypes) > 0)
+                            @foreach($idtypes as $midtypes)
+                            <div class="option"  data-option-item3>
 
-                            <input type="radio" wire:model.lazy="officer.typeID" id="Philhealth" class="radio"  value="Philhealth" />
-                            <label for="Philhealth">
-                                <h4>Philhealth</h4>
-                            </label>
+                                <input type="radio" {{ isset($officer['typeID']) ? ($officer['typeID'] == $midtypes['typeID'] ? 'checked' : '') : '' }} wire:model.lazy="officer.typeID" wire:change="getIdTypeName('{{ $midtypes['type'] }}')" name="typeID" id="idtype{{ $midtypes['typeID'] }}" class="radio"  value="{{ $midtypes['typeID'] }}" />
+                                <label  for="idtype{{ $midtypes['typeID'] }}" style="width: 100%; height: 100%;">
+                                    <h4>{{ $midtypes['type'] }}</h4>
+                                </label>
 
-                        </div>
-
-                        <div class="option" data-option-item3>
-
-                            <input type="radio" wire:model.lazy="officer.typeID" id="SSS" class="radio" value="SSS" />
-                            <label for="SSS">
-                                <h4>SSS</h4>
-                            </label>
-
-                        </div>
-
-                        <div class="option" data-option-item3>
-
-                            <input type="radio" wire:model.lazy="officer.typeID" id="Pag-ibig" class="radio"  value="Pag-ibig" />
-                            <label for="Pag-ibig">
-                                <h4>Pag-ibig</h4>
-                            </label>
-
-                        </div>
+                            </div>
+                            @endforeach
+                        @endif                                              
 
                     </div>
 
                     <div class="selected" style="font-weight: bold;"  data-option-select3>
-                        {{ isset($officer['typeID']) ? $officer['typeID'] : '' }}
+                        {{ isset($idtypename) ? $idtypename : '' }}
                     </div>
 
                 </div>
@@ -453,7 +440,7 @@
 
         optionsList3.forEach(option => {
             option.addEventListener("click", () => {
-                selectedOpt3.innerHTML = option.querySelector("label").innerHTML;
+                // selectedOpt3.innerHTML = option.querySelector("label").innerHTML;
                 optionsContainer3.classList.remove("active");
             });
         });

@@ -8,7 +8,7 @@
 
         <!-- * New Application Registration Level 1 -->
         <div class="level level1 active">
-            <span>Registration {{ $test }}</span>
+            <span>Registration</span>
         </div>
 
         <!-- * New Application Credit Investigation Level 2 -->
@@ -121,7 +121,7 @@
                             <!-- * Co-Makers Data-->
                             <div class="td-wrapper">
                                 <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                                <span class="td-name">Palermo, Juliana</span>
+                                <span class="td-name">{{ $mem['co_Lname'] . ' '.  $mem['co_Suffix'] }}, {{ $mem['co_Fname'] }}</span>
                             </div>
 
                         </td>
@@ -130,7 +130,7 @@
                         <td class="td-btns">
                             <div class="td-btn-wrapper">
                                 <button type="button" class="a-btn-view-2" data-view-group-member>View</button>
-                                <button type="button" class="a-btn-trash-2">Trash</button>
+                                <button type="button" class="a-btn-trash-2">Remove</button>
                             </div>
                         </td>
 
@@ -270,94 +270,22 @@
 
                     </tr>
 
-
-                    <!-- * Members Data -->
-                    <tr>
-
+                    @if($memberlist)
+                        @foreach($memberlist as $list)
+                        <tr onclick="createIndividualLoan('{{ $list['memId'] }}')">
                         <!-- * Checkbox Opt
-                        <td><input type="checkbox" class="checkbox" id="checkbox" data-checkbox></td> -->
-
-                        <td>
-
-                            <!-- * Data Name-->
-                            <span class="td-name">Dela Cruz, Juana</span>
-
-                        </td>
-
-                        <td>
-
-                            <!-- * Add to member button -->
-                            <button class="a-btn-view-2" data-add-new-group-modal>Add to Group</button>
-
-                        </td>
-
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Checkbox Opt
-                        <td><input type="checkbox" class="checkbox" id="checkbox" data-checkbox></td> -->
-
-                        <td>
-
-                            <!-- * Data Name-->
-                            <span class="td-name">Dela Cruz, Juana</span>
-
-                        </td>
-
-                        <td>
-
-                            <!-- * Add to member button -->
-                            <button class="a-btn-view-2" data-add-new-group-modal>Add to Group</button>
-
-                        </td>
-
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Checkbox Opt
-                        <td><input type="checkbox" class="checkbox" id="checkbox" data-checkbox></td> -->
-
-                        <td>
-
-                            <!-- * Data Name-->
-                            <span class="td-name">Dela Cruz, Juana</span>
-
-                        </td>
-
-                        <td>
-
-                            <!-- * Add to member button -->
-                            <button class="a-btn-view-2" data-add-new-group-modal>Add to Group</button>
-
-                        </td>
-
-
-                    </tr>
-                   
-                    <tr>
-
-                        <!-- * Checkbox Opt
-                        <td><input type="checkbox" class="checkbox" id="checkbox" data-checkbox></td> -->
-
-                        <td>
-
-                            <!-- * Data Name-->
-                            <span class="td-name">Dela Cruz, Juana</span>
-
-                        </td>
-
-                        <td>
-
-                            <!-- * Add to member button -->
-                            <button class="a-btn-view-2" data-add-new-group-modal>Add to Group</button>
-
-                        </td>
-
-
-                    </tr>
-
+                        <td><input type="checkbox" id="checkbox" data-checkbox></td> -->
+                            <td>                                
+                                <span class="td-name">{{ $list['fullname'] }}</span>
+                            </td>
+                            <td>
+                                <!-- * Data Member ID-->
+                                <a href="{{ URL::to('/') }}/tranactions/application/create/{{ $list['memId'] }}/2" class="a-btn-view-2" data-add-new-group-modal>Add to Group</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    @endif                   
+                
                 </table>
 
             </div>

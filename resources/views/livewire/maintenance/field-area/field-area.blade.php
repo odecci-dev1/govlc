@@ -1,5 +1,7 @@
 <div>
-
+    @if(session('mmessage'))
+        <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+    @endif
         <!-- * Field Area Maintenance -->
         <form class="fa-form-con" id="field-area-maintenance-form" autocomplete="off">
 
@@ -60,7 +62,7 @@
                             <span>Field Officer</span>
                             <!-- * Search Bar -->
                             <div class="search-wrap">
-                                <input type="text" wire:model.lazy="foid" placeholder="field officer id" >
+                                <input type="hidden" wire:model.lazy="foid" placeholder="field officer id" >
                                 <input type="search" wire:model.lazy="fullname" placeholder="Search" >
                                 <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                             </div>

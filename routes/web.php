@@ -7,6 +7,7 @@ use App\Http\Livewire\Users\UserRegister;
 use App\Http\Livewire\Users\UserList;
 use App\Http\Livewire\Transactions\Application\CreateApplication;
 use App\Http\Livewire\Transactions\Application\CreditInvestigationApplication;
+use App\Http\Livewire\Transactions\Application\CreditInvestigationApplicationList;
 use App\Http\Livewire\Transactions\Application\CreateApplicationGroup;
 use App\Http\Livewire\Transactions\Application\ApprovalApplication;
 use App\Http\Livewire\Transactions\Application\ApplicationList;
@@ -79,6 +80,7 @@ Route::get('/tranactions/application/create/{type}', CreateApplication::class)->
 Route::get('/tranactions/application/view/{memId}/{type}', CreateApplication::class)->name('application.view');
 Route::get('/tranactions/application/create/{memId}/{type}', CreateApplication::class)->name('application.view');
 Route::get('/tranactions/application/group/create', CreateApplicationGroup::class)->name('application.create.group');
-Route::get('/tranactions/application/credit/investigation', CreditInvestigationApplication::class)->name('application.credit.investigation');
+Route::get('/tranactions/application/credit/investigation/list', CreditInvestigationApplicationList::class)->name('application.credit.investigation.list');
+Route::get('/tranactions/application/credit/investigation/view/{memId}', CreditInvestigationApplication::class)->name('application.credit.investigation');
 Route::get('/tranactions/application/approval', ApprovalApplication::class)->name('application.approval');
 //transactions

@@ -99,7 +99,7 @@
 
 
                         <!-- * All Members Data -->
-                        @if(count($list) > 0)
+                        @if(isset($list) > 0)
                             @foreach($list as $l)
                             <tr>
 
@@ -155,6 +155,7 @@
                 </div>
 
                 <!-- * Pagination Container -->
+                @if(isset($list))
                 @if(count($list) > 25)
                 <div class="pagination-container">
 
@@ -168,6 +169,7 @@
                     <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
 
                 </div>
+                @endif
                 @endif
 
             </div>

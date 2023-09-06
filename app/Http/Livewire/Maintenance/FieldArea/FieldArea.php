@@ -5,8 +5,13 @@ namespace App\Http\Livewire\Maintenance\FieldArea;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
+use App\Traits\Common;
+
 class FieldArea extends Component
 {
+
+    use Common;
+
     public $unassigned = [];
     public $selectedunassigned = [];
     public $list = [];
@@ -27,16 +32,21 @@ class FieldArea extends Component
     }
 
     public function store(){
-        $data = [
+        $data = [];
+        if(count($this->selectedunassigned) > 0){
+            foreach($this->selectedunassigned as $selun){                    
+                $data[] = [
                     'areaName' => $this->areaName,
-                    'location' => $this->location,
+                    'location' => $this->unassigned[$selun],
                     'foid' =>  $this->foid,
                     'fullname' => $this->fullname,
                     'status' => '1'
                 ]; 
-           
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AssigningFieldArea', $data);   
-        dd($crt);      
+            }
+        }     
+        // dd( $data );             
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AssigningFieldArea', $data);          
+        return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved');    
     }
 
     public function mount(){

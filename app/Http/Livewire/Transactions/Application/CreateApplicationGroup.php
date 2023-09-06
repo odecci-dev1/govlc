@@ -14,9 +14,10 @@ class CreateApplicationGroup extends Component
 
     public $test = 'hello';
     public $members = [];
+    public $memberlist = [];
     public $groupname;
     public $loandetails;
-    public $searchkeyword;
+    public $searchkeyword = '';
 
     public function messages(){
         $messages = [];
@@ -69,8 +70,11 @@ class CreateApplicationGroup extends Component
     }
 
     public function render()
-    {
-        // session()->forget('memdata');             
+    {     
+        // session()->forget('memdata');  
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => '']);       
+        $this->memberlist = $data->json();           
+     
         if(session('memdata')){
             foreach(session('memdata') as $memdata){
                 $this->members[] = $memdata;

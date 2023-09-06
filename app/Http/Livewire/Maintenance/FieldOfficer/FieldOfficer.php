@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Http;
 
 use App\Traits\Common;
 
-
 class FieldOfficer extends Component
 {   
 
@@ -15,6 +14,8 @@ class FieldOfficer extends Component
     
     public $officer;
     public $foid;
+    public $idtypes = [];
+    public $idtypename = '';
 
     public function rules(){                
         $rules = []; 
@@ -75,8 +76,8 @@ class FieldOfficer extends Component
                         "fname"=> $input['officer']['fname'] ??= '',
                         "lname"=> $input['officer']['lname'] ??= '',
                         "mname"=> $input['officer']['mname'] ??= '',
-                        "suffix"=> $input['officer']['mname'] ??= '',
-                        "gender"=> $input['officer']['mname'] ??= '',
+                        "suffix"=> $input['officer']['suffix'] ??= '',
+                        "gender"=> $input['officer']['gender'] ??= '',
                         "dob"=> $input['officer']['dob'] ??= null,
                         "age"=> $input['officer']['age'] ??= '0',
                         "pob"=> $input['officer']['pob'] ??= '',
@@ -96,7 +97,9 @@ class FieldOfficer extends Component
                     ];   
                     
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/SaveFieldOfficer', $data);  
-            return redirect()->to('/maintenance/fieldofficer/list')->with('message', 'Filed officer successfully saved');    
+            $get = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/GetLastOfficer');
+            $get = $get->json();
+            return redirect()->to('/maintenance/fieldofficer/view/'.$get[0]['foid'])->with('mmessage', 'Field officer successfully saved');    
 
         }
         catch (\Exception $e) {           
@@ -111,8 +114,8 @@ class FieldOfficer extends Component
                         "fname"=> $input['officer']['fname'] ??= '',
                         "lname"=> $input['officer']['lname'] ??= '',
                         "mname"=> $input['officer']['mname'] ??= '',
-                        "suffix"=> $input['officer']['mname'] ??= '',
-                        "gender"=> $input['officer']['mname'] ??= '',
+                        "suffix"=> $input['officer']['suffix'] ??= '',
+                        "gender"=> $input['officer']['gender'] ??= '',
                         "dob"=> $input['officer']['dob'] ??= null,
                         "age"=> $input['officer']['age'] ??= '0',
                         "pob"=> $input['officer']['pob'] ??= '',
@@ -132,14 +135,18 @@ class FieldOfficer extends Component
                         "files" => [],
                         "foid" => $this->foid,
                     ];   
-                             
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/UpdateFieldOfficer', $data);  
-            //dd($crt );
-            return redirect()->to('/maintenance/fieldofficer/view/'.$this->foid)->with('message', 'Field officer successfully saved');    
+                      
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/UpdateFieldOfficer', $data);            
+            return redirect()->to('/maintenance/fieldofficer/view/'.$this->foid)->with('mmessage', 'Field officer successfully updated');    
         }
         catch (\Exception $e) {           
             throw $e;            
         }
+    }
+
+    public function getofficerAge(){
+        $age = $this->calculateAge($this->officer['dob']);
+        $this->officer['age'] = $age;           
     }
 
     public function archive($foid){       
@@ -148,11 +155,20 @@ class FieldOfficer extends Component
     }
     
     public function mount($foid = ''){
+        $idtypes = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/IDTypeList');  
+        $idtypes = $idtypes->json();
+        if(count($idtypes) > 0){
+            foreach($idtypes as $midtypes){
+                $this->idtypes[$midtypes['typeID']] = ['type' => $midtypes['type'], 'typeID' => $midtypes['typeID']];
+            }
+        }
+        // dd($this->idtypes);
         if($foid != ''){
             $this->foid = $foid;
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFOID', [ 'foid' => $this->foid ]);     
             $res = $data->json();
-            $res = $res[0];             
+            $res = $res[0];      
+       
             $this->officer['fname'] =  $res['fname'];
             $this->officer['mname'] =  $res['mname'];
             $this->officer['lname'] =  $res['lname'];
@@ -175,12 +191,20 @@ class FieldOfficer extends Component
             $this->officer['pagIbig'] =  $res['pagIbig'];
             $this->officer['philHealth'] =  $res['philHealth'];
             $this->officer['idNum'] =  $res['idNum'];
-            $this->officer['typeID'] =  $res['typeID'];
+            $this->officer['typeID'] =  $res['typeID'];  
+            $idtypename = $this->idtypes[$res['typeID']];    
+            $this->getIdTypeName( $idtypename['type'] );
         }
     }   
 
+    public function getIdTypeName($idname){
+        $this->idtypename = $idname;       
+    }
+
     public function render()
     {         
+       
+        //dd( $this->idtypes );
         return view('livewire.maintenance.field-officer.field-officer');
     }
 }

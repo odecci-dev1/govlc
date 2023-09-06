@@ -1,4 +1,7 @@
 <div >       
+    @if(session('errmmessage'))
+        <x-alert :message="session('errmmessage')" :words="'Action not successfull'" :header="'Error'"></x-alert>   
+    @endif
     <!-- * New-Application-Form-Container -->
     <form action="" class="na-form-con" autocomplete="off" >
         @if (session()->has('message'))

@@ -176,7 +176,7 @@
 
                         </a>
 
-                        <a href="{{ URL::to('/') }}/tranactions/application/credit/investigation" data-nav-link>
+                        <a href="{{ URL::to('/') }}/tranactions/application/credit/investigation/list" data-nav-link>
                             <li>
                                 <!-- * Credit Investigation  -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/credit-investigation.svg" alt="credit-investigation" />
