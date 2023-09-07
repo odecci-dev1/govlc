@@ -192,8 +192,10 @@ class FieldOfficer extends Component
             $this->officer['philHealth'] =  $res['philHealth'];
             $this->officer['idNum'] =  $res['idNum'];
             $this->officer['typeID'] =  $res['typeID'];  
-            $idtypename = $this->idtypes[$res['typeID']];    
-            $this->getIdTypeName( $idtypename['type'] );
+            $idtypename = isset($this->idtypes[$res['typeID']]) ? $this->idtypes[$res['typeID']] : ''; 
+            if( $idtypename != '' ){   
+                $this->getIdTypeName( $idtypename['type'] );
+            }
         }
     }   
 

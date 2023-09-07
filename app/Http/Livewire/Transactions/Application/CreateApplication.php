@@ -474,7 +474,9 @@ class CreateApplication extends Component
                                 "remarks"=> '',
                                 "applicationStatus" => '7'
                     ]];
-                    // dd($data);      
+                    // dd($data);   
+                    
+                    // $extension = $request->file('filename')->getClientOriginalExtension();
                  
             if($this->type == 1){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
@@ -622,7 +624,8 @@ class CreateApplication extends Component
         }
         else if($this->type == 4){
             $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->memId]);  
-            $resdata = $value->json();            
+            $resdata = $value->json();    
+            if(isset($resdata[0])){        
             $data =  $resdata[0];
            
             $this->member['fname'] = $data['fname'];  
@@ -701,7 +704,8 @@ class CreateApplication extends Component
             $this->comaker['co_CompanyName'] = $data['co_CompanyName']; 
             $this->comaker['co_CompanyID'] = ''; 
             $this->comaker['co_Emp_Status'] = $data['co_Emp_Status']; 
-            $this->comaker['remarks'] = '';             
+            $this->comaker['remarks'] = '';     
+            }        
         }
         else{
           
