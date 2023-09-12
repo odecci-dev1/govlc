@@ -8952,7 +8952,7 @@ body {
   margin-left: 1rem;
 }
 .main-dashboard .na-form-con .nm-container-5 {
-  display: none;
+  /* display: none; bu jumz */
   width: 100%;
   padding: 2rem;
 }
@@ -10888,6 +10888,7 @@ body {
 
 .text-required{
   color:#ff0000!important;
+  font-size: 14px !important;
 }
 
 .full-screen-div{

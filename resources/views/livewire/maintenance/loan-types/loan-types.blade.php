@@ -62,6 +62,7 @@
                         <div class="input-wrapper">
                             <span>Loan Type Name</span>
                             <input autocomplete="off" type="text" wire:model.lazy="loantype.loanTypeName">
+                            @error('loantype.loanTypeName') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                     </div>
@@ -308,13 +309,15 @@
                         <!-- * Name of terms -->
                         <div class="input-wrapper">
                             <span>Name of terms</span>
-                            <input autocomplete="off" type="text" id="topNot" name="topNot">
+                            <input wire:model.lazy="inpterms.nameOfTerms" autocomplete="off" type="text">
+                            @error('inpterms.nameOfTerms') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Days -->
                         <div class="input-wrapper">
                             <span>Days</span>
-                            <input autocomplete="off" type="number" id="topDays" name="topDays">
+                            <input wire:model.lazy="inpterms.days" autocomplete="off" type="number">
+                            @error('inpterms.days') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                     </div>
@@ -332,33 +335,23 @@
                                         <div class="options-container" data-option-con5>
 
                                             <div class="option" data-option-item5>
-
-                                                <input type="radio" class="radio" name="category" value="Percent"/>
-                                                <label for="Percent">
-                                                        <h4>Percent</h4>
+                                                <input type="radio" class="radio" wire:model.lazy="inpterms.interestType" class="radio" name="inptermsinterestType" id="inptermsinterestType1" value="1"/>
+                                                <label for="inptermsinterestType1">
+                                                    <h4>Percent</h4>
                                                 </label>
-
-                                            </div>
-
-                                            <div class="option" data-option-item5>
-
-                                                    <input type="radio" class="radio" name="category" value="Fixed"/>
-                                                    <label for="Fixed">
-                                                        <h4>Fixed</h4>
-                                                    </label>
-
-                                            </div>
-
+                                            </div>                                        
                                         </div>
 
                                         <div class="selected" data-option-select5>
-                                                <!-- Select Formula -->
+                                            {{ isset($inpterms['interestType']) ? ($inpterms['interestType'] == 1 ? 'Percent' : 'Fixed') : '' }}
                                         </div>
 
                                     </div>
-                                    <input autocomplete="off" type="number" id="conNum" name="conNum" placeholder="Amount">
+                                    <input autocomplete="off" type="number" wire:model.lazy="inpterms.interestRate" placeholder="Amount">
                                 </div>
                             </div>
+                            @error('inpterms.interestType') <span class="text-required">{{ $message }}</span>@enderror
+                            @error('inpterms.interestRate') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Advance Payment Formula -->
@@ -369,19 +362,18 @@
                                 <div class="options-container" data-option-con6>
 
                                     <div class="option" data-option-item6>
-
-                                        <input type="radio" class="radio" name="category" value="(Loan Amount + Interest) / Days"/>
-                                        <label for="(Loan Amount + Interest) / Days">
-                                            <h4>(Loan Amount + Interest) / Days</h4>
+                                        <input type="radio" class="radio" wire:model.lazy="inpterms.formula" name="inptermsformula" id="inptermsformula1" value="1"/>
+                                        <label for="inptermsformula1">
+                                            <h4>{{ isset($formulaList[1]) ? $formulaList[1] : '' }}</h4>
                                         </label>
 
                                     </div>
 
                                     <div class="option" data-option-item6>
 
-                                        <input type="radio" class="radio" name="category" value="((Loan Amount + Interest) / Days) x 2"/>
-                                        <label for="((Loan Amount + Interest) / Days) x 2">
-                                            <h4>((Loan Amount + Interest) / Days) x 2</h4>
+                                        <input type="radio" class="radio" wire:model.lazy="inpterms.formula" name="inptermsformula" id="inptermsformula2" value="2"/>
+                                        <label for="inptermsformula2">
+                                            <h4>{{ isset($formulaList[2]) ? $formulaList[2] : '' }}</h4>
                                         </label>
 
                                     </div>
@@ -389,10 +381,11 @@
                                 </div>
 
                                 <div class="selected" data-option-select6>
-                                    Select Formula
+                                    {{ isset($inpterms['formula']) ? ( isset($formulaList[$inpterms['formula']]) ? $formulaList[$inpterms['formula']] : '' ) : '' }}
                                 </div>
 
                             </div>
+                            @error('inpterms.formula') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                     </div>
@@ -401,7 +394,7 @@
                     <div class="rowspan">
 
                         <div class="btn-wrapper">
-                            <button type="button" class="button">Add to list</button>
+                            <button type="button" class="button" wire:click="addTerms">Add to list</button>
                         </div>
 
                     </div>
@@ -455,6 +448,8 @@
 
 
                                     <!-- * Terms Of Payment Data -->
+                                    @if($terms)
+                                    @foreach($terms as $key => $value)
                                     <tr>
 
                                         <!-- * Checkbox Opt -->
@@ -464,216 +459,36 @@
 
                                         <!-- * Name of terms -->
                                         <td>
-                                            60 Days
+                                            {{ $value['nameOfTerms'] }}
                                         </td>
 
                                         <!-- * Interest Rate -->
                                         <td>
-                                            18%
+                                            {{ $value['interestRate'] }} %
                                         </td>
 
                                         <!-- * Days -->
                                         <td>
-                                            60
+                                            {{ $value['days'] }} days
                                         </td>
 
                                         <!-- * Advance payment formula -->
                                         <td>
-                                            (Loan Amount + Interest) / Days
+                                            {{ $value['formula'] }}
                                         </td>
 
                                         <!-- * Action -->
                                         <td class="td-btns">
                                             <div class="td-btn-wrapper">
                                                 <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2">Trash</button>
+                                                <button class="a-btn-trash-2">Remove</button>
                                             </div>
                                         </td>
 
                                     </tr>
-
-                                    <tr>
-
-                                        <!-- * Checkbox Opt -->
-                                        <td>
-                                            <input type="checkbox" class="checkbox" data-select-checkbox>
-                                        </td>
-
-                                        <!-- * Name of terms -->
-                                        <td>
-                                            90 Days
-                                        </td>
-
-                                        <!-- * Interest Rate -->
-                                        <td>
-                                            18%
-                                        </td>
-
-                                        <!-- * Days -->
-                                        <td>
-                                            90
-                                        </td>
-
-                                        <!-- * Advance payment formula -->
-                                        <td>
-                                            (Loan Amount + Interest) / Days
-                                        </td>
-
-                                        <!-- * Action -->
-                                        <td class="td-btns">
-                                            <div class="td-btn-wrapper">
-                                                <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2">Trash</button>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                    <tr>
-
-                                        <!-- * Checkbox Opt -->
-                                        <td>
-                                            <input type="checkbox" class="checkbox" data-select-checkbox>
-                                        </td>
-
-                                        <!-- * Name of terms -->
-                                        <td>
-                                            60 Days
-                                        </td>
-
-                                        <!-- * Interest Rate -->
-                                        <td>
-                                            18%
-                                        </td>
-
-                                        <!-- * Days -->
-                                        <td>
-                                            60
-                                        </td>
-
-                                        <!-- * Advance payment formula -->
-                                        <td>
-                                            (Loan Amount + Interest) / Days
-                                        </td>
-
-                                        <!-- * Action -->
-                                        <td class="td-btns">
-                                            <div class="td-btn-wrapper">
-                                                <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2">Trash</button>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                        <!-- * Checkbox Opt -->
-                                        <td>
-                                            <input type="checkbox" class="checkbox" data-select-checkbox>
-                                        </td>
-
-                                        <!-- * Name of terms -->
-                                        <td>
-                                            90 Days
-                                        </td>
-
-                                        <!-- * Interest Rate -->
-                                        <td>
-                                            18%
-                                        </td>
-
-                                        <!-- * Days -->
-                                        <td>
-                                            90
-                                        </td>
-
-                                        <!-- * Advance payment formula -->
-                                        <td>
-                                            (Loan Amount + Interest) / Days
-                                        </td>
-
-                                        <!-- * Action -->
-                                        <td class="td-btns">
-                                            <div class="td-btn-wrapper">
-                                                <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2">Trash</button>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                    <tr>
-
-                                        <!-- * Checkbox Opt -->
-                                        <td>
-                                            <input type="checkbox" class="checkbox" data-select-checkbox>
-                                        </td>
-
-                                        <!-- * Name of terms -->
-                                        <td>
-                                            60 Days
-                                        </td>
-
-                                        <!-- * Interest Rate -->
-                                        <td>
-                                            18%
-                                        </td>
-
-                                        <!-- * Days -->
-                                        <td>
-                                            60
-                                        </td>
-
-                                        <!-- * Advance payment formula -->
-                                        <td>
-                                            (Loan Amount + Interest) / Days
-                                        </td>
-
-                                        <!-- * Action -->
-                                        <td class="td-btns">
-                                            <div class="td-btn-wrapper">
-                                                <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2">Trash</button>
-                                            </div>
-                                        </td>
-
-                                    </tr>
-
-                                    <tr>
-
-                                        <!-- * Checkbox Opt -->
-                                        <td>
-                                            <input type="checkbox" class="checkbox" data-select-checkbox>
-                                        </td>
-
-                                        <!-- * Name of terms -->
-                                        <td>
-                                            90 Days
-                                        </td>
-
-                                        <!-- * Interest Rate -->
-                                        <td>
-                                            18%
-                                        </td>
-
-                                        <!-- * Days -->
-                                        <td>
-                                            90
-                                        </td>
-
-                                        <!-- * Advance payment formula -->
-                                        <td>
-                                            (Loan Amount + Interest) / Days
-                                        </td>
-
-                                        <!-- * Action -->
-                                        <td class="td-btns">
-                                            <div class="td-btn-wrapper">
-                                                <!-- <button class="a-btn-view">View</button> -->
-                                                <button class="a-btn-trash-2">Trash</button>
-                                            </div>
-                                        </td>
-
-                                    </tr>
+                                    @endforeach
+                                    @endif
+                                   
 
                                 </table>
 
@@ -864,12 +679,6 @@
                 }
             });
 
-            optionsList6.forEach(option => {
-                option.addEventListener("click", () => {
-                    selectedOpt6.innerHTML = option.querySelector("label").innerHTML;
-                    optionsContainer6.classList.remove("active");
-                });
-            });
 
         }
 

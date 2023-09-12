@@ -88,6 +88,7 @@ class UserRegister extends Component
 
 
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUser', $user);  
+        dd($crt);
         // $crtmodules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUserModule', $user);         
         return redirect()->to('/users')->with('message', 'User successfully saved'); 
         

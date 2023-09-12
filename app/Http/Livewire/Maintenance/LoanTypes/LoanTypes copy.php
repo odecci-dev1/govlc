@@ -35,10 +35,11 @@ class LoanTypes extends Component
                                 'days' => $value['days'],
                                 'interestRate' => $value['interestRate'],
                                 'loanTypeID' => $value['loanTypeID'],   
-                                'formula' => $value['formula'],                                        
+                                'formula' => 'string',                                        
                             ];
             }
         }
+
 
         $data = [
                         'loan_amount_Lessthan' =>  $inputs['loan_amount_Lessthan'],
@@ -46,8 +47,8 @@ class LoanTypes extends Component
                         'savings' =>  $inputs['savings'],
                         'loanAmount_Min' =>  $inputs['loanAmount_Min'],
                         'loanAmount_Max' =>  $inputs['loanAmount_Max'],
-                        'loanTypeName' =>  $inputs['loanTypeName'],
-                        'loanTypeID' =>  'string',
+                        'loanTypeName' =>  '234s23423',
+                        'loanTypeID' =>  'stringss',
                         'loan_amount_Lessthan_Amount' =>  $inputs['loan_amount_Lessthan_Amount'],
                         'lalV_Type' =>  $inputs['lalV_Type'],
                         'loan_amount_GreaterEqual_Amount' =>  $inputs['loan_amount_GreaterEqual_Amount'],
@@ -56,10 +57,17 @@ class LoanTypes extends Component
                         'loanI_Type' =>  $inputs['loanI_Type'],
                         'lifeInsurance' =>  $inputs['lifeInsurance'],
                         'lifeI_Type' =>  $inputs['lifeI_Type'],
-                        "terms"=> $terms
+                        "terms"=> [
+                            "nameOfTerms"=> "stringssss",
+                            "days"=> 0,
+                            "interestRate"=> 0,
+                            "loanTypeID"=> "stringsss",
+                            "formula"=> "string"
+                        ]
                 ];
 
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/SaveLoanType', $data);            
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/SaveLoanType', $data);   
+        dd( $crt );             
         return redirect()->to('/maintenance/loantypes/list')->with('mmessage', 'Field area successfully saved');     
     }
 
