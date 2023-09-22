@@ -252,7 +252,8 @@
                  <!-- * All Areas Button -->
                  <button class="link dropdown" data-bor-dropdown-button>
                      <span data-bor-dropdown-button>All Areas</span>
-                     <img src="../../res/assets/icons/white-carret-down.svg" alt="carret-down"data-bor-dropdown-button>
+                     <img src="{{ URL::to('/') }}/assets/icons/white-carret-down.svg"
+                         alt="carret-down"data-bor-dropdown-button>
                  </button>
 
                  <!-- * Submenu -->
