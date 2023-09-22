@@ -48,7 +48,7 @@ Route::get('/dashboard', function(){
 Route::get('/test', [DashboardController::class, 'test']);
 Route::get('/posttest', [DashboardController::class, 'posttest']);
 
-//members
+//members edited
 Route::get('/members', MemberList::class);
 //members
 

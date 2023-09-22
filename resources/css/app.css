@@ -10017,7 +10017,7 @@ body {
   margin-right: 1.5rem;
 }
 .main-dashboard .na-form-con .nm-container-4 {
-  display: none;
+  /* display: none; */
   height: 100% 200%;
   width: 100%;
   padding: 2rem;

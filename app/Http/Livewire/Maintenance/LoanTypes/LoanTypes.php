@@ -29,7 +29,7 @@ class LoanTypes extends Component
         $rules['loantype.loanI_Type'] = ['required'];   
         $rules['loantype.lifeInsurance'] = ['required'];   
         $rules['loantype.lifeI_Type'] = ['required'];   
-        $rules['inpterms'] = ['array'];      
+        $rules['inpterms'] = ['required'];      
         return $rules;
     }
 
@@ -64,7 +64,7 @@ class LoanTypes extends Component
 
     public function store(){   
         $inputs = $this->validate();
-
+        dd($inputs);
         $terms = [];
         if(count( $this->terms) > 0){
             foreach($this->terms as $key => $value){
@@ -76,7 +76,7 @@ class LoanTypes extends Component
                             ];
             }
         }
-      
+       
         $data = [
                         'loan_amount_Lessthan' =>  $inputs['loantype']['loan_amount_Lessthan'],
                         'loan_amount_GreaterEqual' =>  $inputs['loantype']['loan_amount_GreaterEqual'],
@@ -131,7 +131,7 @@ class LoanTypes extends Component
     public function mount(){
         $this->formulaList[1] = '(Loan Amount + Interest) / Days';
         $this->formulaList[2] = '((Loan Amount + Interest) / Days) x 2';
-        $this->inpterms['interestType'] = 1;
+        // $this->inpterms['interestType'] = 1;
     }
 
     public function render()
