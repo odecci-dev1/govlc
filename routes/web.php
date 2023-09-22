@@ -18,6 +18,7 @@ use App\Http\Livewire\Maintenance\Holiday\Holiday;
 use App\Http\Livewire\Maintenance\LoanTypes\LoanTypes;
 use App\Http\Livewire\Maintenance\LoanTypes\LoanTypesList;
 use App\Http\Livewire\Maintenance\FieldArea\FieldArea;
+use App\Http\Livewire\Collection\Collection\CollectionList;
 
 
 /*
@@ -84,3 +85,8 @@ Route::get('/tranactions/application/credit/investigation/list', CreditInvestiga
 Route::get('/tranactions/application/credit/investigation/view/{memId}', CreditInvestigationApplication::class)->name('application.credit.investigation');
 Route::get('/tranactions/application/approval', ApprovalApplication::class)->name('application.approval');
 //transactions
+
+
+//collection
+Route::get('/collection/collection/list',CollectionList::class);
+//collection
