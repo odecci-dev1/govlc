@@ -940,7 +940,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
   background-color: rgba(41, 41, 43, 0.6);
 }
 .checkbox::after {
-  content: url("../assets/icons/white-check.svg");
+  content: url("/public/assets/icons/white-check.svg");
   position: absolute;
   top: 0.1rem;
   visibility: hidden;
@@ -980,7 +980,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
 }
 .selected::after {
   /* BG Img	 */
-  content: url("../assets/icons/carret-down.svg");
+  content: url("/public/assets/icons/carret-down.svg");
   position: absolute;
   right: 15px;
   top: 50%;
@@ -2243,7 +2243,7 @@ body {
   background: linear-gradient(90deg, rgba(214, 163, 48, 0.85) 0%, rgba(214, 163, 48, 0.95) 15%, rgb(214, 163, 48) 50%, rgba(214, 163, 48, 0.85) 85%, rgba(214, 163, 48, 0.8) 100%);
 }
 .nav .nav-links .link.dropdown::after {
-  content: url(../assets/icons/carret-right.svg);
+  content: url(/public/assets/icons/carret-right.svg);
   position: absolute;
   display: inline-block;
   right: 0;
@@ -2618,7 +2618,7 @@ body {
   background-color: rgba(41, 41, 43, 0.6);
 }
 .na-modal .modal-container .rowspan:nth-of-type(3) .na-table-con .table-container table input[type=checkbox]::after {
-  content: url("../assets/icons/white-check.svg");
+  content: url("/public/assets/icons/white-check.svg");
   position: absolute;
   top: 0.1rem;
   visibility: hidden;
@@ -2631,7 +2631,7 @@ body {
   visibility: visible;
 }
 .na-modal .modal-container .rowspan:nth-of-type(3) .na-table-con .table-container table input[type=checkbox]::after {
-  content: url("../assets/icons/white-check.svg");
+  content: url("/public/assets/icons/white-check.svg");
   position: absolute;
   top: 0.1rem;
   display: none;
@@ -4548,7 +4548,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(41, 41, 41, 0.7) url("../assets/img/login-image.png");
+  background: rgba(41, 41, 41, 0.7) url("/public/assets/img/login-image.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
