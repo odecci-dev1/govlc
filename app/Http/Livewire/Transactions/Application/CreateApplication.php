@@ -498,8 +498,10 @@ class CreateApplication extends Component
                     // $extension = $request->file('filename')->getClientOriginalExtension();
                  
             if($this->type == 1){                            
-                $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);                 
-                return redirect()->to('/tranactions/application/list')->with('message', 'Loan successfully saved');                      
+                $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
+                $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                 
+                $getlast = $getlast->json();
+                return redirect()->to('/tranactions/application/view/'.$getlast['naid'].'/4')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
             }
             else{              
                 $membersongroup = session('memdata') !==null ? session('memdata') : [];
@@ -1037,9 +1039,9 @@ class CreateApplication extends Component
                 $this->member['f_Job'] = 'Cashier'; 
                 $this->member['f_CompanyName'] = 'SOEN'; 
                 $this->member['f_RTTB'] = '';     
-                // $this->member['loanAmount'] = '30000'; 
-                // $this->member['termsOfPayment'] = '12 months'; 
-                // $this->member['purpose'] = 'For Business'; 
+                $this->member['loanAmount'] = '30000'; 
+                $this->member['termsOfPayment'] = '12 months'; 
+                $this->member['purpose'] = 'For Business'; 
         
                 $this->comaker['co_Fname'] = 'Thea'; 
                 $this->comaker['co_Lname'] = 'Badajos'; 

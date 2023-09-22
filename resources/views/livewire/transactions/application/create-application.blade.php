@@ -2,6 +2,9 @@
     @if(session('errmmessage'))
         <x-alert :message="session('errmmessage')" :words="'Action not successfull'" :header="'Error'"></x-alert>   
     @endif
+    @if(session('mmessage'))
+        <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+    @endif
     <!-- * New-Application-Form-Container -->
     <form action="" class="na-form-con" autocomplete="off" >
         @if (session()->has('message'))

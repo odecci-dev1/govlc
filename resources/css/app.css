@@ -905,7 +905,8 @@ table .td-btn-wrapper {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem; /*by jumz*/
+  /* font-size: 2rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -939,7 +940,7 @@ table .td-btn-wrapper {
 .selected h4,
 .select-box h4 {
   cursor: pointer;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   color: #29292B;
 }
@@ -1002,7 +1003,7 @@ table .td-btn-wrapper {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -1019,7 +1020,7 @@ table .td-btn-wrapper {
   -moz-filter: brightness(101.5%);
 }
 .search-bar input::placeholder {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   position: absolute;
   top: 0;
   transform: translateY(1rem);
@@ -1042,7 +1043,7 @@ table .td-btn-wrapper {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   padding: 1rem 2rem;
   border: none;
@@ -1055,7 +1056,7 @@ table .td-btn-wrapper {
   transition: opacity 100ms ease-in-out;
 }
 .search-bar-2 input::placeholder {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   position: absolute;
   top: 0;
   transform: translateY(1rem);
@@ -1088,7 +1089,8 @@ table .td-btn-wrapper {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem; /*by jumz*/
+  /* font-size: 2rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -1227,7 +1229,7 @@ table .td-btn-wrapper {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -1322,7 +1324,7 @@ table .td-btn-wrapper {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -1820,7 +1822,7 @@ body {
   text-align: center;
   line-height: 2rem;
   margin-bottom: 0.25rem;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   padding: 1.5rem;
 }
@@ -2328,7 +2330,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -2498,7 +2500,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   margin: 0 0.5rem;
   color: #29292B;
@@ -2585,7 +2587,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -2646,7 +2648,7 @@ body {
 .ng-modal .modal-container .rowspan:nth-of-type(2) .na-table-con .table-container table th {
   text-align: center;
   padding: 1.5rem 2rem;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .ng-modal .modal-container .rowspan:nth-of-type(2) .na-table-con .table-container table th:first-of-type {
   text-align: left;
@@ -2675,7 +2677,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   margin: 0 0.5rem;
   color: #29292B;
@@ -3167,7 +3169,7 @@ body {
   transform: scaleX(50);
 }
 .am-filter-modal .modal-container .modal-header h4 {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .am-filter-modal .modal-container .modal-header button {
   padding: 0;
@@ -3223,7 +3225,7 @@ body {
   transform: scaleX(50);
 }
 .am-filter-modal .modal-container-2 .modal-header h4 {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .am-filter-modal .modal-container-2 .modal-header button {
   padding: 0;
@@ -3282,7 +3284,7 @@ body {
   transform: scaleX(50);
 }
 .am-filter-modal .modal-container-3 .modal-header h4 {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .am-filter-modal .modal-container-3 .modal-header button {
   padding: 0;
@@ -3378,7 +3380,7 @@ body {
 }
 .us-modal .modal-container .modal-header h4 {
   font-weight: 500;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .us-modal .modal-container .rowspan:nth-of-type(2) {
   display: flex;
@@ -3391,7 +3393,7 @@ body {
   font-weight: 700;
 }
 .us-modal .modal-container .rowspan:nth-of-type(2) p {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .us-modal .modal-container .rowspan:nth-of-type(2) p.text-center {
   text-align: center;
@@ -3466,7 +3468,7 @@ body {
 }
 .asking-modal .modal-container .modal-header h4 {
   font-weight: 500;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .asking-modal .modal-container .rowspan:nth-of-type(2) {
   display: flex;
@@ -3480,7 +3482,7 @@ body {
   font-weight: 700;
 }
 .asking-modal .modal-container .rowspan:nth-of-type(2) p {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .asking-modal .modal-container .rowspan:nth-of-type(3) {
   display: flex;
@@ -3587,10 +3589,10 @@ body {
   font-size: 1.6rem;
 }
 .fe-modal .modal-container .box-wrap:nth-of-type(3) p {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .fe-modal .modal-container .box-wrap:nth-of-type(3) p span {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
 }
 .fe-modal .modal-container .box-wrap:last-of-type {
@@ -3647,10 +3649,10 @@ body {
   gap: 1rem;
 }
 .re-modal .modal-container .box-wrap:nth-of-type(3) p {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .re-modal .modal-container .box-wrap:nth-of-type(3) p span {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
 }
 .re-modal .modal-container .box-wrap:last-of-type {
@@ -3692,7 +3694,7 @@ body {
   color: #29292B;
 }
 .main-dashboard .md-con-1 .wrapper p:last-child {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   color: #29292B;
   font-weight: 700;
 }
@@ -3902,7 +3904,7 @@ body {
   background-color: #29292B;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:first-child .div-1 h3 {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   color: #FFFFFF;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:first-child .div-1 p:nth-of-type(1) {
@@ -3958,7 +3960,7 @@ body {
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:first-child .div-2 .circle-div .progress-value p:nth-of-type(2) {
   margin-top: 1rem;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:first-child .div-2 .circle-div ~ p {
@@ -4001,7 +4003,7 @@ body {
   box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:last-child h3 {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:last-child .div-1 {
   margin: min(1rem, 0%);
@@ -4017,7 +4019,7 @@ body {
   align-items: center;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:last-child .div-1 .p-wrap .wrap p {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:last-child .div-1 .p-wrap .wrap ~ p {
@@ -4086,7 +4088,7 @@ body {
   border: none;
   color: #8C8686;
   background-color: #EBEBEB;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 .login-container .login-wrapper .container .input-box span {
@@ -4094,7 +4096,7 @@ body {
   left: 0%;
   padding: 1.5rem;
   pointer-events: none;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   color: #8C8686;
   transition: all 150ms ease-in;
 }
@@ -4959,7 +4961,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -4976,7 +4978,7 @@ body {
   -moz-filter: brightness(101.5%);
 }
 .main-dashboard .m-con-1 .container .wrapper:last-of-type .search-wrap input::placeholder {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   position: absolute;
   top: 0;
   transform: translateY(1rem);
@@ -5083,7 +5085,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   margin: 0 0.5rem;
   color: #29292B;
@@ -5142,7 +5144,8 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem; /*by jumz*/
+  /* font-size: 2rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -5303,7 +5306,8 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem; /*by jumz*/
+  /* font-size: 2rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -5415,13 +5419,13 @@ body {
 .main-dashboard .fa-form-con .fa-container-wrapper .fa-container-1 .verti-con .rowspan .input-wrapper > span {
   margin-bottom: 1rem;
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard .fa-form-con .fa-container-wrapper .fa-container-1 .verti-con .rowspan .input-wrapper input {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -5482,7 +5486,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -5676,7 +5680,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -5885,13 +5889,13 @@ body {
 }
 .main-dashboard .nl-container-1 .container-wrapper .big-con .rowspan .input-wrapper span {
   margin-bottom: 1rem;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard .nl-container-1 .container-wrapper .big-con .rowspan .input-wrapper input {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -6031,7 +6035,7 @@ body {
   display: flex;
   position: relative;
   text-align: left;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -6079,7 +6083,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -6157,13 +6161,13 @@ body {
 .main-dashboard .top-container-2 .container-wrapper .big-con .rowspan .input-wrapper span {
   margin-bottom: 1rem;
   font-weight: 400;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard .top-container-2 .container-wrapper .big-con .rowspan .input-wrapper input {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -6291,7 +6295,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -6374,13 +6378,13 @@ body {
 }
 .main-dashboard .nh-con .container-wrapper .big-con .rowspan .input-wrapper span {
   font-weight: 400;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard .nh-con .container-wrapper .big-con .rowspan .input-wrapper input {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -6728,7 +6732,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -6745,7 +6749,7 @@ body {
   -moz-filter: brightness(101.5%);
 }
 .main-dashboard .am-con-1 .container .wrapper:last-of-type .search-wrap input::placeholder {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   position: absolute;
   top: 0;
   transform: translateY(1rem);
@@ -6913,7 +6917,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   margin: 0 0.5rem;
   color: #29292B;
@@ -6998,7 +7002,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   margin: 0 0.5rem;
   color: #29292B;
@@ -7048,7 +7052,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -7141,7 +7145,7 @@ body {
   justify-content: center;
 }
 .main-dashboard .view-borrower-con .na-container-1 .big-con .rowspan:first-of-type .CI-time-wrapper .box span {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   color: #D6A330;
 }
@@ -7282,7 +7286,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -7337,7 +7341,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -7561,7 +7565,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -7734,7 +7738,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -7751,7 +7755,7 @@ body {
   -moz-filter: brightness(101.5%);
 }
 .main-dashboard .na-form-con .nal-con-1 .container .wrapper:last-of-type .search-wrap input::placeholder {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   position: absolute;
   top: 0;
   transform: translateY(1rem);
@@ -7878,7 +7882,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -7895,7 +7899,7 @@ body {
   -moz-filter: brightness(101.5%);
 }
 .main-dashboard .na-form-con .cil-con-1 .container .wrapper:last-of-type .search-wrap input::placeholder {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   position: absolute;
   top: 0;
   transform: translateY(1rem);
@@ -8049,7 +8053,7 @@ body {
   font-size: 1.8rem;
 }
 .main-dashboard .na-form-con .na-requirements-sec h5 span {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard .na-form-con .na-notes-remarks-sec {
   border-radius: 1.5rem;
@@ -8081,7 +8085,7 @@ body {
   border-radius: 2rem;
   background-color: #EBEBEB;
   color: #8C8686;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 500;
 }
 .main-dashboard .na-form-con .na-approval-sec {
@@ -8114,7 +8118,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -8199,7 +8203,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -8299,7 +8303,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -8468,7 +8472,7 @@ body {
   justify-content: center;
 }
 .main-dashboard .na-form-con .na-container-wrapper .na-container-1 .big-con .rowspan:first-of-type .CI-time-wrapper .box span {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   color: #D6A330;
 }
@@ -8605,7 +8609,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -8651,7 +8655,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -8779,7 +8783,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -8861,7 +8865,7 @@ body {
   margin-bottom: 1rem;
 }
 .main-dashboard .na-form-con .nm-container-4 .small-con-3 .rowspan:nth-of-type(2) h3 {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-style: italic;
 }
 .main-dashboard .na-form-con .nm-container-4 .small-con-3 .rowspan:nth-of-type(3) {
@@ -8906,7 +8910,7 @@ body {
   gap: 0px 2rem;
 }
 .main-dashboard .na-form-con .nm-container-4 .small-con-3 .rowspan:nth-of-type(7) h3 {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-style: italic;
 }
 .main-dashboard .na-form-con .nm-container-4 .small-con-3 .rowspan.child {
@@ -8981,7 +8985,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -9150,7 +9154,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   margin: 0 0.5rem;
   color: #29292B;
@@ -9195,7 +9199,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -9275,7 +9279,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -9673,7 +9677,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -9766,7 +9770,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -9877,7 +9881,7 @@ body {
 .main-dashboard .na-form-con .na-container-12 .small-con-7 .rowspan:nth-of-type(2) .box-wrapper .input-wrapper:nth-of-type(1) .signature-wrapper-2 span {
   position: absolute;
   bottom: 2rem;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   font-weight: 700;
   font-style: italic;
 }
@@ -9912,7 +9916,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -10107,7 +10111,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -10190,7 +10194,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -10207,7 +10211,7 @@ body {
   -moz-filter: brightness(101.5%);
 }
 .ul-con-1 .container .wrapper:last-of-type .search-wrap input::placeholder {
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   position: absolute;
   top: 0;
   transform: translateY(1rem);
@@ -10330,7 +10334,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -10350,7 +10354,7 @@ body {
 .nu-con-1 .container-wrapper .big-con .rowspan .input-wrapper .select-box select {
   position: relative;
   text-align: left;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -10614,7 +10618,7 @@ body {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;
@@ -10634,7 +10638,7 @@ body {
 .view-nu-con-1 .container-wrapper .big-con .rowspan .input-wrapper .select-box select {
   position: relative;
   text-align: left;
-  font-size: 2rem;
+  font-size: 1.5rem;  /*by jumz 2rem*/
   padding: 1rem 2rem;
   border: none;
   outline: none;

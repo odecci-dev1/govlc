@@ -107,8 +107,11 @@
 
                                         </div>
                                         <input autocomplete="off" wire:model.lazy="loantype.loan_amount_Lessthan_Amount" type="number" placeholder="Amount">
-                                    </div>
+                                    </div>                                                                      
                                 </div>
+                                @error('loantype.loan_amount_Lessthan') <span class="text-required">{{ $message }}</span>@enderror
+                                @error('loantype.lalV_Type') <span class="text-required">{{ $message }}</span>@enderror
+                                @error('loantype.loan_amount_Lessthan_Amount') <span class="text-required">{{ $message }}</span>@enderror
                             </div>
                             <div class="input-inner-wrapper">
                                 <div class="wrapper">
@@ -148,6 +151,9 @@
                                         <input autocomplete="off" type="number" wire:model.lazy="loantype.loan_amount_GreaterEqual_Amount" placeholder="Amount">
                                     </div>
                                 </div>
+                                @error('loantype.loan_amount_GreaterEqual') <span class="text-required">{{ $message }}</span>@enderror
+                                @error('loantype.lageF_Type') <span class="text-required">{{ $message }}</span>@enderror
+                                @error('loantype.loan_amount_GreaterEqual_Amount') <span class="text-required">{{ $message }}</span>@enderror
                             </div>
                         </div>
 
@@ -159,7 +165,7 @@
                         <!-- * Savings -->
                         <div class="input-wrapper">
                             <span>Savings</span>
-                            <input autocomplete="off" type="text" wire:model.lazy="loantype.savings">
+                            <input autocomplete="off" type="number" wire:model.lazy="loantype.savings">
                         </div>
 
                         <!-- * Loan Insurance -->
@@ -199,8 +205,11 @@
                                     <input autocomplete="off" type="number" wire:model.lazy="loantype.loanInsurance" placeholder="Amount">
                                 </div>
                             </div>
+                            @error('loantype.savings') <span class="text-required">{{ $message }}</span>@enderror
+                            @error('loantype.loanI_Type') <span class="text-required">{{ $message }}</span>@enderror
+                            @error('loantype.loanInsurance') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
-
+                       
                         <!-- * Life Insurance -->
                         <div class="input-wrapper">
                             <div class="input-inner-wrapper">
@@ -249,9 +258,11 @@
                         <div class="input-wrapper">
                             <span>Loan Amount</span>
                             <div class="input-inner-wrapper-2">
-                                <input autocomplete="off" type="number" wire:model.lazy="loantype.loanAmount_Min" placeholder="Min:">
+                                <input autocomplete="off" type="number" wire:model.lazy="loantype.loanAmount_Min" placeholder="Min:">                             
                                 <input autocomplete="off" type="number" wire:model.lazy="loantype.loanAmount_Max" placeholder="Max:">
                             </div>
+                            @error('loantype.loanAmount_Min') <span class="text-required">{{ $message }}</span>@enderror
+                            @error('loantype.loanAmount_Max') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                     </div>

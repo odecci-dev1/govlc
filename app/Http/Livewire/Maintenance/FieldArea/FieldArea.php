@@ -80,8 +80,9 @@ class FieldArea extends Component
 
     public function getUnassigned(){       
         $this->unassigned = [];       
-        $unassigned = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/UnAssignedFilter', ['location' => $this->keywordunassigned]);  
+        $unassigned = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/UnAssignedFilter', ['location' => $this->keywordunassigned]);         
         $unassigned = $unassigned->json();  
+       
         if($unassigned){
             foreach($unassigned as $unass){
                 $this->unassigned[$unass['areaID']] = $unass['areaName'];

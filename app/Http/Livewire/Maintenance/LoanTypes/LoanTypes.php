@@ -13,8 +13,45 @@ class LoanTypes extends Component
     public $inpterms;
     public $formulaList = [];
 
+    public function rules(){                
+        $rules = [];     
+        $rules['loantype.loan_amount_Lessthan'] = 'required';  
+        $rules['loantype.loan_amount_GreaterEqual'] = 'required';  
+        $rules['loantype.savings'] = 'required';  
+        $rules['loantype.loanAmount_Min'] = ['required'];   
+        $rules['loantype.loanAmount_Max'] = ['required'];   
+        $rules['loantype.loanTypeName'] = ['required'];   
+        $rules['loantype.loan_amount_Lessthan_Amount'] = ['required'];   
+        $rules['loantype.lalV_Type'] = ['required'];   
+        $rules['loantype.loan_amount_GreaterEqual_Amount'] = ['required'];   
+        $rules['loantype.lageF_Type'] = ['required'];   
+        $rules['loantype.loanInsurance'] = ['required'];   
+        $rules['loantype.loanI_Type'] = ['required'];   
+        $rules['loantype.lifeInsurance'] = ['required'];   
+        $rules['loantype.lifeI_Type'] = ['required'];   
+        $rules['inpterms'] = ['array'];      
+        return $rules;
+    }
+
+
     public function messages(){
         $messages = [];
+        $messages['loantype.loan_amount_Lessthan.required'] = 'Please enter amount';  
+        $messages['loantype.loan_amount_GreaterEqual.required'] = 'Please enter amount';  
+        $messages['loantype.savings.required'] = 'Please enter amount';  
+        $messages['loantype.loanAmount_Min.required'] = 'Please enter amount';  
+        $messages['loantype.loanAmount_Max.required'] = 'Please enter amount';  
+        $messages['loantype.loanTypeName.required'] = 'Please enter loan type name';  
+        $messages['loantype.loan_amount_Lessthan_Amount.required'] = 'Please enter amount';  
+        $messages['loantype.lalV_Type.required'] = 'Please enter amount';  
+        $messages['loantype.loan_amount_GreaterEqual_Amount.required'] = 'Please enter amount';    
+        $messages['loantype.lageF_Type.required'] = 'Please enter amount';   
+        $messages['loantype.loanInsurance.required'] = 'Please enter amount';   
+        $messages['loantype.loanI_Type.required'] = 'Please enter amount';    
+        $messages['loantype.lifeInsurance.required'] = 'Please enter amount';  
+        $messages['loantype.lifeI_Type.required'] = 'Please enter amount';  
+        $messages['inpterms.gt'] = 'Please add terms of payment';  
+
         $messages['inpterms.nameOfTerms.required'] = 'Name of terms is required.';        
         $messages['inpterms.days.required'] = 'No. of days is required.';  
         $messages['inpterms.days.numeric'] = 'No. of days is should be a number.';  
@@ -26,7 +63,7 @@ class LoanTypes extends Component
     }
 
     public function store(){   
-        $inputs = $this->loantype;
+        $inputs = $this->validate();
 
         $terms = [];
         if(count( $this->terms) > 0){
