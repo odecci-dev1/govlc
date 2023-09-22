@@ -22,6 +22,9 @@ use App\Http\Livewire\Maintenance\LoanTypes\LoanTypes;
 use App\Http\Livewire\Maintenance\LoanTypes\LoanTypesList;
 use App\Http\Livewire\Maintenance\FieldArea\FieldArea;
 use App\Http\Livewire\Collection\Collection\CollectionList;
+use App\Http\Livewire\Collection\Collection\Collection;
+use App\Http\Livewire\Collection\Collection\CollectionPrint;
+use App\Http\Livewire\Collection\Collection\CollectionRemittance;
 
 
 /*
@@ -99,4 +102,8 @@ Route::get('/tranactions/application/approval', ApprovalApplication::class)->nam
 
 //collection
 Route::get('/collection/collection/list',CollectionList::class);
+Route::get('/collection/collection/{collectionId}',Collection::class);
+Route::get('/collection/collection/area/{areaCode}',CollectionPrint::class);
+Route::get('/collection/collection/area/{areaCode}',CollectionPrint::class);
+Route::get('/collection/remittance/{areaCode}',CollectionRemittance::class);
 //collection
