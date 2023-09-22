@@ -76,23 +76,23 @@ class LoanTypes extends Component
                             ];
             }
         }
-
+      
         $data = [
-                        'loan_amount_Lessthan' =>  $inputs['loan_amount_Lessthan'],
-                        'loan_amount_GreaterEqual' =>  $inputs['loan_amount_GreaterEqual'],
-                        'savings' =>  $inputs['savings'],
-                        'loanAmount_Min' =>  $inputs['loanAmount_Min'],
-                        'loanAmount_Max' =>  $inputs['loanAmount_Max'],
-                        'loanTypeName' =>  $inputs['loanTypeName'],
+                        'loan_amount_Lessthan' =>  $inputs['loantype']['loan_amount_Lessthan'],
+                        'loan_amount_GreaterEqual' =>  $inputs['loantype']['loan_amount_GreaterEqual'],
+                        'savings' =>  $inputs['loantype']['savings'],
+                        'loanAmount_Min' =>  $inputs['loantype']['loanAmount_Min'],
+                        'loanAmount_Max' =>  $inputs['loantype']['loanAmount_Max'],
+                        'loanTypeName' =>  $inputs['loantype']['loanTypeName'],
                         'loanTypeID' =>  'string',
-                        'loan_amount_Lessthan_Amount' =>  $inputs['loan_amount_Lessthan_Amount'],
-                        'lalV_Type' =>  $inputs['lalV_Type'],
-                        'loan_amount_GreaterEqual_Amount' =>  $inputs['loan_amount_GreaterEqual_Amount'],
-                        'lageF_Type' =>  $inputs['lageF_Type'],
-                        'loanInsurance' =>  $inputs['loanInsurance'],
-                        'loanI_Type' =>  $inputs['loanI_Type'],
-                        'lifeInsurance' =>  $inputs['lifeInsurance'],
-                        'lifeI_Type' =>  $inputs['lifeI_Type'],
+                        'loan_amount_Lessthan_Amount' =>  $inputs['loantype']['loan_amount_Lessthan_Amount'],
+                        'lalV_Type' =>  $inputs['loantype']['lalV_Type'],
+                        'loan_amount_GreaterEqual_Amount' =>  $inputs['loantype']['loan_amount_GreaterEqual_Amount'],
+                        'lageF_Type' =>  $inputs['loantype']['lageF_Type'],
+                        'loanInsurance' =>  $inputs['loantype']['loanInsurance'],
+                        'loanI_Type' =>  $inputs['loantype']['loanI_Type'],
+                        'lifeInsurance' =>  $inputs['loantype']['lifeInsurance'],
+                        'lifeI_Type' =>  $inputs['loantype']['lifeI_Type'],
                         "terms"=> $terms
                 ];
 
