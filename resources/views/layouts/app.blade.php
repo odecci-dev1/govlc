@@ -48,7 +48,7 @@
                     <!-- * Submenu -->
                     <ul class="sub-menu">
 
-                        <a href="../KC/all-members.html" data-nav-link>
+                        <a href="{{ URL::to('/') }}/members" data-nav-link>
                             <li>
                                 <!-- * All Members -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/all-members.svg" alt="all-members" />

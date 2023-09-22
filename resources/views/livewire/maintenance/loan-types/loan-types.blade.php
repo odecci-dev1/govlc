@@ -459,6 +459,7 @@
 
 
                                     <!-- * Terms Of Payment Data -->
+                                    @error('inpterms') <span class="text-required">{{ $message }}</span>@enderror
                                     @if($terms)
                                     @foreach($terms as $key => $value)
                                     <tr>

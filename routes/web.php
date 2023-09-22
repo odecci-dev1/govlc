@@ -3,6 +3,9 @@
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+
+use App\Http\Livewire\Members\MemberList;
+
 use App\Http\Livewire\Users\UserRegister;
 use App\Http\Livewire\Users\UserList;
 use App\Http\Livewire\Transactions\Application\CreateApplication;
@@ -43,6 +46,10 @@ Route::get('/dashboard', function(){
 
 Route::get('/test', [DashboardController::class, 'test']);
 Route::get('/posttest', [DashboardController::class, 'posttest']);
+
+//members
+Route::get('/members', MemberList::class);
+//members
 
 //user registration
 Route::get('/register', UserRegister::class)->name('user.register');
