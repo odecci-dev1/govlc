@@ -66,20 +66,18 @@
                     <div class="btn-wrapper">
 
                         <!-- * Save -->
-                        @if($type == 1)
+                        @if($type == 'create')
                         <button wire:click="store" type="button" wire:loading.attr="disabled" class="button" data-save>Save</button>
 
                         <!-- * Save & Apply for loan  -->
                         <a href="#">
                             <button type="button"  wire:loading.attr="disabled" class="button" onclick="activeProgressButton()" data-proceed-to-ci>Save & Proceed to CI</button>
                         </a>
-                        @else
-                            @if($type == 4)
+                        @elseif($type == 'view')
                             <button wire:click="update(1)" type="button" class="button" data-save>Update</button>
-                            <button wire:click="update(2)" type="button" class="button" data-save>Submit And Proceed to CI</button>
-                            @else
-                            <button wire:click="store" type="button" class="button" data-save>Add To Group</button>
-                            @endif
+                            <button wire:click="update(2)" type="button" class="button" data-save>Submit And Proceed to CI</button>                      
+                        @elseif($type == 'add')
+                            <button wire:click="store" type="button" class="button" data-save>Add To Group</button>    
                         @endif
 
                     </div>

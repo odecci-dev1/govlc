@@ -101,7 +101,8 @@ class LoanTypes extends Component
     }
 
     public function addTerms(){
-        $lastcnt = array_key_last($this->terms);    
+        $lastcnt = array_key_last($this->terms);   
+
         $data = $this->validate([                                    
                                     'inpterms.nameOfTerms' => ['required'],
                                     'inpterms.days' => ['required', 'numeric', 'min:1'],
@@ -123,6 +124,7 @@ class LoanTypes extends Component
     public function resetterms(){
         $this->inpterms['nameOfTerms'] = '';
         $this->inpterms['days'] = '';
+        $this->inpterms['interestType'] = '';
         $this->inpterms['interestRate'] = '';
         $this->inpterms['formula'] = '';       
     }

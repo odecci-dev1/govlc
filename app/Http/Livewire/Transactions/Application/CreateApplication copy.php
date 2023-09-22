@@ -341,6 +341,24 @@ class CreateApplication extends Component
             $businesses = [];
             $appliances = [];
             $banks = [];
+            $assets = [];
+            $properties = [];
+
+            if($this->hasvehicle == 1){
+                if(count($this->vehicle) > 0){
+                    foreach($this->vehicle as $key => $value){                   
+                        $assets[] = [ 'motorVehicles' => $this->inpvehicle['vehicle'.$key] ];  
+                    }            
+                }
+            }
+    
+            if($this->hasproperties == 1){
+                if(count($this->properties) > 0){
+                    foreach($this->properties as $key => $value){                    
+                        $properties[] = [ 'property' => $this->inpproperties['property'.$key] ];                
+                    }            
+                }
+            }  
          
             if(count($this->cntmemchild) > 0){
                 if((isset($this->inpchild['fname1']) ? $this->inpchild['fname1'] != '' : false)  || (isset($this->inpchild['mname1']) ? $this->inpchild['mname1'] != '' : false) || (isset($this->inpchild['lname1']) ? $this->inpchild['lname1'] != '' : false) || (isset($this->inpchild['age1']) ? $this->inpchild['age1'] != '' : false) || (isset($this->inpchild['school1']) ? $this->inpchild['school1'] != '' : false)){
@@ -440,8 +458,8 @@ class CreateApplication extends Component
                                 "purpose"=> $input['member']['purpose'] ??= '',
                                 "child"=> $childs,
                                 "appliances"=> $appliances,
-                                "property"=> [],
-                                "assets"=> [],
+                                "property"=> $properties,
+                                "assets"=> $assets,
                                 "bank"=> $banks,
                                 "co_Fname"=> $input['comaker']['co_Fname'] ??= '',
                                 "co_Lname"=> $input['comaker']['co_Lname'] ??= '',
@@ -481,8 +499,9 @@ class CreateApplication extends Component
                  
             if($this->type == 1){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                // dd($crt);
-                return redirect()->to('/tranactions/application/list')->with('message', 'Loan successfully saved');                      
+                $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                 
+                $getlast = $getlast->json();
+                return redirect()->to('/tranactions/application/view/'.$getlast['naid'].'/4')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
             }
             else{              
                 $membersongroup = session('memdata') !==null ? session('memdata') : [];
@@ -563,96 +582,99 @@ class CreateApplication extends Component
                     }
                 }
             }
-     
-            $data = [[          "fname"=> $input['member']['fname'] ??= '',
-                                "lname"=> $input['member']['lname'] ??= '',
-                                "mname"=> $input['member']['mname'] ??= '',
-                                "suffix"=> $input['member']['suffix'] ??= '',
-                                "age"=> $input['member']['age'] ??= '0',
-                                "barangay"=> $input['member']['barangay'] ??= '',
-                                "city"=> $input['member']['city'] ??= '',
-                                "civil_Status"=> $input['member']['civil_Status'] ??= 'Single',
-                                "cno"=> $input['member']['cno'] ??= '',
-                                "country"=> $input['member']['country'] ??= '',
-                                "dob"=> '2023-09-10T11:41:17.234Z', //$input['member']['dob'] ??= null, //not saving if null or blank
-                                "emailAddress"=> $input['member']['emailAddress'] ??= '',
-                                "gender"=> $input['member']['gender'] ??= '',
-                                "houseNo"=> $input['member']['houseNo'] ??= '',
-                                "house_Stats"=> $input['member']['house_Stats'] ??= '0',
-                                "pob"=> $input['member']['pob'] ??= '',
-                                "province"=> $input['member']['province'] ??= '',
-                                "yearsStay"=> $input['member']['yearsStay'] ??= '0',
-                                "zipCode"=> $input['member']['zipCode'] ??= '',
-                                "status"=> '1',
-                                "dateCreated"=> '2023-09-10T11:41:17.234Z',
-                                "dateUpdated"=> '2023-09-10T11:41:17.234Z',
-                                "memId"=> $this->searchedmemId,
-                                "electricBill"=> $input['member']['electricBill'] ??= '0',
-                                "waterBill"=> $input['member']['waterBill'] ??= '0',
-                                "otherBills"=> $input['member']['otherBills'] ??= '0',
-                                "dailyExpenses"=> $input['member']['dailyExpenses'] ??= '0',
-                                "jobDescription"=> $input['member']['jobDescription'] ??= '',
-                                "yos"=> $input['member']['yos'] ??= '0',
-                                "monthlySalary"=> $input['member']['monthlySalary'] ??= '0',
-                                "otherSOC"=> $input['member']['otherSOC'] ??= '',
-                                "bO_Status"=> $input['member']['bO_Status'] ??= '0',
-                                "companyName"=> $input['member']['companyName'] ??= '',
-                                "emp_Status"=> $input['member']['emp_Status'] ??= '0',
-                                "f_Fname"=> $input['member']['f_Fname'] ??= '',
-                                "f_Lname"=> $input['member']['f_Lname'] ??= '',
-                                "f_Mname"=> $input['member']['f_Mname'] ??= '',
-                                "f_Suffix"=> $input['member']['f_Suffix'] ??= '',
-                                "f_DOB"=> null,
-                                "f_Age"=> $input['member']['f_Age'] ??= '0',
-                                "f_NOD"=> $input['member']['f_NOD'] ??= '0',
-                                "f_YOS"=> $input['member']['f_YOS'] ??= '0',
-                                "f_Emp_Status"=> '1', 
-                                "f_Job"=> $input['member']['f_Job'] ??= '',
-                                "f_CompanyName"=> $input['member']['f_CompanyName'] ??= '',
-                                "f_RTTB"=> '',
-                                "business"=> $businesses,
-                                "loanAmount"=> $input['member']['loanAmount'] ??= '0',
-                                "termsOfPayment"=> $input['member']['termsOfPayment'] ??= '',
-                                "purpose"=> $input['member']['purpose'] ??= '',
-                                "child"=> $childs,
-                                "appliances"=> $appliances,
-                                "property"=> [],
-                                "assets"=> [],
-                                "bank"=> $banks,
-                                "co_Fname"=> $input['comaker']['co_Fname'] ??= '',
-                                "co_Lname"=> $input['comaker']['co_Lname'] ??= '',
-                                "co_Mname"=> $input['comaker']['co_Mname'] ??= '',
-                                "co_Suffix"=> $input['comaker']['co_Suffix'] ??= '',
-                                "co_Age"=> $input['comaker']['co_Age'] ??= '0',
-                                "co_Barangay"=> $input['comaker']['co_Barangay'] ??= '',
-                                "co_City"=> $input['comaker']['co_City'] ??= '',
-                                "co_Civil_Status"=> $input['comaker']['co_Civil_Status'] ??= '',
-                                "co_Cno"=> $input['comaker']['co_Cno'] ??= '',
-                                "co_Country"=> $input['comaker']['co_Country'] ??= '',
-                                "co_DOB"=>  $input['comaker']['co_DOB'] ??= null,
-                                "co_EmailAddress"=> $input['comaker']['co_EmailAddress'] ??= '',
-                                "co_Gender"=> $input['comaker']['co_Gender'] ??= '',
-                                "co_HouseNo"=> $input['comaker']['co_HouseNo'] ??= '',
-                                "co_House_Stats"=> $input['comaker']['co_House_Stats'] ??= '0',
-                                "co_POB"=> $input['comaker']['co_POB'] ??= '',
-                                "co_Province"=> $input['comaker']['co_Province'] ??= '',
-                                "co_YearsStay"=> $input['comaker']['co_YearsStay'] ??= '0',
-                                "co_ZipCode"=> $input['comaker']['co_ZipCode'] ??= '',
-                                "co_RTTB"=> '',
-                                "co_Status"=> '1',
-                                "co_JobDescription"=> $input['comaker']['co_JobDescription'] ??= '',
-                                "co_YOS"=> $input['comaker']['co_YOS'] ??= '0',
-                                "co_MonthlySalary"=> $input['comaker']['co_MonthlySalary'] ??= '0',
-                                "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
-                                "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
-                                "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
-                                "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
-                                "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
-                                "remarks"=> '',
-                                "applicationStatus" => $type == 1 ? '7' : '8',
-                    ]];
-                   
-                    
+            $bdate = date('Y-m-d', strtotime($input['member']['dob']));
+            //dd($input['member']['house_Stats']);
+            $data = [
+                        [
+                            "fname"=> $input['member']['fname'] ??= '',
+                            "lname"=> $input['member']['lname'] ??= '',
+                            "mname"=> $input['member']['mname'] ??= '',
+                            "suffix"=> $input['member']['suffix'] ??= '',
+                            "age"=> $input['member']['age'] ??= '0',
+                            "barangay"=> $input['member']['barangay'] ??= '',
+                            "city"=> $input['member']['city'] ??= '',
+                            "civil_Status"=> $input['member']['civil_Status'] ??= 'Single',
+                            "cno"=> $input['member']['cno'] ??= '',
+                            "country"=> $input['member']['country'] ??= '',
+                            "dob"=>  $bdate ??= null, //not saving if null or blank
+                            "emailAddress"=> $input['member']['emailAddress'] ??= '',
+                            "gender"=> $input['member']['gender'] ??= '',
+                            "houseNo"=> $input['member']['houseNo'] ??= '',
+                            "house_Stats"=> 2, //mali owned and lumalabas $input['member']['house_Stats'] ??= '0',
+                            "pob"=> $input['member']['pob'] ??= '',
+                            "province"=> $input['member']['province'] ??= '',
+                            "yearsStay"=> $input['member']['yearsStay'] ??= '0',
+                            "zipCode"=> $input['member']['zipCode'] ??= '',
+                            "status"=> '1',
+                            "dateCreated"=> null,
+                            "dateUpdated"=> null,
+                            "memId"=> $this->searchedmemId,
+                            "electricBill"=> $input['member']['electricBill'] ??= '0',
+                            "waterBill"=> $input['member']['waterBill'] ??= '0',
+                            "otherBills"=> $input['member']['otherBills'] ??= '0',
+                            "dailyExpenses"=> $input['member']['dailyExpenses'] ??= '0',
+                            "jobDescription"=> $input['member']['jobDescription'] ??= '',
+                            "yos"=> $input['member']['yos'] ??= '0',
+                            "monthlySalary"=> $input['member']['monthlySalary'] ??= '0',
+                            "otherSOC"=> $input['member']['otherSOC'] ??= '',
+                            "bO_Status"=> $input['member']['bO_Status'] ??= '0',
+                            "companyName"=> $input['member']['companyName'] ??= '',
+                            "emp_Status"=> $input['member']['emp_Status'] ??= '0',
+                            "f_Fname"=> $input['member']['f_Fname'] ??= '',
+                            "f_Lname"=> $input['member']['f_Lname'] ??= '',
+                            "f_Mname"=> $input['member']['f_Mname'] ??= '',
+                            "f_Suffix"=> $input['member']['f_Suffix'] ??= '',
+                            "f_DOB"=> null, //mali
+                            "f_Age"=> $input['member']['f_Age'] ??= '0',
+                            "f_NOD"=> $input['member']['f_NOD'] ??= '0',
+                            "f_YOS"=> $input['member']['f_YOS'] ??= '0',
+                            "f_Emp_Status"=> '1', 
+                            "f_Job"=> $input['member']['f_Job'] ??= '',
+                            "f_CompanyName"=> $input['member']['f_CompanyName'] ??= '',
+                            "f_RTTB"=> '',
+                            "business"=> $businesses,
+                            "loanAmount"=> $input['member']['loanAmount'] ??= '0',
+                            "termsOfPayment"=> $input['member']['termsOfPayment'] ??= '',
+                            "purpose"=> $input['member']['purpose'] ??= '',
+                            "child"=> $childs,
+                            "appliances"=> $appliances,
+                            "property"=> [],
+                            "assets"=> [],
+                            "bank"=> $banks,
+                            "co_Fname"=> $input['comaker']['co_Fname'] ??= '',
+                            "co_Lname"=> $input['comaker']['co_Lname'] ??= '',
+                            "co_Mname"=> $input['comaker']['co_Mname'] ??= '',
+                            "co_Suffix"=> $input['comaker']['co_Suffix'] ??= '',
+                            "co_Age"=> $input['comaker']['co_Age'] ??= '0',
+                            "co_Barangay"=> $input['comaker']['co_Barangay'] ??= '',
+                            "co_City"=> $input['comaker']['co_City'] ??= '',
+                            "co_Civil_Status"=> $input['comaker']['co_Civil_Status'] ??= '',
+                            "co_Cno"=> $input['comaker']['co_Cno'] ??= '',
+                            "co_Country"=> $input['comaker']['co_Country'] ??= '',
+                            "co_DOB"=>  $input['comaker']['co_DOB'] ??= null,
+                            "co_EmailAddress"=> $input['comaker']['co_EmailAddress'] ??= '',
+                            "co_Gender"=> $input['comaker']['co_Gender'] ??= '',
+                            "co_HouseNo"=> $input['comaker']['co_HouseNo'] ??= '',
+                            "co_House_Stats"=> 2, //mali $input['comaker']['co_House_Stats'] ??= '0',
+                            "co_POB"=> $input['comaker']['co_POB'] ??= '',
+                            "co_Province"=> $input['comaker']['co_Province'] ??= '',
+                            "co_YearsStay"=> $input['comaker']['co_YearsStay'] ??= '0',
+                            "co_ZipCode"=> $input['comaker']['co_ZipCode'] ??= '',
+                            "co_RTTB"=> '',
+                            "co_Status"=> '1',
+                            "co_JobDescription"=> $input['comaker']['co_JobDescription'] ??= '',
+                            "co_YOS"=> $input['comaker']['co_YOS'] ??= '0',
+                            "co_MonthlySalary"=> $input['comaker']['co_MonthlySalary'] ??= '0',
+                            "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
+                            "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
+                            "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
+                            "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
+                            "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
+                            "remarks"=> '',
+                            "applicationStatus" => 8,
+                        ]
+                    ];
+                                                           
                     // $extension = $request->file('filename')->getClientOriginalExtension();
                  
                     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);  
@@ -755,8 +777,8 @@ class CreateApplication extends Component
         $this->membusinfo['aos'] = '';
     }
 
-    public function mount($type = '1'){
-        $this->type = $type;
+    public function mount($type = 'create'){
+        $this->type = $type;      
         $this->member['civil_Status'] = '';       
         $this->member['emp_Status'] = '';
         $this->member['f_Emp_Status'] = '';
@@ -779,97 +801,116 @@ class CreateApplication extends Component
         }
         else if($this->type == 4){
             $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->memId]);  
-            $resdata = $value->json();    
+            $resdata = $value->json();             
             if(isset($resdata[0])){        
-            $data =  $resdata[0];
-
-            $this->searchedmemId =  $data['memId'];
-           
-            $this->member['fname'] = $data['fname'];  
-            $this->member['lname'] = $data['lname'];
-            $this->member['mname'] = $data['mname'];
-            $this->member['suffix'] = $data['suffix']; 
-            $this->member['age'] = $data['age']; 
-            $this->member['barangay'] = $data['barangay'];  
-            $this->member['city'] = $data['city']; 
-            $this->member['civil_Status'] = $data['civil_Status'];  
-            $this->member['cno'] = $data['cno']; 
-            $this->member['country'] = $data['country']; 
-            $this->member['dob'] = date('m/d/Y', strtotime($data['dob']));
-            $this->member['emailAddress'] = $data['emailAddress']; 
-            $this->member['gender'] = $data['gender'];
-            $this->member['houseNo'] = $data['houseNo'];
-            $this->member['house_Stats'] = $data['house_Stats']; 
-            $this->member['pob'] = $data['pob'];
-            $this->member['province'] = $data['province']; 
-            $this->member['yearsStay'] = $data['yearsStay'];
-            $this->member['zipCode'] = $data['zipCode'];
-            $this->member['status'] = $data['status'];
-            $this->member['electricBill'] = $data['electricBill']; 
-            $this->member['waterBill'] = $data['waterBill']; 
-            $this->member['otherBills'] = $data['otherBills']; 
-            $this->member['dailyExpenses'] = $data['dailyExpenses']; 
-            $this->member['jobDescription'] = $data['jobDescription']; 
-            $this->member['yos'] = $data['yos']; 
-            $this->member['monthlySalary'] = $data['monthlySalary']; 
-            $this->member['otherSOC'] = $data['otherSOC']; 
-            $this->member['bO_Status'] = $data['bO_Status']; 
-            $this->member['companyName'] = $data['companyName']; 
-            $this->member['emp_Status'] = $data['emp_Status']; 
-            $this->member['f_Fname'] = $data['f_Fname']; 
-            $this->member['f_Lname'] = $data['f_Lname']; 
-            $this->member['f_Mname'] = $data['f_Mname']; 
-            $this->member['f_Suffix'] = $data['f_Suffix']; 
-            $this->member['f_DOB'] = $data['f_DOB']; 
-            $this->member['f_Age'] = $data['f_Age']; 
-            $this->member['f_NOD'] = $data['f_NOD']; 
-            $this->member['f_YOS'] = $data['f_YOS']; 
-            $this->member['f_Emp_Status'] = $data['f_Emp_Status']; 
-            $this->member['f_Job'] = $data['f_Job']; 
-            $this->member['f_CompanyName'] = $data['f_CompanyName']; 
-            $this->member['f_RTTB'] = $data['f_RTTB'];     
-            $this->member['loanAmount'] = $data['loanAmount']; 
-            $this->member['termsOfPayment'] = $data['termsOfPayment']; 
-            $this->member['purpose'] = $data['purpose']; 
-    
-            $this->comaker['co_Fname'] = $data['co_Fname']; 
-            $this->comaker['co_Lname'] = $data['co_Lname']; 
-            $this->comaker['co_Mname'] = $data['co_Mname']; 
-            $this->comaker['co_Suffix'] = $data['co_Suffix']; 
-            $this->comaker['co_Age'] = $data['co_Age']; 
-            $this->comaker['co_Barangay'] = $data['co_Barangay']; 
-            $this->comaker['co_City'] = $data['co_City']; 
-            $this->comaker['co_Civil_Status'] = $data['co_Civil_Status']; 
-            $this->comaker['co_Cno'] = $data['co_Cno']; 
-            $this->comaker['co_Country'] = $data['co_Country']; 
-            $this->comaker['co_DOB'] = $data['co_DOB']; 
-            $this->comaker['co_EmailAddress'] = $data['co_EmailAddress']; 
-            $this->comaker['co_Gender'] = $data['co_Gender']; 
-            $this->comaker['co_HouseNo'] = $data['co_HouseNo'];         
-            $this->comaker['co_House_Stats'] = $data['co_House_Stats']; 
-            $this->comaker['co_POB'] = $data['co_POB']; 
-            $this->comaker['co_Province'] = $data['co_Province']; 
-            $this->comaker['co_YearsStay'] = $data['co_YearsStay']; 
-            $this->comaker['co_ZipCode'] = $data['co_ZipCode']; 
-            $this->comaker['co_RTTB'] = $data['co_RTTB']; 
-            $this->comaker['co_Status'] = ''; 
-            $this->comaker['co_JobDescription'] = $data['co_JobDescription']; 
-            $this->comaker['co_YOS'] = ''; 
-            $this->comaker['co_MonthlySalary'] = $data['co_MonthlySalary']; 
-            $this->comaker['co_OtherSOC'] = $data['co_OtherSOC']; 
-            $this->comaker['co_BO_Status'] = $data['co_BO_Status'] == true ? 1 : 0; 
-            $this->comaker['co_CompanyName'] = $data['co_CompanyName']; 
-            $this->comaker['co_CompanyID'] = ''; 
-            $this->comaker['co_Emp_Status'] = $data['co_Emp_Status']; 
-            $this->comaker['remarks'] = '';     
+                $data =  $resdata[0];
+            
+                $this->searchedmemId =  $data['memId'];
+            
+                $this->member['fname'] = $data['fname'];  
+                $this->member['lname'] = $data['lname'];
+                $this->member['mname'] = $data['mname'];
+                $this->member['suffix'] = $data['suffix']; 
+                $this->member['age'] = $data['age']; 
+                $this->member['barangay'] = $data['barangay'];  
+                $this->member['city'] = $data['city']; 
+                $this->member['civil_Status'] = $data['civil_Status'];  
+                $this->member['cno'] = $data['cno']; 
+                $this->member['country'] = $data['country']; 
+                $this->member['dob'] = date('m/d/Y', strtotime($data['dob']));
+                $this->member['emailAddress'] = $data['emailAddress']; 
+                $this->member['gender'] = $data['gender'];
+                $this->member['houseNo'] = $data['houseNo'];
+                $this->member['house_Stats'] = $data['houseStatusId']; 
+                $this->member['pob'] = $data['pob'];
+                $this->member['province'] = $data['province']; 
+                $this->member['yearsStay'] = $data['yearsStay'];
+                $this->member['zipCode'] = $data['zipCode'];
+                $this->member['status'] = $data['status'];
+                $this->member['electricBill'] = $data['electricBill']; 
+                $this->member['waterBill'] = $data['waterBill']; 
+                $this->member['otherBills'] = $data['otherBills']; 
+                $this->member['dailyExpenses'] = $data['dailyExpenses']; 
+                $this->member['jobDescription'] = $data['jobDescription']; 
+                $this->member['yos'] = $data['yos']; 
+                $this->member['monthlySalary'] = $data['monthlySalary']; 
+                $this->member['otherSOC'] = $data['otherSOC']; 
+                $this->member['bO_Status'] = $data['bO_Status']; 
+                $this->member['companyName'] = $data['companyName']; 
+                $this->member['emp_Status'] = $data['emp_Status']; 
+                $this->member['f_Fname'] = $data['f_Fname']; 
+                $this->member['f_Lname'] = $data['f_Lname']; 
+                $this->member['f_Mname'] = $data['f_Mname']; 
+                $this->member['f_Suffix'] = $data['f_Suffix']; 
+                $this->member['f_DOB'] = $data['f_DOB']; 
+                $this->member['f_Age'] = $data['f_Age']; 
+                $this->member['f_NOD'] = $data['f_NOD']; 
+                $this->member['f_YOS'] = $data['f_YOS']; 
+                $this->member['f_Emp_Status'] = $data['f_Emp_Status']; 
+                $this->member['f_Job'] = $data['f_Job']; 
+                $this->member['f_CompanyName'] = $data['f_CompanyName']; 
+                $this->member['f_RTTB'] = $data['f_RTTB'];     
+                $this->member['loanAmount'] = $data['loanAmount']; 
+                $this->member['termsOfPayment'] = $data['termsOfPayment']; 
+                $this->member['purpose'] = $data['purpose']; 
+        
+                $this->comaker['co_Fname'] = $data['co_Fname']; 
+                $this->comaker['co_Lname'] = $data['co_Lname']; 
+                $this->comaker['co_Mname'] = $data['co_Mname']; 
+                $this->comaker['co_Suffix'] = $data['co_Suffix']; 
+                $this->comaker['co_Age'] = $data['co_Age']; 
+                $this->comaker['co_Barangay'] = $data['co_Barangay']; 
+                $this->comaker['co_City'] = $data['co_City']; 
+                $this->comaker['co_Civil_Status'] = $data['co_Civil_Status']; 
+                $this->comaker['co_Cno'] = $data['co_Cno']; 
+                $this->comaker['co_Country'] = $data['co_Country']; 
+                $this->comaker['co_DOB'] = $data['co_DOB']; 
+                $this->comaker['co_EmailAddress'] = $data['co_EmailAddress']; 
+                $this->comaker['co_Gender'] = $data['co_Gender']; 
+                $this->comaker['co_HouseNo'] = $data['co_HouseNo'];         
+                $this->comaker['co_House_Stats'] = $data['co_HouseStatusId']; 
+                $this->comaker['co_POB'] = $data['co_POB']; 
+                $this->comaker['co_Province'] = $data['co_Province']; 
+                $this->comaker['co_YearsStay'] = $data['co_YearsStay']; 
+                $this->comaker['co_ZipCode'] = $data['co_ZipCode']; 
+                $this->comaker['co_RTTB'] = $data['co_RTTB']; 
+                $this->comaker['co_Status'] = ''; 
+                $this->comaker['co_JobDescription'] = $data['co_JobDescription']; 
+                $this->comaker['co_YOS'] = $data['co_YearsStay'];  
+                $this->comaker['co_MonthlySalary'] = $data['co_MonthlySalary']; 
+                $this->comaker['co_OtherSOC'] = $data['co_OtherSOC']; 
+                $this->comaker['co_BO_Status'] = $data['co_BO_Status'] == true ? 1 : 0; 
+                $this->comaker['co_CompanyName'] = $data['co_CompanyName']; 
+                $this->comaker['co_CompanyID'] = ''; 
+                $this->comaker['co_Emp_Status'] = $data['co_Emp_Status']; 
+                $this->comaker['remarks'] = '';    
+                
+                // $this->cntmemchild
+                $child = $data['child'];
+              
+                if(count($child) > 0){
+                    $this->cntmemchild = [];
+                    $cntchild = 0;
+                    foreach($child as $mchild){     
+                        $cntchild = $cntchild + 1;               
+                        $this->cntmemchild[] = $cntchild;
+                        $this->inpchild['fname'.$cntchild] = $mchild['fname'];   
+                        $this->inpchild['mname'.$cntchild] = $mchild['mname'];                             
+                        $this->inpchild['lname'.$cntchild] = $mchild['lname'];  
+                        $this->inpchild['age'.$cntchild] = $mchild['age'];    
+                        $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
+                    }                   
+                }
             }        
         }
         else{
           
             if($this->memId != ''){             
                 $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'MemId', 'values' => $this->memId]]);                 
-                $resdata = $value->json();                       
+                $resdata = $value->json(); 
+                         
                 $data =  $resdata[0];
+            
 
                 $this->member['fname'] = $data['fname'];  
                 $this->member['lname'] = $data['lname'];
@@ -958,9 +999,9 @@ class CreateApplication extends Component
                 // $this->comaker['remarks'] = ''; 
             }
             //else{
-                // $this->member['fname'] = '1Jumar';  
-                // $this->member['lname'] = '1Cave';
-                // $this->member['mname'] = '1Badajos';
+                $this->member['fname'] = '1Jumar';  
+                $this->member['lname'] = '1Cave';
+                $this->member['mname'] = '1Badajos';
                 $this->member['suffix'] = ''; 
                 $this->member['age'] = '20'; 
                 $this->member['barangay'] = 'Rivera';  
@@ -1000,9 +1041,9 @@ class CreateApplication extends Component
                 $this->member['f_Job'] = 'Cashier'; 
                 $this->member['f_CompanyName'] = 'SOEN'; 
                 $this->member['f_RTTB'] = '';     
-                // $this->member['loanAmount'] = '30000'; 
-                // $this->member['termsOfPayment'] = '12 months'; 
-                // $this->member['purpose'] = 'For Business'; 
+                $this->member['loanAmount'] = '30000'; 
+                $this->member['termsOfPayment'] = '12 months'; 
+                $this->member['purpose'] = 'For Business'; 
         
                 $this->comaker['co_Fname'] = 'Thea'; 
                 $this->comaker['co_Lname'] = 'Badajos'; 

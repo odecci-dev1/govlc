@@ -77,7 +77,7 @@
                 </div>
 
                 <!-- * Create New Button -->
-                <a href="{{ URL::to('/') }}/tranactions/application/create/1" class="button">Create New</a>
+                <a href="{{ URL::to('/') }}/tranactions/application/create" class="button">Create New</a>
 
             </div>
 

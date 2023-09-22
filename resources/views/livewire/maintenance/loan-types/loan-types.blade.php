@@ -354,7 +354,7 @@
                                         </div>
 
                                         <div class="selected" data-option-select5>
-                                            {{ isset($inpterms['interestType']) ? ($inpterms['interestType'] == 1 ? 'Percent' : 'Fixed') : '' }}
+                                            {{ isset($inpterms['interestType']) ? ($inpterms['interestType'] == 1 ? 'Percent' : '') : '' }}
                                         </div>
 
                                     </div>
@@ -459,7 +459,7 @@
 
 
                                     <!-- * Terms Of Payment Data -->
-                                    @error('inpterms') <span class="text-required">{{ $message }}</span>@enderror
+                                   
                                     @if($terms)
                                     @foreach($terms as $key => $value)
                                     <tr>
@@ -500,6 +500,11 @@
                                     </tr>
                                     @endforeach
                                     @endif
+                                    @error('inpterms') 
+                                        <tr>
+                                            <td colspan="6" style="text-align: center; padding: 20px;"><span class="text-required">{{ $message }}</span></td>
+                                        </tr>
+                                    @enderror
                                    
 
                                 </table>

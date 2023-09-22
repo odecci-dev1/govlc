@@ -84,9 +84,12 @@ Route::get('/maintenance/fieldarea', FieldArea::class)->name('fieldarea');
 
 //transactions
 Route::get('/tranactions/application/list', ApplicationList::class)->name('application.list');
-Route::get('/tranactions/application/create/{type}', CreateApplication::class)->name('application.create');
-Route::get('/tranactions/application/view/{memId}/{type:slug}', CreateApplication::class)->name('application.view');
-Route::get('/tranactions/application/create/{memId}/{type}', CreateApplication::class)->name('application.view');
+// Route::get('/tranactions/application/create/{type}', CreateApplication::class)->name('application.create');
+Route::get('/tranactions/application/{type}', CreateApplication::class)->name('application.create');
+// Route::get('/tranactions/application/view/{memId}/{type:slug}', CreateApplication::class)->name('application.view');
+Route::get('/tranactions/application/{type}/{naID}', CreateApplication::class)->name('application.view');
+// Route::get('/tranactions/application/create/{memId}/{type}', CreateApplication::class)->name('application.view');
+Route::get('/tranactions/application/{type}/{naID}', CreateApplication::class)->name('application.view');
 Route::get('/tranactions/application/group/create', CreateApplicationGroup::class)->name('application.create.group');
 Route::get('/tranactions/application/credit/investigation/list', CreditInvestigationApplicationList::class)->name('application.credit.investigation.list');
 Route::get('/tranactions/application/credit/investigation/view/{memId}', CreditInvestigationApplication::class)->name('application.credit.investigation');

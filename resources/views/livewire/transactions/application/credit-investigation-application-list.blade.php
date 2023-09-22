@@ -181,19 +181,19 @@
                     <!-- * Action -->
                     <th><span class="th-name">Action</span></th>
                 </tr>
-                @if(count($list) > 0)
+                @if($list)
                     @foreach($list as $mlist)
                     <tr>
 
                         <!-- * Borrower -->
                         <td>
                             <!-- <span class="td-num"></span> -->
-                            {{ $mlist['lname'] }}, {{ $mlist['lname'] }} {{ mb_substr($mlist['mname'], 0, 1) }}.
+                            {{ $mlist['borrower'] }}
                         </td>
         
                         <!-- * Borrower Contact Number -->
                         <td>
-                            {{ $mlist['cno'] }}
+                            {{ $mlist['borrowerCno'] }}
                         </td>
 
                         <!-- * Loan Amount -->
@@ -203,12 +203,12 @@
         
                         <!-- * Terms of Payment -->
                         <td>
-                            {{ $mlist['nameOfTerms'] }} {{ $mlist['days'] . ' days'   }}
+                           
                         </td>
         
                         <!-- * Interest -->
                         <td style="text-align: end;">
-                            {{ number_format($mlist['interestAmount'], 2) }}
+                                
                         </td>
         
                         <!-- * Table View and Trash Button -->
@@ -220,6 +220,10 @@
                     
                     </tr>
                     @endforeach
+                @else
+                    <tr>
+                        <td colspan="6" class="text-required" style="text-align: center; padding: 20px;">No application found</td>
+                    </tr>    
                 @endif
                 <!-- * Table Data -->                                                
             </table>
