@@ -1132,3 +1132,202 @@
     </div>
 
 </div>
+<script>
+    // ***** Field Expense Modal ***** //
+
+    const fieldExpenseModal = document.querySelector('[data-field-expense-modal]')
+    const openFieldExpenseBtn = document.querySelectorAll('[data-open-field-expense-modal]')
+    const closeFieldExpenseBtn = document.querySelector('[data-close-field-expense-modal]')
+    const saveFieldExpenseBtn = document.querySelector('[data-save-field-expense-modal]')
+
+    // * For toggling for Total Remittance Footer
+    const totalRemittanceFooter = document.querySelector('[data-total-remittance-footer]')
+    const totalRemittanceFooterMobile = document.querySelector('[data-total-remittance-footer-mobile]')
+    const showMoreDetailsFieldExp = document.querySelectorAll('[data-show-more-details-field-exp]')
+
+
+    if (fieldExpenseModal) {
+
+        openFieldExpenseBtn.forEach((button) => {
+            button.addEventListener('click', () => {
+                fieldExpenseModal.showModal()
+            })
+        })
+
+        closeFieldExpenseBtn.addEventListener('click', () => {
+            fieldExpenseModal.setAttribute("closing", "");
+            fieldExpenseModal.addEventListener("animationend", () => {
+                fieldExpenseModal.removeAttribute("closing");
+                fieldExpenseModal.close();
+            }, {
+                once: true
+            });
+
+        })
+
+        // * Toggle Attributes
+        function toggleAttributes() {
+
+            const isMobile = window.innerWidth <= 430
+
+            // * If mobile viewport
+            if (isMobile) {
+                saveFieldExpenseBtn.removeAttribute('data-save-field-expense-modal');
+                saveFieldExpenseBtn.setAttribute('data-show-total-remittance', '');
+
+            } else {
+
+                saveFieldExpenseBtn.removeAttribute('data-show-total-remittance', '');
+                saveFieldExpenseBtn.setAttribute('data-save-field-expense-modal', '');
+
+            }
+
+            if (saveFieldExpenseBtn.matches('[data-save-field-expense-modal]')) {
+                saveFieldExpenseBtn.addEventListener('click', () => {
+                    showMoreDetailsFieldExp.forEach((button) => {
+                        button.classList.add('show-more-details')
+                    })
+                    totalRemittanceFooter.classList.add('show-remittance-footer')
+                    totalRemittanceFooterMobile.setAttribute("show", "")
+                    fieldExpenseModal.setAttribute("closing", "")
+                    fieldExpenseModal.addEventListener("animationend", () => {
+                        fieldExpenseModal.removeAttribute("closing")
+                        fieldExpenseModal.close();
+                    }, {
+                        once: true
+                    });
+                })
+
+            }
+
+        }
+
+        window.addEventListener('resize', toggleAttributes)
+        toggleAttributes()
+
+    }
+
+    // ***** END ---- Field Expense Modal ***** //
+
+    // ***** Add and Subtract Field Expenses ***** //
+
+    // * Add Expenses
+
+    cloneCount = 0;
+
+    function addExpenses() {
+
+        const expensesForm = document.querySelector('[data-expenses]')
+        const expensesContainer = document.querySelector('[data-expenses-container]')
+
+        expensesForm.setAttribute('id', 'expenses-1')
+
+        // * Clone the original element
+        const clonedChild = expensesForm.cloneNode(true)
+
+        // * Increment the clone count and modify the ID
+        cloneCount++
+        const newId = `expenses-${cloneCount}`
+        clonedChild.id = newId
+
+        // * Hide the increment button
+        // clonedChild.lastElementChild.lastElementChild.lastElementChild.children[0].style.visibility = 'hidden'
+
+        // * Append the cloned element to the target container
+        expensesContainer.appendChild(clonedChild)
+
+    }
+
+    // * Subtract Expenses
+    function subExpenses() {
+
+        const expensesContainer = document.querySelector('[data-expenses-container]')
+
+        // * Reset cloneCount when decrement
+        cloneCount = 1
+
+        // * Remove the the next sibling of appliance-1
+        if (expensesContainer.firstElementChild.nextElementSibling !== null) {
+            expensesContainer.lastElementChild.remove()
+        }
+
+    }
+
+    // ***** END ---- Add and Subtract Expenses ***** //
+
+    // ***** Remit Modal ***** //
+
+    const remitModal = document.querySelector('[data-remit-modal]')
+    const openRemitModalBtn = document.querySelectorAll('[data-open-remit-modal]')
+    const closeRemitModalBtn = document.querySelector('[data-close-remit-modal]')
+    const saveRemitModalBtn = document.querySelector('[data-save-remit-modal]')
+    const linkToRemittedAllBtn = document.querySelector('[data-link-to-remitted-all]')
+
+    // ***** For Mobile Devices ***** //
+    const showRemittedBtn = document.querySelector('[data-show-remitted-button]')
+
+    if (remitModal) {
+
+        openRemitModalBtn.forEach((button) => {
+            button.addEventListener('click', () => {
+                remitModal.showModal()
+
+                saveRemitModalBtn.addEventListener('click', () => {
+                    button.innerText = ''
+                    button.classList.add('remitted')
+                })
+            })
+        })
+
+        closeRemitModalBtn.addEventListener('click', () => {
+            remitModal.setAttribute("closing", "");
+            remitModal.addEventListener("animationend", () => {
+                remitModal.removeAttribute("closing");
+                remitModal.close();
+            }, {
+                once: true
+            });
+        })
+
+        if (saveRemitModalBtn) {
+            saveRemitModalBtn.addEventListener('click', () => {
+                remitModal.setAttribute("closing", "");
+                remitModal.addEventListener("animationend", () => {
+                    remitModal.removeAttribute("closing");
+                    remitModal.close();
+                }, {
+                    once: true
+                });
+            })
+        }
+
+    }
+
+    // ***** END ---- Remit Modal ***** //
+
+
+    // ***** Collection Summary Modal ***** //
+
+    const collectionSummaryModal = document.querySelector('[data-collection-summary-modal]')
+    const openCollectionSummaryBtn = document.querySelector('[data-open-collection-summary-button]')
+    const closeCollectionSummaryBtn = document.querySelector('[data-close-collection-summary-button]')
+
+    if (collectionSummaryModal) {
+
+        openCollectionSummaryBtn.addEventListener('click', () => {
+            collectionSummaryModal.showModal()
+        })
+
+        closeCollectionSummaryBtn.addEventListener('click', () => {
+            collectionSummaryModal.setAttribute("closing", "");
+            collectionSummaryModal.addEventListener("animationend", () => {
+                collectionSummaryModal.removeAttribute("closing");
+                collectionSummaryModal.close();
+            }, {
+                once: true
+            });
+
+        })
+
+    }
+</script>
