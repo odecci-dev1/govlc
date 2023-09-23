@@ -557,17 +557,36 @@
 
                     <!-- * Colspan 1: Upload Image and Attach Files Buttons  -->
                     <div class="colspan">
-
+                        <!-- dito -->
                         <!-- * Upload Image -->
                         <div class="input-wrapper">
+                            @if(isset($member['profile']))
+                            <input type="image" style="width: 150px; height: 150px;" src="{{ $member['profile']->temporaryUrl() }}" alt="upload-image">
+                            @else
                             <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
+                            @endif                                                       
+                        </div>
+                        @error('member.profile') <span class="error">{{ $message }}</span> @enderror
+                        <div class="btn-wrapper">
+                                        <!-- * Upload Button -->
+                                        <input type="file"  wire:model="member.profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                                        <!-- * Attach Button -->
+                                        <input type="file" wire:model="member.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
                         </div>
 
-                        <!-- * Upload Button -->
-                        <button type="button" submit="" class="button">Upload Image</button>
-
-                        <!-- * Attach Button -->
-                        <button type="button" submit="" class="button">Attach Files</button>
+                        <div class="file-wrapper" data-attach-file-container>
+                            @if(isset($member['attachments']))
+                                @foreach($member['attachments'] as $attachments)
+                              
+                                    <div type="button" class="fileButton">
+                                        <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                        <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>                                       
+                                    </div>
+                                    <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
+                                @endforeach
+                            @endif
+                         
+                        </div>
 
                     </div>
 
@@ -1070,7 +1089,7 @@
                 </div>
 
                 <!-- * Rowspan 8: First Name, Middle Name , Last Name, Age, Name Of School and Add/Subtract Button -->
-                <!-- dito -->
+               
                 @if(count($cntmemchild) > 0)    
                     @foreach($cntmemchild as $cntchild)
                     <div class="rowspan child" data-child>                    
@@ -1329,7 +1348,7 @@
                 @if(count($cntmemchild) > 0)    
                     @foreach($cntmemchild as $cntchild)
                     <div class="rowspan child" data-child-2>
-                        <!-- dito -->
+                       
                             <!-- * First Name -->
                             <div class="input-wrapper">
                                 <span>First Name</span>
@@ -2155,18 +2174,39 @@
                         <div class="box-wrap">
 
                             <!-- * Colspan 1: Upload Image and Attach Files Buttons  -->
+                          
+                            <!-- dito -->
+                            <!-- * Colspan 1: Upload Image and Attach Files Buttons  -->
                             <div class="colspan">
 
                                 <!-- * Upload Image -->
-                                <div class="input-wrapper">
+                                <div class="input-wrapper" data-upload-image-co-borrower-hover-container>                                   
+                                    @if(isset($comaker['profile']))
+                                    <input type="image" style="width: 150px; height: 150px;" src="{{ $comaker['profile']->temporaryUrl() }}" alt="upload-image">
+                                    @else
                                     <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
+                                    @endif      
+                                </div>
+                                @error('comaker.profile') <span class="error">{{ $message }}</span> @enderror
+                                <div class="btn-wrapper">
+                                        <!-- * Upload Button -->
+                                        <input type="file"  wire:model="comaker.profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                                        <!-- * Attach Button -->
+                                        <input type="file" wire:model="comaker.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
                                 </div>
 
-                                <!-- * Upload Button -->
-                                <button submit="">Upload Image</button>
-
-                                <!-- * Attach Button -->
-                                <button submit="">Attach Files</button>
+                                <div class="file-wrapper" data-attach-file-container2>
+                                @if(isset($comaker['attachments']))
+                                    @foreach($comaker['attachments'] as $comakerattachments)
+                                
+                                        <div type="button" class="fileButton">
+                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                            <a href="{{ $comakerattachments->path() }}" target="_blank" alt="file.png">{{ $comakerattachments->getClientOriginalName() }}</a>                                       
+                                        </div>
+                                        <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $comakerattachments->getClientOriginalName() }}</button> -->
+                                    @endforeach
+                                @endif
+                                </div>
 
                             </div>
 
@@ -2367,7 +2407,7 @@
 
                     <!-- * Upload Applicant Signature Button -->
                     <div class="input-wrapper">
-                        <button type="button">Upload Applicant Signature</button>
+                        <input type="file" class="input-image" id="imageUploadApplicantSign">
                     </div>
 
                 </div>
@@ -2395,7 +2435,7 @@
 
                     <!-- * Upload Co-Maker Signature Button -->
                     <div class="input-wrapper">
-                        <button type="button">Upload Co-Maker Signature</button>
+                        <input type="file" class="input-image" id="imageUploadCoMakerSign">
                     </div>
 
                 </div>

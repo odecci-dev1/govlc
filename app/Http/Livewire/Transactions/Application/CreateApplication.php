@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Transactions\Application;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Livewire\WithFileUploads;
 
 use App\Traits\Common;
 
@@ -12,6 +13,7 @@ class CreateApplication extends Component
 {
 
     use Common;
+    use WithFileUploads;
 
     public $naID;
     public $searchedmemId;
@@ -405,6 +407,26 @@ class CreateApplication extends Component
                     }
                 }
             }
+
+            $profilename = '';
+            if(isset($this->member['profile'])){
+                $time = time();
+                $profilename = 'members_profile_'.$time;
+                $this->member['profile']->storeAs('public/members_profile', $profilename);   
+                // $profileimages = [ [ 'additionalProp1' => [$profilename] ] ]; 
+                // $upprofile = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UploadProfileImage', $profileimages);              
+            }          
+            
+            $memattachements = [];
+            if(isset($this->member['attachments'])){
+                //dd( $this->member['attachments'] );
+                foreach ($this->member['attachments'] as $attachments) {
+                    $time = time();
+                    $filename = 'members_attachments_'.$time.'_'.$attachments->getClientOriginalName();
+                    $attachments->storeAs('public/members_attachments', $filename);   
+                    $memattachements[] = [ 'fileName' =>  $filename, 'filePath' => $filename ];
+                }
+            }
      
             $data = [[          "fname"=> $input['member']['fname'] ??= '',
                                 "lname"=> $input['member']['lname'] ??= '',
@@ -491,17 +513,21 @@ class CreateApplication extends Component
                                 "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
                                 "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
                                 "remarks"=> '',
+                                "profileName"=> $profilename,
+                                "profileFilePath"=> $profilename,
+                                "requirementsFile"=> $memattachements,
                                 "applicationStatus" => '7'
                     ]];
-                    // dd($data);   
+                    dd($data);   
                     
                     // $extension = $request->file('filename')->getClientOriginalExtension();
-                 
+                                  
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
+                
                 $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                 
                 $getlast = $getlast->json();
-                dd( $getlast);
+                dd($getlast);
                 return redirect()->to('/tranactions/application/view/'.$getlast['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
             }
             else{              
