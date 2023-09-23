@@ -60,11 +60,14 @@
                         <!-- * Search Wrapper -->
                         <div class="input-wrapper">
                             <span>Field Officer</span>
-                            <!-- * Search Bar -->
-                            <div class="search-wrap">
+                            <!-- * Search Bar -->                            
+                            <div class="search-wrap">                               
                                 <input type="hidden" wire:model.lazy="foid" placeholder="field officer id" >
                                 <input type="search" wire:model.lazy="fullname" placeholder="Search" >
-                                <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
+                                <img wire:click; src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">                               
+                            </div>
+                            <div class="input-wrapper" style="padding-top: 20px;">
+                                <button type="button" wire:click="openSearchOfficer"  id="data-open-new-group-modal" class="button">Search</button>
                             </div>
 
                         </div>
@@ -295,7 +298,115 @@
 
         </div>
         </form>
+        <!-- * New Group Application Modal -->
+    <dialog class="ng-modal" data-new-group-modal wire:ignore>
+        <div class="modal-container">
+
+            <!-- * Exit Button -->
+            <button class="exit-button" id="data-close-new-group-modal">
+                <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="exit">
+            </button>
+
+            <!-- * Search for existing member -->
+            <div class="rowspan">
+
+                <!-- * Search for existing member -->
+                <h3>Search for field officer</h3>
+
+                <div class="wrapper">
+
+                    <!-- * Search Bar -->
+                    <div class="search-wrap">
+                        <input type="search" wire:model="searchkeyword" placeholder="Search field officer">
+                        <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+            <!-- * Table -->
+            <div class="rowspan">
+
+                <!-- * Container: Table and Pagination -->
+                <div class="na-table-con">
+
+                    <!-- * Table Container -->
+                    <div class="table-container">
+
+                        <!-- * Members Table -->
+                        <table>
+
+                            <!-- * Table Header -->
+                            <tr>
+
+                                <!-- * Checkbox ALl
+                        <th><input type="checkbox" class="checkbox" id="allCheckbox" onchange="checkAll(this)"></th> -->
+
+                                <!-- * Header Name -->
+                                <th><span class="th-name">Name</span></th>
+
+                                <!-- * Header Action-->
+                                <th><span class="th-name">Action</span></th>
+
+                            </tr>
+
+                          
+
+                        </table>
+
+                    </div>
+
+                    <!-- * Pagination Container -->
+                    <div class="pagination-container">
+
+                        <!-- * Pagination Links -->
+                        <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg"
+                                alt="caret-left"></a>
+                        <a href="#">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">4</a>
+                        <a href="#">5</a>
+                        <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg"
+                                alt="caret-right"></a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </dialog>
         <script>
-            
+            document.addEventListener('livewire:load', function() {
+                const dataNewGroupModal = document.querySelector('[data-new-group-modal]')
+                const openNewGroupModal = document.querySelector('#data-open-new-group-modal')
+                const closeNewGroupModal = document.querySelector('#data-close-new-group-modal')
+                const addNewGroupModal = document.querySelector('[data-add-new-group-modal]')
+
+                closeNewGroupModal.addEventListener('click', () => {
+                    dataNewGroupModal.setAttribute("closing", "");
+                    dataNewGroupModal.addEventListener("animationend", () => {
+                        dataNewGroupModal.removeAttribute("closing");
+                        dataNewGroupModal.close();
+                    }, {
+                        once: true
+                    });
+                })
+
+                window.livewire.on('openSearchOfficerModal', message => {
+                    dataNewGroupModal.showModal()
+                });
+
+                // let input = document.getElementById('groupname');
+
+                // input.addEventListener('blur', () => {
+                //     @this.dispatch('your-event-name');
+                // });
+            })
         </script>
 </div>

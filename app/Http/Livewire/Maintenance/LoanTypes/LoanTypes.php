@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Http;
 
 class LoanTypes extends Component
 {
+
+    public $loantypeID = '';
     public $loantype;
 
     public $terms = [];
@@ -62,7 +64,7 @@ class LoanTypes extends Component
         return $messages;        
     }
 
-    public function store(){   
+    public function save(){   
         $inputs = $this->validate();
         dd($inputs);
         $terms = [];
@@ -71,7 +73,7 @@ class LoanTypes extends Component
                 $terms[] =  [   'nameOfTerms' => $value['nameOfTerms'], 
                                 'days' => $value['days'],
                                 'interestRate' => $value['interestRate'],
-                                'loanTypeID' => $value['loanTypeID'],   
+                                'loanTypeID' => $this->loantypeID,   
                                 'formula' => $value['formula'],                                        
                             ];
             }
@@ -84,7 +86,7 @@ class LoanTypes extends Component
                         'loanAmount_Min' =>  $inputs['loantype']['loanAmount_Min'],
                         'loanAmount_Max' =>  $inputs['loantype']['loanAmount_Max'],
                         'loanTypeName' =>  $inputs['loantype']['loanTypeName'],
-                        'loanTypeID' =>  'string',
+                        'loanTypeID' =>  $this->loantypeID,
                         'loan_amount_Lessthan_Amount' =>  $inputs['loantype']['loan_amount_Lessthan_Amount'],
                         'lalV_Type' =>  $inputs['loantype']['lalV_Type'],
                         'loan_amount_GreaterEqual_Amount' =>  $inputs['loantype']['loan_amount_GreaterEqual_Amount'],
@@ -96,10 +98,15 @@ class LoanTypes extends Component
                         "terms"=> $terms
                 ];
 
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/SaveLoanType', $data);            
-        return redirect()->to('/maintenance/loantypes/list')->with('mmessage', 'Field area successfully saved');     
+        if($this->loantypeID == ''){
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/SaveLoanType', $data);  
+        }   
+        else{
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/UpdateLoanType', $data);
+        }       
+        return redirect()->to('/maintenance/loantypes/list')->with('mmessage', ($this->loantypeID == '' ? 'Loan type successfully saved' : 'Loan type successfully updated'));     
     }
-
+    
     public function addTerms(){
         $lastcnt = array_key_last($this->terms);   
 

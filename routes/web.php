@@ -92,8 +92,7 @@ Route::get('/tranactions/application/{type}', CreateApplication::class)->name('a
 // Route::get('/tranactions/application/view/{memId}/{type:slug}', CreateApplication::class)->name('application.view');
 Route::get('/tranactions/application/{type}/{naID}', CreateApplication::class)->name('application.view');
 // Route::get('/tranactions/application/create/{memId}/{type}', CreateApplication::class)->name('application.view');
-Route::get('/tranactions/application/{type}/{naID}', CreateApplication::class)->name('application.view');
-Route::get('/tranactions/application/group/create', CreateApplicationGroup::class)->name('application.create.group');
+Route::get('/tranactions/group/application/create', CreateApplicationGroup::class)->name('application.create.group');
 Route::get('/tranactions/application/credit/investigation/list', CreditInvestigationApplicationList::class)->name('application.credit.investigation.list');
 Route::get('/tranactions/application/credit/investigation/view/{memId}', CreditInvestigationApplication::class)->name('application.credit.investigation');
 Route::get('/tranactions/application/approval', ApprovalApplication::class)->name('application.approval');

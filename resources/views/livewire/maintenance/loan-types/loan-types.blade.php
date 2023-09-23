@@ -29,7 +29,7 @@
                         <div class="btn-wrapper">
 
                             <!-- * Save -->
-                            <button type="button" wire:click="store" class="button" data-save>Save</button>
+                            <button type="button" wire:click="save" class="button" data-save>Save</button>
 
                         </div>
 

@@ -49,6 +49,10 @@ class FieldArea extends Component
         return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved');    
     }
 
+    public function openSearchOfficer(){                 
+        $this->emit('openSearchOfficerModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
+    }
+
     public function mount(){
         // $this->selectedunassigned = collect([]);
     }

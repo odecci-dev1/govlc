@@ -21,7 +21,7 @@ class NewApplicationModal extends Component
     }
 
     public function redirectToGroupLoan(){
-        return redirect()->to('/tranactions/application/group/create');
+        return redirect()->to('/tranactions/group/application/create');
     }
 
     public function mount(){

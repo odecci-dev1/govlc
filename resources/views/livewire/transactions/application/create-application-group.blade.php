@@ -226,7 +226,7 @@
                     </div>
 
                     <!-- * Create New Button -->
-                    <a href="{{ URL::to('/') }}/tranactions/application/create/2" targets="_blank" class="button"
+                    <a href="{{ URL::to('/') }}/tranactions/application/add" targets="_blank" class="button"
                         data-link-to-newgroup-app>Create New</a>
 
                 </div>
@@ -270,7 +270,7 @@
                                         </td>
                                         <td>
                                             <!-- * Data Member ID-->
-                                            <a href="{{ URL::to('/') }}/tranactions/application/create/{{ $list['memId'] }}/2"
+                                            <a href="{{ URL::to('/') }}/tranactions/application/add/{{ $list['memId'] }}"
                                                 class="a-btn-view-2" data-add-new-group-modal>Add to Group</a>
                                         </td>
                                     </tr>
@@ -302,6 +302,7 @@
             </div>
 
         </div>
+    </dialog>
         <script>
             document.addEventListener('livewire:load', function() {
                 const dataNewGroupModal = document.querySelector('[data-new-group-modal]')

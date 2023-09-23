@@ -42,6 +42,174 @@
         </div>
     </div>
 
+
+    @if($member['statusID'] == 8)
+                <div class="na-requirements-sec">
+                    <h5>
+                        Missing Requirements:
+                        <span>Proof of Income,</span>
+                        <span>Barangay ID</span>
+                    </h5>
+                </div>
+
+                <!-- * New Application Notes and Remarks Section -->
+                <div class="na-notes-remarks-sec">
+                    <div class="wrapper-1">
+                        <h3>Notes/Remarks</h3>
+                        <div class="btn-wrapper">
+                            <!-- <a href="new-application-approval.html"> -->
+                                <button type="button" wire:click="submitForApproval" class="button" data-submit-for-approval>Submit for approval</button>
+                            <!-- </a> -->
+                            <button type="submit" class="declineButton">Decline</button>
+                        </div>
+                    </div>
+                    <div class="wrapper-2">
+                        <p>The subject has maintained a good credit score over the years, indicating a strong credit worthiness and a positive repayment history.</p>
+                    </div>
+
+                </div>
+    @elseif($member['statusID'] == 9)
+                <div class="na-approval-sec">
+
+                    <!-- * Rowspan 1: Loan Details Header -->
+                    <div class="rowspan">
+                        <h3>Loan Details</h3>
+                        <!-- <div class="btn-wrapper">
+                            <a href="new-application-approval.html">
+                                <button type="button">Submit for approval</button>
+                            </a>
+                            <button type="button">Decline</button>
+                        </div> -->
+                    </div>
+
+                    <!-- * Rowspan 2: Loan Type, Loan Amount, Purpose, and Approve for Releasing Button -->
+                    <div class="rowspan">
+
+                        <!-- * Loan Type -->
+                        <div class="input-wrapper">
+                            <span>Loan Type</span>
+                            <input autocomplete="off" type="text" id="loanType" name="loanType">
+                        </div>
+
+                        <!-- * Loan Amount -->
+                        <div class="input-wrapper">
+                            <span>Loan Amount</span>
+                            <div class="select-box">
+
+                                <div class="options-container" data-option-con9>
+
+                                    <div class="option" data-option-item9>
+
+                                        <input type="radio" class="radio" name="category" value="5,000" />
+                                        <label for="5,000">
+                                            <h4>5,000</h4>
+                                        </label>
+
+                                    </div>
+
+                                    <div class="option" data-option-item9>
+
+                                        <input type="radio" class="radio" name="category" value="10,000" />
+                                        <label for="10,000">
+                                            <h4>10,000</h4>
+                                        </label>
+
+                                    </div>
+
+                                    <div class="option" data-option-item9>
+
+                                        <input type="radio" class="radio" name="category" value="15,000" />
+                                        <label for="15,000">
+                                            <h4>15,000</h4>
+                                        </label>
+
+                                    </div>
+
+                                    <div class="option" data-option-item9>
+
+                                        <input type="radio" class="radio" name="category" value="20,000" />
+                                        <label for="20,000">
+                                            <h4>20,000</h4>
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="selected" data-option-select9>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- * Purpose -->
+                        <div class="input-wrapper">
+                            <span>Purpose</span>
+                            <input autocomplete="off" type="text" id="loanPurpose" name="loanPurpose">
+                        </div>
+
+                        <!-- * Approve for Releasing Button -->
+                        <div class="input-wrapper">
+                            <a href="new-application-releasing.html">
+                                <button type="button" class="button">Approve for Releasing</button>
+                            </a>
+                        </div>
+
+                    </div>
+
+                    <!-- * Rowspan 3: Terms of Payment, Number of No Payment, Number of Loans, and Change Loan Payment Button -->
+                    <div class="rowspan">
+
+                        <!-- * Terms of Payment -->
+                        <div class="input-wrapper">
+                            <span>Terms of Payment</span>
+                            <input autocomplete="off" type="text" id="termsOfPaymnt" name="termsOfPaymnt">
+                        </div>
+
+                        <!-- * Number of No Payment -->
+                        <div class="input-wrapper">
+                            <span>Number of No Payment</span>
+                            <input autocomplete="off" type="text" id="noOfNoPayment" name="noOfNoPayment">
+                        </div>
+
+                        <!-- * Number of Loans -->
+                        <div class="input-wrapper">
+                            <span>Number of Loans</span>
+                            <input autocomplete="off" type="text" id="advPayment" name="advPayment">
+                        </div>
+
+                        <!-- * Change Loan Payment -->
+                        <div class="input-wrapper">
+                            <button type="button" class="button">Change Loan Payment</button>
+                        </div>
+
+                    </div>
+
+                    <!-- * Rowspan 4: Approved by:, Notes and Decline Button -->
+                    <div class="rowspan">
+
+                        <!-- * Approved by: -->
+                        <div class="input-wrapper">
+                            <span>Approved by:</span>
+                            <input autocomplete="off" type="text" id="approvedBy" name="approvedBy">
+                        </div>
+
+                        <!-- * Notes -->
+                        <div class="input-wrapper">
+                            <span>Notes &nbsp;<p>(if approving officer is not available)</p></span>
+                            <input autocomplete="off" type="text" id="notes" name="notes">
+                        </div>
+
+                        <!-- * Decline Button -->
+                        <div class="input-wrapper">
+                            <button type="button" class="declineButton">Decline</button>
+                        </div>
+
+                    </div>
+
+                </div>          
+    @endif            
+
     <!-- * New Application Container Wrapper -->
     <div class="na-container-wrapper">
 
@@ -74,8 +242,22 @@
                             <button type="button"  wire:loading.attr="disabled" class="button" onclick="activeProgressButton()" data-proceed-to-ci>Save & Proceed to CI</button>
                         </a>
                         @elseif($type == 'view')
-                            <button wire:click="update(1)" type="button" class="button" data-save>Update</button>
-                            <button wire:click="update(2)" type="button" class="button" data-save>Submit And Proceed to CI</button>                      
+                            @if($member['statusID'] == 7)
+                                <button wire:click="update(1)" type="button" class="button" data-save>Update</button>
+                                <button wire:click="update(2)" type="button" class="button" data-save>Submit And Proceed to CI</button>                      
+                            @elseif($member['statusID'] == 8)
+                                <div class="CI-time-wrapper">
+                                    <img src="{{ URL::to('/') }}/assets/icons/time.svg" alt="Time">
+                                    <div class="box">
+                                        <span>CI Time</span>
+                                        <span id="ciTime">
+                                            <span id="ciTimeWeek">1</span>W
+                                        <span id="ciTimeDay">3</span>D
+                                        <span id="ciTimeHour">4</span>H
+                                        </span>
+                                    </div>
+                                </div>
+                            @endif
                         @elseif($type == 'add')
                             <button wire:click="store" type="button" class="button" data-save>Add To Group</button>    
                         @endif
