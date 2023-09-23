@@ -919,7 +919,7 @@ class CreateApplication extends Component
                 $this->member['yearsStay'] = $data['yearsStay'];
                 $this->member['zipCode'] = $data['zipCode'];
                 $this->member['status'] = $data['status'];
-                $this->member['statusID'] = 9; //$data['statusId'];
+                $this->member['statusID'] = 11; //$data['statusId'];
                 $this->member['electricBill'] = $data['electricBill']; 
                 $this->member['waterBill'] = $data['waterBill']; 
                 $this->member['otherBills'] = $data['otherBills']; 
