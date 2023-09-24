@@ -118,7 +118,7 @@
                             <!-- * Table View and Trash Button -->
                             <td class="td-btns">
                                 <div class="td-btn-wrapper">
-                                    <button class="a-btn-view-2">View</button>
+                                    <a href="{{ URL::to('/') }}/maintenance/loantypes/view/{{ $list['loanTypeID'] }}" class="a-btn-view-2">View</a>
                                     <button class="a-btn-trash-2">Trash</button>
                                 </div>
                             </td>

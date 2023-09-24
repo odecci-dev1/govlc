@@ -137,9 +137,31 @@ class LoanTypes extends Component
     }
 
 
-    public function mount(){
+    public function mount($loanid = ''){
         $this->formulaList[1] = '(Loan Amount + Interest) / Days';
         $this->formulaList[2] = '((Loan Amount + Interest) / Days) x 2';
+        if($loanid != ''){
+            $this->loantypeID = $loanid;
+            $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/LoanTypeFilter', ['loanTypeID' => $this->loantypeID]);            
+            $data = $data->json();
+            $data = $data[0];
+
+            $this->loantype['loan_amount_Lessthan'] = $data['loan_amount_Lessthan'];
+            $this->loantype['loan_amount_GreaterEqual'] = $data['loan_amount_GreaterEqual'];
+            $this->loantype['savings'] = $data['savings'];
+ 
+            // $rules['loantype.loanAmount_Min'] = ['required'];   
+            // $rules['loantype.loanAmount_Max'] = ['required'];   
+            // $rules['loantype.loanTypeName'] = ['required'];   
+            // $rules['loantype.loan_amount_Lessthan_Amount'] = ['required'];   
+            // $rules['loantype.lalV_Type'] = ['required'];   
+            // $rules['loantype.loan_amount_GreaterEqual_Amount'] = ['required'];   
+            // $rules['loantype.lageF_Type'] = ['required'];   
+            // $rules['loantype.loanInsurance'] = ['required'];   
+            // $rules['loantype.loanI_Type'] = ['required'];   
+            // $rules['loantype.lifeInsurance'] = ['required'];   
+            // $rules['loantype.lifeI_Type'] = ['required'];   
+        }
         // $this->inpterms['interestType'] = 1;
     }
 

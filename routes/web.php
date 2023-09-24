@@ -79,6 +79,7 @@ Route::get('/maintenance/holiday/view/{holid}', Holiday::class)->name('holiday.v
 //loan types
 Route::get('/maintenance/loantypes/list', LoanTypesList::class)->name('loantypes.list');
 Route::get('/maintenance/loantypes/create', LoanTypes::class)->name('loantypes.create');
+Route::get('/maintenance/loantypes/view/{loanid}', LoanTypes::class)->name('loantypes.view');
 //loan types
 
 //field area

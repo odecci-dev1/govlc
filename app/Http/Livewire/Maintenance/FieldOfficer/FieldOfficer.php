@@ -99,7 +99,6 @@ class FieldOfficer extends Component
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/SaveFieldOfficer', $data);  
             $get = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/GetLastOfficerList');
             $get = $get->json();
-            dd($get);
             return redirect()->to('/maintenance/fieldofficer/view/'.$get[0]['foid'])->with('mmessage', 'Field officer successfully saved');    
 
         }
