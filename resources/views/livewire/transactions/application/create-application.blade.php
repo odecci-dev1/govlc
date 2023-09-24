@@ -5,6 +5,13 @@
     @if(session('mmessage'))
         <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif
+    @if($showDialog == 1)
+        <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
+    @endif
+    @if($showDialog == 1)
+        <x-asking-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-asking-dialog>   
+    @endif
+
     <!-- * New-Application-Form-Container -->
     <form action="" class="na-form-con" autocomplete="off" >
         @if (session()->has('message'))
@@ -63,9 +70,7 @@
                             <button type="submit" class="declineButton">Decline</button>
                         </div>
                     </div>
-                    <div class="wrapper-2">
-                        <p>The subject has maintained a good credit score over the years, indicating a strong credit worthiness and a positive repayment history.</p>
-                    </div>
+                    <textarea wire:model.lazy="loanDetails.remarks" class="wrapper-2"></textarea>
 
                 </div>
     @elseif(in_array($member['statusID'], [9, 10, 11]))
@@ -89,8 +94,8 @@
 
                         <div class="option" data-option-item10>
 
-                            <input type="radio" class="radio" name="category" value="Cash" />
-                            <label for="Cash">
+                            <input type="radio" wire:model.lazy="loanDetails.modeOfRelease" class="radio" id="modeOfRelease1" name="modeOfRelease" value="Cash" />
+                            <label for="modeOfRelease1">
                                 <h4>Cash</h4>
                             </label>
 
@@ -98,8 +103,8 @@
 
                         <div class="option" data-option-item10>
 
-                            <input type="radio" class="radio" name="category" value="Check" />
-                            <label for="Check">
+                            <input type="radio" wire:model.lazy="loanDetails.modeOfRelease" class="radio" id="modeOfRelease2" name="modeOfRelease" value="Check" />
+                            <label for="modeOfRelease2">
                                 <h4>Check</h4>
                             </label>
 
@@ -107,7 +112,8 @@
 
                     </div>
 
-                    <div class="selected" data-option-select10>
+                    <div class="selected" style="font-weight: bold;" data-option-select10>
+                        {{ isset($loanDetails['modeOfRelease']) ? $loanDetails['modeOfRelease'] : '' }}
                     </div>
 
                 </div>
@@ -115,16 +121,21 @@
             </div>
 
             <!-- * Denomination -->
-            <div class="input-wrapper" data-toggle-mor-1>
-                <span>Denomination</span>
-                <input autocomplete="off" type="text" id="denomination" name="denomination">
-            </div>
-
-            <!-- * Check Number -->
-            <div class="input-wrapper" data-toggle-mor-2>
-                <span>Check Number</span>
-                <input autocomplete="off" type="text" id="checkNumber" name="checkNumber">
-            </div>
+            @if(isset($loanDetails['modeOfRelease']))
+                @if($loanDetails['modeOfRelease'] == 'Cash')
+                <div class="input-wrapper" data-toggle-mor-1>
+                    <span>Denomination</span>
+                    <input autocomplete="off" wire:model.lazy="loanDetails.denomination" type="text" id="denomination" name="denomination">
+                </div>
+                @endif
+                @if($loanDetails['modeOfRelease'] == 'Check')
+                <!-- * Check Number -->
+                <div class="input-wrapper" data-toggle-mor-2>
+                    <span>Check Number</span>
+                    <input autocomplete="off" wire:model.lazy="loanDetails.checkNumber" type="text" id="checkNumber" name="checkNumber">
+                </div>
+                @endif
+            @endif
 
         </div>
         @endif
@@ -135,26 +146,26 @@
             <!-- * Loan Type -->
             <div class="input-wrapper">
                 <span>Loan Type</span>
-                <input autocomplete="off" type="text" id="loanType" name="loanType">
+                <input wire:model.lazy="loanDetails.loanType" disabled autocomplete="off" type="text">
             </div>
 
             <!-- * Loan Amount -->
             <div class="input-wrapper">
                 <span>Loan Amount</span>
-                <input autocomplete="off" type="text" id="loanAmount" name="loanAmount">
+                <input wire:model.lazy="loanDetails.loanAmount" disabled autocomplete="off" type="text" >
             </div>
 
             <!-- * Purpose -->           
             <div class="input-wrapper">
                 <span>Purpose</span>
-                <input autocomplete="off" type="text" id="loanPurpose" name="loanPurpose">
+                <input wire:model.lazy="loanDetails.purpose" disabled autocomplete="off" type="text" >
             </div>
-
+        
             @if($member['statusID'] == 9)      
             <div class="input-wrapper">
-                <a href="new-application-releasing.html">
-                    <button type="button" class="button">Approve for Releasing</button>
-                </a>
+                <p style="font-size:1.5rem;color:darkgoldenrod;">Waiting for Approval...</p>  <!-- This will show if same user is  approved this application-->
+                <p style="font-size:1.5rem;color:green;">Approved By: Jumar 25 mins ago</p>  <!-- this will show to another approving officer-->
+                <button type="button" wire:click="approveForReleasing" class="button">Approve for Releasing</button>
             </div>                  
             @elseif($member['statusID'] == 10)
             <!-- * Approve for Releasing Button -->
@@ -175,29 +186,71 @@
             <!-- * Terms of Payment -->
             <div class="input-wrapper">
                 <span>Terms of Payment</span>
-                <input autocomplete="off" type="text" id="termsOfPaymnt" name="termsOfPaymnt">
+                <!-- <input disabled wire:model.lazy="loanDetails.terms" autocomplete="off" type="text" > -->
+                <div class="select-box"  style="{{ in_array($member['statusID'], [10, 11]) ? 'pointer-events: none; color: #808080;' : '' }}">
+
+                                <div class="options-container" data-type-opt-con>
+
+                                    @if(isset($termsOfPaymentList))
+                                        @foreach($termsOfPaymentList as $termsOfPaymentList)
+                                        <div class="option" data-type-loan-opt data-individual-loan-link>
+
+                                            <input type="radio" wire:model="loanDetails.topId" class="radio" value="{{ $termsOfPaymentList['topId'] }}" id="topId{{ $termsOfPaymentList['topId'] }}" name="top" />
+                                            <label for="topId{{ $termsOfPaymentList['topId'] }}">
+                                                <h4>{{ $termsOfPaymentList['termsofPayment'] }}</h4>
+                                            </label>
+
+                                        </div>
+                                        @endforeach
+                                    @endif
+                                    
+                                </div>
+                                
+                                <div class="selected" style="font-weight: bold;" data-type-loan-select>
+                                    {{ isset($this->member['termsOfPayment']) ? $this->member['termsOfPayment'] : '' }}
+                                </div>
+
+                </div>
             </div>
+
+            <script>
+                              
+            const selected = document.querySelector('[data-type-loan-select]')
+            const optionsContainer = document.querySelector('[data-type-opt-con')
+            const optionsList = document.querySelectorAll('[data-type-loan-opt]')
+
+            selected.addEventListener("click", () => {
+                optionsContainer.classList.toggle("active");
+            });
+
+            optionsList.forEach(option => {
+                option.addEventListener("click", () => {
+                    selected.innerHTML = option.querySelector("label").innerHTML;
+                    optionsContainer.classList.remove("active");
+                });
+            });  
+            </script>
 
             <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Number of No Payment</span>
-                <input autocomplete="off" type="number" id="noOfNoPayment" name="noOfNoPayment">
+                <input disabled wire:model.lazy="loanDetails.noofnopayment" autocomplete="off" type="number">
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper">
                 <span>Number of Loans</span>
-                <input autocomplete="off" type="number" id="advPayment" name="advPayment">
+                <input disabled wire:model.lazy="loanDetails.noofloans" autocomplete="off" type="number">
             </div>
-            @if(in_array($member['statusID'], [9, 10]))    
+            @if(in_array($member['statusID'], [9]))    
             <!-- * Change Loan Payment -->
             <div class="input-wrapper">
                 <button type="button" class="button">Change Loan Payment</button>
             </div>
             @else
-            <div class="input-wrapper input-wrapper-decline">
-                            <button type="button" class="declineButton" data-open-application-decline>Decline</button>
-                        </div>
+                <div class="input-wrapper input-wrapper-decline">
+                    <button type="button" class="declineButton" data-open-application-decline>Decline</button>
+                </div>
             @endif
 
         </div>
@@ -208,13 +261,13 @@
             <!-- * Approved by: -->
             <div class="input-wrapper">
                 <span>Approved by:</span>
-                <input autocomplete="off" type="text" id="approvedBy" name="approvedBy">
+                <input {{ in_array($member['statusID'], [10, 11]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.approvedBy" autocomplete="off" type="text" id="approvedBy" name="approvedBy">
             </div>
 
             <!-- * Notes -->
             <div class="input-wrapper">
                 <span>Notes &nbsp;<p>(if approving officer is not available)</p></span>
-                <input autocomplete="off" type="text" id="notes" name="notes">
+                <input {{ in_array($member['statusID'], [10, 11]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.notes" autocomplete="off" type="text" >
             </div>
 
             <!-- * Decline Button -->
@@ -223,14 +276,99 @@
                 <button type="button" class="declineButton">Decline</button>
             </div>
             @elseif($member['statusID'] == 10)  
-            <div class="input-wrapper input-wrapper-decline">
+            <!-- <div class="input-wrapper input-wrapper-decline">
                 <button type="button" class="declineButton">Cancel</button>
-            </div>  
+            </div>   -->
             @endif
 
         </div>
 
-        </div>         
+        </div>    
+        
+        @if(in_array($member['statusID'], [10, 11]))
+                <div class="na-cash-courier">
+
+                    <!-- * Small Container -->
+                    <div class="small-con-2">
+
+                        <!-- * Rowspan 1: Header -->
+                        <div class="rowspan">
+
+                            <!-- * Cash and Courier -->
+                            <div class="input-wrapper">
+                                <h2>Cash and Courier</h2>
+                            </div>
+
+                        </div>
+
+                        <!-- * Rowspan 2: Employee or Client Toggle -->
+                        <div class="rowspan">
+
+                            <!-- * Employee and Client Radio Buttons -->
+                            <div class="input-wrapper">
+
+                                <div class="box-wrap">
+
+                                    <!-- * Employee -->
+                                    <div class="radio-btn-wrapper">
+                                        <span>Employee</span>
+                                        <input autocomplete="off" type="radio" wire:model.lazy="loanDetails.courier" name="courier" value="Employee" id="employee">
+                                    </div>
+
+                                    <!-- * Client -->
+                                    <div class="radio-btn-wrapper">
+                                        <span>Client</span>
+                                        <input autocomplete="off" type="radio" wire:model.lazy="loanDetails.courier" name="courier" value="Client" id="client">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="toggle-container">
+
+                                <!-- * Search Wrapper -->
+                                <div class="input-wrapper" data-employee-search-toggle>
+                                    <span>Employee Name</span>
+    
+                                    <!-- * Primary Search Bar -->
+                                    <div class="primary-search-bar">
+                                        <div class="row">
+                                            <input type="search" id="searchInput" name="search" placeholder="Search" autocomplete="off">
+                                            <button>
+                                            </button>
+                                        </div>
+                                        <div class="result-box" data-search-results>
+                                        </div>
+                                    </div>
+    
+                                </div>
+    
+                                <!-- * Client Name -->
+                                <div class="input-wrapper" data-client-name-toggle>
+                                    <div class="input-wrapper">
+                                        <span>Client Name</span>
+                                        <input autocomplete="off" type="number" id="empConNum" name="empConNum">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- * Contact Number -->
+                            <div class="input-wrapper" data-contact-number-toggle>
+                                <div class="input-wrapper">
+                                    <span>Contact No:</span>
+                                    <input autocomplete="off" type="number" id="empConNum" name="empConNum">
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+        @endif
     @endif            
 
     <!-- * New Application Container Wrapper -->
@@ -258,16 +396,16 @@
 
                         <!-- * Save -->
                         @if($type == 'create')
-                        <button wire:click="store" type="button" wire:loading.attr="disabled" class="button" data-save>Save</button>
+                        <button wire:click="store(1)" type="button" wire:loading.attr="disabled" class="button" data-save>Save</button>
 
-                        <!-- * Save & Apply for loan  -->
+                        <!-- * Save & Apply for loan  dito -->
                         <a href="#">
-                            <button type="button"  wire:loading.attr="disabled" class="button" onclick="activeProgressButton()" data-proceed-to-ci>Save & Proceed to CI</button>
+                            <button type="button" wire:click="store(2)"  wire:loading.attr="disabled" class="button" onclick="activeProgressButton()" data-proceed-to-ci>Save & Proceed to CI</button>
                         </a>
                         @elseif($type == 'view')
                             @if($member['statusID'] == 7)
                                 <button wire:click="update(1)" type="button" class="button" data-save>Update</button>
-                                <button wire:click="update(2)" type="button" class="button" data-save>Submit And Proceed to CI</button>                      
+                                <button wire:click="update(2)" onclick="showAskingDialog()" type="button" class="button" data-save>Submit And Proceed to CI</button>                      
                             @elseif($member['statusID'] == 8)
                                 <div class="CI-time-wrapper">
                                     <img src="{{ URL::to('/') }}/assets/icons/time.svg" alt="Time">
@@ -2449,7 +2587,12 @@
     </form>
     <script>
 
-        
+        document.addEventListener('livewire:load', function () {
+            window.showAskingDialog = function(){              
+                @this.call('showAskingDialog');        
+            };
+
+        })
         const openLoanDetailsButton = document.querySelector('#data-open-loan-details')
         const closeLoanDetailsButton = document.querySelector('#data-close-loan-details')
         const loanDetailsModal = document.querySelector('[data-loan-details-modal]')
@@ -2677,6 +2820,9 @@
 
         //     }
         // }
+
+        // ** Loan Type Dropdown
+          
 
 
         // ****** Child Form Toggle ***** //
@@ -2907,6 +3053,45 @@
 
 
         // ***** Add and Subtract Property ***** //
+
+        // ** Select Dropdown 10 (Mode of Payment)
+        const selectedOpt10 = document.querySelector('[data-option-select10]');
+
+        if (selectedOpt10) {
+
+            const optionsContainer10 = document.querySelector('[data-option-con10]');
+            const optionsList10 = document.querySelectorAll('[data-option-item10]');
+
+            selectedOpt10.addEventListener("click", () => {
+                optionsContainer10.classList.toggle("active");
+            });
+
+            optionsList10.forEach(option => {
+                option.setAttribute('value', option.children[0].value)
+                option.addEventListener("click", () => {
+                    selectedOpt10.innerHTML = option.querySelector("label").innerHTML;
+                    optionsContainer10.classList.remove("active");
+                    selectedOpt10.setAttribute('value', option.children[0].value);
+                });
+            });
+
+            // * Mode of Release Toggle
+            // const denominationToggle = document.querySelector('[data-toggle-mor-1]')
+            // const checkNumberToggle = document.querySelector('[data-toggle-mor-2]')
+
+            // optionsContainer10.firstElementChild.addEventListener('click', () => {
+            //     checkNumberToggle.style.display = 'none'
+            //     denominationToggle.style.display = 'flex'
+            // })
+
+            // optionsContainer10.lastElementChild.addEventListener('click', () => {
+            //     checkNumberToggle.style.display = 'flex'
+            //     denominationToggle.style.display = 'none'
+            // })
+
+        }
+
+        // * Mode of Release Toggle
 
         
     </script>

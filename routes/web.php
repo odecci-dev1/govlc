@@ -12,7 +12,8 @@ use App\Http\Livewire\Transactions\Application\CreateApplication;
 use App\Http\Livewire\Transactions\Application\CreditInvestigationApplication;
 use App\Http\Livewire\Transactions\Application\CreditInvestigationApplicationList;
 use App\Http\Livewire\Transactions\Application\CreateApplicationGroup;
-use App\Http\Livewire\Transactions\Application\ApprovalApplication;
+use App\Http\Livewire\Transactions\Application\ApplicationApprovalList;
+use App\Http\Livewire\Transactions\Application\ApplicationReleasingList;
 use App\Http\Livewire\Transactions\Application\ApplicationList;
 use App\Http\Livewire\Maintenance\FieldOfficer\FieldOfficerlist;
 use App\Http\Livewire\Maintenance\FieldOfficer\FieldOfficer;
@@ -87,15 +88,13 @@ Route::get('/maintenance/fieldarea', FieldArea::class)->name('fieldarea');
 
 //transactions
 Route::get('/tranactions/application/list', ApplicationList::class)->name('application.list');
-// Route::get('/tranactions/application/create/{type}', CreateApplication::class)->name('application.create');
-Route::get('/tranactions/application/{type}', CreateApplication::class)->name('application.create');
-// Route::get('/tranactions/application/view/{memId}/{type:slug}', CreateApplication::class)->name('application.view');
-Route::get('/tranactions/application/{type}/{naID}', CreateApplication::class)->name('application.view');
-// Route::get('/tranactions/application/create/{memId}/{type}', CreateApplication::class)->name('application.view');
+Route::get('/tranactions/application/approval/list', ApplicationApprovalList::class)->name('application.approval');
+Route::get('/tranactions/application/releasing/list', ApplicationReleasingList::class)->name('application.approval');
 Route::get('/tranactions/group/application/create', CreateApplicationGroup::class)->name('application.create.group');
 Route::get('/tranactions/application/credit/investigation/list', CreditInvestigationApplicationList::class)->name('application.credit.investigation.list');
+Route::get('/tranactions/application/{type}/{naID}', CreateApplication::class)->name('application.view');
+Route::get('/tranactions/application/{type}', CreateApplication::class)->name('application.create');
 Route::get('/tranactions/application/credit/investigation/view/{memId}', CreditInvestigationApplication::class)->name('application.credit.investigation');
-Route::get('/tranactions/application/approval', ApprovalApplication::class)->name('application.approval');
 //transactions
 
 

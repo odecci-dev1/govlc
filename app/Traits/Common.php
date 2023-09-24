@@ -5,6 +5,7 @@ namespace App\Traits;
 trait Common {
 
    public $showDialog = 0;
+   public $showAskingDialog = 0;
    public $showAlert = 0;
    public $mid = '';
 
@@ -18,6 +19,11 @@ trait Common {
       $this->mid = $mid;     
       $this->showDialog = 1;
    }
+
+   public function showAskingDialog($message = '', $header = ''){
+      $this->showAskingDialog = 1;
+   }
+
 
    public function closeDialog(){
       $this->showDialog = 0;

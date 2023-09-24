@@ -143,6 +143,15 @@
                             </li>
                         </a>
 
+                        <a href="../KC/remittance.html" data-nav-link>
+                            <li>
+                                <!-- * Remittance  -->
+                                <img src="{{ URL::to('/') }}/assets/icons/sub-menu/remittance.svg" alt="remittance" />
+                                <span>Remittance</span>
+                            </li>
+                        </a>
+
+
                         <a href="../KC/areas.html" data-nav-link>
                             <li>
                                 <!-- * Areas -->
@@ -184,15 +193,8 @@
                             </li>
                         </a>
 
-                        <a href="../KC/remittance.html" data-nav-link>
-                            <li>
-                                <!-- * Remittance  -->
-                                <img src="{{ URL::to('/') }}/assets/icons/sub-menu/remittance.svg" alt="remittance" />
-                                <span>Remittance</span>
-                            </li>
-                        </a>
-
-                        <a href="{{ URL::to('/') }}/tranactions/application/approval" data-nav-link>
+                       
+                        <a href="{{ URL::to('/') }}/tranactions/application/approval/list" data-nav-link>
                             <li>
                                 <!-- * Approval  -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/approval.svg" alt="approval" />
@@ -200,7 +202,7 @@
                             </li>
                         </a>
 
-                        <a href="../KC/releasing.html" data-nav-link>
+                        <a href="{{ URL::to('/') }}/tranactions/application/releasing/list" data-nav-link>
                             <li>
                                 <!-- * Releasing  -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/releasing.svg" alt="releasing" />

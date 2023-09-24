@@ -19,10 +19,6 @@
 
             <!-- * Search Wrapper -->
             <div class="wrapper">
-
-                <!-- * Filter Button -->
-                <button><img src="{{ URL::to('/') }}/assets/icons/filter.svg" alt="filter"></button>
-
                 <!-- * Search Bar -->
                 <div class="search-wrap">
                     <input type="search" id="search" name="search" placeholder="Search">
@@ -80,7 +76,7 @@
                     <!-- * Terms of payment -->
                     <th>
                         <div class="th-wrapper">
-                            <span class="th-name">Terms of payment</span>
+                            <span class="th-name">Created At</span>
                             <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
                         </div>
                     </th>
@@ -89,82 +85,49 @@
                     <th><span class="th-name">Action</span></th>
                 </tr>
 
+                @if($list)
+                    @foreach($list as $list)
+                        <!-- * Loan Type Data -->
+                        <tr class="tr-loan-type">
 
-                <!-- * Loan Type Data -->
-                <tr class="tr-loan-type">
+                            <!-- * Checkbox Opt -->
+                            <td>
+                                <input type="checkbox" class="checkbox" data-select-checkbox>
+                            </td>
 
-                    <!-- * Checkbox Opt -->
-                    <td>
-                        <input type="checkbox" class="checkbox" data-select-checkbox>
-                    </td>
+                            <!-- * Loan type name Data-->
+                            <td>
+                                {{ $list['loanTypeName'] }}
+                            </td>
 
-                    <!-- * Loan type name Data-->
-                    <td>
-                        Collateral loan
-                    </td>
+                            <!-- * Notarial fee Data-->
+                            <td>
+                                {{ $list['loan_amount_Lessthan_Amount'] }} {{ $list['laL_Type'] }}
+                            </td>
 
-                    <!-- * Notarial fee Data-->
-                    <td>
-                        10%
-                    </td>
+                            <!-- * Interest rate Data-->
+                            <td class="td-curLoan">
+                                {{ $list['loan_amount_GreaterEqual_Amount'] }} {{ $list['laG_Type'] }}
+                            </td>
 
-                    <!-- * Interest rate Data-->
-                    <td class="td-curLoan">
-                        18%
-                    </td>
+                            <!-- * Terms of payment Data-->
+                            <td class="td-bal">
+                                {{ date('m/d/Y', strtotime($list['dateCreated'])) }}
+                            </td>
 
-                    <!-- * Terms of payment Data-->
-                    <td class="td-bal">
-                        60 Days
-                    </td>
+                            <!-- * Table View and Trash Button -->
+                            <td class="td-btns">
+                                <div class="td-btn-wrapper">
+                                    <button class="a-btn-view-2">View</button>
+                                    <button class="a-btn-trash-2">Trash</button>
+                                </div>
+                            </td>
 
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-2">View</button>
-                            <button class="a-btn-trash-2">Trash</button>
-                        </div>
-                    </td>
+                        </tr>
+                    @endforeach
+                @endif
 
-                </tr>
-
-                <tr class="tr-loan-type">
-
-                    <!-- * Checkbox Opt -->
-                    <td>
-                        <input type="checkbox" class="checkbox" data-select-checkbox>
-                    </td>
-
-                    <!-- * Loan type name Data-->
-                    <td>
-                        Sample loan
-                    </td>
-
-                    <!-- * Notarial fee Data-->
-                    <td>
-                        10%
-                    </td>
-
-                    <!-- * Interest rate Data-->
-                    <td class="td-inter-rate">
-                        18%
-                    </td>
-
-                    <!-- * Terms of payment Data-->
-                    <td class="td-top">
-                        90 Days
-                    </td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-2">View</button>
-                            <button class="a-btn-trash-2">Trash</button>
-                        </div>
-                    </td>
-
-                </tr>
-
+             
             </table>
 
         </div>

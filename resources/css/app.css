@@ -993,7 +993,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     background-color: rgba(41, 41, 43, 0.6);
 }
 .checkbox::after {
-    content: url("../assets/icons/white-check.svg");
+    content: url("/public/assets/icons/white-check.svg");
     position: absolute;
     top: 0.1rem;
     visibility: hidden;
@@ -1010,7 +1010,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -1033,7 +1033,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
 }
 .selected::after {
     /* BG Img	 */
-    content: url("../assets/icons/carret-down.svg");
+    content: url("/public/assets/icons/carret-down.svg");
     position: absolute;
     right: 15px;
     top: 50%;
@@ -1044,7 +1044,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
 .selected h4,
 .select-box h4 {
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
     color: #29292b;
 }
@@ -1108,7 +1108,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -1125,7 +1125,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     -moz-filter: brightness(101.5%);
 }
 .search-bar input::placeholder {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     position: absolute;
     top: 0;
     transform: translateY(1rem);
@@ -1276,7 +1276,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     border-radius: 3px;
     padding: 1.5rem 2rem;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
 }
 .primary-search-bar .result-box ul li:hover {
@@ -1298,7 +1298,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -1437,7 +1437,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -1532,7 +1532,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -2032,7 +2032,7 @@ body {
     text-align: center;
     line-height: 2rem;
     margin-bottom: 0.25rem;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
     padding: 1.5rem;
 }
@@ -2305,7 +2305,7 @@ body {
     );
 }
 .nav .nav-links .link.dropdown::after {
-    content: url(../assets/icons/carret-right.svg);
+    content: url(/public/assets/icons/carret-right.svg);
     position: absolute;
     display: inline-block;
     right: 0;
@@ -2600,7 +2600,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -2774,7 +2774,7 @@ body {
     .table-container
     table
     input[type="checkbox"]::after {
-    content: url("../assets/icons/white-check.svg");
+    content: url("/public/assets/icons/white-check.svg");
     position: absolute;
     top: 0.1rem;
     visibility: hidden;
@@ -2805,7 +2805,7 @@ body {
     .table-container
     table
     input[type="checkbox"]::after {
-    content: url("../assets/icons/white-check.svg");
+    content: url("/public/assets/icons/white-check.svg");
     position: absolute;
     top: 0.1rem;
     display: none;
@@ -2969,7 +2969,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
     margin: 0 0.5rem;
     color: #29292b;
@@ -3066,7 +3066,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -3167,7 +3167,7 @@ body {
     th {
     text-align: center;
     padding: 1.5rem 2rem;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .ng-modal
     .modal-container
@@ -3235,7 +3235,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
     margin: 0 0.5rem;
     color: #29292b;
@@ -4135,7 +4135,7 @@ body {
     transform: scaleX(50);
 }
 .am-filter-modal .modal-container .modal-header h4 {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .am-filter-modal .modal-container .modal-header button {
     padding: 0;
@@ -4194,7 +4194,7 @@ body {
     transform: scaleX(50);
 }
 .am-filter-modal .modal-container-2 .modal-header h4 {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .am-filter-modal .modal-container-2 .modal-header button {
     padding: 0;
@@ -4256,7 +4256,7 @@ body {
     transform: scaleX(50);
 }
 .am-filter-modal .modal-container-3 .modal-header h4 {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .am-filter-modal .modal-container-3 .modal-header button {
     padding: 0;
@@ -4294,6 +4294,7 @@ body {
 
 .us-modal {
     margin: auto;
+    margin-top: 10%; /*by jumz*/
     width: clamp(min(90vw, 44rem), 30%, max(18vw, 44rem));
     z-index: 10;
     background-color: #ffffff;
@@ -4351,7 +4352,7 @@ body {
 }
 .us-modal .modal-container .modal-header h4 {
     font-weight: 500;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .us-modal .modal-container .rowspan:nth-of-type(2) {
     display: flex;
@@ -4364,7 +4365,7 @@ body {
     font-weight: 700;
 }
 .us-modal .modal-container .rowspan:nth-of-type(2) p {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .us-modal .modal-container .rowspan:nth-of-type(2) p.text-center {
     text-align: center;
@@ -4378,6 +4379,7 @@ body {
 
 .asking-modal {
     margin: auto;
+    margin-top: 10%; /*by jumz*/
     width: clamp(min(90vw, 50rem), 30%, max(18vw, 44rem));
     z-index: 10;
     background-color: #ffffff;
@@ -4438,7 +4440,7 @@ body {
 }
 .asking-modal .modal-container .modal-header h4 {
     font-weight: 500;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .asking-modal .modal-container .rowspan:nth-of-type(2) {
     display: flex;
@@ -4452,7 +4454,7 @@ body {
     font-weight: 700;
 }
 .asking-modal .modal-container .rowspan:nth-of-type(2) p {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .asking-modal .modal-container .rowspan:nth-of-type(3) {
     display: flex;
@@ -4591,10 +4593,10 @@ body {
     font-size: 1.6rem;
 }
 .fe-modal .modal-container .box-wrap:nth-of-type(3) p {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .fe-modal .modal-container .box-wrap:nth-of-type(3) p span {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
 }
 .fe-modal .modal-container .box-wrap:last-of-type {
@@ -4651,10 +4653,10 @@ body {
     gap: 1rem;
 }
 .re-modal .modal-container .box-wrap:nth-of-type(3) p {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .re-modal .modal-container .box-wrap:nth-of-type(3) p span {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
 }
 .re-modal .modal-container .box-wrap:last-of-type {
@@ -5010,7 +5012,7 @@ body {
     color: #29292b;
 }
 .main-dashboard .md-con-1 .wrapper p:last-child {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     color: #29292b;
     font-weight: 700;
 }
@@ -5305,7 +5307,7 @@ body {
     background-color: #29292b;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:first-child .div-1 h3 {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     color: #ffffff;
 }
 .main-dashboard
@@ -5398,7 +5400,7 @@ body {
     .progress-value
     p:nth-of-type(2) {
     margin-top: 1rem;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
 }
 .main-dashboard
@@ -5464,7 +5466,7 @@ body {
     box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:last-child h3 {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:last-child .div-1 {
     margin: min(1rem, 0%);
@@ -5487,7 +5489,7 @@ body {
     .p-wrap
     .wrap
     p {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
 }
 .main-dashboard
@@ -5527,7 +5529,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(41, 41, 41, 0.7) url("../assets/img/login-image.png");
+    background: rgba(41, 41, 41, 0.7) url("/public/assets/img/login-image.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -5568,7 +5570,7 @@ body {
     border: none;
     color: #8c8686;
     background-color: #ebebeb;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 @media (max-width: 430px) {
@@ -5581,7 +5583,7 @@ body {
     left: 0%;
     padding: 1.5rem;
     pointer-events: none;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     color: #8c8686;
     transition: all 150ms ease-in;
 }
@@ -5884,7 +5886,7 @@ body {
     color: #8c8686;
 }
 .clr-con-2 .total-remittance-footer .expandable .container .box p:last-of-type {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
 }
 
@@ -7915,7 +7917,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -7942,7 +7944,7 @@ body {
     .wrapper:last-of-type
     .search-wrap
     input::placeholder {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     position: absolute;
     top: 0;
     transform: translateY(1rem);
@@ -8060,7 +8062,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
     margin: 0 0.5rem;
     color: #29292b;
@@ -8147,7 +8149,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -8451,7 +8453,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -8647,7 +8649,7 @@ body {
     > span {
     margin-bottom: 1rem;
     font-weight: 700;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard
     .fa-form-con
@@ -8660,7 +8662,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -8789,7 +8791,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -9225,7 +9227,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -9891,7 +9893,7 @@ body {
     .input-wrapper
     span {
     margin-bottom: 1rem;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard
     .nl-container-1
@@ -9903,7 +9905,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -10202,7 +10204,7 @@ body {
     display: flex;
     position: relative;
     text-align: left;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -10316,7 +10318,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -10466,7 +10468,7 @@ body {
     span {
     margin-bottom: 1rem;
     font-weight: 400;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard
     .top-container-2
@@ -10478,7 +10480,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -10738,7 +10740,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -10888,7 +10890,7 @@ body {
     .input-wrapper
     span {
     font-weight: 400;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard
     .nh-con
@@ -10900,7 +10902,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -11494,7 +11496,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -11521,7 +11523,7 @@ body {
     .wrapper:last-of-type
     .search-wrap
     input::placeholder {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     position: absolute;
     top: 0;
     transform: translateY(1rem);
@@ -11694,7 +11696,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
     margin: 0 0.5rem;
     color: #29292b;
@@ -11779,7 +11781,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
     margin: 0 0.5rem;
     color: #29292b;
@@ -11846,7 +11848,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -12045,7 +12047,7 @@ body {
     .CI-time-wrapper
     .box
     span {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
     color: #d6a330;
 }
@@ -12308,7 +12310,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -12387,7 +12389,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -12800,7 +12802,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -13116,7 +13118,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -13145,7 +13147,7 @@ body {
     .wrapper:last-of-type
     .search-wrap
     input::placeholder {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     position: absolute;
     top: 0;
     transform: translateY(1rem);
@@ -13288,7 +13290,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -13317,7 +13319,7 @@ body {
     .wrapper:last-of-type
     .search-wrap
     input::placeholder {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     position: absolute;
     top: 0;
     transform: translateY(1rem);
@@ -13531,7 +13533,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -13560,7 +13562,7 @@ body {
     .wrapper:last-of-type
     .search-wrap
     input::placeholder {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     position: absolute;
     top: 0;
     transform: translateY(1rem);
@@ -13803,7 +13805,7 @@ body {
     font-size: 1.8rem;
 }
 .main-dashboard .na-form-con .na-requirements-sec h5 span {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
 }
 .main-dashboard .na-form-con .na-notes-remarks-sec {
     border-radius: 1.5rem;
@@ -13835,7 +13837,7 @@ body {
     border-radius: 2rem;
     background-color: #ebebeb;
     color: #8c8686;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 500;
 }
 .main-dashboard .na-form-con .na-approval-sec {
@@ -13872,7 +13874,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -13999,7 +14001,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -14057,7 +14059,7 @@ body {
     .na-releasing-sec
     .rowspan:nth-of-type(2)
     [data-toggle-mor-2] {
-    display: none;
+    /* display: none; */
 }
 .main-dashboard .na-form-con .na-releasing-sec .rowspan:first-of-type {
     display: flex;
@@ -14168,7 +14170,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -14540,7 +14542,7 @@ body {
     .CI-time-wrapper
     .box
     span {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
     color: #d6a330;
 }
@@ -14817,7 +14819,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -14882,7 +14884,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -15123,7 +15125,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -15290,7 +15292,7 @@ body {
     .small-con-3
     .rowspan:nth-of-type(2)
     h3 {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-style: italic;
 }
 .main-dashboard
@@ -15366,7 +15368,7 @@ body {
     .small-con-3
     .rowspan:nth-of-type(7)
     h3 {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-style: italic;
 }
 .main-dashboard .na-form-con .nm-container-4 .small-con-3 .rowspan.child {
@@ -15496,7 +15498,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -15858,7 +15860,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
     margin: 0 0.5rem;
     color: #29292b;
@@ -15926,7 +15928,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -16057,7 +16059,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -17101,7 +17103,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -17368,7 +17370,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -17578,7 +17580,7 @@ body {
     span {
     position: absolute;
     bottom: 2rem;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     font-weight: 700;
     font-style: italic;
 }
@@ -17630,7 +17632,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -17974,7 +17976,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -18083,7 +18085,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -18100,7 +18102,7 @@ body {
     -moz-filter: brightness(101.5%);
 }
 .ul-con-1 .container .wrapper:last-of-type .search-wrap input::placeholder {
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     position: absolute;
     top: 0;
     transform: translateY(1rem);
@@ -18230,7 +18232,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -18256,7 +18258,7 @@ body {
     select {
     position: relative;
     text-align: left;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -18635,7 +18637,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -18661,7 +18663,7 @@ body {
     select {
     position: relative;
     text-align: left;
-    font-size: 2rem;
+    font-size: 1.5rem;  /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -19053,4 +19055,20 @@ body {
 .view-nu-con-2 .container-wrapper .ur-con-1 .table-container table td {
     padding: 1.5rem;
     font-size: 1.8rem;
+}
+
+.text-required{
+  color:#ff0000!important;
+  font-size: 14px !important;
+}
+
+.full-screen-div{
+  background:red;
+  position:fixed;
+  top:0px;
+  right:0px;
+  bottom:0px;
+  left:0px;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.2);
 }

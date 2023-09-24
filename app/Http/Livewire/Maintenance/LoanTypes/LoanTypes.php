@@ -66,7 +66,7 @@ class LoanTypes extends Component
 
     public function save(){   
         $inputs = $this->validate();
-        dd($inputs);
+       
         $terms = [];
         if(count( $this->terms) > 0){
             foreach($this->terms as $key => $value){

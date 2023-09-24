@@ -57,8 +57,9 @@ class UserRegister extends Component
     {
         if(isset($this->userid)){
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [ 'type' => 'Username', 'values' => $this->userid ]);     
-            $res = $data->json();
-            $res = $res[0];        
+            $res = $data->json();            
+            $res = $res[0];       
+         
             $this->username = $res['username'];            
             $this->fname = $res['fname'];
             $this->lname = $res['lname'];

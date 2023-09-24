@@ -22,37 +22,23 @@
 
                                 <div class="options-container" data-type-opt-con>
 
-                                    <div class="option" data-type-loan-opt data-individual-loan-link>
+                                    @if($loantypeList)
+                                        @foreach($loantypeList as $loantypeList)
+                                        <div class="option" data-type-loan-opt data-individual-loan-link>
 
-                                        <input type="radio" wire:model.lazy="loantype" class="radio" value="Individual Loan" id="loantype1" name="loantype" />
-                                        <label for="loantype1">
-                                            <h4>Individual Loan</h4>
-                                        </label>
+                                            <input type="radio" wire:model="loantype" wire:change="changeLoanType('{{ $loantypeList['loanTypeID'] }}')" class="radio" value="{{ $loantypeList['loanTypeID'] }}" id="loantype{{ $loantypeList['loanTypeID'] }}" name="loantype" />
+                                            <label for="loantype{{ $loantypeList['loanTypeID'] }}">
+                                                <h4>{{ $loantypeList['loanTypeName'] }}</h4>
+                                            </label>
 
-                                    </div>
-
-                                    <div class="option" data-type-loan-opt data-group-loan-link>
-
-                                        <input type="radio" wire:model.lazy="loantype"  wire:click="redirectToGroupLoan" value="Group Loan" class="radio" id="loantype2" name="loantype" />
-                                        <label for="loantype2">
-                                            <h4>Group Loan</h4>
-                                        </label>
-
-                                    </div>
-
-                                    <div class="option" data-type-loan-opt>
-
-                                        <input type="radio" wire:model.lazy="loantype"  class="radio" id="loantype3" value="Sample Loan" name="loantype" />
-                                        <label for="loantype3">
-                                            <h4>Sample Loan</h4>
-                                        </label>
-
-                                    </div>
-
+                                        </div>
+                                        @endforeach
+                                    @endif
+                                    
                                 </div>
                                 
                                 <div class="selected" style="font-weight: bold;" data-type-loan-select>
-                                    {{ $loantype != '' ? $loantype : '' }}
+                                    {{ $loantypename }}
                                 </div>
 
                             </div>
@@ -77,7 +63,7 @@
                 </div>
 
                 <!-- * Create New Button -->
-                <a href="{{ URL::to('/') }}/tranactions/application/create" class="button">Create New</a>
+                <button wire:click="createIndividualLoan('', '{{ $loantype }}')" type="button" class="button">Create New</button>
 
             </div>
 

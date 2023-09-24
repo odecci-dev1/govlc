@@ -98,46 +98,45 @@
     <!-- * Container 1: User list Header, Buttons, and Searchbar -->
 
     <div class="nal-con-1">
-    <h2>Application List</h2>
-    <p class="p-1">
-    Total of <span id="numOfApplicants">50</span> active users
-    </p>
+        <h2>Application List</h2>
+        <p class="p-1">
+        Total of <span id="numOfApplicants">50</span> active users
+        </p>
 
-    <!-- * Button Container -->
-    <div class="container">
+        <!-- * Button Container -->
+        <div class="container">
 
-    <!-- * Button Wrapper -->
-    <div class="wrapper">
+        <!-- * Button Wrapper -->
+            <div class="wrapper">
 
-        <!-- * Add New Button -->
-        <button type="button"  class="button" id="data-open-new-application-modal"  data-nav-link>
-            <span>Add New</span>
-        </button>
+                <!-- * Add New Button -->
+                <button type="button"  class="button" id="data-open-new-application-modal"  data-nav-link>
+                    <span>Add New</span>
+                </button>
 
-    </div>
+            </div>
 
-    <!-- * Search Wrapper -->
-    <div class="wrapper">
+            <!-- * Search Wrapper -->
+            <div class="wrapper">
 
-        <!-- * Filter Button -->
-        <button data-open-filter-member-modal>
-        <img src="{{ URL::to('/') }}/assets/icons/filter.svg" alt="filter" />
-        </button>
+                <!-- * Filter Button -->
+                <button data-open-filter-member-modal>
+                <img src="{{ URL::to('/') }}/assets/icons/filter.svg" alt="filter" />
+                </button>
 
-        <!-- * Search Bar -->
-        <div class="search-wrap">
-        <input
-            type="search"
-            id="search"
-            name="search"
-            placeholder="Search"
-        />
-        <img
-            src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg"
-            alt="search"
-        />
-        </div>
-    </div>
+                <!-- * Search Bar -->
+                <div class="search-wrap">
+                    <input
+                        type="search"
+                        wire:model="keyword"
+                        placeholder="Search"
+                    />
+                    <img
+                        src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg"
+                        alt="search"
+                    />
+                </div>
+            </div>
     </div>
 
     <!-- * View Trash Button -->
@@ -263,7 +262,7 @@
                     <!-- * Table View and Trash Button -->
                     <td class="td-btns">
                         <div class="td-btn-wrapper">
-                            <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $l['naid'] }}/4" class="a-btn-view-3" data-view-application>View</a>
+                            <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $l['naid'] }}" class="a-btn-view-3" data-view-application>View</a>
                             <button class="a-btn-trash-5">Trash</button>
                         </div>
                     </td>
