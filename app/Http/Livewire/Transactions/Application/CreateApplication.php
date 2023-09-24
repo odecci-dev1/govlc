@@ -766,23 +766,26 @@ class CreateApplication extends Component
 
     public function signForRelease(){
         try{
-           
+          
             $data = [
                         'ldid' => $this->loanDetails['ldid'],
                         'naid' => $this->naID,
                         'approvedby' => 'ADMIN',
-                        'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],
+                        'topId' => 'TopId-01',
                         'approvedLoanAmount' => $this->loanDetails['loanAmount'],
                         "note"=> $this->loanDetails['notes'],
                         "courier"=> $this->loanDetails['courier'],
                         "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
                         "courierCno"=> $this->loanDetails['couriercno'],
                         "modeOfRelease"=> $this->loanDetails['modeOfRelease'],
-                        "reference"=> $this->loanDetails['modeOfRelease'] == 'Cash' ? $this->loanDetails['denomination'] : $this->loanDetails['checkNumber'],
+                        "modeOfReleaseReference"=> $this->loanDetails['modeOfRelease'],
+                        "denomination"=> $this->loanDetails['modeOfRelease'] == 'Cash' ? $this->loanDetails['denomination'] : $this->loanDetails['checkNumber'],
           
                     ];
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Approval/ApproveReleasing', $data);          
-            return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully approve for releasing', 'mword'=> 'Success']);
+
+          
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);          
+            return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully signed for releasing', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
             throw $e;            
@@ -790,21 +793,25 @@ class CreateApplication extends Component
     }
 
     public function completeApplication(){
+       
         $data = [
-                    'ldid' => $this->loanDetails['ldid'],
-                    'naid' => $this->naID,
-                    'approvedby' => 'ADMIN',
-                    'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],
-                    'approvedLoanAmount' => $this->loanDetails['loanAmount'],
-                    "note"=> $this->loanDetails['notes'],
-                    "courier"=> $this->loanDetails['courier'],
-                    "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
-                    "courierCno"=> $this->loanDetails['couriercno'],
-                    "modeOfRelease"=> $this->loanDetails['modeOfRelease'],
-                    "reference"=> $this->loanDetails['modeOfRelease'] == 'Cash' ? $this->loanDetails['denomination'] : $this->loanDetails['checkNumber'],
-                ];
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ComppleteTransaction', $data);          
-        return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully approve for releasing', 'mword'=> 'Success']);
+            'ldid' => $this->loanDetails['ldid'],
+            'naid' => $this->naID,
+            'approvedby' => 'ADMIN',
+            'topId' => 'TopId-01',
+            'approvedLoanAmount' => $this->loanDetails['loanAmount'],
+            "note"=> $this->loanDetails['notes'],
+            "courier"=> $this->loanDetails['courier'],
+            "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
+            "courierCno"=> $this->loanDetails['couriercno'],
+            "modeOfRelease"=> $this->loanDetails['modeOfRelease'],
+            "modeOfReleaseReference"=> $this->loanDetails['modeOfRelease'],
+            "denomination"=> $this->loanDetails['modeOfRelease'] == 'Cash' ? $this->loanDetails['denomination'] : $this->loanDetails['checkNumber'],
+
+        ];
+
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);          
+        return redirect()->to('tranactions/application/releasing/list')->with(['mmessage'=> 'Application is complete and ready for releasing', 'mword'=> 'Success']);
     }
 
     public function getmemberAge(){
@@ -1228,7 +1235,7 @@ class CreateApplication extends Component
                 $this->comaker['co_OtherSOC'] = 'none'; 
                 $this->comaker['co_BO_Status'] = '1'; 
                 $this->comaker['co_CompanyName'] = 'SOEN'; 
-                $this->comaker['co_CompanyID'] = ''; 
+                $this->comaker['co_CompanyID'] = 'string'; 
                 $this->comaker['co_Emp_Status'] = '1'; 
                 $this->comaker['remarks'] = ''; 
             //}

@@ -73,7 +73,7 @@
                     <textarea wire:model.lazy="loanDetails.remarks" class="wrapper-2"></textarea>
 
                 </div>
-    @elseif(in_array($member['statusID'], [9, 10, 11]))
+    @elseif(in_array($member['statusID'], [9, 10, 15]))
     <div class="na-releasing-sec">
 
         <!-- * Rowspan 1: Loan Details Header -->
@@ -81,7 +81,7 @@
             <h3>Loan Details</h3>
         </div>
 
-        @if(in_array($member['statusID'], [10, 11]))
+        @if(in_array($member['statusID'], [10, 15]))
         <!-- * Rowspan 2: Mode of Release and Denomination and Check Number Toggle -->
         <div class="rowspan">
 
@@ -172,7 +172,7 @@
             <div class="input-wrapper input-wrapper-release">
                 <button type="button" wire:click="signForRelease" class="releaseButton" data-sign-for-releasing-button>Sign For Releasing</button>
             </div>
-            @elseif($member['statusID'] == 11)
+            @elseif($member['statusID'] == 15)
             <div class="input-wrapper input-wrapper-release">
                 <button type="button" wire:click="completeApplication" class="releaseButton" data-application-complete-button>Complete</button>
             </div>
@@ -187,7 +187,7 @@
             <div class="input-wrapper">
                 <span>Terms of Payment</span>
                 <!-- <input disabled wire:model.lazy="loanDetails.terms" autocomplete="off" type="text" > -->
-                <div class="select-box"  style="{{ in_array($member['statusID'], [10, 11]) ? 'pointer-events: none; color: #808080;' : '' }}">
+                <div class="select-box"  style="{{ in_array($member['statusID'], [10, 15]) ? 'pointer-events: none; color: #808080;' : '' }}">
 
                                 <div class="options-container" data-type-opt-con>
 
@@ -261,13 +261,13 @@
             <!-- * Approved by: -->
             <div class="input-wrapper">
                 <span>Approved by:</span>
-                <input {{ in_array($member['statusID'], [10, 11]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.approvedBy" autocomplete="off" type="text" id="approvedBy" name="approvedBy">
+                <input {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.approvedBy" autocomplete="off" type="text" id="approvedBy" name="approvedBy">
             </div>
 
             <!-- * Notes -->
             <div class="input-wrapper">
                 <span>Notes &nbsp;<p>(if approving officer is not available)</p></span>
-                <input {{ in_array($member['statusID'], [10, 11]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.notes" autocomplete="off" type="text" >
+                <input {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.notes" autocomplete="off" type="text" >
             </div>
 
             <!-- * Decline Button -->
@@ -285,7 +285,7 @@
 
         </div>    
         
-        @if(in_array($member['statusID'], [10, 11]))
+        @if(in_array($member['statusID'], [10, 15]))
                 <div class="na-cash-courier">
 
                     <!-- * Small Container -->
@@ -351,7 +351,7 @@
                                 <div class="input-wrapper" data-client-name-toggle>
                                     <div class="input-wrapper">
                                         <span>Client Name</span>
-                                        <input wire:model.lazy="loanDetails.courierclient" autocomplete="off" type="number" >
+                                        <input wire:model.lazy="loanDetails.courierclient" autocomplete="off" type="text" >
                                     </div>
                                 </div>
                                 @endif

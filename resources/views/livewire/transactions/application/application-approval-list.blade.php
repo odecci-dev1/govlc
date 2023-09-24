@@ -100,7 +100,7 @@
 
         <div class="cil-con-1">
             <div class="header-container">
-                <h2>For Credit Checking</h2>
+                <h2>For Approval Checking</h2>
                 <p class="p-1">
                 You have a total <span id="numOfApplicantsForApproval">10</span> 
                 <span>applications for approval</span>
