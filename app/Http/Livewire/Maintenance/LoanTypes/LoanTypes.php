@@ -31,7 +31,7 @@ class LoanTypes extends Component
         $rules['loantype.loanI_Type'] = ['required'];   
         $rules['loantype.lifeInsurance'] = ['required'];   
         $rules['loantype.lifeI_Type'] = ['required'];   
-        $rules['inpterms'] = ['required'];      
+        $rules['terms'] = ['required'];      
         return $rules;
     }
 
@@ -52,7 +52,7 @@ class LoanTypes extends Component
         $messages['loantype.loanI_Type.required'] = 'Please enter amount';    
         $messages['loantype.lifeInsurance.required'] = 'Please enter amount';  
         $messages['loantype.lifeI_Type.required'] = 'Please enter amount';  
-        $messages['inpterms.gt'] = 'Please add terms of payment';  
+        $messages['terms.required'] = 'Please add terms of payment';  
 
         $messages['inpterms.nameOfTerms.required'] = 'Name of terms is required.';        
         $messages['inpterms.days.required'] = 'No. of days is required.';  
@@ -98,13 +98,16 @@ class LoanTypes extends Component
                         "terms"=> $terms
                 ];
 
+            
         if($this->loantypeID == ''){
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/SaveLoanType', $data);  
         }   
         else{
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/UpdateLoanType', $data);
+            dd($data);
         }       
-        return redirect()->to('/maintenance/loantypes/list')->with('mmessage', ($this->loantypeID == '' ? 'Loan type successfully saved' : 'Loan type successfully updated'));     
+        
+        //return redirect()->to('/maintenance/loantypes/list')->with('mmessage', ($this->loantypeID == '' ? 'Loan type successfully saved' : 'Loan type successfully updated'));     
     }
     
     public function addTerms(){
@@ -156,16 +159,26 @@ class LoanTypes extends Component
             $this->loantype['loan_amount_Lessthan_Amount'] = $data['loan_amount_Lessthan_Amount'];
             $this->loantype['lalV_Type'] = $data['laL_Type'];
             $this->loantype['loan_amount_GreaterEqual_Amount'] = $data['loan_amount_GreaterEqual_Amount'];
-            $this->loantype['laG_Type'] = $data['laG_Type'];
-    
-            // $rules['loantype.loan_amount_Lessthan_Amount'] = ['required'];   
-            // $rules['loantype.lalV_Type'] = ['required'];   
-            // $rules['loantype.loan_amount_GreaterEqual_Amount'] = ['required'];   
-            // $rules['loantype.lageF_Type'] = ['required'];   
-            // $rules['loantype.loanInsurance'] = ['required'];   
-            // $rules['loantype.loanI_Type'] = ['required'];   
-            // $rules['loantype.lifeInsurance'] = ['required'];   
-            // $rules['loantype.lifeI_Type'] = ['required'];   
+            $this->loantype['lageF_Type'] = $data['laG_Type'];
+
+            $this->loantype['loanInsurance'] = $data['loanInsurance'];
+            $this->loantype['loanI_Type'] = $data['loanI_Type'];
+            $this->loantype['lifeInsurance'] = $data['lifeInsurance'];
+            $this->loantype['lifeI_Type'] = $data['lifeI_Type'];
+
+            $termsofPayment = $data['termsofPayment'];
+            $cnt = 0;
+            if( $termsofPayment ){
+                foreach($termsofPayment as $termsofPayment){
+                    $cnt = $cnt + 1;
+                    $this->terms[$cnt] = [  'nameOfTerms' => $termsofPayment['nameOfTerms'],
+                                            'days' => $termsofPayment['days'],
+                                            'interestRate' => $termsofPayment['interestRate'],                                         
+                                            'loanTypeID' => $termsofPayment['loanTypeId'],
+                                            'formula' => $termsofPayment['formula']                                  
+                                         ];
+                }
+            }
         }
         // $this->inpterms['interestType'] = 1;
     }

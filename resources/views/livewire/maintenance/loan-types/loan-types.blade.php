@@ -27,9 +27,9 @@
 
                         <!-- * Buttons -->
                         <div class="btn-wrapper">
-
+                            
                             <!-- * Save -->
-                            <button type="button" wire:click="save" class="button" data-save>Save</button>
+                            <button type="button" wire:click="save" class="button" data-save>{{ $loantypeID =='' ? 'Save' : 'Update' }}</button>
 
                         </div>
 
@@ -500,7 +500,7 @@
                                     </tr>
                                     @endforeach
                                     @endif
-                                    @error('inpterms') 
+                                    @error('terms') 
                                         <tr>
                                             <td colspan="6" style="text-align: center; padding: 20px;"><span class="text-required">{{ $message }}</span></td>
                                         </tr>
