@@ -149,10 +149,15 @@ class LoanTypes extends Component
             $this->loantype['loan_amount_Lessthan'] = $data['loan_amount_Lessthan'];
             $this->loantype['loan_amount_GreaterEqual'] = $data['loan_amount_GreaterEqual'];
             $this->loantype['savings'] = $data['savings'];
- 
-            // $rules['loantype.loanAmount_Min'] = ['required'];   
-            // $rules['loantype.loanAmount_Max'] = ['required'];   
-            // $rules['loantype.loanTypeName'] = ['required'];   
+            $this->loantype['loanAmount_Min'] = $data['loanAmount_Min'];
+            $this->loantype['loanAmount_Max'] = $data['loanAmount_Max'];
+            $this->loantype['loanTypeName'] = $data['loanTypeName'];
+
+            $this->loantype['loan_amount_Lessthan_Amount'] = $data['loan_amount_Lessthan_Amount'];
+            $this->loantype['lalV_Type'] = $data['laL_Type'];
+            $this->loantype['loan_amount_GreaterEqual_Amount'] = $data['loan_amount_GreaterEqual_Amount'];
+            $this->loantype['laG_Type'] = $data['laG_Type'];
+    
             // $rules['loantype.loan_amount_Lessthan_Amount'] = ['required'];   
             // $rules['loantype.lalV_Type'] = ['required'];   
             // $rules['loantype.loan_amount_GreaterEqual_Amount'] = ['required'];   
