@@ -170,11 +170,11 @@
             @elseif($member['statusID'] == 10)
             <!-- * Approve for Releasing Button -->
             <div class="input-wrapper input-wrapper-release">
-                <button type="button" class="releaseButton" data-sign-for-releasing-button>Sign For Releasing</button>
+                <button type="button" wire:click="signForRelease" class="releaseButton" data-sign-for-releasing-button>Sign For Releasing</button>
             </div>
             @elseif($member['statusID'] == 11)
             <div class="input-wrapper input-wrapper-release">
-                <button type="button" class="releaseButton" data-application-complete-button>Complete</button>
+                <button type="button" wire:click="completeApplication" class="releaseButton" data-application-complete-button>Complete</button>
             </div>
             @endif
 
@@ -324,9 +324,10 @@
                                 </div>
 
                             </div>
-
+                            @if(isset($loanDetails['courier']))
                             <div class="toggle-container">
 
+                                @if($loanDetails['courier'] == 'Employee')
                                 <!-- * Search Wrapper -->
                                 <div class="input-wrapper" data-employee-search-toggle>
                                     <span>Employee Name</span>
@@ -334,7 +335,7 @@
                                     <!-- * Primary Search Bar -->
                                     <div class="primary-search-bar">
                                         <div class="row">
-                                            <input type="search" id="searchInput" name="search" placeholder="Search" autocomplete="off">
+                                            <input wire:model.lazy="loanDetails.courieremployee" type="search" placeholder="Search" autocomplete="off">
                                             <button>
                                             </button>
                                         </div>
@@ -343,14 +344,17 @@
                                     </div>
     
                                 </div>
+                                @endif
     
+                                @if($loanDetails['courier'] == 'Client')
                                 <!-- * Client Name -->
                                 <div class="input-wrapper" data-client-name-toggle>
                                     <div class="input-wrapper">
                                         <span>Client Name</span>
-                                        <input autocomplete="off" type="number" id="empConNum" name="empConNum">
+                                        <input wire:model.lazy="loanDetails.courierclient" autocomplete="off" type="number" >
                                     </div>
                                 </div>
+                                @endif
 
                             </div>
 
@@ -358,9 +362,10 @@
                             <div class="input-wrapper" data-contact-number-toggle>
                                 <div class="input-wrapper">
                                     <span>Contact No:</span>
-                                    <input autocomplete="off" type="number" id="empConNum" name="empConNum">
+                                    <input wire:model.lazy="loanDetails.couriercno" autocomplete="off" type="number">
                                 </div>
                             </div>
+                            @endif
 
 
                         </div>

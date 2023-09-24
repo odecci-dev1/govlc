@@ -54,11 +54,11 @@ class CreateApplicationGroup extends Component
         $data = [
                     "member" => session('memdata'),
                     "groupName"=> $this->groupname,
-                    "groupId"=> null
+                    "groupId"=> "string"
                 ];
                        
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Group/SaveGroupList', $data);  
-        dd($crt);
+        dd($data);
     }
 
     public function mount(){  
@@ -72,7 +72,7 @@ class CreateApplicationGroup extends Component
     public function render()
     {     
         // session()->forget('memdata');  
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => '']);       
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => $this->searchkeyword]);       
         $this->memberlist = $data->json();           
      
         if(session('memdata')){

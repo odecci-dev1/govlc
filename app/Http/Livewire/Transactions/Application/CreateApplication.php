@@ -520,7 +520,22 @@ class CreateApplication extends Component
                                 "profileName"=> $profilename,
                                 "profileFilePath"=> $profilename,
                                 "requirementsFile"=> $memattachements,
-                                "applicationStatus" => $type == 1 ? 7 : 8
+                                "applicationStatus" => $type == 1 ? 7 : 8,
+                                "co_ProfileName"=> "string",
+                                "co_ProfileFilePath"=> "string",
+                                "co_RequirementsFile"=> [
+                                    [
+                                      "fileName"=> "string",
+                                      "filePath"=> "string"
+                                    ]
+                                  ],
+                                  "signatureUpload"=> [
+                                    [
+                                      "fileName"=> "string",
+                                      "filePath"=> "string"
+                                    ]
+                                  ],
+                                  "userId"=> "ADMIN"
                     ]];
       
                     // $extension = $request->file('filename')->getClientOriginalExtension();
@@ -749,6 +764,49 @@ class CreateApplication extends Component
         }
     }
 
+    public function signForRelease(){
+        try{
+           
+            $data = [
+                        'ldid' => $this->loanDetails['ldid'],
+                        'naid' => $this->naID,
+                        'approvedby' => 'ADMIN',
+                        'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],
+                        'approvedLoanAmount' => $this->loanDetails['loanAmount'],
+                        "note"=> $this->loanDetails['notes'],
+                        "courier"=> $this->loanDetails['courier'],
+                        "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
+                        "courierCno"=> $this->loanDetails['couriercno'],
+                        "modeOfRelease"=> $this->loanDetails['modeOfRelease'],
+                        "reference"=> $this->loanDetails['modeOfRelease'] == 'Cash' ? $this->loanDetails['denomination'] : $this->loanDetails['checkNumber'],
+          
+                    ];
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Approval/ApproveReleasing', $data);          
+            return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully approve for releasing', 'mword'=> 'Success']);
+        }
+        catch (\Exception $e) {           
+            throw $e;            
+        }
+    }
+
+    public function completeApplication(){
+        $data = [
+                    'ldid' => $this->loanDetails['ldid'],
+                    'naid' => $this->naID,
+                    'approvedby' => 'ADMIN',
+                    'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],
+                    'approvedLoanAmount' => $this->loanDetails['loanAmount'],
+                    "note"=> $this->loanDetails['notes'],
+                    "courier"=> $this->loanDetails['courier'],
+                    "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
+                    "courierCno"=> $this->loanDetails['couriercno'],
+                    "modeOfRelease"=> $this->loanDetails['modeOfRelease'],
+                    "reference"=> $this->loanDetails['modeOfRelease'] == 'Cash' ? $this->loanDetails['denomination'] : $this->loanDetails['checkNumber'],
+                ];
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ComppleteTransaction', $data);          
+        return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully approve for releasing', 'mword'=> 'Success']);
+    }
+
     public function getmemberAge(){
         $age = $this->calculateAge($this->member['dob']);
         $this->member['age'] = $age;           
@@ -844,7 +902,7 @@ class CreateApplication extends Component
     public function mount($type = '1', $loanTypeID = ''){
         $this->type = $type;     
         //$this->loanTypeID = $loanTypeID;
-        // dd($this->loanTypeID);
+        //dd($this->loanTypeID);
         $this->member['civil_Status'] = '';       
         $this->member['emp_Status'] = '';
         $this->member['f_Emp_Status'] = '';
@@ -1097,25 +1155,25 @@ class CreateApplication extends Component
                 $this->member['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';
             }
             //else{
-                $this->member['fname'] = '1Jumar';  
-                $this->member['lname'] = '1Cave';
-                $this->member['mname'] = '1Badajos';
-                $this->member['suffix'] = ''; 
-                $this->member['age'] = '20'; 
-                $this->member['barangay'] = 'Rivera';  
-                $this->member['city'] = 'San Juan'; 
-                $this->member['civil_Status'] = 'Married';  
-                $this->member['cno'] = '02233666666'; 
-                $this->member['country'] = 'Philippines'; 
-                $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
-                $this->member['emailAddress'] = 'test@gmail.com'; 
-                $this->member['gender'] = 'Male';
-                $this->member['houseNo'] = 'No. 9 GB';
-                $this->member['house_Stats'] = '2'; 
-                $this->member['pob'] = 'Bani, Pangasinan';
-                $this->member['province'] = 'NCR'; 
-                $this->member['yearsStay'] = '5';
-                $this->member['zipCode'] = '';            
+                // $this->member['fname'] = '1Jumar';  
+                // $this->member['lname'] = '1Cave';
+                // $this->member['mname'] = '1Badajos';
+                // $this->member['suffix'] = ''; 
+                // $this->member['age'] = '20'; 
+                // $this->member['barangay'] = 'Rivera';  
+                // $this->member['city'] = 'San Juan'; 
+                // $this->member['civil_Status'] = 'Married';  
+                // $this->member['cno'] = '02233666666'; 
+                // $this->member['country'] = 'Philippines'; 
+                // $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
+                // $this->member['emailAddress'] = 'test@gmail.com'; 
+                // $this->member['gender'] = 'Male';
+                // $this->member['houseNo'] = 'No. 9 GB';
+                // $this->member['house_Stats'] = '2'; 
+                // $this->member['pob'] = 'Bani, Pangasinan';
+                // $this->member['province'] = 'NCR'; 
+                // $this->member['yearsStay'] = '5';
+                // $this->member['zipCode'] = '';            
                 $this->member['electricBill'] = '250'; 
                 $this->member['waterBill'] = '100'; 
                 $this->member['otherBills'] = '1000'; 
@@ -1139,9 +1197,9 @@ class CreateApplication extends Component
                 $this->member['f_Job'] = 'Cashier'; 
                 $this->member['f_CompanyName'] = 'SOEN'; 
                 $this->member['f_RTTB'] = '';     
-                $this->member['loanAmount'] = '30000'; 
-                $this->member['termsOfPayment'] = '12 months'; 
-                $this->member['purpose'] = 'For Business'; 
+                // $this->member['loanAmount'] = '30000'; 
+                // $this->member['termsOfPayment'] = '12 months'; 
+                // $this->member['purpose'] = 'For Business'; 
         
                 $this->comaker['co_Fname'] = 'Thea'; 
                 $this->comaker['co_Lname'] = 'Badajos'; 
