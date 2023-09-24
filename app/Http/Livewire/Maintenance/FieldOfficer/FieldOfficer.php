@@ -94,6 +94,14 @@ class FieldOfficer extends Component
                         "philHealth"=> $input['officer']['philHealth'] ??= '',
                         "idNum"=> $input['officer']['idNum'] ??= null,
                         "typeID"=> $input['officer']['typeID'] ??= '',
+                        "profileName"=> "string",
+                        "profilePath"=> "string",
+                        "uploadFiles"=> [
+                          [
+                            "fileName"=> "string",
+                            "filePath"=> "string"
+                          ]
+                        ]
                     ];   
                     
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/SaveFieldOfficer', $data);  
