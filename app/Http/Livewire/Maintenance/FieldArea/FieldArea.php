@@ -15,13 +15,16 @@ class FieldArea extends Component
     public $unassigned = [];
     public $selectedunassigned = [];
     public $list = [];
+    public $folist = [];
 
     public $areaName;
     public $location;
     public $foid;
     public $fullname;
     public $keyword;
-    public $keywordunassigned;
+    public $keywordunassigned = '';
+
+    public $searchfokeyword = '';
 
     public function removeSelUnassigned($mkey){
         $key = array_search($mkey, $this->selectedunassigned);
@@ -38,19 +41,22 @@ class FieldArea extends Component
                 $data[] = [
                     'areaName' => $this->areaName,
                     'location' => $this->unassigned[$selun],
-                    'foid' =>  $this->foid,
-                    'fullname' => $this->fullname,
-                    'status' => '1'
+                    'foid' =>  $this->foid,         
                 ]; 
             }
         }     
         // dd( $data );             
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AssigningFieldArea', $data);          
+        dd($crt);
         return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved');    
     }
 
     public function openSearchOfficer(){                 
         $this->emit('openSearchOfficerModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
+    }
+
+    public function selectFO($foid){
+
     }
 
     public function mount(){
@@ -61,7 +67,11 @@ class FieldArea extends Component
     {      
         $this->getUnassigned();          
         $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AreaFilter', ['areaName' => $this->keyword]);  
-        $this->list = $data->json();            
+        $this->list = $data->json();    
+        // dd($this->list);
+        
+        $fodata = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFullname', ['fullname' => $this->searchfokeyword]);  
+        $this->folist = $fodata->json();    
         return view('livewire.maintenance.field-area.field-area');
     }
 
@@ -85,11 +95,13 @@ class FieldArea extends Component
     public function getUnassigned(){       
         $this->unassigned = [];       
         $unassigned = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/UnAssignedFilter', ['location' => $this->keywordunassigned]);         
+      
         $unassigned = $unassigned->json();  
+        
        
         if($unassigned){
             foreach($unassigned as $unass){
-                $this->unassigned[$unass['areaID']] = $unass['areaName'];
+                $this->unassigned[$unass['areaID']] = $unass['location'];
             }
         }       
     }

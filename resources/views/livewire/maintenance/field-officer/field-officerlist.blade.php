@@ -114,7 +114,7 @@
                                     <!-- * Officers' Name-->
                                     <div class="td-wrapper">
                                         <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
-                                        <span class="td-name">{{ $l['lname'] . ', ' . $l['fname'] . ' ' . mb_substr($l['mname'], 0, 1) . '.' }}</span>
+                                        <span class="td-name">{{ $l['lname'] . ', ' . $l['fname'] . ' ' . mb_substr($l['mname'], 0, 1) . ($l['mname'] == '' ? '' : '.') }}</span>
                                     </div>
 
                                 </td>

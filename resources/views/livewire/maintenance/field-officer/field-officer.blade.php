@@ -357,22 +357,28 @@
         <div class="rowspan">
 
             <div class="wrapper">
-
+                <!-- dito -->
                 <!-- * ID Front Image Input -->
                 <div class="input-wrapper">
                     <span>Front</span>
                     <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">
+                    <div class="btn-wrapper">
+                        <input type="file" wire:model="officer.frontID" class="input-image upload-profile-image-btn" style="margin-top: 1rem;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                    </div>
                 </div>
 
                 <!-- * ID Back Image Input -->
                 <div class="input-wrapper">
                     <span>Back</span>
                     <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Back Image" id="backImage" name="backImage">
+                    <div class="btn-wrapper">
+                        <input type="file" wire:model="officer.backID" class="input-image upload-profile-image-btn" style="margin-top: 1rem;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                    </div>
                 </div>
 
             </div>
 
-            <button class="button">Upload Image</button>
+            
 
         </div>
 

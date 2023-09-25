@@ -5,9 +5,12 @@ namespace App\Http\Livewire\Maintenance\LoanTypes;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
+use App\Traits\Common;
+
 class LoanTypes extends Component
 {
 
+    use Common;
     public $loantypeID = '';
     public $loantype;
 
@@ -20,8 +23,8 @@ class LoanTypes extends Component
         $rules['loantype.loan_amount_Lessthan'] = 'required';  
         $rules['loantype.loan_amount_GreaterEqual'] = 'required';  
         $rules['loantype.savings'] = 'required';  
-        $rules['loantype.loanAmount_Min'] = ['required'];   
-        $rules['loantype.loanAmount_Max'] = ['required'];   
+        $rules['loantype.loanAmount_Min'] = [''];   
+        $rules['loantype.loanAmount_Max'] = [''];   
         $rules['loantype.loanTypeName'] = ['required'];   
         $rules['loantype.loan_amount_Lessthan_Amount'] = ['required'];   
         $rules['loantype.lalV_Type'] = ['required'];   
@@ -83,8 +86,8 @@ class LoanTypes extends Component
                         'loan_amount_Lessthan' =>  $inputs['loantype']['loan_amount_Lessthan'],
                         'loan_amount_GreaterEqual' =>  $inputs['loantype']['loan_amount_GreaterEqual'],
                         'savings' =>  $inputs['loantype']['savings'],
-                        'loanAmount_Min' =>  $inputs['loantype']['loanAmount_Min'],
-                        'loanAmount_Max' =>  $inputs['loantype']['loanAmount_Max'],
+                        'loanAmount_Min' =>  isset($inputs['loantype']['loanAmount_Min']) ? $inputs['loantype']['loanAmount_Min'] : 0,
+                        'loanAmount_Max' =>  isset($inputs['loantype']['loanAmount_Max']) ? $inputs['loantype']['loanAmount_Max'] : 0,
                         'loanTypeName' =>  $inputs['loantype']['loanTypeName'],
                         'loanTypeID' =>  $this->loantypeID,
                         'loan_amount_Lessthan_Amount' =>  $inputs['loantype']['loan_amount_Lessthan_Amount'],
@@ -98,16 +101,20 @@ class LoanTypes extends Component
                         "terms"=> $terms
                 ];
 
-            
+        $savemsg = '';
         if($this->loantypeID == ''){
+            $savemsg = 'Loan type successfully saved';
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/SaveLoanType', $data);  
+            $getLasLoanId = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/GetlastLoanTypeDetails');  
+            $getLasLoanId =  $getLasLoanId->json();
+            $this->loantypeID = $getLasLoanId['loanTypeID'];
         }   
         else{
+            $savemsg = 'Loan type successfully updated';
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/UpdateLoanType', $data);
-            dd($data);
-        }       
-        
-        //return redirect()->to('/maintenance/loantypes/list')->with('mmessage', ($this->loantypeID == '' ? 'Loan type successfully saved' : 'Loan type successfully updated'));     
+            // dd($data);
+        }               
+        return redirect()->to('/maintenance/loantypes/view/' . $this->loantypeID)->with('mmessage', $savemsg);     
     }
     
     public function addTerms(){
@@ -148,6 +155,7 @@ class LoanTypes extends Component
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/LoanTypeFilter', ['loanTypeID' => $this->loantypeID]);            
             $data = $data->json();
             $data = $data[0];
+            // dd($data);
 
             $this->loantype['loan_amount_Lessthan'] = $data['loan_amount_Lessthan'];
             $this->loantype['loan_amount_GreaterEqual'] = $data['loan_amount_GreaterEqual'];
@@ -157,14 +165,14 @@ class LoanTypes extends Component
             $this->loantype['loanTypeName'] = $data['loanTypeName'];
 
             $this->loantype['loan_amount_Lessthan_Amount'] = $data['loan_amount_Lessthan_Amount'];
-            $this->loantype['lalV_Type'] = $data['laL_Type'];
+            $this->loantype['lalV_Type'] = $data['laL_Id'];
             $this->loantype['loan_amount_GreaterEqual_Amount'] = $data['loan_amount_GreaterEqual_Amount'];
-            $this->loantype['lageF_Type'] = $data['laG_Type'];
+            $this->loantype['lageF_Type'] = $data['laG_Id'];
 
             $this->loantype['loanInsurance'] = $data['loanInsurance'];
-            $this->loantype['loanI_Type'] = $data['loanI_Type'];
+            $this->loantype['loanI_Type'] = $data['loanI_Id'];
             $this->loantype['lifeInsurance'] = $data['lifeInsurance'];
-            $this->loantype['lifeI_Type'] = $data['lifeI_Type'];
+            $this->loantype['lifeI_Type'] = $data['lifeI_Id'];
 
             $termsofPayment = $data['termsofPayment'];
             $cnt = 0;

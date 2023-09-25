@@ -62,7 +62,7 @@
                             <span>Field Officer</span>
                             <!-- * Search Bar -->                            
                             <div class="search-wrap">                               
-                                <input type="hidden" wire:model.lazy="foid" placeholder="field officer id" >
+                                <input type="text" wire:model.lazy="foid" placeholder="field officer id" >
                                 <input type="search" wire:model.lazy="fullname" placeholder="Search" >
                                 <img wire:click; src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">                               
                             </div>
@@ -317,7 +317,7 @@
 
                     <!-- * Search Bar -->
                     <div class="search-wrap">
-                        <input type="search" wire:model="searchkeyword" placeholder="Search field officer">
+                        <input type="search" wire:model="searchfokeyword" placeholder="Search field officer">
                         <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                     </div>
 
@@ -352,6 +352,31 @@
                                 <th><span class="th-name">Action</span></th>
 
                             </tr>
+
+                            @if(isset($folist) > 0)
+                                @foreach($folist as $fol)
+                                <tr>
+                                    <!-- * Officer Name -->
+                                    <td>
+
+                                        <!-- * Officers' Name-->
+                                        <div class="td-wrapper">
+                                            <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
+                                            <span class="td-name">{{ $fol['lname'] . ', ' . $fol['fname'] . ' ' . mb_substr($fol['mname'], 0, 1) . '.' }}</span>
+                                        </div>
+
+                                    </td>
+
+                                    <!-- * Action -->
+                                    <td class="td-btns">
+                                        <div class="td-btn-wrapper">                                           
+                                            <button type="button" onclick="selectFO('{{ $fol['foid'] }}')" class="a-btn-trash-2">Select</button>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                @endforeach
+                            @endif     
 
                           
 
@@ -402,11 +427,9 @@
                     dataNewGroupModal.showModal()
                 });
 
-                // let input = document.getElementById('groupname');
-
-                // input.addEventListener('blur', () => {
-                //     @this.dispatch('your-event-name');
-                // });
+                window.selectFO = function($foid){
+                    @this.selectFO('selectFO', $foid);       
+                };
             })
         </script>
 </div>

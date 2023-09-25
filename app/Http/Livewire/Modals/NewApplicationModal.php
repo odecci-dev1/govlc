@@ -46,14 +46,14 @@ class NewApplicationModal extends Component
                 $loantypeList[$getloans['loanTypeID']] = ['loanTypeName' => $getloans['loanTypeName'], 'loanTypeID' => $getloans['loanTypeID']];
             }
         }
-        $this->loantype = 'LT-01013';
+        $this->loantype = 'LT-01';
         $this->loantypeList = $loantypeList;
         $this->changeLoanType($this->loantype);
         //dd($this->loantypeList);
     }
 
     public function changeLoanType($loanId){
-        if($loanId == 'LT-01014'){
+        if($loanId == 'LT-02'){
             $this->redirectToGroupLoan();
         }
         $this->getLoanTypeName($loanId);

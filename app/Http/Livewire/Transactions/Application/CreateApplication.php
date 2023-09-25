@@ -6,8 +6,9 @@ use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
 
 use App\Traits\Common;
-
+use Symfony\Component\HttpFoundation\Request;
 use Livewire\Component;
+use Symfony\Component\Console\Input\Input;
 
 class CreateApplication extends Component
 {
@@ -479,7 +480,7 @@ class CreateApplication extends Component
                                 "f_RTTB"=> '',
                                 "business"=> $businesses,
                                 "loanAmount"=> $input['member']['loanAmount'] ??= '0',
-                                'loanTypeId' => 'LT-01013',
+                                'loanTypeId' => $this->loanTypeID,
                                 "termsOfPayment"=> $input['member']['termsOfPayment'] ??= '',
                                 "purpose"=> $input['member']['purpose'] ??= '',
                                 "child"=> $childs,
@@ -906,10 +907,9 @@ class CreateApplication extends Component
         $this->membusinfo['aos'] = '';
     }
 
-    public function mount($type = '1', $loanTypeID = ''){
+    public function mount($type = '1', Request $request){
         $this->type = $type;     
-        //$this->loanTypeID = $loanTypeID;
-        //dd($this->loanTypeID);
+        $this->loanTypeID = $request->loanTypeID;        
         $this->member['civil_Status'] = '';       
         $this->member['emp_Status'] = '';
         $this->member['f_Emp_Status'] = '';
@@ -1011,19 +1011,21 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                // dd($data);
+                //dd($data);
                 $this->searchedmemId =  $data['memId'];
 
-                $this->loanDetails['loanType'] = isset($data['individualLoan'][0]['loanType']) ? $data['individualLoan'][0]['loanType'] : '';
-                $this->loanDetails['loanAmount'] = $data['individualLoan'][0]['loanAmount'];
-                $this->loanDetails['purpose'] = $data['purpose'];
-                $this->loanDetails['terms'] = $data['individualLoan'][0]['terms'];
-                
-                $this->loanDetails['noofnopayment'] = 0; 
-                $this->loanDetails['noofloans'] = 0; 
-                $this->loanDetails['approvedBy'] = 'ADMIN'; 
-                $this->loanDetails['notes'] = ''; 
-                $this->loanDetails['ldid'] = $data['individualLoan'][0]['ldid'];
+                if($data['applicationStatus'] >= 9){
+                    $this->loanDetails['loanType'] = isset($data['individualLoan'][0]['loanType']) ? $data['individualLoan'][0]['loanType'] : '';
+                    $this->loanDetails['loanAmount'] = $data['individualLoan'][0]['loanAmount'];
+                    $this->loanDetails['purpose'] = $data['purpose'];
+                    $this->loanDetails['terms'] = $data['individualLoan'][0]['terms'];
+                    
+                    $this->loanDetails['noofnopayment'] = 0; 
+                    $this->loanDetails['noofloans'] = 0; 
+                    $this->loanDetails['approvedBy'] = 'ADMIN'; 
+                    $this->loanDetails['notes'] = ''; 
+                    $this->loanDetails['ldid'] = $data['individualLoan'][0]['ldid'];
+                }
             
                 $this->member['fname'] = $data['fname'];  
                 $this->member['lname'] = $data['lname'];
@@ -1069,7 +1071,7 @@ class CreateApplication extends Component
                 $this->member['f_Job'] = $data['f_Job']; 
                 $this->member['f_CompanyName'] = $data['f_CompanyName']; 
                 $this->member['f_RTTB'] = $data['f_RTTB'];     
-                $this->member['loanAmount'] = $data['individualLoan'][0]['loanAmount']; //$data['loanAmount'];  cant find in api
+                $this->member['loanAmount'] = isset($data['individualLoan'][0]['loanAmount']) ? $data['individualLoan'][0]['loanAmount'] : 0; //$data['loanAmount'];  cant find in api
                 $this->member['termsOfPayment'] = $data['termsOfPayment']; 
                 $this->member['purpose'] = $data['purpose']; 
         

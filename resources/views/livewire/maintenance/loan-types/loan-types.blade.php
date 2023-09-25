@@ -1,5 +1,7 @@
 <div>
-    
+    @if(session('mmessage'))
+            <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+    @endif
     <!-- * New Loan Types Form -->
     <form action="" class="na-form-con" autocomplete="off">
 

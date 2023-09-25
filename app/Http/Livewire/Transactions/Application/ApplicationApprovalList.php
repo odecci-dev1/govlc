@@ -11,7 +11,7 @@ class ApplicationApprovalList extends Component
 
     public function render()
     {
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/GlobalFilter/FilterSearch', ['loanType' => 'Individual',  'fullname' => $this->keyword, 'status' =>  [9], 'page' => 1, 'pageSize' => 30,  'from' => '0', 'to' => '0']);  
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/GlobalFilter/FilterSearch', ['loanType' => 'Individual',  'fullname' => $this->keyword, 'statusid' => [[ 'status' => 9 ]], 'page' => 1, 'pageSize' => 30,  'from' => '0', 'to' => '0']);  
        
         $list = $data->json();           
         return view('livewire.transactions.application.application-approval-list', ['list' => $list]);

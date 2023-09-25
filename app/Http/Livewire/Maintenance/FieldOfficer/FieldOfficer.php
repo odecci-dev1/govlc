@@ -77,19 +77,19 @@ class FieldOfficer extends Component
 
             
             $profilename = '';
-            if(isset($this->member['profile'])){
+            if(isset($this->officer['profile'])){
                 $time = time();
                 $profilename = 'officer_profile_'.$time;
-                $this->member['officer']->storeAs('public/officer_profile', $profilename);                               
+                $this->officer['profile']->storeAs('public/officer_profile', $profilename);                               
             }          
             
             $memattachements = [];
-            if(isset($this->member['attachments'])){
+            if(isset($this->officer['attachments'])){
                 //dd( $this->member['attachments'] );
-                foreach ($this->member['attachments'] as $attachments) {
+                foreach ($this->officer['attachments'] as $attachments) {
                     $time = time();
-                    $filename = 'members_attachments_'.$time.'_'.$attachments->getClientOriginalName();
-                    $attachments->storeAs('public/members_attachments', $filename);   
+                    $filename = 'officer_attachments_'.$time.'_'.$attachments->getClientOriginalName();
+                    $attachments->storeAs('public/officer_attachments', $filename);   
                     $memattachements[] = [ 'fileName' =>  $filename, 'filePath' => $filename ];
                 }
             }
@@ -119,7 +119,9 @@ class FieldOfficer extends Component
                         "profileName"=> $profilename,
                         "profilePath"=> $profilename,
                         "uploadFiles"=> $memattachements
-                    ];   
+                    ]; 
+                    
+            // dd($data);        
                     
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/SaveFieldOfficer', $data);  
             $get = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/GetLastOfficerList');
@@ -192,7 +194,7 @@ class FieldOfficer extends Component
             $this->foid = $foid;
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFOID', [ 'foid' => $this->foid ]);     
             $res = $data->json();
-            $res = $res[0];      
+            $res = $res[0];   
        
             $this->officer['fname'] =  $res['fname'];
             $this->officer['mname'] =  $res['mname'];
