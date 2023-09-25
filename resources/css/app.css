@@ -8371,7 +8371,8 @@ body {
     .box-wrap:first-of-type
     .colspan
     .file-wrapper {
-    display: none;
+    /* display: none; */
+    padding-top: 1rem;
 }
 .main-dashboard
     .no-form-con

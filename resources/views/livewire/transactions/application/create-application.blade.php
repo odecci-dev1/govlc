@@ -719,8 +719,7 @@
 
                         <div class="file-wrapper" data-attach-file-container>
                             @if(isset($member['attachments']))
-                                @foreach($member['attachments'] as $attachments)
-                              
+                                @foreach($member['attachments'] as $attachments)                              
                                     <div type="button" class="fileButton">
                                         <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
                                         <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>                                       

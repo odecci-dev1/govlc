@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Maintenance\FieldOfficer;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Livewire\WithFileUploads;
 
 use App\Traits\Common;
 
@@ -11,6 +12,7 @@ class FieldOfficer extends Component
 {   
 
     use Common;
+    use WithFileUploads;
     
     public $officer;
     public $foid;
@@ -20,7 +22,7 @@ class FieldOfficer extends Component
     public function rules(){                
         $rules = []; 
         $rules['officer.fname'] = 'required';
-        $rules['officer.mname'] = 'required';
+        $rules['officer.mname'] = '';
         $rules['officer.lname'] = 'required';
         $rules['officer.suffix'] = '';
         $rules['officer.gender'] = 'required';
@@ -29,12 +31,12 @@ class FieldOfficer extends Component
         $rules['officer.pob'] = 'required';
         $rules['officer.civilStatus'] = 'required';
         $rules['officer.cno'] = 'required';
-        $rules['officer.emailAddress'] = 'required';
+        $rules['officer.emailAddress'] = '';
         $rules['officer.houseNo'] = 'required';
         $rules['officer.barangay'] = 'required';
         $rules['officer.city'] = 'required';
         $rules['officer.region'] = 'required';
-        $rules['officer.country'] = 'required';
+        $rules['officer.country'] = '';
         $rules['officer.sss'] = 'required';
         $rules['officer.pagIbig'] = 'required';
         $rules['officer.philHealth'] = 'required';
@@ -72,6 +74,26 @@ class FieldOfficer extends Component
     public function store(){   
         try {                  
             $input = $this->validate(); 
+
+            
+            $profilename = '';
+            if(isset($this->member['profile'])){
+                $time = time();
+                $profilename = 'officer_profile_'.$time;
+                $this->member['officer']->storeAs('public/officer_profile', $profilename);                               
+            }          
+            
+            $memattachements = [];
+            if(isset($this->member['attachments'])){
+                //dd( $this->member['attachments'] );
+                foreach ($this->member['attachments'] as $attachments) {
+                    $time = time();
+                    $filename = 'members_attachments_'.$time.'_'.$attachments->getClientOriginalName();
+                    $attachments->storeAs('public/members_attachments', $filename);   
+                    $memattachements[] = [ 'fileName' =>  $filename, 'filePath' => $filename ];
+                }
+            }
+
             $data = [
                         "fname"=> $input['officer']['fname'] ??= '',
                         "lname"=> $input['officer']['lname'] ??= '',
@@ -94,14 +116,9 @@ class FieldOfficer extends Component
                         "philHealth"=> $input['officer']['philHealth'] ??= '',
                         "idNum"=> $input['officer']['idNum'] ??= null,
                         "typeID"=> $input['officer']['typeID'] ??= '',
-                        "profileName"=> "string",
-                        "profilePath"=> "string",
-                        "uploadFiles"=> [
-                          [
-                            "fileName"=> "string",
-                            "filePath"=> "string"
-                          ]
-                        ]
+                        "profileName"=> $profilename,
+                        "profilePath"=> $profilename,
+                        "uploadFiles"=> $memattachements
                     ];   
                     
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/SaveFieldOfficer', $data);  

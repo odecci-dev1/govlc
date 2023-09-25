@@ -248,19 +248,33 @@
 
                     <!-- * Upload Image -->
                     <div class="input-wrapper" data-upload-image-field-officer-hover-container>
-                        <img type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" data-field-officer-image-container>
+                        <!-- <img type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" data-field-officer-image-container> -->
+                        @if(isset($officer['profile']))
+                            <input type="image" style="width: 211px; height: 211px;" src="{{ $officer['profile']->temporaryUrl() }}" alt="upload-image">
+                        @else
+                            <img type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" data-field-officer-image-container>
+                        @endif       
                     </div>
 
                     <!-- * Button Wrapper -->
                     <div class="btn-wrapper">
                         <!-- * Upload Button -->
-                        <input type="file" submit="" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        <input type="file" wire:model="officer.profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                         <!-- * Attach Button -->
-                        <input type="file" submit="" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-field-officer-file-btn></input>
+                        <input type="file" wire:model="officer.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-field-officer-file-btn></input>
                     </div>
 
-                    <!-- * File Chips Container -->
-                    <div class="file-wrapper" data-attach-field-officer-file-container>
+                    <!-- * File Chips Container -->           
+                    <div class="file-wrapper" data-attach-file-container>                   
+                            @if(isset($officer['attachments']))                            
+                                @foreach($officer['attachments'] as $attachments)                                                     
+                                    <div type="button" class="fileButton">
+                                        <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                        <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>                                       
+                                    </div>
+                                    <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
+                                @endforeach
+                            @endif                         
                     </div>
 
                     <!-- * Save Button -->
