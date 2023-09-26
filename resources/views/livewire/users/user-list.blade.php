@@ -101,7 +101,7 @@
                         alt="Dela Cruz, Juana"
                         />
                         <span class="td-num">1</span>
-                        <span class="td-name">{{ $l['lname'] }}, {{ $l['fname'] }}</span>
+                        <span class="td-name">{{ $l['fullname'] }}</span>
                     </div>
                     </td>
 

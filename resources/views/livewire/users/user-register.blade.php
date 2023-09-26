@@ -160,8 +160,12 @@
                         <!-- * Upload Image -->
                         <div class="input-wrapper">
                           <!-- <input type="image"  style="width: 219px; height: 215px;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" /> -->
-                          @if(!isset($profile))                      
-                            <img type="image" style="width: 219px; height: 215px;" src="{{ url('storage/user_profile/'.$profilePath) }}" alt="upload-image" />
+                          @if(!isset($profile))   
+                            @if($profileExist == 1)                                                          
+                              <img type="image" style="width: 219px; height: 215px;" src="{{ url('storage/user_profile/'.$profilePath) }}" alt="upload-image" />                                               
+                            @else  
+                              <img type="image" style="width: 219px; height: 215px;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                            @endif
                           @else                          
                             <img type="image" style="width: 219px; height: 215px;" src="{{ $profile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
                           @endif    

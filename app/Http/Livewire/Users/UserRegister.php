@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Users;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Livewire\WithFileUploads;
-
+use File;
 use App\Traits\Common;
 
 class UserRegister extends Component
@@ -20,6 +20,7 @@ class UserRegister extends Component
     public $suffix;
     public $profile;
     public $profilePath;
+    public $profileExist = 0;
     public $username;
     public $password;
     public $cno;
@@ -68,7 +69,7 @@ class UserRegister extends Component
           
             $res = $data->json();  
             if(isset($res[0])){    
-                $res = $res[0];       
+                $res = $res[0];                 
                 $this->mid = $res['id'];            
                 $this->username = $res['username'];            
                 $this->fname = $res['fname'];
@@ -78,7 +79,11 @@ class UserRegister extends Component
                 $this->cno = $res['cno'];          
                 $this->address = $res['address'];   
                 $this->profilePath = $res['profilePath'];       
-                $this->usertype = 1;    
+                $this->usertype = $res['userTypeId'];
+              
+                if (file_exists(public_path('storage/user_profile/'.($this->profilePath == '' ? 'xxxxxxxxxxxxxxxxxxxx' : $this->profilePath)))){
+                    $this->profileExist = 1;
+                }
 
                 $usemodules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', [ 'userID' => $this->userid ]);     
                 $usemodules = $usemodules->json();
