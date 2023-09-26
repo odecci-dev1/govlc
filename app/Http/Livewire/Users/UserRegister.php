@@ -4,14 +4,22 @@ namespace App\Http\Livewire\Users;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Livewire\WithFileUploads;
+
+use App\Traits\Common;
 
 class UserRegister extends Component
 {
+
+    use Common;
+    use WithFileUploads;
 
     public $fname;
     public $lname;
     public $mname;
     public $suffix;
+    public $profile;
+    public $profilePath;
     public $username;
     public $password;
     public $cno;
@@ -21,6 +29,7 @@ class UserRegister extends Component
     public $password_confirmation;
     public $userid = '';
     public $mid = '';
+    public $updatePassword = 1;
 
     public $modules = [];
     public $modulelist;
@@ -52,6 +61,7 @@ class UserRegister extends Component
     
     public function mount($userid = ""){
         $this->modulelist = collect([]);
+        $this->modules = [];
         if($userid != ''){
             $this->userid = $userid;
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/FilterUserInfoByUID', [ 'userID' => $this->userid ]);     
@@ -66,8 +76,20 @@ class UserRegister extends Component
                 $this->mname = $res['mname'];         
                 $this->suffix = $res['suffix'];        
                 $this->cno = $res['cno'];          
-                $this->address = $res['address'];          
-                $this->usertype = 1;     
+                $this->address = $res['address'];   
+                $this->profilePath = $res['profilePath'];       
+                $this->usertype = 1;    
+
+                $usemodules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', [ 'userID' => $this->userid ]);     
+                $usemodules = $usemodules->json();
+                
+                if($usemodules){
+                    foreach($usemodules as $usemodules){
+                        $this->modules[] = $usemodules['module_code'];
+                    }
+                }
+               
+                $this->updatePassword = 0;
             }           
         }           
         $getmodules = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetModuleList');     
@@ -76,12 +98,11 @@ class UserRegister extends Component
             foreach($getmodules as $getmodules){
                 $this->modulelist[$getmodules['module_code']] = ['module_code' => $getmodules['module_code'], 'module_name' => $getmodules['module_name'], 'module_category' => $getmodules['module_category']];
             }
-        }
+        }        
     }
 
     public function register(){      
         $data = $this->validate();
-
         $modules = [];
         if(count($this->modules) > 0){
             foreach($this->modules as $mdl){
@@ -94,6 +115,13 @@ class UserRegister extends Component
                             ];
             }
         }
+
+        $profilename = '';
+        if(isset($this->profile)){
+            $time = time();
+            $profilename = 'user_profile_'.$time;
+            $this->profile->storeAs('public/user_profile', $profilename);                               
+        }  
         
         $user = [            
                     "id"=> $this->mid == '' ? '0' : $this->mid,        
@@ -106,6 +134,7 @@ class UserRegister extends Component
                     "cno"=> $this->cno,
                     "address"=> $this->address,
                     "userTypeID"=> $this->usertype,
+                    "profilePath"=> $profilename,
                     "status"=> 1,
                     "usermodule"=> $modules
                 ];
@@ -118,9 +147,10 @@ class UserRegister extends Component
             return redirect()->to('/user/view/'.$getlast['userId'])->with('message', 'User successfully saved'); 
         }      
         else{
+            // dd($user);
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/UpdateUserInfo', $user); 
-            // dd($crt);
-            return redirect()->to('/user/view/'.$this->userid)->with('message', 'User successfully saved'); 
+           
+            return redirect()->to('/user/view/'.$this->userid)->with('message', 'User successfully updated'); 
         }  
                  
         // $crtmodules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUserModule', $user);         
@@ -128,6 +158,14 @@ class UserRegister extends Component
       
        
         
+    }
+
+    public function changeUpdatePassword(){
+        $this->updatePassword = 1;
+    }
+
+    public function closeUpdatePassword(){
+        $this->updatePassword = 0;
     }
 
     public function render()

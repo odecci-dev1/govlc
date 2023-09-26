@@ -32,6 +32,7 @@
                     @error('username') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
 
+                  @if($updatePassword == 1)
                   <div class="rowspan">
                     <!-- * First Name -->
                     <div class="input-wrapper">
@@ -57,6 +58,22 @@
                     </div>
                     @error('password_confirmation') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
+                  @if($mid != '')
+                  <div class="rowspan">
+                        <div class="btn-wrapper">
+                          <!-- * Upload Button -->
+                          <button type="button" wire:click="closeUpdatePassword" class="button">Cancel</button>
+                        </div>
+                  </div>
+                  @endif
+                  @else
+                  <div class="rowspan">
+                        <div class="btn-wrapper">
+                          <!-- * Upload Button -->
+                          <button type="button" wire:click="changeUpdatePassword" class="button">update password</button>
+                        </div>
+                  </div>
+                  @endif
 
 
                   <div class="rowspan">
@@ -142,18 +159,18 @@
                       <div class="colspan">
                         <!-- * Upload Image -->
                         <div class="input-wrapper">
-                          <input
-                            type="image"
-                            src="{{ URL::to('/') }}/assets/icons/upload-image.svg"
-                            alt="upload-image"
-                          />
+                          <!-- <input type="image"  style="width: 219px; height: 215px;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" /> -->
+                          @if(!isset($profile))                      
+                            <img type="image" style="width: 219px; height: 215px;" src="{{ url('storage/user_profile/'.$profilePath) }}" alt="upload-image" />
+                          @else                          
+                            <img type="image" style="width: 219px; height: 215px;" src="{{ $profile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
+                          @endif    
                         </div>
 
                         <!-- * Button Wrapper -->
                         <div class="btn-wrapper">
                           <!-- * Upload Button -->
-                          <button type="button" class="button" submit="">Upload Image</button>
-
+                          <input type="file" wire:model="profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                           <!-- * Update Button -->
                           <button type="button" class="button" wire:click="register">Update</button>
 
