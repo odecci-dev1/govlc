@@ -220,335 +220,147 @@
                 <div class="ur-con-1">
                   <!-- * Table Container -->
                   <div class="table-container">
-                    <!-- * User Restrictions Table -->
                     <table>
-
-                      <!-- * Table Header -->
                       <tr>
-
-                        <!-- * Maintenance (Checkbox)-->
-                        <th class="th-name">
-                          <div class="flex-data">
-                              <input
-                              type="checkbox"
-                              class="checkbox"
-                              wire:model="maintenanace"  
-                              value="1"                         
-                              onchange="checkAll(this)"
-                            />
-                            <span>Maintenance</span>
-                          </div>
-                        </th>
-
-                        <!-- * Collection (Checkbox)-->
-                        <th class="th-name">
-                          <div class="flex-data">
-                              <input
-                              type="checkbox"
-                              class="checkbox"
-                              wire:model="collection"      
-                              value="1"                   
-                              onchange="checkAll(this)"
-                            />
-                            <span>Collection</span>
-                          </div>
-                        </th>
-
-                        <!-- * Transactions (Checkbox)-->
-                        <th class="th-name">
-                          <div class="flex-data">
-                            <input
-                            type="checkbox"
-                            class="checkbox"
-                            wire:model="transactions"  
-                            value="1"                       
-                            onchange="checkAll(this)"
-                          />
-                          <span>Transactions</span>
-                          </div>
-                        </th>
-
-                        <!-- * Reports (Checkbox)-->
-                        <th class="th-name">
-                          <div class="flex-data">
-                              <input
-                              type="checkbox"
-                              class="checkbox"
-                              wire:model="reports"       
-                              value="1"                  
-                              onchange="checkAll(this)"
-                            />
-                            <span>Reports</span>
-                          </div>
-                        </th>
-
+                        <td>
+                          <table>
+                            <tr>
+                              <td>
+                                <div class="flex-data">
+                                    <input
+                                    type="checkbox"
+                                    class="checkbox"
+                                    wire:model="maintenanace"  
+                                    value="1"                         
+                                    onchange="checkAll(this)"
+                                  />
+                                  <span>Maintenance</span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                @php
+                                  $maintenancemdl = $modulelist->where('module_category', '1')->sortBy('module_name');;
+                                @endphp
+                                @if( $maintenancemdl )
+                                  @foreach($maintenancemdl as $maintenancemdl)
+                                  <div class="flex-data" style="margin-top: 20px;">
+                                    <input type="checkbox" wire:model="modules" class="checkbox" value="{{ $maintenancemdl['module_code'] }}" id="chkmdl{{ $maintenancemdl['module_code'] }}"/>
+                                    <label for="chkmdl{{ $maintenancemdl['module_code'] }}">{{ $maintenancemdl['module_name'] }}</label>
+                                  </div>
+                                  @endforeach
+                                @endif
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td>
+                          <!-- table -->
+                          <table>
+                            <tr>
+                              <td>
+                                <div class="flex-data">
+                                    <input
+                                    type="checkbox"
+                                    class="checkbox"
+                                    wire:model="collection"  
+                                    value="1"                         
+                                    onchange="checkAll(this)"
+                                  />
+                                  <span>Collection</span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                @php
+                                  $maintenancemdl = $modulelist->where('module_category', '2')->sortBy('module_name');;
+                                @endphp
+                                @if( $maintenancemdl )
+                                  @foreach($maintenancemdl as $maintenancemdl)
+                                  <div class="flex-data" style="margin-top: 20px;">
+                                    <input type="checkbox" wire:model="modules" class="checkbox" value="{{ $maintenancemdl['module_code'] }}" id="chkmdl{{ $maintenancemdl['module_code'] }}"/>
+                                    <label for="chkmdl{{ $maintenancemdl['module_code'] }}">{{ $maintenancemdl['module_name'] }}</label>
+                                  </div>
+                                  @endforeach
+                                @endif
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- table -->
+                        </td>
+                        <td>
+                          <!-- table -->
+                          <table>
+                            <tr>
+                              <td>
+                                <div class="flex-data">
+                                    <input
+                                    type="checkbox"
+                                    class="checkbox"
+                                    wire:model="transactions"  
+                                    value="1"                         
+                                    onchange="checkAll(this)"
+                                  />
+                                  <span>Transactions</span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                @php
+                                  $maintenancemdl = $modulelist->where('module_category', '3')->sortBy('module_name');;
+                                @endphp
+                                @if( $maintenancemdl )
+                                  @foreach($maintenancemdl as $maintenancemdl)
+                                  <div class="flex-data" style="margin-top: 20px;">
+                                    <input type="checkbox" wire:model="modules" class="checkbox" value="{{ $maintenancemdl['module_code'] }}" id="chkmdl{{ $maintenancemdl['module_code'] }}"/>
+                                    <label for="chkmdl{{ $maintenancemdl['module_code'] }}">{{ $maintenancemdl['module_name'] }}</label>
+                                  </div>
+                                  @endforeach
+                                @endif
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- table -->
+                        </td>
+                        <td>
+                          <!-- table -->
+                          <table>
+                            <tr>
+                              <td>
+                                <div class="flex-data">
+                                    <input
+                                    type="checkbox"
+                                    class="checkbox"
+                                    wire:model="reports"  
+                                    value="1"                         
+                                    onchange="checkAll(this)"
+                                  />
+                                  <span>Reports</span>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                @php
+                                  $maintenancemdl = $modulelist->where('module_category', '4')->sortBy('module_name');;
+                                @endphp
+                                @if( $maintenancemdl )
+                                  @foreach($maintenancemdl as $maintenancemdl)
+                                  <div class="flex-data" style="margin-top: 20px;">
+                                    <input type="checkbox" wire:model="modules" class="checkbox" value="{{ $maintenancemdl['module_code'] }}" id="chkmdl{{ $maintenancemdl['module_code'] }}"/>
+                                    <label for="chkmdl{{ $maintenancemdl['module_code'] }}">{{ $maintenancemdl['module_name'] }}</label>
+                                  </div>
+                                  @endforeach
+                                @endif
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- table -->
+                        </td>                       
                       </tr>
-
-                      <!-- * Table Body -->
-                      <!-- * URRes 1 -->
-                      <tr>
-
-                        <!-- * Field Officer (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              wire:model="maintenance."
-                            />
-                            <span>Field Officer</span>
-                          </div>
-                        </td>
-
-                        <!-- * Areas (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Areas</span>
-                          </div>
-                        </td>
-
-                        <!-- * Applications (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Applications</span>
-                          </div>
-                        </td>
-
-                        <!-- * Outstanding Reports (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Outstanding Reports</span>
-                          </div>
-                        </td>
-     
-                      </tr>
-
-                      <!-- * URRes 2 -->
-                      <tr>
-
-                        <!-- * Field Area (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Field Area</span>
-                          </div>
-                        </td>
-
-                        <!-- * Collection (Checkbox) -->
-                        <td class="empty-cell">
-                        </td>
-
-                        <!-- * Credit Investigation (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Credit Investigation</span>
-                          </div>
-                        </td>
-
-                        <!-- * Custom Report 1 (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Custom Report 1</span>
-                          </div>
-                        </td>
-     
-                      </tr>
-
-                      <!-- * URRes 3 -->
-                      <tr>
-
-                        <!-- * Loan Types (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Loan Types</span>
-                          </div>
-                        </td>
-
-                        <!-- * Collection (Checkbox) -->
-                        <td class="empty-cell">
-                        </td>
-
-                        <!-- * Remittance (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Remittance</span>
-                          </div>
-                        </td>
-
-                        <!-- * Custom Report 2 (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Custom Report 2</span>
-                          </div>
-                        </td>
-     
-                      </tr>
-
-                      <!-- * URRes 4 -->
-                      <tr>
-
-                        <!-- * Holidays (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Holidays</span>
-                          </div>
-                        </td>
-
-                        <!-- * Collection (Checkbox) -->
-                        <td class="empty-cell">
-                        </td>
-
-                        <!-- * Approval (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Approval</span>
-                          </div>
-                        </td>
-
-                        <!-- * Custom Report 3 (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Custom Report 3</span>
-                          </div>
-                        </td>
-     
-                      </tr>
-
-                      <!-- * URRes 5 -->                      
-                      <tr>
-
-                        <td class="empty-cell">
-                        </td>
-
-                        <td class="empty-cell">
-                        </td>
-
-                        <!-- * Releasing (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Releasing</span>
-                          </div>
-                        </td>
-
-                        <!-- * Custom Report 4 (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Custom Report 4</span>
-                          </div>
-                        </td>
-     
-                      </tr>
-
-                      <!-- * URRes 6 -->                     
-                      <tr>
-
-                        <td class="empty-cell">
-                        </td>
-
-                        <td class="empty-cell">
-                        </td>
-
-                        <!-- * Loan Calculator (Checkbox) -->
-                        <td>
-                          <div class="flex-data">
-                            <input
-                              type="checkbox"
-                              class="checkbox"
-                              id="checkboxallCheckbox"
-                              onchange="checkAll(this)"
-                            />
-                            <span>Loan Calculator</span>
-                          </div>
-                        </td>
-
-                        <td class="empty-cell">
-                        </td>
-     
-                      </tr>
-
                     </table>
                   </div>
                 </div>

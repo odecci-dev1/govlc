@@ -19,7 +19,11 @@ class UserRegister extends Component
     public $usertype = [];
     public $status;
     public $password_confirmation;
-    public $userid;
+    public $userid = '';
+    public $mid = '';
+
+    public $modules = [];
+    public $modulelist;
 
     public function rules(){                
         $rules = []; 
@@ -28,7 +32,7 @@ class UserRegister extends Component
         $rules['mname'] = 'required';  
         $rules['suffix'] = '';  
         $rules['username'] = 'required'; 
-        $rules['password'] = ['required', 'confirmed'];   
+        $rules['password'] = $this->mid !='' ? '' : ['required', 'confirmed'];   
         $rules['password_confirmation'] = '';   
         $rules['cno'] = '';   
         $rules['usertype'] = 'required';      
@@ -47,34 +51,52 @@ class UserRegister extends Component
 
     
     public function mount($userid = ""){
+        $this->modulelist = collect([]);
         if($userid != ''){
             $this->userid = $userid;
-        }     
-    }
-
-
-    public function render()
-    {
-        if(isset($this->userid)){
-            $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [ 'type' => 'Username', 'values' => $this->userid ]);     
-            $res = $data->json();            
-            $res = $res[0];       
-         
-            $this->username = $res['username'];            
-            $this->fname = $res['fname'];
-            $this->lname = $res['lname'];
-            $this->mname = $res['mname'];         
-            $this->suffix = $res['suffix'];        
-            $this->cno = $res['cno'];          
-            $this->address = $res['address'];          
-            $this->usertype = 1;                               
+            $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/FilterUserInfoByUID', [ 'userID' => $this->userid ]);     
+          
+            $res = $data->json();  
+            if(isset($res[0])){    
+                $res = $res[0];       
+                $this->mid = $res['id'];            
+                $this->username = $res['username'];            
+                $this->fname = $res['fname'];
+                $this->lname = $res['lname'];
+                $this->mname = $res['mname'];         
+                $this->suffix = $res['suffix'];        
+                $this->cno = $res['cno'];          
+                $this->address = $res['address'];          
+                $this->usertype = 1;     
+            }           
+        }           
+        $getmodules = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetModuleList');     
+        $getmodules = $getmodules->json();
+        if($getmodules){
+            foreach($getmodules as $getmodules){
+                $this->modulelist[$getmodules['module_code']] = ['module_code' => $getmodules['module_code'], 'module_name' => $getmodules['module_name'], 'module_category' => $getmodules['module_category']];
+            }
         }
-        return view('livewire.users.user-register');
     }
 
-    public function register(){
+    public function register(){      
         $data = $this->validate();
-        $user = [                    
+
+        $modules = [];
+        if(count($this->modules) > 0){
+            foreach($this->modules as $mdl){
+                $modules[] = [
+                                "id"=> $this->mid == '' ? '0' : $this->mid,
+                                "user_id"=> "string",
+                                "module_code"=> $mdl,
+                                "created_by"=> "ADMIN",
+                                "module_category"=> "string"
+                            ];
+            }
+        }
+        
+        $user = [            
+                    "id"=> $this->mid == '' ? '0' : $this->mid,        
                     "fname"=> $this->fname,
                     "lname"=> $this->lname,
                     "mname"=> $this->mname,
@@ -84,14 +106,33 @@ class UserRegister extends Component
                     "cno"=> $this->cno,
                     "address"=> $this->address,
                     "userTypeID"=> $this->usertype,
-                    "status"=> 1
+                    "status"=> 1,
+                    "usermodule"=> $modules
                 ];
 
 
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUser', $user);  
-        dd($crt);
+        if( $this->mid == '' ){
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUser', $user); 
+            $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetLastUserList');       
+            $getlast =  $getlast->json();
+            return redirect()->to('/user/view/'.$getlast['userId'])->with('message', 'User successfully saved'); 
+        }      
+        else{
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/UpdateUserInfo', $user); 
+            // dd($crt);
+            return redirect()->to('/user/view/'.$this->userid)->with('message', 'User successfully saved'); 
+        }  
+                 
         // $crtmodules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUserModule', $user);         
-        return redirect()->to('/users')->with('message', 'User successfully saved'); 
+
+      
+       
         
+    }
+
+    public function render()
+    {
+       
+        return view('livewire.users.user-register');
     }
 }

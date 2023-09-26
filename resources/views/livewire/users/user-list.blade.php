@@ -123,7 +123,7 @@
                     <!-- * Table View and Trash Button -->
                     <td class="td-btns">
                     <div class="td-btn-wrapper">
-                        <a href="{{ URL::to('/') }}/user/view/{{ $l['username'] }}" class="a-btn-view-2" data-user-view>View</a>
+                        <a href="{{ URL::to('/') }}/user/view/{{ $l['userId'] }}" class="a-btn-view-2" data-user-view>View</a>
                         <button class="a-btn-trash-2">Trash</button>
                     </div>
                     </td>
