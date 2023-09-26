@@ -106,6 +106,15 @@ class UserRegister extends Component
         }        
     }
 
+    public function updatePassword(){
+        $data = $this->validate(['password' => ['required', 'confirmed']]);
+        $user = [            
+            "userId"=> $this->username,
+            "password"=> $this->password      
+        ];
+        $this->updatePassword = 0;
+    }
+
     public function register(){      
         $data = $this->validate();
         $modules = [];

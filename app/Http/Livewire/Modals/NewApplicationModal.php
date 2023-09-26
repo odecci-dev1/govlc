@@ -26,8 +26,11 @@ class NewApplicationModal extends Component
                 [CreateApplication::class], ['type' => 'create', 'naID' => '', 'loanTypeID' => $loanid]
             );
         }
-        else{
-            return redirect()->to('/tranactions/application/create/'.$value);
+        else{          
+            // return redirect()->to('/tranactions/application/create/'.$value);
+            return redirect()->action(
+                [CreateApplication::class], ['type' => 'create', 'naID' => $value, 'loanTypeID' => $loanid]
+            );
         }
        
     }

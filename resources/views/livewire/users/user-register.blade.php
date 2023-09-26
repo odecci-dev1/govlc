@@ -63,6 +63,7 @@
                         <div class="btn-wrapper">
                           <!-- * Upload Button -->
                           <button type="button" wire:click="closeUpdatePassword" class="button">Cancel</button>
+                          <button type="button" wire:click="updatePassword" class="button">Update password</button>
                         </div>
                   </div>
                   @endif
@@ -70,7 +71,7 @@
                   <div class="rowspan">
                         <div class="btn-wrapper">
                           <!-- * Upload Button -->
-                          <button type="button" wire:click="changeUpdatePassword" class="button">update password</button>
+                          <button type="button" wire:click="changeUpdatePassword" class="button">Change password</button>
                         </div>
                   </div>
                   @endif

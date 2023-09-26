@@ -101,7 +101,7 @@
                        
                         @if($memberlist)
                             @foreach($memberlist as $list)
-                            <tr onclick="createIndividualLoan('{{ $list['memId'] }}')">
+                            <tr onclick="createIndividualLoan('{{ $list['memId'] }}', '{{ $loantype }}')">
                             <!-- * Checkbox Opt
                             <td><input type="checkbox" id="checkbox" data-checkbox></td> -->
                                 <td>
@@ -146,8 +146,8 @@
 
     <script>
         document.addEventListener('livewire:load', function () {
-            window.createIndividualLoan = function($cmid){               
-                @this.call('createIndividualLoan', $cmid);
+            window.createIndividualLoan = function($cmid, $loanid){               
+                @this.call('createIndividualLoan', $cmid, $loanid);
             };     
         });
     </script>
