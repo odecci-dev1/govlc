@@ -58,7 +58,7 @@ class CreateApplicationGroup extends Component
                 ];
                        
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Group/SaveGroupList', $data);  
-        dd($data);
+        dd($crt);
     }
 
     public function mount(){  

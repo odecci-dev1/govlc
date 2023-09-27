@@ -18,6 +18,26 @@ class LoginController extends Controller
         $res = $crt->getReasonPhrase();
       
         if($res == 'OK'){
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [ ['column' => 'username', 'values' =>  $request['username']] ]); 
+            $data = $crt->json();
+            $usermodules = [];
+
+            if($data){
+                $data = $data[0];  
+                // dd( $data );              
+                session()->put('auth_usertype', $data['userTypeId']); 
+                session()->put('auth_username', $data['userTypeId']);    
+                session()->put('auth_userid', $data['userId']); 
+                session()->put('auth_id', $data['id']);                                
+                $modules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', ['userID' => $data['userId']]); 
+                $modules = $modules->json();
+                if($modules){
+                    foreach($modules as $mdl){
+                        $usermodules[] = $mdl['module_code'];
+                    }
+                }
+                session()->put('auth_usermodules', $usermodules);
+            }           
             return redirect('/dashboard');
         }
         else{

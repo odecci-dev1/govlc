@@ -339,6 +339,10 @@ class CreateApplication extends Component
         return $messages;        
     }
 
+    public function viewByStatus($status = '7'){
+        $this->member['statusID'] = $status;
+    }
+
     public function store($type = 1){               
         try {                        
             $this->resetValidation();          
@@ -543,7 +547,7 @@ class CreateApplication extends Component
                                   
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-               
+                dd( $crt );
                 $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                 
                 $getlast = $getlast->json();
    
@@ -752,11 +756,12 @@ class CreateApplication extends Component
             $data = [
                         'ldid' => $this->loanDetails['ldid'],
                         'naid' => $this->naID,
-                        'remarks' => isset($this->loanDetails['notes']) ? $this->loanDetails['notes'] : '',
-                        'approvedby' => 'ADMIN',
+                        'note' => isset($this->loanDetails['notes']) ? $this->loanDetails['notes'] : '',
+                        'approvedby' => session()->get('auth_userid'),
                         'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],
                         'approvedLoanAmount' => $this->loanDetails['loanAmount'],
                     ];
+            // dd($data);        
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Approval/ApproveReleasing', $data);          
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully approve for releasing', 'mword'=> 'Success']);
         }
@@ -1039,7 +1044,7 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                //dd($data);
+            
                 $this->searchedmemId =  $data['memId'];
 
                 if($data['applicationStatus'] >= 9){
@@ -1050,7 +1055,22 @@ class CreateApplication extends Component
                     
                     $this->loanDetails['noofnopayment'] = 0; 
                     $this->loanDetails['noofloans'] = 0; 
-                    $this->loanDetails['approvedBy'] = 'ADMIN'; 
+                                        
+                    $this->loanDetails['app_ApprovedBy_1'] = $data['individualLoan'][0]['app_ApprovedBy_1'];
+                    $this->loanDetails['app_ApprovalDate_1'] = $data['individualLoan'][0]['app_ApprovalDate_1'];
+
+                    $userid = isset($data['individualLoan'][0]['app_ApprovedBy_1']) ? $data['individualLoan'][0]['app_ApprovedBy_1'] : '';                
+                    $this->loanDetails['approvedBy']  = 'User not found';
+                    if( $userid != ''){
+                        $getuser = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [['column' => 'userId', 'values' => $userid]]); 
+                        $getuser = $getuser->json();
+                        if($getuser[0]){
+                            $this->loanDetails['approvedBy'] = $getuser[0]['fname'] .' '. $getuser[0]['lname'];
+                        }
+                    }
+                    
+                    
+
                     $this->loanDetails['notes'] = ''; 
                     $this->loanDetails['ldid'] = $data['individualLoan'][0]['ldid'];
                 }

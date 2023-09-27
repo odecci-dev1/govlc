@@ -30,7 +30,7 @@
 
             <!-- * New Application Credit Investigation Level 2 -->
             <div class="line {{ $member['statusID'] >= 8 ? 'active' : '' }}" data-level-2></div>
-            <div class="level {{ $member['statusID'] >= 8 ? 'active' : '' }}" data-level-2>
+            <div wire:click="viewByStatus('8')" class="level {{ $member['statusID'] >= 8 ? 'active' : '' }}" data-level-2>
                 <span>Credit<br>Investigation</span>
             </div>
 
@@ -152,7 +152,7 @@
             <!-- * Loan Amount -->
             <div class="input-wrapper">
                 <span>Loan Amount</span>
-                <input wire:model.lazy="loanDetails.loanAmount" disabled autocomplete="off" type="text" >
+                <input wire:model.lazy="loanDetails.loanAmount" autocomplete="off" type="text" >
             </div>
 
             <!-- * Purpose -->           
@@ -163,9 +163,12 @@
         
             @if($member['statusID'] == 9)      
             <div class="input-wrapper">
-                <p style="font-size:1.5rem;color:darkgoldenrod;">Waiting for Approval...</p>  <!-- This will show if same user is  approved this application-->
-                <p style="font-size:1.5rem;color:green;">Approved By: Jumar 25 mins ago</p>  <!-- this will show to another approving officer-->
-                <button type="button" wire:click="approveForReleasing" class="button">Approve for Releasing</button>
+                @if($loanDetails['app_ApprovedBy_1'] == session()->get('auth_userid'))
+                    <p style="font-size:1.5rem;color:darkgoldenrod;">Waiting for Approval...</p>  <!-- This will show if same user is  approved this application-->
+                @else
+                    <p style="font-size:1.5rem;color:green;">Approved By: Jumar 25 mins ago</p>  <!-- this will show to another approving officer-->
+                    <button type="button" wire:click="approveForReleasing" class="button">Approve for Releasing</button>
+                @endif                
             </div>                  
             @elseif($member['statusID'] == 10)
             <!-- * Approve for Releasing Button -->
@@ -244,9 +247,9 @@
             </div>
             @if(in_array($member['statusID'], [9]))    
             <!-- * Change Loan Payment -->
-            <div class="input-wrapper">
+            <!-- <div class="input-wrapper">
                 <button type="button" class="button">Change Loan Payment</button>
-            </div>
+            </div> -->
             @else
                 <div class="input-wrapper input-wrapper-decline">
                     <button type="button" class="declineButton" data-open-application-decline>Decline</button>
@@ -261,7 +264,7 @@
             <!-- * Approved by: -->
             <div class="input-wrapper">
                 <span>Approved by:</span>
-                <input {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.approvedBy" autocomplete="off" type="text" id="approvedBy" name="approvedBy">
+                <input disabled wire:model.lazy="loanDetails.approvedBy" autocomplete="off" type="text" id="approvedBy" name="approvedBy">
             </div>
 
             <!-- * Notes -->

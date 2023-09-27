@@ -248,12 +248,20 @@
 
                     <!-- * Upload Image -->
                     <div class="input-wrapper" data-upload-image-field-officer-hover-container>
-                        <!-- <img type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" data-field-officer-image-container> -->
-                        @if(isset($officer['profile']))
-                            <input type="image" style="width: 211px; height: 211px;" src="{{ $officer['profile']->temporaryUrl() }}" alt="upload-image">
+               
+                        @if($foid != '')
+                            @if($profileExist == 1)                                                                                  
+                                <img type="image" style="width: 200px; height: 190px;" src="{{ url('storage/officer_profile/'.$officer['profile']) }}" alt="upload-image" />                                               
+                            @else  
+                                <img type="image" style="width: 200px; height: 190px;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                            @endif
                         @else
-                            <img type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" data-field-officer-image-container>
-                        @endif       
+                            @if(isset($officer['profile']))
+                                <img type="image" style="width: 200px; height: 190px;" src="{{ $officer['profile']->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
+                            @else
+                                <img type="image" style="width: 200px; height: 190px;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                            @endif
+                        @endif  
                     </div>
 
                     <!-- * Button Wrapper -->

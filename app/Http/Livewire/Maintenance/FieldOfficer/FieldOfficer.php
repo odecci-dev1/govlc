@@ -15,9 +15,11 @@ class FieldOfficer extends Component
     use WithFileUploads;
     
     public $officer;
-    public $foid;
+    public $foid = '';
     public $idtypes = [];
     public $idtypename = '';
+
+    public $profileExist = 0;
 
     public function rules(){                
         $rules = []; 
@@ -71,28 +73,36 @@ class FieldOfficer extends Component
         return $messages;        
     }
 
+    public function storeProfileImage(){
+        $profilename = '';
+        if(isset($this->officer['profile'])){
+            $time = time();
+            $profilename = 'officer_profile_'.$time;
+            $this->officer['profile']->storeAs('public/officer_profile', $profilename);                               
+        }    
+        return $profilename;
+    }
+
+    public function storeAttachments(){
+        $memattachements = [];
+        if(isset($this->officer['attachments'])){
+            //dd( $this->member['attachments'] );
+            foreach ($this->officer['attachments'] as $attachments) {
+                $time = time();
+                $filename = 'officer_attachments_'.$time.'_'.$attachments->getClientOriginalName();
+                $attachments->storeAs('public/officer_attachments', $filename);   
+                $memattachements[] = [ 'filePath' => $filename ];
+            }
+        }
+        return $memattachements;
+    }
+
+
     public function store(){   
         try {                  
-            $input = $this->validate(); 
-
+            $input = $this->validate();        
             
-            $profilename = '';
-            if(isset($this->officer['profile'])){
-                $time = time();
-                $profilename = 'officer_profile_'.$time;
-                $this->officer['profile']->storeAs('public/officer_profile', $profilename);                               
-            }          
             
-            $memattachements = [];
-            if(isset($this->officer['attachments'])){
-                //dd( $this->member['attachments'] );
-                foreach ($this->officer['attachments'] as $attachments) {
-                    $time = time();
-                    $filename = 'officer_attachments_'.$time.'_'.$attachments->getClientOriginalName();
-                    $attachments->storeAs('public/officer_attachments', $filename);   
-                    $memattachements[] = [ 'fileName' =>  $filename, 'filePath' => $filename ];
-                }
-            }
 
             $data = [
                         "fname"=> $input['officer']['fname'] ??= '',
@@ -115,15 +125,17 @@ class FieldOfficer extends Component
                         "pagIbig"=> $input['officer']['pagIbig'] ??= '',
                         "philHealth"=> $input['officer']['philHealth'] ??= '',
                         "idNum"=> $input['officer']['idNum'] ??= null,
-                        "typeID"=> $input['officer']['typeID'] ??= '',
-                        "profileName"=> $profilename,
-                        "profilePath"=> $profilename,
-                        "uploadFiles"=> $memattachements
+                        "typeID"=> $input['officer']['typeID'] ??= '',                     
+                        "profilePath"=> $this->storeProfileImage(),
+                        "frontID_Path"=> "string",
+                        "backID_Path"=> "string",
+                        "uploadFiles"=> $this->storeAttachments()
                     ]; 
                     
-            // dd($data);        
+          
                     
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/SaveFieldOfficer', $data);  
+            // dd($crt);       
             $get = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/GetLastOfficerList');
             $get = $get->json();
             return redirect()->to('/maintenance/fieldofficer/view/'.$get['foid'])->with('mmessage', 'Field officer successfully saved');    
@@ -137,6 +149,9 @@ class FieldOfficer extends Component
     public function update(){   
         try {                  
             $input = $this->validate(); 
+
+          
+
             $data = [
                         "fname"=> $input['officer']['fname'] ??= '',
                         "lname"=> $input['officer']['lname'] ??= '',
@@ -154,13 +169,16 @@ class FieldOfficer extends Component
                         "city"=> $input['officer']['city'] ??= '',
                         "region"=> $input['officer']['region'] ??= '',
                         "country"=> $input['officer']['country'] ??= '',
+                        "foid" => $this->foid,
                         "sss"=> $input['officer']['sss'] ??= '',
                         "pagIbig"=> $input['officer']['pagIbig'] ??= '',
                         "philHealth"=> $input['officer']['philHealth'] ??= '',
                         "idNum"=> $input['officer']['idNum'] ??= null,
                         "typeID"=> $input['officer']['typeID'] ??= '',
-                        "files" => [],
-                        "foid" => $this->foid,
+                        "profilePath"=> $this->storeProfileImage(),
+                        "frontID_Path"=> "string",
+                        "backID_Path"=> "string",
+                        "uploadFiles"=> $this->storeAttachments(),                       
                     ];   
                       
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/UpdateFieldOfficer', $data);            
@@ -195,7 +213,7 @@ class FieldOfficer extends Component
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFOID', [ 'foid' => $this->foid ]);     
             $res = $data->json();
             $res = $res[0];   
-       
+            // dd( $res);
             $this->officer['fname'] =  $res['fname'];
             $this->officer['mname'] =  $res['mname'];
             $this->officer['lname'] =  $res['lname'];
@@ -218,7 +236,14 @@ class FieldOfficer extends Component
             $this->officer['pagIbig'] =  $res['pagIbig'];
             $this->officer['philHealth'] =  $res['philHealth'];
             $this->officer['idNum'] =  $res['idNum'];
-            $this->officer['typeID'] =  $res['typeID'];  
+            $this->officer['typeID'] =  $res['typeID']; 
+
+            $this->officer['profile'] = $res['profilePath'];
+            
+            if (file_exists(public_path('storage/officer_profile/'.($this->officer['profile'] == '' ? 'xxxxxxxxxxxxxxxxxxxx' : $this->officer['profile'])))){
+                $this->profileExist = 1;                   
+            }
+
             $idtypename = isset($this->idtypes[$res['typeID']]) ? $this->idtypes[$res['typeID']] : ''; 
             if( $idtypename != '' ){   
                 $this->getIdTypeName( $idtypename['type'] );
