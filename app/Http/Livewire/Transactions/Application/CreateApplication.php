@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Transactions\Application;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
-
 use App\Traits\Common;
 use Symfony\Component\HttpFoundation\Request;
 use Livewire\Component;
@@ -442,7 +441,8 @@ class CreateApplication extends Component
                     $memattachements[] = [ 'fileName' =>  $filename, 'filePath' => $filename ];
                 }
             }
-     
+           
+
             $data = [[          "fname"=> $input['member']['fname'] ??= '',
                                 "lname"=> $input['member']['lname'] ??= '',
                                 "mname"=> $input['member']['mname'] ??= '',
@@ -530,19 +530,25 @@ class CreateApplication extends Component
                                 "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
                                 "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
                                 "remarks"=> '',
+                                "applicationStatus" => $type == 1 ? 7 : 8,
                                 "profileName"=> $profilename,
                                 "profileFilePath"=> $profilename,
-                                "requirementsFile"=> $memattachements,
-                                "applicationStatus" => $type == 1 ? 7 : 8,
                                 "co_ProfileName"=> "string",
                                 "co_ProfileFilePath"=> "string",
-                                "co_RequirementsFile"=> [
+                                "requirementsFile"=> $memattachements,                                                                                   
+                                  "signatureUpload"=> [
                                     [
                                       "fileName"=> "string",
                                       "filePath"=> "string"
                                     ]
                                   ],
-                                  "signatureUpload"=> [
+                                  "co_RequirementsFile"=> [
+                                    [
+                                      "fileName"=> "string",
+                                      "filePath"=> "string"
+                                    ]
+                                  ],
+                                  "co_SignatureUpload"=> [
                                     [
                                       "fileName"=> "string",
                                       "filePath"=> "string"
@@ -552,11 +558,11 @@ class CreateApplication extends Component
                     ]];
       
                     // $extension = $request->file('filename')->getClientOriginalExtension();
-            dd($data);                      
+                    //dd($data);                      
             //dito
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                //dd( $crt );
+                dd( $crt );
                 $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                 
                 $getlast = $getlast->json();
    
