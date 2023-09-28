@@ -72,8 +72,8 @@ class NewApplicationModal extends Component
     public function render()
     {
         $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => $this->newappmodelkeyword]);       
-        $this->memberlist = $data->json();       
-        
+        $this->memberlist = $data->json();  
+        // dd($data);             
         return view('livewire.modals.new-application-modal');
     }
 }

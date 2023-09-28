@@ -78,6 +78,7 @@ class CreateApplication extends Component
         $rules['member.otherSOC'] = 'required';
         $rules['member.bO_Status'] = 'required';
         $rules['member.companyName'] = 'required';
+        $rules['member.companyAddress'] = 'required';
         $rules['member.emp_Status'] = 'required';
         $rules['member.f_Fname'] = 'required';
         $rules['member.f_Lname'] = 'required';
@@ -94,6 +95,8 @@ class CreateApplication extends Component
         $rules['member.loanAmount'] = 'required';
         $rules['member.termsOfPayment'] = 'required';
         $rules['member.purpose'] = 'required';
+        $rules['member.profile'] = 'required';  
+        $rules['member.attachments'] = 'required';  
 
         $rules['comaker.co_Fname'] = 'required';
         $rules['comaker.co_Lname'] = 'required';
@@ -228,6 +231,7 @@ class CreateApplication extends Component
         $messages['member.otherSOC.required'] = 'Enter other source of income';
         $messages['member.bO_Status.required'] = 'Enter business status';
         $messages['member.companyName.required'] = 'Enter company name';
+        $messages['member.companyAddress.required'] = 'Enter company address';
         $messages['member.emp_Status.required'] = 'Enter employment status';
         $messages['member.f_Fname.required'] = 'Enter first name';
         $messages['member.f_Lname.required'] = 'Enter last name';
@@ -242,6 +246,9 @@ class CreateApplication extends Component
         $messages['member.loanAmount.required'] = 'Enter loan amount';
         $messages['member.termsOfPayment.required'] = 'Enter terms of payment';
         $messages['member.purpose.required'] = 'Enter purpose of loan';
+        $messages['member.profile.required'] = 'Please insert picture of borrower';
+        $messages['member.attachments.required'] = 'Please include at least one documents referring to borrower';
+
         $messages['comaker.co_Fname.required'] = 'Enter first name';
         $messages['comaker.co_Lname.required'] = 'Enter last name';
         $messages['comaker.co_Mname.required'] = 'Enter middle name';
@@ -469,6 +476,7 @@ class CreateApplication extends Component
                                 "otherSOC"=> $input['member']['otherSOC'] ??= '',
                                 "bO_Status"=> $input['member']['bO_Status'] ??= '0',
                                 "companyName"=> $input['member']['companyName'] ??= '',
+                                "companyAddress"=> $input['member']['companyAddress'] ??= '',
                                 "emp_Status"=> $input['member']['emp_Status'] ??= '0',
                                 "f_Fname"=> $input['member']['f_Fname'] ??= '',
                                 "f_Lname"=> $input['member']['f_Lname'] ??= '',
@@ -540,14 +548,15 @@ class CreateApplication extends Component
                                       "filePath"=> "string"
                                     ]
                                   ],
-                                  "userId"=> "ADMIN"
+                                  "userId"=> session()->get('auth_userid')
                     ]];
       
                     // $extension = $request->file('filename')->getClientOriginalExtension();
-                                  
+            dd($data);                      
+            //dito
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                dd( $crt );
+                //dd( $crt );
                 $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                 
                 $getlast = $getlast->json();
    
@@ -633,6 +642,24 @@ class CreateApplication extends Component
                 }
             }
             $bdate = date('Y-m-d', strtotime($input['member']['dob']));
+
+            $profilename = '';
+            if(isset($this->member['profile'])){
+                $time = time();
+                $profilename = 'members_profile_'.$time;
+                $this->member['profile']->storeAs('public/members_profile', $profilename);                   
+            }          
+            
+            $memattachements = [];
+            if(isset($this->member['attachments'])){        
+                foreach ($this->member['attachments'] as $attachments) {
+                    $time = time();
+                    $filename = 'members_attachments_'.$time.'_'.$attachments->getClientOriginalName();
+                    $attachments->storeAs('public/members_attachments', $filename);   
+                    $memattachements[] = [ 'fileName' =>  $filename, 'filePath' => $filename ];
+                }
+            }
+
             //dd($input['member']['house_Stats']);
             $data = [
                         [
@@ -669,6 +696,7 @@ class CreateApplication extends Component
                             "otherSOC"=> $input['member']['otherSOC'] ??= '',
                             "bO_Status"=> $input['member']['bO_Status'] ??= '0',
                             "companyName"=> $input['member']['companyName'] ??= '',
+                            "companyAddress"=> $input['member']['companyAddress'] ??= '',
                             "emp_Status"=> $input['member']['emp_Status'] ??= '0',
                             "f_Fname"=> $input['member']['f_Fname'] ??= '',
                             "f_Lname"=> $input['member']['f_Lname'] ??= '',
@@ -722,13 +750,32 @@ class CreateApplication extends Component
                             "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
                             "remarks"=> '',
                             "applicationStatus" => $type == 1 ? 7 : 8,
+                            "profileName"=> $profilename,
+                            "profileFilePath"=> $profilename,
+                            "requirementsFile"=> $memattachements,
+                            "applicationStatus" => $type == 1 ? 7 : 8,
+                            "co_ProfileName"=> "string",
+                            "co_ProfileFilePath"=> "string",
+                            "co_RequirementsFile"=> [
+                                    [
+                                    "fileName"=> "string",
+                                    "filePath"=> "string"
+                                    ]
+                                ],
+                                "signatureUpload"=> [
+                                    [
+                                    "fileName"=> "string",
+                                    "filePath"=> "string"
+                                    ]
+                                ],
+                            "userId"=> session()->get('auth_userid')
                         ]
                     ];
                                                            
                     // $extension = $request->file('filename')->getClientOriginalExtension();
                  
                     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);  
-                    return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully updated', 'mword'=> 'Success']);
+                    return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> $type == 1 ? 'Application successfully updated' : 'Application successfully submited for CI', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
             throw $e;            
@@ -937,27 +984,47 @@ class CreateApplication extends Component
                 if($request->naID != ''){                        
                     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'MemId', 'values' => $request->naID]]);                 
                     $resdata = $value->json();                          
-                    $data =  $resdata[0];      
+                    $data =  $resdata[0];  
 
-                    $this->member['fname'] = $data['fname'];  
-                    $this->member['lname'] = $data['lname'];
-                    $this->member['mname'] = $data['mname'];
-                    $this->member['suffix'] = $data['suffix']; 
-                    $this->member['age'] = $data['age']; 
-                    $this->member['barangay'] = $data['barangay'];  
-                    $this->member['city'] = $data['city']; 
-                    $this->member['civil_Status'] = $data['civil_Status'];  
-                    $this->member['cno'] = $data['cno']; 
-                    $this->member['country'] = $data['country']; 
-                    $this->member['dob'] = date('m/d/Y', strtotime($data['dob']));
-                    $this->member['emailAddress'] = $data['emailAddress']; 
-                    $this->member['gender'] = $data['gender'];
-                    $this->member['houseNo'] = $data['houseNo'];
-                    $this->member['house_Stats'] = $data['house_Stats']; 
-                    $this->member['pob'] = $data['pob'];
-                    $this->member['province'] = $data['province']; 
-                    $this->member['yearsStay'] = $data['yearsStay'];
-                    $this->member['zipCode'] = $data['zipCode'];
+                    // $this->member['fname'] = $data['fname'];  
+                    // $this->member['lname'] = $data['lname'];
+                    // $this->member['mname'] = $data['mname'];
+                    // $this->member['suffix'] = $data['suffix']; 
+                    // $this->member['age'] = $data['age']; 
+                    // $this->member['barangay'] = $data['barangay'];  
+                    // $this->member['city'] = $data['city']; 
+                    // $this->member['civil_Status'] = $data['civil_Status'];  
+                    // $this->member['cno'] = $data['cno']; 
+                    // $this->member['country'] = $data['country']; 
+                    // $this->member['dob'] = date('m/d/Y', strtotime($data['dob']));
+                    // $this->member['emailAddress'] = $data['emailAddress']; 
+                    // $this->member['gender'] = $data['gender'];
+                    // $this->member['houseNo'] = $data['houseNo'];
+                    // $this->member['house_Stats'] = $data['house_Stats']; 
+                    // $this->member['pob'] = $data['pob'];
+                    // $this->member['province'] = $data['province']; 
+                    // $this->member['yearsStay'] = $data['yearsStay'];
+                    // $this->member['zipCode'] = $data['zipCode'];
+
+                    $this->member['fname'] = '1Jumar';  
+                    $this->member['lname'] = '1Cave';
+                    $this->member['mname'] = '1Badajos';
+                    $this->member['suffix'] = ''; 
+                    $this->member['age'] = '20'; 
+                    $this->member['barangay'] = 'Rivera';  
+                    $this->member['city'] = 'San Juan'; 
+                    $this->member['civil_Status'] = 'Married';  
+                    $this->member['cno'] = '02233666666'; 
+                    $this->member['country'] = 'Philippines'; 
+                    $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
+                    $this->member['emailAddress'] = 'test@gmail.com'; 
+                    $this->member['gender'] = 'Male';
+                    $this->member['houseNo'] = 'No. 9 GB';
+                    $this->member['house_Stats'] = '2'; 
+                    $this->member['pob'] = 'Bani, Pangasinan';
+                    $this->member['province'] = 'NCR'; 
+                    $this->member['yearsStay'] = '5';
+                    $this->member['zipCode'] = '';     
                 }
                 else{
                     $this->member['fname'] = '1Jumar';  
@@ -991,6 +1058,7 @@ class CreateApplication extends Component
                 $this->member['otherSOC'] = 'Freelancer'; 
                 $this->member['bO_Status'] = '1'; 
                 $this->member['companyName'] = 'SOEN'; 
+                $this->member['companyAddress'] = 'ORTIGAS'; 
                 $this->member['emp_Status'] = '1'; 
                 $this->member['f_Fname'] = 'Jezz'; 
                 $this->member['f_Lname'] = 'Eurolfan'; 
@@ -1044,7 +1112,8 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-            
+                dd($data);    
+                //dito
                 $this->searchedmemId =  $data['memId'];
 
                 if($data['applicationStatus'] >= 9){
@@ -1068,9 +1137,7 @@ class CreateApplication extends Component
                             $this->loanDetails['approvedBy'] = $getuser[0]['fname'] .' '. $getuser[0]['lname'];
                         }
                     }
-                    
-                    
-
+                                        
                     $this->loanDetails['notes'] = ''; 
                     $this->loanDetails['ldid'] = $data['individualLoan'][0]['ldid'];
                 }
@@ -1079,17 +1146,17 @@ class CreateApplication extends Component
                 $this->member['lname'] = $data['lname'];
                 $this->member['mname'] = $data['mname'];
                 $this->member['suffix'] = $data['suffix']; 
-                $this->member['age'] = $data['age']; 
+                $this->member['age'] = $data['age'];         
                 $this->member['barangay'] = $data['barangay'];  
                 $this->member['city'] = $data['city']; 
                 $this->member['civil_Status'] = $data['civil_Status'];  
                 $this->member['cno'] = $data['cno']; 
                 $this->member['country'] = $data['country']; 
-                $this->member['dob'] = date('m/d/Y', strtotime($data['dob']));
+                $this->member['dob'] = date('Y-m-d', strtotime($data['dob']));
                 $this->member['emailAddress'] = $data['emailAddress']; 
                 $this->member['gender'] = $data['gender'];
                 $this->member['houseNo'] = $data['houseNo'];
-                $this->member['house_Stats'] = $data['houseStatusId']; 
+                $this->member['house_Stats'] = $data['houseStatusId'];          
                 $this->member['pob'] = $data['pob'];
                 $this->member['province'] = $data['province']; 
                 $this->member['yearsStay'] = $data['yearsStay'];
@@ -1104,8 +1171,10 @@ class CreateApplication extends Component
                 $this->member['yos'] = $data['yos']; 
                 $this->member['monthlySalary'] = $data['monthlySalary']; 
                 $this->member['otherSOC'] = $data['otherSOC']; 
-                $this->member['bO_Status'] = $data['bO_Status']; 
-                $this->member['companyName'] = $data['companyName']; 
+                $this->member['bO_Status'] = $data['bO_Status'];
+                // dd($data['bO_Status']); dito               
+                $this->member['companyName'] = $data['companyName'];
+                $this->member['companyAddress'] = $data['companyAddress'];  
                 $this->member['emp_Status'] = $data['emp_Status']; 
                 $this->member['f_Fname'] = $data['f_Fname']; 
                 $this->member['f_Lname'] = $data['f_Lname']; 
@@ -1122,7 +1191,7 @@ class CreateApplication extends Component
                 $this->member['loanAmount'] = isset($data['individualLoan'][0]['loanAmount']) ? $data['individualLoan'][0]['loanAmount'] : 0; //$data['loanAmount'];  cant find in api
                 $this->member['termsOfPayment'] = $data['termsOfPayment']; 
                 $this->member['purpose'] = $data['purpose']; 
-        
+           
                 $this->comaker['co_Fname'] = $data['co_Fname']; 
                 $this->comaker['co_Lname'] = $data['co_Lname']; 
                 $this->comaker['co_Mname'] = $data['co_Mname']; 
@@ -1150,7 +1219,7 @@ class CreateApplication extends Component
                 $this->comaker['co_OtherSOC'] = $data['co_OtherSOC']; 
                 $this->comaker['co_BO_Status'] = $data['co_BO_Status'] == true ? 1 : 0; 
                 $this->comaker['co_CompanyName'] = $data['co_CompanyName']; 
-                $this->comaker['co_CompanyID'] = ''; 
+                $this->comaker['co_CompanyID'] = $data['co_CompanyAddress']; 
                 $this->comaker['co_Emp_Status'] = $data['co_Emp_Status']; 
                 $this->comaker['remarks'] = '';    
                 
@@ -1171,6 +1240,7 @@ class CreateApplication extends Component
                     }                   
                 }
                 //dito
+
                 if($this->member['statusID'] >= 9){
                     $top = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => 'LT-01013']); 
                     //$this->loanDetails['ldid']

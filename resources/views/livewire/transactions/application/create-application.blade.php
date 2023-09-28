@@ -49,15 +49,15 @@
         </div>
     </div>
 
-
+    @if($errors->any())
+    <div class="na-requirements-sec">
+        @foreach ($errors->all() as $error)
+            <span class="text-required"><li>{{ $error }}</li></span>
+        @endforeach       
+    </div>
+    @endif
     @if($member['statusID'] == 8)
-                <div class="na-requirements-sec">
-                    <h5>
-                        Missing Requirements:
-                        <span>Proof of Income,</span>
-                        <span>Barangay ID</span>
-                    </h5>
-                </div>
+                
 
                 <!-- * New Application Notes and Remarks Section -->
                 <div class="na-notes-remarks-sec">
@@ -712,14 +712,14 @@
                             <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
                             @endif                                                       
                         </div>
-                        @error('member.profile') <span class="error">{{ $message }}</span> @enderror
+                        @error('member.profile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <div class="btn-wrapper">
-                                        <!-- * Upload Button -->
-                                        <input type="file"  wire:model="member.profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
-                                        <!-- * Attach Button -->
-                                        <input type="file" wire:model="member.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
+                            <!-- * Upload Button -->
+                            <input type="file"  wire:model="member.profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                            <!-- * Attach Button -->
+                            <input type="file" wire:model="member.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
                         </div>
-
+                        @error('member.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <div class="file-wrapper" data-attach-file-container>
                             @if(isset($member['attachments']))
                                 @foreach($member['attachments'] as $attachments)                              
@@ -986,8 +986,8 @@
                 <!-- * Company Address -->
                 <div class="input-wrapper">
                     <span>Company Address</span>
-                    <input wire:model.lazy="member.companyID" type="text">
-                    @error('member.companyID') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="member.companyAddress" type="text">
+                    @error('member.companyAddress') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Monthly Salary -->
@@ -1020,7 +1020,7 @@
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
-                            <input  wire:model="member.bO_Status" autocomplete="off" type="radio" name="mem_bO_Status" value="0">
+                            <input  wire:model="member.bO_Status" autocomplete="off" type="radio" name="mem_bO_Status" value="2">
                             <span>No</span>
                         </div>
 
