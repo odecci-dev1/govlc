@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
 use App\Traits\Common;
+use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Request;
 use Livewire\Component;
 use Symfony\Component\Console\Input\Input;
@@ -44,6 +45,9 @@ class CreateApplication extends Component
 
     public $bank = [];
     public $inpbank;
+
+    public $emplist = [];
+    public $searchempkeyword = '';
     
     public function rules(){                
         $rules = [];      
@@ -273,6 +277,11 @@ class CreateApplication extends Component
         $messages['comaker.co_CompanyName.required'] = 'Enter company name';    
         $messages['comaker.co_CompanyID.required'] = 'Enter company address';    
         $messages['comaker.co_Emp_Status.required'] = 'Enter employement status';   
+
+        $messages['loanDetails.loanAmount.required'] = 'Please enter loan amount'; 
+        $messages['loanDetails.loanAmount.min'] = 'Loan amount must be greater that 0';
+        $messages['loanDetails.loanAmount.numeric'] = 'Please enter a valid number';
+        $messages['loanDetails.topId.required'] = 'Please select terms'; 
         
         if(isset($this->member['civil_Status'])){
             if($this->member['civil_Status'] == 'Married' || $this->member['civil_Status']=='Single'){
@@ -554,7 +563,8 @@ class CreateApplication extends Component
                                       "filePath"=> "string"
                                     ]
                                   ],
-                                  "userId"=> session()->get('auth_userid')
+                                  "userId"=> session()->get('auth_userid'),
+                                  "naid"=> ""
                     ]];
       
                     // $extension = $request->file('filename')->getClientOriginalExtension();
@@ -562,7 +572,7 @@ class CreateApplication extends Component
             //dito
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                dd( $crt );
+                //dd( $crt );
                 $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                 
                 $getlast = $getlast->json();
    
@@ -793,7 +803,7 @@ class CreateApplication extends Component
             $data = [
                         'naid' => $this->naID,
                         'remarks' => isset($this->loanDetails['remarks']) ? $this->loanDetails['remarks'] : '',
-                        'userId' => 'ADMIN',
+                        'userId' => session()->get('auth_userid'),
                     ];
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Credit/CreditSubmitforApproval', $data);  
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully submited', 'mword'=> 'Success']);
@@ -804,15 +814,24 @@ class CreateApplication extends Component
     }
 
     public function approveForReleasing(){
-        try{
-           
+        try{   
+            $this->validate([
+                                'loanDetails.loanAmount' => ['required', 'numeric', 'min:1'],
+                                'loanDetails.topId' => ['required'],
+                            ]);
+            //dito
             $data = [
                         'ldid' => $this->loanDetails['ldid'],
-                        'naid' => $this->naID,
                         'note' => isset($this->loanDetails['notes']) ? $this->loanDetails['notes'] : '',
                         'approvedby' => session()->get('auth_userid'),
-                        'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],
+                        'naid' => $this->naID,
                         'approvedLoanAmount' => $this->loanDetails['loanAmount'],
+                        'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],
+                        'courier' => '',
+                        'courierName' => '',
+                        'courierCno' => '',
+                        'modeOfRelease' => '',
+                        'modeOfReleaseReference' => '',                        
                     ];
             // dd($data);        
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Approval/ApproveReleasing', $data);          
@@ -824,26 +843,33 @@ class CreateApplication extends Component
     }
 
     public function signForRelease(){
-        try{
-          
+        try{          
+
+            $this->validate([
+                                'loanDetails.modeOfRelease' => ['required'],
+                                'loanDetails.denomination' => ['required'],
+                                'loanDetails.courier' => ['required'],          
+                                'loanDetails.courierclient' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Client' ? ['required'] : '') : '',  
+                                'loanDetails.courieremployee' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Employee' ? ['required'] : '') : '',  
+                                'loanDetails.couriercno' => ['required'],                                             
+                            ]);
+
             $data = [
                         'ldid' => $this->loanDetails['ldid'],
-                        'naid' => $this->naID,
-                        'approvedby' => 'ADMIN',
-                        'topId' => 'TopId-01',
-                        'approvedLoanAmount' => $this->loanDetails['loanAmount'],
                         "note"=> $this->loanDetails['notes'],
+                        'approvedby' => session()->get('auth_userid'),
+                        'naid' => $this->naID,
+                        'approvedLoanAmount' => $this->loanDetails['loanAmount'],                        
+                        'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],                                            
                         "courier"=> $this->loanDetails['courier'],
                         "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
                         "courierCno"=> $this->loanDetails['couriercno'],
-                        "modeOfRelease"=> $this->loanDetails['modeOfRelease'],
-                        "modeOfReleaseReference"=> $this->loanDetails['modeOfRelease'],
-                        "denomination"=> $this->loanDetails['modeOfRelease'] == 'Cash' ? $this->loanDetails['denomination'] : $this->loanDetails['checkNumber'],
-          
+                        "modeOfRelease"=> $this->loanDetails['modeOfRelease'],                       
+                        "modeOfReleaseReference"=> $this->loanDetails['denomination'],          
                     ];
 
-          
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);          
+            // dd($data);        
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);                    
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully signed for releasing', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -853,24 +879,67 @@ class CreateApplication extends Component
 
     public function completeApplication(){
        
-        $data = [
-            'ldid' => $this->loanDetails['ldid'],
-            'naid' => $this->naID,
-            'approvedby' => 'ADMIN',
-            'topId' => 'TopId-01',
-            'approvedLoanAmount' => $this->loanDetails['loanAmount'],
-            "note"=> $this->loanDetails['notes'],
-            "courier"=> $this->loanDetails['courier'],
-            "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
-            "courierCno"=> $this->loanDetails['couriercno'],
-            "modeOfRelease"=> $this->loanDetails['modeOfRelease'],
-            "modeOfReleaseReference"=> $this->loanDetails['modeOfRelease'],
-            "denomination"=> $this->loanDetails['modeOfRelease'] == 'Cash' ? $this->loanDetails['denomination'] : $this->loanDetails['checkNumber'],
+        // $data = [
+        //     'ldid' => $this->loanDetails['ldid'],
+        //     'naid' => $this->naID,
+        //     'approvedby' => session()->get('auth_userid'),
+        //     'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],                                            
+        //     'approvedLoanAmount' => $this->loanDetails['loanAmount'],
+        //     "note"=> $this->loanDetails['notes'],
+        //     "courier"=> $this->loanDetails['courier'],
+        //     "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
+        //     "courierCno"=> $this->loanDetails['couriercno'],
+        //     "modeOfRelease"=> $this->loanDetails['modeOfRelease'],
+        //     "modeOfReleaseReference"=> $this->loanDetails['modeOfRelease'],
+        //     "denomination"=> $this->loanDetails['modeOfRelease'] == 'Cash' ? $this->loanDetails['denomination'] : $this->loanDetails['checkNumber'],
 
-        ];
+        // ];
 
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);          
-        return redirect()->to('tranactions/application/releasing/list')->with(['mmessage'=> 'Application is complete and ready for releasing', 'mword'=> 'Success']);
+        try{          
+
+            $this->validate([
+                                'loanDetails.modeOfRelease' => ['required'],
+                                'loanDetails.denomination' => ['required'],
+                                'loanDetails.courier' => ['required'],          
+                                'loanDetails.courierclient' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Client' ? ['required'] : '') : '',  
+                                'loanDetails.courieremployee' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Employee' ? ['required'] : '') : '',  
+                                'loanDetails.couriercno' => ['required'],                                             
+                            ]);
+
+            $data = [
+                        'ldid' => $this->loanDetails['ldid'],
+                        "note"=> $this->loanDetails['notes'],
+                        'approvedby' => session()->get('auth_userid'),
+                        'naid' => $this->naID,
+                        'approvedLoanAmount' => $this->loanDetails['loanAmount'],                        
+                        'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],                                            
+                        "courier"=> $this->loanDetails['courier'],
+                        "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
+                        "courierCno"=> $this->loanDetails['couriercno'],
+                        "modeOfRelease"=> $this->loanDetails['modeOfRelease'],                       
+                        "modeOfReleaseReference"=> $this->loanDetails['denomination'],          
+                    ];
+      
+           
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ComppleteTransaction', $data);                    
+            dd($crt);       
+            return redirect()->to('tranactions/application/releasing/list')->with(['mmessage'=> 'Application is complete and ready for releasing', 'mword'=> 'Success']);
+        }
+        catch (\Exception $e) {           
+            throw $e;            
+        }
+
+        //$crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);          
+        //return redirect()->to('tranactions/application/releasing/list')->with(['mmessage'=> 'Application is complete and ready for releasing', 'mword'=> 'Success']);
+    }
+
+    public function openSearchEmployee(){              
+        $this->emit('openSearchEmployeeModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
+    }
+
+    public function selectEmployee($empname = ''){
+        $this->loanDetails['courieremployee'] = $empname;
+        $this->emit('closeSearchEmployeeModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
     }
 
     public function getmemberAge(){
@@ -965,8 +1034,18 @@ class CreateApplication extends Component
         $this->membusinfo['aos'] = '';
     }
 
+    public function getLoanTermsname($topid = ''){
+        $termsofPayment = '';
+        $loantypelist = $this->termsOfPaymentList->where('topId', $topid)->first();
+        if($loantypelist){
+            $termsofPayment = $loantypelist['termsofPayment'];
+        }
+        return $termsofPayment;
+    }
+
     public function mount($type = 'create', Request $request){
         $this->type = $type;     
+        $this->termsOfPaymentList = collect([]);
         $this->loanTypeID = $request->loanTypeID;        
         $this->member['civil_Status'] = '';       
         $this->member['emp_Status'] = '';
@@ -1115,18 +1194,20 @@ class CreateApplication extends Component
         }
         else if($this->type == 'view'){
             $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
+            
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                dd($data);    
+                //dd($data);    
                 //dito
                 $this->searchedmemId =  $data['memId'];
 
                 if($data['applicationStatus'] >= 9){
                     $this->loanDetails['loanType'] = isset($data['individualLoan'][0]['loanType']) ? $data['individualLoan'][0]['loanType'] : '';
+                    $this->loanDetails['loanTypeID'] = $data['individualLoan'][0]['loanTypeID'];
                     $this->loanDetails['loanAmount'] = $data['individualLoan'][0]['loanAmount'];
                     $this->loanDetails['purpose'] = $data['purpose'];
-                    $this->loanDetails['terms'] = $data['individualLoan'][0]['terms'];
+                    $this->loanDetails['terms'] = $data['termsOfPayment']; //$data['individualLoan'][0]['terms'];
                     
                     $this->loanDetails['noofnopayment'] = 0; 
                     $this->loanDetails['noofloans'] = 0; 
@@ -1134,19 +1215,35 @@ class CreateApplication extends Component
                     $this->loanDetails['app_ApprovedBy_1'] = $data['individualLoan'][0]['app_ApprovedBy_1'];
                     $this->loanDetails['app_ApprovalDate_1'] = $data['individualLoan'][0]['app_ApprovalDate_1'];
 
-                    $userid = isset($data['individualLoan'][0]['app_ApprovedBy_1']) ? $data['individualLoan'][0]['app_ApprovedBy_1'] : '';                
-                    $this->loanDetails['approvedBy']  = 'User not found';
-                    if( $userid != ''){
-                        $getuser = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [['column' => 'userId', 'values' => $userid]]); 
-                        $getuser = $getuser->json();
-                        if($getuser[0]){
-                            $this->loanDetails['approvedBy'] = $getuser[0]['fname'] .' '. $getuser[0]['lname'];
+                    $this->loanDetails['app_ApprovedBy_1_name'] = $this->getUserName($data['individualLoan'][0]['app_ApprovedBy_1']);
+                    $this->loanDetails['app_ApprovalDate_1_timeint'] = $this->calculateTimeDifference($data['individualLoan'][0]['app_ApprovalDate_1'], Carbon::now());
+                    
+
+                    $ciuserid = isset($data['individualLoan'][0]['cI_ApprovedBy']) ? $data['individualLoan'][0]['cI_ApprovedBy'] : '';                
+                    $this->loanDetails['approvedBy'] = $this->getUserName($ciuserid);                                                           
+                    $this->loanDetails['notes'] = isset($data['individualLoan'][0]['app_Note']) ? $data['individualLoan'][0]['app_Note'] : ''; 
+                    $this->loanDetails['ldid'] = $data['individualLoan'][0]['ldid'];
+                    $this->loanDetails['topId'] = $data['termsOfPayment'];  
+
+                    $this->loanDetails['modeOfRelease'] = $data['individualLoan'][0]['modeOfRelease'];
+                    $this->loanDetails['denomination'] = $data['individualLoan'][0]['modeOfReleaseReference'];
+                    $this->loanDetails['courier'] = $data['individualLoan'][0]['courerier'];
+                    $this->loanDetails['courieremployee'] = $data['individualLoan'][0]['courerierName'];
+                    $this->loanDetails['courierclient'] = $data['individualLoan'][0]['courerierName'];
+                    $this->loanDetails['couriercno'] = $data['individualLoan'][0]['courierCNo'];
+
+                    $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loanDetails['loanTypeID']]);                  
+                    $loanterms = $loanterms->json();
+                    //dd( $loanterms );
+                    if( $loanterms ){
+                        foreach( $loanterms  as  $loanterms ){
+                            $this->termsOfPaymentList[$loanterms['topId']] = ['topId' => $loanterms['topId'],'termsofPayment' => $loanterms['termsofPayment'],'loanTypeId' => $loanterms['loanTypeId']];   
                         }
                     }
-                                        
-                    $this->loanDetails['notes'] = ''; 
-                    $this->loanDetails['ldid'] = $data['individualLoan'][0]['ldid'];
+                                                             
                 }
+                $this->loanDetails['remarks'] = $data['individualLoan'][0]['remarks'];
+                $this->loanDetails['ci_time'] = $this->calculateTimeDifference($data['dateCreated'], Carbon::now());                
             
                 $this->member['fname'] = $data['fname'];  
                 $this->member['lname'] = $data['lname'];
@@ -1177,8 +1274,7 @@ class CreateApplication extends Component
                 $this->member['yos'] = $data['yos']; 
                 $this->member['monthlySalary'] = $data['monthlySalary']; 
                 $this->member['otherSOC'] = $data['otherSOC']; 
-                $this->member['bO_Status'] = $data['bO_Status'];
-                // dd($data['bO_Status']); dito               
+                $this->member['bO_Status'] = $data['bO_Status'];        
                 $this->member['companyName'] = $data['companyName'];
                 $this->member['companyAddress'] = $data['companyAddress'];  
                 $this->member['emp_Status'] = $data['emp_Status']; 
@@ -1196,7 +1292,7 @@ class CreateApplication extends Component
                 $this->member['f_RTTB'] = $data['f_RTTB'];     
                 $this->member['loanAmount'] = isset($data['individualLoan'][0]['loanAmount']) ? $data['individualLoan'][0]['loanAmount'] : 0; //$data['loanAmount'];  cant find in api
                 $this->member['termsOfPayment'] = $data['termsOfPayment']; 
-                $this->member['purpose'] = $data['purpose']; 
+                $this->member['purpose'] = $data['purpose'];                
            
                 $this->comaker['co_Fname'] = $data['co_Fname']; 
                 $this->comaker['co_Lname'] = $data['co_Lname']; 
@@ -1226,8 +1322,7 @@ class CreateApplication extends Component
                 $this->comaker['co_BO_Status'] = $data['co_BO_Status'] == true ? 1 : 0; 
                 $this->comaker['co_CompanyName'] = $data['co_CompanyName']; 
                 $this->comaker['co_CompanyID'] = $data['co_CompanyAddress']; 
-                $this->comaker['co_Emp_Status'] = $data['co_Emp_Status']; 
-                $this->comaker['remarks'] = '';    
+                $this->comaker['co_Emp_Status'] = $data['co_Emp_Status'];                
                 
                 // $this->cntmemchild
                 $child = $data['child'];
@@ -1244,16 +1339,7 @@ class CreateApplication extends Component
                         $this->inpchild['age'.$cntchild] = $mchild['age'];    
                         $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
                     }                   
-                }
-                //dito
-
-                if($this->member['statusID'] >= 9){
-                    $top = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => 'LT-01013']); 
-                    //$this->loanDetails['ldid']
-                    $top = $top->json();
-                    $this->termsOfPaymentList = $top;
-                    // dd($this->termsOfPaymentList);
-                }
+                }      
             }
         }
         else if($this->type == 'add'){
@@ -1370,6 +1456,9 @@ class CreateApplication extends Component
 
     public function render()
     {       
-        return view('livewire.transactions.application.create-application');        
+        $emplist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserListFilter', [ 'page' => 1, 'pageSize' => 50, 'fullname' => $this->searchempkeyword ]);  
+        $this->emplist = $emplist->json();    
+        $getLoanTermsname = $this->getLoanTermsname(isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : '');
+        return view('livewire.transactions.application.create-application', ['getLoanTermsname' => $getLoanTermsname]);        
     }
 }

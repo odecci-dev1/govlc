@@ -114,30 +114,49 @@
 
                     <div class="selected" style="font-weight: bold;" data-option-select10>
                         {{ isset($loanDetails['modeOfRelease']) ? $loanDetails['modeOfRelease'] : '' }}
-                    </div>
-
+                    </div>                    
                 </div>
-
+                @error('loanDetails.modeOfRelease') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Denomination -->
-            @if(isset($loanDetails['modeOfRelease']))
-                @if($loanDetails['modeOfRelease'] == 'Cash')
+            @if(isset($loanDetails['modeOfRelease']))               
                 <div class="input-wrapper" data-toggle-mor-1>
-                    <span>Denomination</span>
+                    @if($loanDetails['modeOfRelease'] == 'Cash')
+                        <span>Denomination</span>
+                    @endif
+                    @if($loanDetails['modeOfRelease'] == 'Check')
+                        <span>Check Number</span>
+                    @endif
                     <input autocomplete="off" wire:model.lazy="loanDetails.denomination" type="text" id="denomination" name="denomination">
-                </div>
-                @endif
-                @if($loanDetails['modeOfRelease'] == 'Check')
-                <!-- * Check Number -->
-                <div class="input-wrapper" data-toggle-mor-2>
-                    <span>Check Number</span>
-                    <input autocomplete="off" wire:model.lazy="loanDetails.checkNumber" type="text" id="checkNumber" name="checkNumber">
-                </div>
-                @endif
+                    @error('loanDetails.denomination') <span class="text-required">{{ $message }}</span> @enderror
+                </div>                                            
             @endif
 
         </div>
+        <script>
+            const selectedOpt10 = document.querySelector('[data-option-select10]');
+
+            if (selectedOpt10) {
+
+                const optionsContainer10 = document.querySelector('[data-option-con10]');
+                const optionsList10 = document.querySelectorAll('[data-option-item10]');
+
+                selectedOpt10.addEventListener("click", () => {
+                    optionsContainer10.classList.toggle("active");
+                });
+
+                optionsList10.forEach(option => {
+                    option.setAttribute('value', option.children[0].value)
+                    option.addEventListener("click", () => {
+                        selectedOpt10.innerHTML = option.querySelector("label").innerHTML;
+                        optionsContainer10.classList.remove("active");
+                        selectedOpt10.setAttribute('value', option.children[0].value);
+                    });
+                });
+            }
+
+        </script>
         @endif
 
         <!-- * Rowspan 2: Loan Type, Loan Amount, Purpose, and Approve for Releasing Button -->
@@ -152,7 +171,9 @@
             <!-- * Loan Amount -->
             <div class="input-wrapper">
                 <span>Loan Amount</span>
-                <input wire:model.lazy="loanDetails.loanAmount" autocomplete="off" type="text" >
+                <input wire:model.lazy="loanDetails.loanAmount"  {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} autocomplete="off" type="text" >
+                @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror
+                <!-- dito -->
             </div>
 
             <!-- * Purpose -->           
@@ -161,15 +182,38 @@
                 <input wire:model.lazy="loanDetails.purpose" disabled autocomplete="off" type="text" >
             </div>
         
-            @if($member['statusID'] == 9)      
-            <div class="input-wrapper">
-                @if($loanDetails['app_ApprovedBy_1'] == session()->get('auth_userid'))
-                    <p style="font-size:1.5rem;color:darkgoldenrod;">Waiting for Approval...</p>  <!-- This will show if same user is  approved this application-->
-                @else
-                    <p style="font-size:1.5rem;color:green;">Approved By: Jumar 25 mins ago</p>  <!-- this will show to another approving officer-->
-                    <button type="button" wire:click="approveForReleasing" class="button">Approve for Releasing</button>
-                @endif                
-            </div>                  
+            @if($member['statusID'] == 9)   
+               
+                    <div class="input-wrapper">   
+                        @if($loanDetails['app_ApprovedBy_1'] != '')             
+                            @if($loanDetails['app_ApprovedBy_1'] == session()->get('auth_userid'))
+                                <p style="font-size:1.5rem;color:darkgoldenrod; text-align: center;">Waiting for Approval...</p>  <!-- This will show if same user is  approved this application-->
+                                <p style="font-size:1.5rem;color:darkgoldenrod; text-align: center;">
+                                    Initial approval last 
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['years'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['years'] }} Years</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['months'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['months'] }} Months</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['days'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['days'] }} Days</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['hours'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['hours'] }} Hours</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['hours'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['minutes'] }} Minutes</span> @endif                                    
+                                    ago
+                                </p>
+                            @else
+                                <p style="font-size:1.5rem;color:green;">Approved By: {{ $loanDetails['app_ApprovedBy_1_name'] }}  </p>                                                                                  
+                                <p style="font-size:1.5rem;color:green;">
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['years'] > 0) <span id="ciTimeWeek">{{ $loanDetails['app_ApprovalDate_1_timeint']['years'] }} Years</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['months'] > 0) <span id="ciTimeWeek">{{ $loanDetails['app_ApprovalDate_1_timeint']['months'] }} Months</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['days'] > 0) <span id="ciTimeDay">{{ $loanDetails['app_ApprovalDate_1_timeint']['days'] }} Days</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['hours'] > 0) <span id="ciTimeHour">{{ $loanDetails['app_ApprovalDate_1_timeint']['hours'] }} Hours</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['hours'] > 0) <span id="ciTimeHour">{{ $loanDetails['app_ApprovalDate_1_timeint']['minutes'] }} Minutes</span> @endif
+                                    ago
+                                </p>  <!-- this will show to another approving officer-->                                                            
+                            @endif          
+                        @endif    
+                        @if($loanDetails['app_ApprovedBy_1'] != session()->get('auth_userid'))
+                            <button type="button" wire:click="approveForReleasing" class="button">Approve for Releasing</button>                                   
+                        @endif                                                      
+                    </div>       
+                            
             @elseif($member['statusID'] == 10)
             <!-- * Approve for Releasing Button -->
             <div class="input-wrapper input-wrapper-release">
@@ -193,14 +237,21 @@
                 <div class="select-box"  style="{{ in_array($member['statusID'], [10, 15]) ? 'pointer-events: none; color: #808080;' : '' }}">
 
                                 <div class="options-container" data-type-opt-con>
+                                    <div class="option" data-type-loan-opt data-individual-loan-link>
 
+                                        <input type="radio" wire:model="loanDetails.topId" class="radio" value="{{ $member['termsOfPayment'] }}" id="topId{{ $member['termsOfPayment'] }}" name="top" />
+                                        <label for="topId{{ $member['termsOfPayment'] }}">
+                                            <h4>{{ $member['termsOfPayment'] }}  <span style="font-weight: normal; color: #737373;">(user input)</span></h4>
+                                        </label>
+
+                                    </div>
                                     @if(isset($termsOfPaymentList))
-                                        @foreach($termsOfPaymentList as $termsOfPaymentList)
+                                        @foreach($termsOfPaymentList as $topList)
                                         <div class="option" data-type-loan-opt data-individual-loan-link>
 
-                                            <input type="radio" wire:model="loanDetails.topId" class="radio" value="{{ $termsOfPaymentList['topId'] }}" id="topId{{ $termsOfPaymentList['topId'] }}" name="top" />
-                                            <label for="topId{{ $termsOfPaymentList['topId'] }}">
-                                                <h4>{{ $termsOfPaymentList['termsofPayment'] }}</h4>
+                                            <input type="radio" wire:model="loanDetails.topId" class="radio" value="{{ $topList['topId'] }}" id="topId{{ $topList['topId'] }}" name="top" />
+                                            <label for="topId{{ $topList['topId'] }}">
+                                                <h4>{{ $topList['termsofPayment'] }}</h4>
                                             </label>
 
                                         </div>
@@ -210,10 +261,11 @@
                                 </div>
                                 
                                 <div class="selected" style="font-weight: bold;" data-type-loan-select>
-                                    {{ isset($this->member['termsOfPayment']) ? $this->member['termsOfPayment'] : '' }}
+                                    {{ $getLoanTermsname != '' ? $getLoanTermsname : $loanDetails['terms'] }}
                                 </div>
 
                 </div>
+                @error('loanDetails.topId') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <script>
@@ -228,7 +280,7 @@
 
             optionsList.forEach(option => {
                 option.addEventListener("click", () => {
-                    selected.innerHTML = option.querySelector("label").innerHTML;
+                    //selected.innerHTML = option.querySelector("label").innerHTML;
                     optionsContainer.classList.remove("active");
                 });
             });  
@@ -263,7 +315,7 @@
 
             <!-- * Approved by: -->
             <div class="input-wrapper">
-                <span>Approved by:</span>
+                <span>Approved by (From CI) :</span>
                 <input disabled wire:model.lazy="loanDetails.approvedBy" autocomplete="off" type="text" id="approvedBy" name="approvedBy">
             </div>
 
@@ -325,7 +377,7 @@
                                     </div>
 
                                 </div>
-
+                                @error('loanDetails.courier') <span class="text-required">{{ $message }}</span> @enderror
                             </div>
                             @if(isset($loanDetails['courier']))
                             <div class="toggle-container">
@@ -338,15 +390,15 @@
                                     <!-- * Primary Search Bar -->
                                     <div class="primary-search-bar">
                                         <div class="row">
-                                            <input wire:model.lazy="loanDetails.courieremployee" type="search" placeholder="Search" autocomplete="off">
-                                            <button>
+                                            <input wire:model.lazy="loanDetails.courieremployee" wire:click="openSearchEmployee"  type="search" placeholder="Search" autocomplete="off">
+                                            <button type="button">                                                
                                             </button>
                                         </div>
-                                        <div class="result-box" data-search-results>
+                                        <div  class="result-box" data-search-results>
                                         </div>
                                     </div>
-    
-                                </div>
+                                    @error('loanDetails.courieremployee') <span class="text-required">{{ $message }}</span> @enderror
+                                </div>                                
                                 @endif
     
                                 @if($loanDetails['courier'] == 'Client')
@@ -355,6 +407,7 @@
                                     <div class="input-wrapper">
                                         <span>Client Name</span>
                                         <input wire:model.lazy="loanDetails.courierclient" autocomplete="off" type="text" >
+                                        @error('loanDetails.courierclient') <span class="text-required">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                                 @endif
@@ -366,6 +419,7 @@
                                 <div class="input-wrapper">
                                     <span>Contact No:</span>
                                     <input wire:model.lazy="loanDetails.couriercno" autocomplete="off" type="number">
+                                    @error('loanDetails.couriercno') <span class="text-required">{{ $message }}</span> @enderror
                                 </div>
                             </div>
                             @endif
@@ -406,7 +460,7 @@
                         @if($type == 'create')
                         <button wire:click="store(1)" type="button" wire:loading.attr="disabled" class="button" data-save>Save</button>
 
-                        <!-- * Save & Apply for loan  dito -->
+                        <!-- * Save & Apply for loan -->
                         <a href="#">
                             <button type="button" wire:click="store(2)"  wire:loading.attr="disabled" class="button" onclick="activeProgressButton()" data-proceed-to-ci>Save & Proceed to CI</button>
                         </a>
@@ -420,9 +474,10 @@
                                     <div class="box">
                                         <span>CI Time</span>
                                         <span id="ciTime">
-                                            <span id="ciTimeWeek">1</span>W
-                                        <span id="ciTimeDay">3</span>D
-                                        <span id="ciTimeHour">4</span>H
+                                            @if($loanDetails['ci_time']['years'] > 0) <span id="ciTimeWeek">{{ $loanDetails['ci_time']['years'] }}</span>Y @endif
+                                            @if($loanDetails['ci_time']['months'] > 0) <span id="ciTimeWeek">{{ $loanDetails['ci_time']['months'] }}</span>M @endif
+                                            @if($loanDetails['ci_time']['days'] > 0) <span id="ciTimeDay">{{ $loanDetails['ci_time']['days'] }}</span>D @endif
+                                            @if($loanDetails['ci_time']['hours'] > 0) <span id="ciTimeHour">{{ $loanDetails['ci_time']['hours'] }}</span>H @endif
                                         </span>
                                     </div>
                                 </div>
@@ -702,8 +757,7 @@
                 <div class="box-wrap">
 
                     <!-- * Colspan 1: Upload Image and Attach Files Buttons  -->
-                    <div class="colspan">
-                        <!-- dito -->
+                    <div class="colspan">                       
                         <!-- * Upload Image -->
                         <div class="input-wrapper">
                             @if(isset($member['profile']))
@@ -2317,10 +2371,7 @@
                     <div class="small-con">
 
                         <div class="box-wrap">
-
-                            <!-- * Colspan 1: Upload Image and Attach Files Buttons  -->
-                          
-                            <!-- dito -->
+                                         
                             <!-- * Colspan 1: Upload Image and Attach Files Buttons  -->
                             <div class="colspan">
 
@@ -2591,6 +2642,115 @@
         </div>
 
     </div>
+                                <!-- employee searching -->
+                                <dialog class="ng-modal" data-new-group-modal wire:ignore>
+                                    <div class="modal-container">
+
+                                        <!-- * Exit Button -->
+                                        <button type="button" class="exit-button" id="data-close-new-group-modal">
+                                            <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="exit">
+                                        </button>
+
+                                        <!-- * Search for existing member -->
+                                        <div class="rowspan">
+
+                                            <!-- * Search for existing member -->
+                                            <h3>Search for field officer</h3>
+
+                                            <div class="wrapper">
+
+                                                <!-- * Search Bar -->
+                                                <div class="search-wrap">
+                                                    <input type="search" wire:model="searchempkeyword" placeholder="Search field officer">
+                                                    <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <!-- * Table -->
+                                        <div class="rowspan">
+
+                                            <!-- * Container: Table and Pagination -->
+                                            <div class="na-table-con">
+
+                                                <!-- * Table Container -->
+                                                <div class="table-container">
+
+                                                    <!-- * Members Table -->
+                                                    <table>
+
+                                                        <!-- * Table Header -->
+                                                        <tr>
+
+                                                            <!-- * Checkbox ALl
+                                                    <th><input type="checkbox" class="checkbox" id="allCheckbox" onchange="checkAll(this)"></th> -->
+
+                                                            <!-- * Header Name -->
+                                                            <th><span class="th-name">Name</span></th>
+
+                                                            <!-- * Header Action-->
+                                                            <th><span class="th-name">Action</span></th>
+
+                                                        </tr>
+
+                                                        @if(isset($emplist) > 0)
+                                                            @foreach($emplist as $fol)
+                                                            <tr>
+                                                                <!-- * Officer Name -->
+                                                                <td>
+
+                                                                    <!-- * Officers' Name-->
+                                                                    <div class="td-wrapper">
+                                                                        <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
+                                                                        <span class="td-name">{{ $fol['lname'] . ', ' . $fol['fname'] . ' ' . mb_substr($fol['mname'], 0, 1) . '.' }}</span>
+                                                                    </div>
+
+                                                                </td>
+
+                                                                <!-- * Action -->
+                                                                <td class="td-btns">
+                                                                    <div class="td-btn-wrapper">                                           
+                                                                        <button type="button" wire:click="selectEmployee('{{ $fol['fname'] . ' ' . $fol['lname'] }}')" class="a-btn-trash-2">Select</button>
+                                                                    </div>
+                                                                </td>
+
+                                                            </tr>
+                                                            @endforeach
+                                                        @endif     
+
+                                                    
+
+                                                    </table>
+
+                                                </div>
+
+                                                <!-- * Pagination Container -->
+                                                <div class="pagination-container">
+
+                                                    <!-- * Pagination Links -->
+                                                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg"
+                                                            alt="caret-left"></a>
+                                                    <a href="#">1</a>
+                                                    <a href="#">2</a>
+                                                    <a href="#">3</a>
+                                                    <a href="#">4</a>
+                                                    <a href="#">5</a>
+                                                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg"
+                                                            alt="caret-right"></a>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </dialog>
+                                <!-- employee searching -->
     </form>
     <script>
 
@@ -2598,6 +2758,32 @@
             window.showAskingDialog = function(){              
                 @this.call('showAskingDialog');        
             };
+
+            const dataNewGroupModal = document.querySelector('[data-new-group-modal]')
+            const openNewGroupModal = document.querySelector('#data-open-new-group-modal')
+            const closeNewGroupModal = document.querySelector('#data-close-new-group-modal')
+            const addNewGroupModal = document.querySelector('[data-add-new-group-modal]')
+
+            closeNewGroupModal.addEventListener('click', () => {
+                    dataNewGroupModal.setAttribute("closing", "");
+                    dataNewGroupModal.addEventListener("animationend", () => {
+                        dataNewGroupModal.removeAttribute("closing");
+                        dataNewGroupModal.close();
+                    }, {
+                        once: true
+                    });
+            })
+
+            window.livewire.on('openSearchEmployeeModal', message => {
+                dataNewGroupModal.showModal()
+            });
+
+            window.livewire.on('closeSearchEmployeeModal', message => {
+                dataNewGroupModal.close();
+            });
+
+            
+
 
         })
         const openLoanDetailsButton = document.querySelector('#data-open-loan-details')
@@ -2687,29 +2873,6 @@
                 optionsContainer3.classList.remove("active");
             });
         });
-
-        // * Borrower Job Information
-        // const previousJob = document.querySelectorAll('[data-previous-job]')
-        // const currentJob = document.querySelectorAll('[data-current-job]')
-
-        // for (const previousJobItems of previousJob) {
-        //     previousJobItems.style.display = 'none'
-
-        //     for (const currentJobItems of currentJob) {
-
-        //         optionsContainer3.firstElementChild.addEventListener('click', () => {
-        //             previousJobItems.style.display = 'none'
-        //             currentJobItems.style.display = 'block'                    
-        //         })
-
-        //         optionsContainer3.lastElementChild.addEventListener('click', () => {
-        //             previousJobItems.style.display = 'block'
-        //             currentJobItems.style.display = 'none'
-        //         })
-
-        //     }
-        // }
-
 
         // ** Select Dropdown 4
         const selectedOpt4 = document.querySelector('[data-option-select4]');
@@ -3062,42 +3225,7 @@
         // ***** Add and Subtract Property ***** //
 
         // ** Select Dropdown 10 (Mode of Payment)
-        const selectedOpt10 = document.querySelector('[data-option-select10]');
-
-        if (selectedOpt10) {
-
-            const optionsContainer10 = document.querySelector('[data-option-con10]');
-            const optionsList10 = document.querySelectorAll('[data-option-item10]');
-
-            selectedOpt10.addEventListener("click", () => {
-                optionsContainer10.classList.toggle("active");
-            });
-
-            optionsList10.forEach(option => {
-                option.setAttribute('value', option.children[0].value)
-                option.addEventListener("click", () => {
-                    selectedOpt10.innerHTML = option.querySelector("label").innerHTML;
-                    optionsContainer10.classList.remove("active");
-                    selectedOpt10.setAttribute('value', option.children[0].value);
-                });
-            });
-
-            // * Mode of Release Toggle
-            // const denominationToggle = document.querySelector('[data-toggle-mor-1]')
-            // const checkNumberToggle = document.querySelector('[data-toggle-mor-2]')
-
-            // optionsContainer10.firstElementChild.addEventListener('click', () => {
-            //     checkNumberToggle.style.display = 'none'
-            //     denominationToggle.style.display = 'flex'
-            // })
-
-            // optionsContainer10.lastElementChild.addEventListener('click', () => {
-            //     checkNumberToggle.style.display = 'flex'
-            //     denominationToggle.style.display = 'none'
-            // })
-
-        }
-
+        
         // * Mode of Release Toggle
 
         

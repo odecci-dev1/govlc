@@ -2,6 +2,9 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\Http;
+use DateTime;
+
 trait Common {
 
    public $showDialog = 0;
@@ -13,6 +16,36 @@ trait Common {
         $today = date("Y-m-d");
         $diff = date_diff(date_create($dateOfBirth), date_create($today));
         return $diff->format('%y');
+   }
+
+   public function calculateTimeDifference($start, $end){     
+      $datestart = $start; 
+      $dateend = $end; 
+      
+      $start_datetime = new DateTime($datestart); 
+      $diff = $start_datetime->diff(new DateTime($dateend)); 
+
+      return ['years' => $diff->y, 'months' => $diff->m, 'days' => $diff->d, 'hours' => $diff->h, 'minutes' => $diff->i];
+      
+      // echo $diff->days.' Days total<br>'; 
+      // echo $diff->y.' Years<br>'; 
+      // echo $diff->m.' Months<br>'; 
+      // echo $diff->d.' Days<br>'; 
+      // echo $diff->h.' Hours<br>'; 
+      // echo $diff->i.' Minutes<br>'; 
+      // echo $diff->s.' Seconds<br>';
+   }
+
+   public function getUserName($userid){     
+      $user_name = 'User not found';
+      if( $userid != ''){
+         $getuser = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [['column' => 'userId', 'values' => $userid]]); 
+         $getuser = $getuser->json();
+         if($getuser[0]){
+            $user_name = $getuser[0]['fname'] .' '. $getuser[0]['lname'];
+         }
+     }
+     return $user_name;
    }
 
    public function showDialog($mid){
@@ -37,5 +70,6 @@ trait Common {
    public function closeAlert(){
       $this->showAlert = 0;
    }
+   
   
 }
