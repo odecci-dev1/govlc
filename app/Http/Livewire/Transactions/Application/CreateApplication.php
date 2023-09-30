@@ -572,7 +572,7 @@ class CreateApplication extends Component
             //dito
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                //dd( $crt );
+                // dd( $crt );
                 $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                 
                 $getlast = $getlast->json();
    
@@ -868,8 +868,8 @@ class CreateApplication extends Component
                         "modeOfReleaseReference"=> $this->loanDetails['denomination'],          
                     ];
 
-            // dd($data);        
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);                    
+             
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);                                 
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully signed for releasing', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -922,7 +922,7 @@ class CreateApplication extends Component
       
            
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ComppleteTransaction', $data);                    
-            dd($crt);       
+            //dd($crt);       
             return redirect()->to('tranactions/application/releasing/list')->with(['mmessage'=> 'Application is complete and ready for releasing', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -1071,45 +1071,45 @@ class CreateApplication extends Component
                     $resdata = $value->json();                          
                     $data =  $resdata[0];  
 
-                    // $this->member['fname'] = $data['fname'];  
-                    // $this->member['lname'] = $data['lname'];
-                    // $this->member['mname'] = $data['mname'];
-                    // $this->member['suffix'] = $data['suffix']; 
-                    // $this->member['age'] = $data['age']; 
-                    // $this->member['barangay'] = $data['barangay'];  
-                    // $this->member['city'] = $data['city']; 
-                    // $this->member['civil_Status'] = $data['civil_Status'];  
-                    // $this->member['cno'] = $data['cno']; 
-                    // $this->member['country'] = $data['country']; 
-                    // $this->member['dob'] = date('m/d/Y', strtotime($data['dob']));
-                    // $this->member['emailAddress'] = $data['emailAddress']; 
-                    // $this->member['gender'] = $data['gender'];
-                    // $this->member['houseNo'] = $data['houseNo'];
-                    // $this->member['house_Stats'] = $data['house_Stats']; 
-                    // $this->member['pob'] = $data['pob'];
-                    // $this->member['province'] = $data['province']; 
-                    // $this->member['yearsStay'] = $data['yearsStay'];
-                    // $this->member['zipCode'] = $data['zipCode'];
+                    $this->member['fname'] = $data['fname'];  
+                    $this->member['lname'] = $data['lname'];
+                    $this->member['mname'] = $data['mname'];
+                    $this->member['suffix'] = $data['suffix']; 
+                    $this->member['age'] = $data['age']; 
+                    $this->member['barangay'] = $data['barangay'];  
+                    $this->member['city'] = $data['city']; 
+                    $this->member['civil_Status'] = $data['civil_Status'];  
+                    $this->member['cno'] = $data['cno']; 
+                    $this->member['country'] = $data['country']; 
+                    $this->member['dob'] = date('m/d/Y', strtotime($data['dob']));
+                    $this->member['emailAddress'] = $data['emailAddress']; 
+                    $this->member['gender'] = $data['gender'];
+                    $this->member['houseNo'] = $data['houseNo'];
+                    $this->member['house_Stats'] = $data['house_Stats']; 
+                    $this->member['pob'] = $data['pob'];
+                    $this->member['province'] = $data['province']; 
+                    $this->member['yearsStay'] = $data['yearsStay'];
+                    $this->member['zipCode'] = $data['zipCode'];
 
-                    $this->member['fname'] = '1Jumar';  
-                    $this->member['lname'] = '1Cave';
-                    $this->member['mname'] = '1Badajos';
-                    $this->member['suffix'] = ''; 
-                    $this->member['age'] = '20'; 
-                    $this->member['barangay'] = 'Rivera';  
-                    $this->member['city'] = 'San Juan'; 
-                    $this->member['civil_Status'] = 'Married';  
-                    $this->member['cno'] = '02233666666'; 
-                    $this->member['country'] = 'Philippines'; 
-                    $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
-                    $this->member['emailAddress'] = 'test@gmail.com'; 
-                    $this->member['gender'] = 'Male';
-                    $this->member['houseNo'] = 'No. 9 GB';
-                    $this->member['house_Stats'] = '2'; 
-                    $this->member['pob'] = 'Bani, Pangasinan';
-                    $this->member['province'] = 'NCR'; 
-                    $this->member['yearsStay'] = '5';
-                    $this->member['zipCode'] = '';     
+                    // $this->member['fname'] = '1Jumar';  
+                    // $this->member['lname'] = '1Cave';
+                    // $this->member['mname'] = '1Badajos';
+                    // $this->member['suffix'] = ''; 
+                    // $this->member['age'] = '20'; 
+                    // $this->member['barangay'] = 'Rivera';  
+                    // $this->member['city'] = 'San Juan'; 
+                    // $this->member['civil_Status'] = 'Married';  
+                    // $this->member['cno'] = '02233666666'; 
+                    // $this->member['country'] = 'Philippines'; 
+                    // $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
+                    // $this->member['emailAddress'] = 'test@gmail.com'; 
+                    // $this->member['gender'] = 'Male';
+                    // $this->member['houseNo'] = 'No. 9 GB';
+                    // $this->member['house_Stats'] = '2'; 
+                    // $this->member['pob'] = 'Bani, Pangasinan';
+                    // $this->member['province'] = 'NCR'; 
+                    // $this->member['yearsStay'] = '5';
+                    // $this->member['zipCode'] = '';     
                 }
                 else{
                     $this->member['fname'] = '1Jumar';  
@@ -1198,7 +1198,7 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                //dd($data);    
+                // dd($data);    
                 //dito
                 $this->searchedmemId =  $data['memId'];
 

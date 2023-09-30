@@ -274,15 +274,35 @@
 
                     <!-- * File Chips Container -->           
                     <div class="file-wrapper" data-attach-file-container>                   
-                            @if(isset($officer['attachments']))                            
-                                @foreach($officer['attachments'] as $attachments)                                                     
-                                    <div type="button" class="fileButton">
-                                        <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                        <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>                                       
-                                    </div>
-                                    <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
-                                @endforeach
-                            @endif                         
+                          
+                            @if($foid != '')
+                                @if(isset($officer['attachments']))                            
+                                    @foreach($officer['attachments'] as $attachments)                                                     
+                                        <div type="button" class="fileButton">
+                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                            @php
+                                                $getfilename = $attachments['filePath'];
+                                                $filenamearray = explode("_", $getfilename);
+                                                $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
+                                             @endphp
+                                            <a href="{{ url('storage/officer_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
+                                                {{ strlen($filename) > 10 ? strtolower(substr($filename, 0, 10)) . '...' : $filename }}
+
+                                            </a>                                       
+                                        </div>                                        
+                                    @endforeach
+                                @endif   
+                            @else
+                                @if(isset($officer['attachments']))                            
+                                    @foreach($officer['attachments'] as $attachments)                                                     
+                                        <div type="button" class="fileButton">
+                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                            <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>                                       
+                                        </div>
+                                        <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
+                                    @endforeach
+                                @endif   
+                            @endif                        
                     </div>
 
                     <!-- * Save Button -->

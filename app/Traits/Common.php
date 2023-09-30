@@ -40,6 +40,7 @@ trait Common {
       $user_name = 'User not found';
       if( $userid != ''){
          $getuser = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [['column' => 'userId', 'values' => $userid]]); 
+         // dd( $userid );
          $getuser = $getuser->json();
          if($getuser[0]){
             $user_name = $getuser[0]['fname'] .' '. $getuser[0]['lname'];

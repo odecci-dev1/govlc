@@ -104,8 +104,8 @@ class LoanTypes extends Component
         $savemsg = '';
         if($this->loantypeID == ''){
             $savemsg = 'Loan type successfully saved';
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/SaveLoanType', $data);  
-            dd( $data );
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/SaveLoanType', $data);            
+            // dd($crt);
             $getLasLoanId = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/GetlastLoanTypeDetails');  
             $getLasLoanId =  $getLasLoanId->json();
             $this->loantypeID = $getLasLoanId['loanTypeID'];

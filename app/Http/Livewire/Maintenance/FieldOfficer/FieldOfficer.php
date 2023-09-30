@@ -239,6 +239,7 @@ class FieldOfficer extends Component
             $this->officer['typeID'] =  $res['typeID']; 
 
             $this->officer['profile'] = $res['profilePath'];
+            $this->officer['attachments'] = $res['files'];
             
             if (file_exists(public_path('storage/officer_profile/'.($this->officer['profile'] == '' ? 'xxxxxxxxxxxxxxxxxxxx' : $this->officer['profile'])))){
                 $this->profileExist = 1;                   
