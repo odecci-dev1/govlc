@@ -1,6 +1,9 @@
 <div>
+@if($showDialog == 1)
+    <x-dialog :message="'Are you sure you want to trash this data '" :xmid="$mid" :confirmaction="'archive'" :header="'Trash'"></x-dialog>   
+@endif
 @if(session('mmessage'))
-        <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+    <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
 @endif
 <!-- * New-Field-Officer-Container -->
 <form action="" class="no-form-con" autocomplete="off">
@@ -248,50 +251,61 @@
 
                     <!-- * Upload Image -->
                     <div class="input-wrapper" data-upload-image-field-officer-hover-container>
-               
-                        @if($foid != '')
-                            @if($profileExist == 1)                                                                                  
-                                <img type="image" style="width: 200px; height: 190px;" src="{{ url('storage/officer_profile/'.$officer['profile']) }}" alt="upload-image" />                                               
-                            @else  
-                                <img type="image" style="width: 200px; height: 190px;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
-                            @endif
+                        @if(file_exists(public_path('storage/officer_profile/'.(isset($officer['profile']) ? $officer['profile'] : 'xxxx'))))
+                            <img type="image" style="width: 200px; height: 170px;" src="{{ url('storage/officer_profile/'.$officer['profile']) }}" alt="upload-image" />                                               
+                        @elseif(isset($officer['profile']))
+                            <img type="image" style="width: 200px; height: 170px;" src="{{ $officer['profile']->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
                         @else
-                            @if(isset($officer['profile']))
-                                <img type="image" style="width: 200px; height: 190px;" src="{{ $officer['profile']->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
-                            @else
-                                <img type="image" style="width: 200px; height: 190px;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
-                            @endif
-                        @endif  
+                            <img type="image" style="width: 200px; height: 170px;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                        @endif                           
                     </div>
 
                     <!-- * Button Wrapper -->
                     <div class="btn-wrapper">
+                        @error('officer.profile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <!-- * Upload Button -->
                         <input type="file" wire:model="officer.profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        <div wire:loading wire:target="officer.profile">Uploading...</div>
                         <!-- * Attach Button -->
                         <input type="file" wire:model="officer.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-field-officer-file-btn></input>
+                        <div wire:loading wire:target="officer.attachments">Uploading...</div>
+                        @error('officer.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                     </div>
 
                     <!-- * File Chips Container -->           
                     <div class="file-wrapper" data-attach-file-container>                   
-                          
-                            @if($foid != '')
-                                @if(isset($officer['attachments']))                            
+                    
+                            @if(isset($officer['attachments']))
+                                @if($officer['attachments'] == $officer['old_attachments'])                            
                                     @foreach($officer['attachments'] as $attachments)                                                     
                                         <div type="button" class="fileButton">
-                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                            @php
-                                                $getfilename = $attachments['filePath'];
-                                                $filenamearray = explode("_", $getfilename);
-                                                $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
-                                             @endphp
-                                            <a href="{{ url('storage/officer_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
-                                                {{ strlen($filename) > 10 ? strtolower(substr($filename, 0, 10)) . '...' : $filename }}
-
-                                            </a>                                       
+                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">                                           
+                                            @if(file_exists(public_path('storage/officer_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
+                                                @php
+                                                    $getfilename = $attachments['filePath'];
+                                                    $filenamearray = explode("_", $getfilename);
+                                                    $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
+                                                @endphp                                               
+                                                <a href="{{ url('storage/officer_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
+                                                    {{ strlen($filename) > 10 ? strtolower(substr($filename, 0, 10)) . '...' : $filename }}
+                                                </a>                                               
+                                            @endif                                
                                         </div>                                        
                                     @endforeach
+                                @else
+                                    @if(isset($officer['attachments']))                            
+                                        @foreach($officer['attachments'] as $attachments)                                                     
+                                            <div type="button" class="fileButton">
+                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                <a href="{{ $attachments->path() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
+                                                    {{ strlen($attachments->getClientOriginalName()) > 10 ? strtolower(substr($attachments->getClientOriginalName(), 0, 10)) . '...' : $attachments->getClientOriginalName() }}
+                                                </a>                                       
+                                            </div>
+                                            <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
+                                        @endforeach
+                                    @endif   
                                 @endif   
+                                
                             @else
                                 @if(isset($officer['attachments']))                            
                                     @foreach($officer['attachments'] as $attachments)                                                     
@@ -310,7 +324,7 @@
                     <button type="button" wire:click="store" class="button save-btn">Save</button>
                     @else
                     <button type="button" wire:click="update" class="button save-btn">Update</button>
-                    <button type="button" wire:click="archive('{{ $foid }}')" class="button save-btn">Trash</button>
+                    <button type="button" onclick="showDialog('{{ $foid }}')" class="button save-btn">Trash</button>
                     @endif
 
                 </div>
@@ -389,19 +403,33 @@
                 <!-- * ID Front Image Input -->
                 <div class="input-wrapper">
                     <span>Front</span>
-                    <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">
-                    <div class="btn-wrapper">
-                        <input type="file" wire:model="officer.frontID" class="input-image upload-profile-image-btn" style="margin-top: 1rem;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                    @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['frontID']) ? $officer['frontID'] : 'xxxx'))))                            
+                        <input type="image" src="{{ url('storage/officer_ids/'.$officer['frontID']) }}" alt="Front Image" id="frontImage" name="frontImage">
+                    @elseif(isset($officer['frontID']))                            
+                        <input type="image" src="{{ $officer['frontID']->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                    @else
+                        <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">
+                    @endif                                       
+                    <div class="btn-wrapper">                
+                        <input type="file" wire:model="officer.frontID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                     </div>
+                    @error('officer.frontID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- * ID Back Image Input -->
                 <div class="input-wrapper">
                     <span>Back</span>
-                    <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Back Image" id="backImage" name="backImage">
+                    @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['backID']) ? $officer['backID'] : 'xxxx'))))                            
+                        <input type="image" src="{{ url('storage/officer_ids/'.$officer['backID']) }}" alt="Front Image" id="frontImage" name="frontImage">
+                    @elseif(isset($officer['backID']))                            
+                        <input type="image" src="{{ $officer['backID']->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                    @else
+                        <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">
+                    @endif  
                     <div class="btn-wrapper">
-                        <input type="file" wire:model="officer.backID" class="input-image upload-profile-image-btn" style="margin-top: 1rem;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        <input type="file" wire:model="officer.backID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                     </div>
+                    @error('officer.backID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                 </div>
 
             </div>
@@ -444,7 +472,15 @@
 
 </div>
 <script>
-    
+        document.addEventListener('livewire:load', function () {
+            window.showDialog = function($mid){              
+                @this.call('showDialog', $mid);        
+            };
+
+            window.archive = function($mid){
+                @this.call('archive', $mid);       
+            };
+        })
         // ** Select Dropdown 1
         const selectedOpt1 = document.querySelector('[data-option-select1]');
         const optionsContainer1 = document.querySelector('[data-option-con1]');

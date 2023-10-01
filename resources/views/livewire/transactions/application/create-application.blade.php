@@ -56,6 +56,7 @@
         @endforeach       
     </div>
     @endif
+    
     @if($member['statusID'] == 8)
                 
 
@@ -760,11 +761,13 @@
                     <div class="colspan">                       
                         <!-- * Upload Image -->
                         <div class="input-wrapper">
-                            @if(isset($member['profile']))
-                            <input type="image" style="width: 150px; height: 150px;" src="{{ $member['profile']->temporaryUrl() }}" alt="upload-image">
+                            @if(file_exists(public_path('storage/members_profile/'.(isset($this->member['profile']) ? $this->member['profile'] : 'xxxxxxxxx'))))                                
+                                <input type="image" style="width: 150px; height: 150px; padding: 2px;" src="{{ url('storage/members_profile/'.$member['profile']) }}" alt="upload-image">                                             
+                            @elseif(isset($member['profile']))
+                                <input type="image" style="width: 150px; height: 150px; padding: 2px;" src="{{ $member['profile']->temporaryUrl() }}" alt="upload-image">
                             @else
-                            <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
-                            @endif                                                       
+                                <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
+                            @endif         
                         </div>
                         @error('member.profile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <div class="btn-wrapper">
@@ -775,14 +778,36 @@
                         </div>
                         @error('member.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <div class="file-wrapper" data-attach-file-container>
+                          
                             @if(isset($member['attachments']))
-                                @foreach($member['attachments'] as $attachments)                              
-                                    <div type="button" class="fileButton">
-                                        <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                        <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>                                       
-                                    </div>
-                                    <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
-                                @endforeach
+                                @if($member['attachments'] == $member['old_attachments'])                            
+                                        @foreach($member['attachments'] as $attachments)                                                     
+                                            <div type="button" class="fileButton">
+                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">                                           
+                                                @if(file_exists(public_path('storage/members_attachments/'.(isset($attachments) ? $attachments : $attachments->getClientOriginalName() ))))
+                                                    @php
+                                                        $getfilename = $attachments;
+                                                        $filenamearray = explode("_", $getfilename);
+                                                        $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
+                                                    @endphp                                               
+                                                    <a href="{{ url('storage/members_attachments/'.$attachments) }}" title="{{ $filename }}" target="_blank">                                                                                              
+                                                        {{ strlen($filename) > 10 ? strtolower(substr($filename, 0, 10)) . '...' : $filename }}asd
+                                                    </a>                                               
+                                                @endif                                
+                                            </div>                                        
+                                        @endforeach
+                                @else
+                                        @if(isset($member['attachments']))                            
+                                            @foreach($member['attachments'] as $attachments)                                                     
+                                                <div type="button" class="fileButton">
+                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                    <a href="" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
+                                                        {{ strlen($attachments->getClientOriginalName()) > 10 ? strtolower(substr($attachments->getClientOriginalName(), 0, 10)) . '...' : $attachments->getClientOriginalName() }}
+                                                    </a>                                       
+                                                </div>                                                
+                                            @endforeach
+                                        @endif   
+                                @endif  
                             @endif
                          
                         </div>

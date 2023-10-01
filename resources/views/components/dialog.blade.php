@@ -13,8 +13,7 @@
             <!-- * Modal Body -->
             <div class="rowspan">
                 <img src="{{ URL::to('/') }}/assets/icons/modal-icon/asking-deletion.svg" alt="Asking">
-                <p>Are you sure you want to Permanently 
-                    delete the selected data?</p>
+                <p>{{ $message }}?</p>
             </div>
 
             <!-- * Yes or No Button -->
