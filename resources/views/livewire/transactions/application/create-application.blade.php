@@ -1976,8 +1976,8 @@
                                 <!-- * Appliances -->
                                 <div class="input-wrapper">
                                     <span>Appliances</span>
-                                    <input wire:model="inpappliances.applaince{{ $key }}" autocomplete="off" type="text">
-                                    @error('inpappliances.applaince'.$key) <span class="text-required">{{ $message }}</span>@enderror
+                                    <input wire:model="inpappliances.appliance{{ $key }}" autocomplete="off" type="text">
+                                    @error('inpappliances.appliance'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                 </div>
 
                                 <!-- * Brand / Model -->

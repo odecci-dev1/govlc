@@ -179,13 +179,13 @@ class CreateApplication extends Component
 
         if(count($this->appliances) > 1){
             foreach($this->appliances as $key => $value){
-                $rules['inpappliances.applaince'.$key] = 'required';               
+                $rules['inpappliances.appliance'.$key] = 'required';               
                 $rules['inpappliances.brand'.$key] = 'required';               
             }            
         }
         else{            
-            if((isset($this->inpappliances['applaince1']) ? $this->inpappliances['applaince1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
-                $rules['inpappliances.applaince1'] = 'required';               
+            if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
+                $rules['inpappliances.appliance1'] = 'required';               
                 $rules['inpappliances.brand1'] = 'required';   
             }
         }
@@ -329,13 +329,13 @@ class CreateApplication extends Component
 
         if(count($this->appliances) > 1){
             foreach($this->appliances as $key => $value){                     
-                $messages['inpappliances.applaince'.$key.'.required'] = 'Enter appliance name';      
+                $messages['inpappliances.appliance'.$key.'.required'] = 'Enter appliance name';      
                 $messages['inpappliances.brand'.$key.'.required'] = 'Enter brand';             
             }            
         }
         else{            
-            if((isset($this->inpappliances['applaince1']) ? $this->inpappliances['applaince1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){               
-                $messages['inpappliances.applaince1.required'] = 'Enter appliance name';      
+            if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){               
+                $messages['inpappliances.appliance1.required'] = 'Enter appliance name';      
                 $messages['inpappliances.brand1.required'] = 'Enter brand';        
             }
         }
@@ -379,8 +379,7 @@ class CreateApplication extends Component
         }    
         return $profilename;
     }
-
-    //dito
+    
     public function storeAttachments(){
         $memattachements = [];      
         if($this->member['attachments'] == $this->member['old_attachments']){
@@ -464,9 +463,9 @@ class CreateApplication extends Component
             }
 
             if(count( $this->appliances) > 0){
-                if((isset($this->inpappliances['applaince1']) ? $this->inpappliances['applaince1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
+                if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
                     foreach($this->appliances as $key => $value){
-                        $appliances[] = [   'brand' => $this->inpappliances['applaince'.$key], 
+                        $appliances[] = [   'brand' => $this->inpappliances['appliance'.$key], 
                                             'appliances' => $this->inpappliances['brand'.$key],
                                             'naid' => ''   ];
                     }
@@ -619,8 +618,7 @@ class CreateApplication extends Component
                     ]];
       
                     // $extension = $request->file('filename')->getClientOriginalExtension();
-                    //dd($data);                      
-            //dito
+                    //dd($data);                          
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
                 // dd( $crt );
@@ -691,9 +689,9 @@ class CreateApplication extends Component
             }
 
             if(count( $this->appliances) > 0){
-                if((isset($this->inpappliances['applaince1']) ? $this->inpappliances['applaince1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
+                if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
                     foreach($this->appliances as $key => $value){
-                        $appliances[] = [   'brand' => $this->inpappliances['applaince'.$key], 
+                        $appliances[] = [   'brand' => $this->inpappliances['appliance'.$key], 
                                             'appliances' => $this->inpappliances['brand'.$key],
                                             'naid' => ''   ];
                     }
@@ -759,7 +757,7 @@ class CreateApplication extends Component
                             "f_Job"=> $input['member']['f_Job'] ??= '',
                             "f_CompanyName"=> $input['member']['f_CompanyName'] ??= '',
                             "f_RTTB"=> '',
-                            "famId"=> $this->member['famId'], //dito
+                            "famId"=> $this->member['famId'], 
                             "business"=> $businesses,
                             "loanAmount"=> $input['member']['loanAmount'] ??= '0',
                             "termsOfPayment"=> $input['member']['termsOfPayment'] ??= '',
@@ -783,7 +781,7 @@ class CreateApplication extends Component
                             "co_EmailAddress"=> $input['comaker']['co_EmailAddress'] ??= '',
                             "co_Gender"=> $input['comaker']['co_Gender'] ??= '',
                             "co_HouseNo"=> $input['comaker']['co_HouseNo'] ??= '',
-                            "co_House_Stats"=> 2, //mali $input['comaker']['co_House_Stats'] ??= '0', dito
+                            "co_House_Stats"=> 2, //mali $input['comaker']['co_House_Stats'] ??= '0',
                             "co_POB"=> $input['comaker']['co_POB'] ??= '',
                             "co_Province"=> $input['comaker']['co_Province'] ??= '',
                             "co_YearsStay"=> $input['comaker']['co_YearsStay'] ??= '0',
@@ -796,7 +794,7 @@ class CreateApplication extends Component
                             "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
                             "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
                             "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
-                            "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '', //dito
+                            "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '', //mali
                             "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
                             "remarks"=> '',
                             "applicationStatus" => $type == 1 ? 7 : 8,
@@ -860,7 +858,6 @@ class CreateApplication extends Component
                                 'loanDetails.loanAmount' => ['required', 'numeric', 'min:1'],
                                 'loanDetails.topId' => ['required'],
                             ]);
-            //dito
             $data = [
                         'ldid' => $this->loanDetails['ldid'],
                         'note' => isset($this->loanDetails['notes']) ? $this->loanDetails['notes'] : '',
@@ -1225,7 +1222,7 @@ class CreateApplication extends Component
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
                 //dd($data);    
-                //dito
+                //ditoviewing
                 $this->searchedmemId =  $data['memId'];
 
                 if($data['applicationStatus'] >= 9){
@@ -1384,6 +1381,74 @@ class CreateApplication extends Component
                         $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
                     }                   
                 }      
+                $this->member['bO_Status'] = 1;                      
+                $businessInfo = $data['business'];   
+                if(count($businessInfo)>0){
+                    $cntbusinfo = 0;
+                    foreach($businessInfo as $businfo){
+                        $cntbusinfo = $cntbusinfo + 1;
+                        $this->businfo[$cntbusinfo] = [ 
+                                                        'businessName' => $businfo['businessName'],
+                                                        'businessType' => $businfo['businessType'],
+                                                        'businessAddress' => $businfo['businessAddress'],                                   
+                                                        'b_status' => $businfo['b_status'],
+                                                        'yob' => $businfo['yob'],
+                                                        'noe' => $businfo['noe'],
+                                                        'salary' => $businfo['salary'],
+                                                        'vos' => $businfo['vos'],
+                                                        'aos' => $businfo['aos'],
+                                                      ];    
+                    }
+                }
+
+                $motors= $data['assets'];
+                if(count($motors) > 0){
+                    $this->hasvehicle = 1;
+                    $motorscnt = 0;
+                    foreach($motors as $mmotors){
+                        $motorscnt = $motorscnt + 1;
+                        $this->vehicle[$motorscnt] = [ 'vehicle' => $mmotors['motorVehicles'] ];  
+                        $this->inpvehicle['vehicle'.$motorscnt] = $mmotors['motorVehicles'];                       
+                    }
+                }
+                 
+                $properties= $data['property'];
+                if(count($properties) > 0){
+                    $this->hasproperties = 1;
+                    $propertiescnt = 0;
+                    foreach($properties as $mproperties){
+                        $propertiescnt = $propertiescnt + 1;
+                        $this->properties[$propertiescnt] = [ 'property' => $mproperties['property'] ];  
+                        $this->inpproperties['property'.$propertiescnt] = $mproperties['property'];                       
+                    }
+                }                  
+
+                $appliances= $data['appliances'];
+                if(count($appliances) > 0){                   
+                    $appliancescnt = 0;
+                    foreach($appliances as $mappliances){
+                        $appliancescnt = $appliancescnt + 1;
+                        $this->appliances[$appliancescnt] = [ 'appliance' => $mappliances['appliances'], 'brand' => $mappliances['brand'] ];  
+                        $this->inpappliances['appliance'.$appliancescnt] = $mappliances['appliances'];   
+                        $this->inpappliances['brand'.$appliancescnt] = $mappliances['brand'];                        
+                    }
+                }   
+
+                //dd($data);
+                //dito
+
+                $bank= $data['bank'];
+                if(count($bank) > 0){                   
+                    $bankcnt = 0;
+                    foreach($bank as $mbank){
+                        $bankcnt = $bankcnt + 1;
+                        $this->bank[$bankcnt] = [ 'account' => $mbank['bankName'], 'address' => $mbank['address'] ];  
+                        $this->inpbank['account'.$bankcnt] = $mbank['bankName'];   
+                        $this->inpbank['address'.$bankcnt] = $mbank['address'];                        
+                    }
+                }   
+                
+                   
             }
         }
         else if($this->type == 'add'){
