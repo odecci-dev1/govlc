@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gold One Victory Lending App</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js']) 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
@@ -29,11 +29,11 @@
 
                     <div class="input-box">
                         <input type="text" name="username" required />
-                        <span>Username</span>                        
+                        <span>Username</span>
                     </div>
 
-                    @if(session('message'))
-                        <span style="font-size: 18px; color: #ff8080;"> {{ session('message') }}</span>
+                    @if (session('message'))
+                        <span style="font-size: 18px; color: #ff8080;margin:1rem;"> {{ session('message') }}</span>
                     @endif
 
                     <div class="input-box">
@@ -48,7 +48,7 @@
                 </div>
             </form>
         </div>
-    </main>   
+    </main>
 </body>
 
 </html>
