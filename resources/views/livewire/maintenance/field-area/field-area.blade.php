@@ -36,6 +36,7 @@
                         <div class="input-wrapper">
                             <span>Area Name</span>
                             <input autocomplete="off" wire:model.lazy="areaName">
+                            @error('areaName') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Location -->
@@ -55,6 +56,7 @@
                                 </div>
                                 <!-- <input class="input-chips" autocomplete="off" type="text" id="mInputLocation" name="mLocation"> -->
                             </div>
+                            @error('location') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Search Wrapper -->
@@ -62,12 +64,12 @@
                             <span>Field Officer</span>
                             <!-- * Search Bar -->                            
                             <div class="search-wrap">                               
-                                <input type="text" wire:model.lazy="foid" placeholder="field officer id" >
-                                <input type="search" wire:model.lazy="fullname" placeholder="Search" >
-                                <img wire:click; src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">                               
+                                <input type="hidden" wire:model.lazy="foid" placeholder="field officer id" >
+                                <input type="search" readonly wire:model.lazy="fullname" placeholder="Search" >    
+                                @error('foid') <span class="text-required">{{ $message }}</span>@enderror                            
                             </div>
                             <div class="input-wrapper" style="padding-top: 20px;">
-                                <button type="button" wire:click="openSearchOfficer"  id="data-open-new-group-modal" class="button">Search</button>
+                                <button type="button" wire:click="openSearchOfficer"  id="data-open-new-group-modal" class="button">Search Field Officer</button>
                             </div>
 
                         </div>
@@ -124,8 +126,7 @@
                                     <!-- * Table Header -->
                                     <tr>
 
-                                        <!-- * Checkbox ALl-->
-                                        <th><input type="checkbox" class="checkbox" data-select-all-checkbox></th>
+                                        <!-- * Checkbox ALl-->                                       
 
                                         <!-- * Area Name -->
                                         <th><span class="th-name">Area Name</span></th>
@@ -137,18 +138,15 @@
                                         <th><span class="th-name">Field Officer</span></th>
 
                                         <!-- * Action -->
-                                        <th><span class="th-name">Action</span></th>
+                                        <th style="text-align: center;"><span class="th-name">Action</span></th>
 
                                     </tr>
 
                                     @if($list)              
                                         @foreach($list as $l)
-                                        <tr data-area-maintenance>
+                                        <tr wire:click="selectArea" data-area-maintenance>
 
-                                            <!-- * Checkbox Opt -->
-                                            <td>
-                                                <input type="checkbox" class="checkbox" data-select-checkbox>
-                                            </td>
+                                            <!-- * Checkbox Opt -->                                            
 
                                             <!-- * Data Area Name-->
                                             <td class="td-name" data-area-name>
@@ -370,7 +368,7 @@
                                     <!-- * Action -->
                                     <td class="td-btns">
                                         <div class="td-btn-wrapper">                                           
-                                            <button type="button" onclick="selectFO('{{ $fol['foid'] }}')" class="a-btn-trash-2">Select</button>
+                                            <button type="button" onclick="selectFO('{{ $fol['foid'] }}', '{{ $fol['lname'] . ', ' . $fol['fname'] . ' ' . mb_substr($fol['mname'], 0, 1) . '.' }}')" class="a-btn-trash-2">Select</button>
                                         </div>
                                     </td>
 
@@ -427,9 +425,13 @@
                     dataNewGroupModal.showModal()
                 });
 
-                window.selectFO = function($foid){
-                    @this.selectFO('selectFO', $foid);       
+                window.selectFO = function($foid, $fullname){
+                    @this.call('selectFO', $foid, $fullname);       
                 };
+
+                window.livewire.on('closeSearchFOModal', message => {
+                    dataNewGroupModal.close();
+                });
             })
         </script>
 </div>

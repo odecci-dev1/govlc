@@ -762,11 +762,11 @@
                         <!-- * Upload Image -->
                         <div class="input-wrapper">
                             @if(file_exists(public_path('storage/members_profile/'.(isset($this->member['profile']) ? $this->member['profile'] : 'xxxxxxxxx'))))                                
-                                <input type="image" style="width: 150px; height: 150px; padding: 2px;" src="{{ url('storage/members_profile/'.$member['profile']) }}" alt="upload-image">                                             
+                                <input type="image" class="profile" style="padding: 2px;" src="{{ url('storage/members_profile/'.$member['profile']) }}" alt="upload-image">                                             
                             @elseif(isset($member['profile']))
-                                <input type="image" style="width: 150px; height: 150px; padding: 2px;" src="{{ $member['profile']->temporaryUrl() }}" alt="upload-image">
+                                <input type="image" class="profile" style="padding: 2px;" src="{{ $member['profile']->temporaryUrl() }}" alt="upload-image">
                             @else
-                                <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
+                                <input type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
                             @endif         
                         </div>
                         @error('member.profile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
