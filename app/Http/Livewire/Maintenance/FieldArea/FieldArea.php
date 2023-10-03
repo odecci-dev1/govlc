@@ -26,6 +26,24 @@ class FieldArea extends Component
 
     public $searchfokeyword = '';
 
+    public function rules(){
+        $rules = [];
+        $rules['areaName'] = ['required'];
+        $rules['location'] = ['required'];
+        $rules['foid'] = ['required'];
+        $rules['fullname'] = ['required'];
+        return $rules;
+    }
+
+    public function messages(){
+        $messages = [];
+        $messages['areaName.required'] = 'Please enter area name';
+        $messages['areaName.location'] = 'Please select unassigned locations';
+        $messages['areaName.foid'] = 'Please field officer';
+        $messages['areaName.foid'] = 'Please field officer';
+        return $messages;
+    }
+
     public function removeSelUnassigned($mkey){
         $key = array_search($mkey, $this->selectedunassigned);
         if ($key !== false) {
@@ -35,6 +53,7 @@ class FieldArea extends Component
     }
 
     public function store(){
+        $this->validate(); 
         $data = [];
         if(count($this->selectedunassigned) > 0){
             foreach($this->selectedunassigned as $selun){                    
@@ -45,9 +64,8 @@ class FieldArea extends Component
                 ]; 
             }
         }     
-        // dd( $data );             
+        //dd( $data );             
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AssigningFieldArea', $data);          
-        dd($crt);
         return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved');    
     }
 
@@ -55,8 +73,10 @@ class FieldArea extends Component
         $this->emit('openSearchOfficerModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
     }
 
-    public function selectFO($foid){
-
+    public function selectFO($foid, $name){
+        $this->foid = $foid;
+        $this->fullname = $name;
+        $this->emit('closeSearchFOModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
     }
 
     public function mount(){
