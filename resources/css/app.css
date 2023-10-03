@@ -388,9 +388,9 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
 
 .button {
     pointer-events: all;
-    border-radius: 1rem;
-    padding: 0.8rem 4rem;
-    font-size: 1.5rem;
+    border-radius: 0.8rem;
+    padding: 0.7rem 4rem;
+    font-size: 1rem;
     font-weight: 700;
     color: #ffffff;
     background-color: #d6a330;
@@ -1016,7 +1016,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 1.5rem; /*by jumz 2rem*/
+    font-size: 1.2rem; /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -1028,8 +1028,8 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     align-items: center;
     position: relative;
     width: 100%;
-    height: 4.4rem;
-    padding: 1rem 3rem 1rem 2rem;
+    height: 4rem;
+
     cursor: pointer;
 }
 .selected:hover {
@@ -1050,7 +1050,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
 .selected h4,
 .select-box h4 {
     cursor: pointer;
-    font-size: 1.5rem; /*by jumz 2rem*/
+    font-size: 1.3rem; /*by jumz 2rem*/
     font-weight: 700;
     color: #29292b;
 }
@@ -1115,7 +1115,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     -webkit-appearance: none;
     margin: 0;
     font-size: 1.5rem; /*by jumz 2rem*/
-    padding: 1rem 2rem;
+    padding: 0.8rem 2rem;
     border: none;
     outline: none;
     background-color: #ebebeb;
