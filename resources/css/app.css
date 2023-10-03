@@ -389,8 +389,8 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
 .button {
     pointer-events: all;
     border-radius: 0.8rem;
-    padding: 0.7rem 4rem;
-    font-size: 1rem;
+    padding: 1rem 4rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #ffffff;
     background-color: #d6a330;
@@ -817,7 +817,8 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     background: none;
     padding: 0;
     color: #d6a330;
-    font-size: 1.5rem;
+    margin-top: 1rem;
+    font-size: 1.2rem;
     font-weight: 700;
     text-decoration: underline;
     transition: 200ms ease-in-out;
@@ -1028,7 +1029,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     align-items: center;
     position: relative;
     width: 100%;
-    height: 4rem;
+    height: 4rem !important;
 
     cursor: pointer;
 }
@@ -1042,6 +1043,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     content: url("/public/assets/icons/carret-down.svg");
     position: absolute;
     right: 15px;
+    height: 1rem;
     top: 50%;
     transition: transform 0.5s;
     transform: translateY(-50%);
@@ -1298,13 +1300,13 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
 .input-wrapper > span {
     margin-bottom: 1rem;
     font-weight: 700;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 .input-wrapper input {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 1.5rem; /*by jumz 2rem*/
+    font-size: 1rem !important; /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -1312,6 +1314,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     border-radius: 1rem;
     box-shadow: inset 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
     transition: opacity 100ms ease-in-out;
+    height: 4rem !important;
 }
 .input-wrapper input:hover {
     filter: brightness(101.5%);
@@ -1339,9 +1342,9 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     display: inline;
     text-align: center;
     white-space: wrap;
-    top: 0;
+    top: -50%;
     left: 50%;
-    transform: translate(-50%, 1rem);
+    transform: translate(-50%, -50%);
     color: #ffffff;
 }
 .input-wrapper input.input-image:hover {
@@ -1400,9 +1403,9 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     appearance: none;
     -webkit-appearance: none;
     box-shadow: none;
-    scale: 0.7;
-    height: 5rem;
-    width: 5rem;
+    scale: 0.6 !important;
+    height: 5rem !important;
+    width: 5rem !important;
     border-radius: 50%;
     border: max(0.4rem, 0.3em) solid #d6a330;
     background-color: #ffffff;
@@ -1443,7 +1446,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 1.5rem; /*by jumz 2rem*/
+    font-size: 1rem; /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -1487,7 +1490,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     position: relative;
     border-radius: 1rem;
     padding: 0.8rem 4rem;
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: transparent;
     background-color: #d6a330;
@@ -2606,15 +2609,14 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 1.5rem; /*by jumz 2rem*/
-    padding: 1rem 2rem;
+    font-size: 1.3rem; /*by jumz 2rem*/
+    padding: 0.8rem 2rem;
     border: none;
     outline: none;
     background-color: #ebebeb;
     border-radius: 1rem;
     box-shadow: inset 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
     transition: opacity 100ms ease-in-out;
-    font-size: 1.5rem;
     position: relative;
     padding-left: 2rem;
     padding-right: 5rem;
@@ -3328,7 +3330,7 @@ body {
     .small-con
     .rowspan:first-of-type
     h2 {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
 }
 .na-application-decline-modal
     .modal-container
@@ -11998,7 +12000,7 @@ body {
     .rowspan:first-of-type
     .header-wrapper
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .view-borrower-con
@@ -12538,7 +12540,7 @@ body {
     .rowspan:first-of-type
     .header-wrapper
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .view-co-borrower-con-1
@@ -12927,7 +12929,7 @@ body {
     opacity: 1;
 }
 .main-dashboard .view-co-borrower-con-2 .small-con-2 .rowspan:first-of-type h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .view-co-borrower-con-2
@@ -13873,7 +13875,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 1.5rem; /*by jumz 2rem*/
+    font-size: 1rem; /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -14000,7 +14002,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 1.5rem; /*by jumz 2rem*/
+    font-size: 1rem; /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -14485,7 +14487,7 @@ body {
     .rowspan:first-of-type
     .header-wrapper
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .na-form-con
@@ -15021,7 +15023,7 @@ body {
     .small-con-2
     .rowspan:first-of-type
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .na-form-con
@@ -15269,7 +15271,7 @@ body {
     .small-con-3
     .rowspan:first-of-type
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .na-form-con
@@ -15638,7 +15640,7 @@ body {
     .small-con-4
     .rowspan:first-of-type
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .na-form-con
@@ -15963,7 +15965,7 @@ body {
     .rowspan:first-of-type
     .input-wrapper
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .na-form-con
@@ -16213,7 +16215,7 @@ body {
     .rowspan:first-of-type
     .header-wrapper
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .na-form-con
@@ -16595,7 +16597,7 @@ body {
     .big-con-2
     .rowspan-container:first-of-type
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .na-form-con
@@ -17311,7 +17313,7 @@ body {
     .box-wrap
     .rowspan
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .na-form-con
@@ -17484,7 +17486,7 @@ body {
     .rowspan:first-of-type
     .input-wrapper
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .na-form-con
@@ -17663,7 +17665,7 @@ body {
     .rowspan:first-of-type
     .input-wrapper
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard .na-form-con .na-container-group-2 {
     height: clamp(100% - 22rem, 60%, 66vh);
@@ -18010,7 +18012,7 @@ body {
     .rowspan:first-of-type
     .input-wrapper
     h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .main-dashboard
     .na-form-con
@@ -18042,7 +18044,7 @@ body {
     padding: 4rem 4rem 2rem 4rem;
 }
 .ul-con-1 h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .ul-con-1 .p-1 {
     margin-top: 1.5rem;
@@ -18224,7 +18226,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 1.5rem; /*by jumz 2rem*/
+    font-size: 1rem; /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -18409,7 +18411,7 @@ body {
     align-items: center;
 }
 .nu-con-1 .container-wrapper .big-con .rowspan:first-of-type h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .nu-con-1
     .container-wrapper
@@ -18531,7 +18533,7 @@ body {
     border-bottom: 4px solid #29292b;
 }
 .nu-con-2 .container-wrapper .header-con h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .nu-con-2 .container-wrapper .header-con .input-wrapper-checkbox {
     display: flex;
@@ -18628,7 +18630,7 @@ body {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 1.5rem; /*by jumz 2rem*/
+    font-size: 1rem; /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
@@ -18813,7 +18815,7 @@ body {
     align-items: center;
 }
 .view-nu-con-1 .container-wrapper .big-con .rowspan:first-of-type h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .view-nu-con-1
     .container-wrapper
@@ -18992,7 +18994,7 @@ body {
     border-bottom: 4px solid #29292b;
 }
 .view-nu-con-2 .container-wrapper .header-con h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 .view-nu-con-2 .container-wrapper .header-con .input-wrapper-checkbox {
     display: flex;
@@ -19062,4 +19064,16 @@ body {
     left: 0px;
     z-index: 999;
     background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Editor: Ace
+Description: Addtional script for design adjustment
+Date: 10-03-2023
+*/
+
+.input-wrapper .profile {
+    height: 150px !important;
+}
+.input-wrapper .profile input[type="image"] {
+    object-fit: contain !important;
 }
