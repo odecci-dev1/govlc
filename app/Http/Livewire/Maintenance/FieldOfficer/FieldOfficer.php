@@ -21,6 +21,9 @@ class FieldOfficer extends Component
     public $foid = '';
     public $idtypes = [];
     public $idtypename = '';
+    public $imgprofile;
+    public $imgfrontID;
+    public $imgbackID;
     public function rules(){                
         $rules = []; 
         $rules['officer.fname'] = 'required';
@@ -44,10 +47,13 @@ class FieldOfficer extends Component
         $rules['officer.philHealth'] = 'required';
         $rules['officer.idNum'] = 'required';
         $rules['officer.typeID'] = 'required';
-        $rules['officer.profile'] = 'required';  
+        $rules['officer.profile'] = '';
+        $rules['imgprofile'] = isset($this->officer['profile']) ? '' : 'required';  
         $rules['officer.attachments'] = 'required'; 
-        $rules['officer.frontID'] = 'required';  
-        $rules['officer.backID'] = 'required'; 
+        $rules['officer.frontID'] = '';  
+        $rules['imgfrontID'] = isset($this->officer['frontID']) ? '' : 'required';  
+        $rules['officer.backID'] = ''; 
+        $rules['imgbackID'] = isset($this->officer['backID']) ? '' : 'required';  
         return  $rules;     
     }
     
@@ -74,10 +80,12 @@ class FieldOfficer extends Component
         $messages['officer.philHealth.required'] = 'PhilHealth number is required';                        
         $messages['officer.idNum.required'] = 'ID number number is required';                        
         $messages['officer.typeID.required'] = 'Please select ID type';    
-        $messages['officer.profile.required'] = 'Please include profile img';                        
+        $messages['imgprofile.required'] = 'Please include profile img';                        
         $messages['officer.attachments.required'] = 'Please attach files'; 
         $messages['officer.frontID.required'] = 'Please include image of front id';                        
-        $messages['officer.backID.required'] = 'Please include image of back id';                           
+        $messages['officer.backID.required'] = 'Please include image of back id';  
+        $messages['imgfrontID.required'] = 'Please include image of front id';                        
+        $messages['imgbackID.required'] = 'Please include image of back id';                               
         return $messages;        
     }
 
@@ -85,22 +93,20 @@ class FieldOfficer extends Component
         
         // dd($this->officer['profile']);        
         $profilename = '';
-        if(isset($this->officer['profile'])){
-            if($this->officer['profile'] == $this->officer['old_profile']){
-                $profilename = $this->officer['profile'];  
+        if($this->imgprofile){
+            $deletefiles = [];
+            if(isset($this->officer['profile'])){
+                $deletefiles[] = 'public/officer_profile/'.$this->officer['profile'];
             }
-            else{
-                $deletefiles = [];
-                if(isset($this->officer['old_profile'])){
-                    $deletefiles[] = 'public/officer_profile/'.$this->officer['old_profile'];
-                }
-                Storage::delete($deletefiles);       
-                
-                $time = time();          
-                $profilename = 'officer_profile_'.$time;         
-                $this->officer['profile']->storeAs('public/officer_profile', $profilename);    
-            }                           
-        }    
+            Storage::delete($deletefiles);       
+            
+            $time = time();          
+            $profilename = 'officer_profile_'.$time;         
+            $this->imgprofile->storeAs('public/officer_profile', $profilename);    
+        }
+        else{
+            $profilename = $this->officer['profile'];  
+        }  
         return $profilename;
     }
 
@@ -108,44 +114,40 @@ class FieldOfficer extends Component
         
         // dd($this->officer['profile']);        
         $frontidname = '';
-        if(isset($this->officer['frontID'])){
-            if($this->officer['frontID'] == $this->officer['old_frontID']){
-                $frontidname = $this->officer['frontID'];  
+        if($this->imgfrontID){
+            $deletefiles = [];
+            if(isset($this->officer['frontID'])){
+                $deletefiles[] = 'public/officer_ids/'.$this->officer['frontID'];
             }
-            else{
-                $deletefiles = [];
-                if(isset($this->officer['old_frontID'])){
-                    $deletefiles[] = 'public/officer_ids/'.$this->officer['old_frontID'];
-                }
-                Storage::delete($deletefiles);       
-                
-                $time = time();          
-                $frontidname = 'officer_frontid_'.$time;         
-                $this->officer['frontID']->storeAs('public/officer_ids', $frontidname);    
-            }                           
-        }    
+            Storage::delete($deletefiles);       
+            
+            $time = time();          
+            $frontidname = 'officer_frontid_'.$time;         
+            $this->imgfrontID->storeAs('public/officer_ids', $frontidname); 
+        }
+        else{
+            $frontidname = $this->officer['frontID'];  
+        }  
         return $frontidname;
     }
 
     public function storeBackIdImage(){
         
         $backidname = '';
-        if(isset($this->officer['backID'])){
-            if($this->officer['backID'] == $this->officer['old_backID']){
-                $backidname = $this->officer['backID'];  
+        if($this->imgbackID){
+            $deletefiles = [];
+            if(isset($this->officer['backID'])){
+                $deletefiles[] = 'public/officer_ids/'.$this->officer['backID'];
             }
-            else{
-                $deletefiles = [];
-                if(isset($this->officer['old_backID'])){
-                    $deletefiles[] = 'public/officer_ids/'.$this->officer['old_backID'];
-                }
-                Storage::delete($deletefiles);       
+            Storage::delete($deletefiles);       
                 
-                $time = time();          
-                $backidname = 'officer_backid_'.$time;         
-                $this->officer['backID']->storeAs('public/officer_ids', $backidname);    
-            }                           
-        }    
+            $time = time();          
+            $backidname = 'officer_backid_'.$time;         
+            $this->imgbackID->storeAs('public/officer_ids', $backidname);    
+        }
+        else{
+            $backidname = $this->officer['backID'];  
+        } 
         return $backidname;
     }
 

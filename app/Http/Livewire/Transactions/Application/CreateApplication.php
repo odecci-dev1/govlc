@@ -1217,7 +1217,7 @@ class CreateApplication extends Component
         }
         else if($this->type == 'view'){
             $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
-            
+            //dd($value);
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    

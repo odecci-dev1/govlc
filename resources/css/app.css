@@ -1306,7 +1306,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
     -moz-appearance: textfield;
     -webkit-appearance: none;
     margin: 0;
-    font-size: 1rem !important; /*by jumz 2rem*/
+    font-size: 1.3rem !important; /*by jumz 2rem*/
     padding: 1rem 2rem;
     border: none;
     outline: none;
