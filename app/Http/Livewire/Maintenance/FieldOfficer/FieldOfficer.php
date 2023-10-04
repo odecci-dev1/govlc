@@ -101,7 +101,7 @@ class FieldOfficer extends Component
             Storage::delete($deletefiles);       
             
             $time = time();          
-            $profilename = 'officer_profile_'.$time;         
+            $profilename = 'officer_profile_'.$time.'.'.$this->imgprofile->getClientOriginalExtension();         
             $this->imgprofile->storeAs('public/officer_profile', $profilename);    
         }
         else{
@@ -122,7 +122,7 @@ class FieldOfficer extends Component
             Storage::delete($deletefiles);       
             
             $time = time();          
-            $frontidname = 'officer_frontid_'.$time;         
+            $frontidname = 'officer_frontid_'.$time.'.'.$this->imgfrontID->getClientOriginalExtension();             
             $this->imgfrontID->storeAs('public/officer_ids', $frontidname); 
         }
         else{
@@ -142,7 +142,7 @@ class FieldOfficer extends Component
             Storage::delete($deletefiles);       
                 
             $time = time();          
-            $backidname = 'officer_backid_'.$time;         
+            $backidname = 'officer_backid_'.$time.'.'.$this->imgbackID->getClientOriginalExtension();    
             $this->imgbackID->storeAs('public/officer_ids', $backidname);    
         }
         else{
