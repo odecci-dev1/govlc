@@ -24,9 +24,10 @@ class LoginController extends Controller
 
             if($data){
                 $data = $data[0];  
-                // dd( $data );              
+                //dd( $data );              
                 session()->put('auth_usertype', $data['userTypeId']); 
-                session()->put('auth_username', $data['userTypeId']);    
+                session()->put('auth_username', $data['username']); 
+                session()->put('auth_name', $data['lname'] . ', ' . $data['fname'] .' '. mb_substr($data['mname'],0,1) . '.');       
                 session()->put('auth_userid', $data['userId']); 
                 session()->put('auth_id', $data['id']);                                
                 $modules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', ['userID' => $data['userId']]); 

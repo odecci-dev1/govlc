@@ -79,9 +79,163 @@
 
         <!-- * Rowspan 1: Loan Details Header -->
         <div class="rowspan">
-            <h3>Loan Details</h3>
+            <div class="header-wrapper">
+                <h3>Loan Details</h3>
+                <button type="button" class="viewLoanDetailsButton" data-open-receipt-voucher>View Loan Summary</button>
+            </div>
         </div>
+            <!-- * Receipt Voucher Modal -->
+            <dialog class="na-receipt-voucher-modal" data-receipt-voucher-modal>
 
+            <!-- * Modal Container -->
+            <div class="modal-container">
+
+                <!-- * Receipt Voucher Container -->
+                <div class="receipt-voucher-container">
+
+                    <!-- * Button Wrapper -->
+                    <div class="button-wrapper">
+                        <button type="button" data-close-receipt-voucher>
+                            <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="close">
+                        </button>
+                    </div>
+
+                    <!-- * Header Wrapper -->
+                    <div class="header-wrapper">
+                        <p>LOAN SUMMARY</p>
+                        <!-- <p>GOLD ONE VICTORY FINANCIAL CONSULTANCY</p>
+                        <p>BALAGTAS, BULACAN</p>
+                        <p>RECEIPT VOUCHER</p> -->
+                    </div>
+
+                    <!-- * Body Wrapper -->
+                    <div class="body-wrapper">
+                        <div class="box-wrapper">
+                            <!-- * Box-1 -->
+                            <div class="box">
+                                <p>NAME: <span id="printClientName"> {{ $member['fname'] }}, {{ $member['lname'] }} {{ mb_substr($member['mname'], 0, 1) }}.</span></p>
+                                <p class="p-bold">{{ isset($loansummary['areaName']) ? $loansummary['areaName'] : 'not found' }}</p>
+                                <div class="box-inner">
+                                    <div class="box-inner-wrapper">
+                                        <p>DATE:</p> 
+                                        <span id="printDate">{{ isset($loansummary['date']) ? date('F j, Y', strtotime($loansummary['date'])) : 'not found' }}</span>
+                                    </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>DUE-DATE:</p> 
+                                        <span id="printDueDate">{{ isset($loansummary['date']) ? date('F j, Y', strtotime($loansummary['date'])) : 'not found' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- * Box-2 -->
+                            <div class="box">
+                                <div class="box-inner">
+                                    <div class="box-inner-wrapper">
+                                        <p>LOAN AMOUNT:</p>
+                                        <span id="">{{ isset($loansummary['principalLoan']) ? number_format($loansummary['principalLoan'], 2) : 'not found' }}</span>
+                                    </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>INTEREST RATE:</p>
+                                        <span id="">{{ isset($loansummary['interestRate']) ? $loansummary['interestRate'] * 100 : 'not found' }}%</span>
+                                    </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>NOTARIAL FEE:</p>
+                                        <span id=""></span>
+                                    </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>LOAN INSURANCE:</p>
+                                        <span id=""></span>
+                                    </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>LOAN RECEIVABLE:</p>
+                                        <span id=""></span>
+                                    </div>
+                                    <div class="box-inner-wrapper p-red-text">
+                                        <p class="p-red-text">FIRST PAYMENT:</p>
+                                        <span id="">{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : 'not found' }}</span>
+                                    </div>
+                                </div>
+                                <div class="box-inner">
+                                    <p>{{ isset($loansummary['loanAmount']) ? number_format($loansummary['loanAmount'], 2) : 'not found' }}</p>
+                                    <p>{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : 'not found' }}</p>
+                                    <p>{{ isset($loansummary['notarialFee']) ? number_format($loansummary['notarialFee'], 2) : 'not found' }}</p>
+                                    <p class="underline">{{ isset($loansummary['total_LoanInsuraneAmount']) ? number_format($loansummary['total_LoanInsuraneAmount'], 2) : 'not found' }}</p>
+                                    <p class="underline-thick">{{ isset($loansummary['total_LoanReceivable']) ? number_format($loansummary['total_LoanReceivable'], 2) : 'not found' }}</p>
+                                </div>
+                            </div>
+                            <!-- * Box-3 -->
+                            <!-- <div class="box">
+                                <p class="p-red-text">FIRST PAYMENT: <span id="">138</span></p>
+                            </div> -->
+                            <!-- * Box-4 -->
+                            <div class="box">
+                                <div class="box-inner">
+                                    <div class="box-inner-wrapper">
+                                        <p>PREPARED BY:</p>
+                                        <span id="">{{ session()->get('auth_name') }}</span>
+                                    </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>APPROVED BY:</p>
+                                        <span id="">{{ isset($loansummary['app_ApprovedBy_2']) ? $loansummary['app_ApprovedBy_2'] : 'not found' }}</span>
+                                    </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>RELEASED THRU CASH</p>
+                                    </div>
+                                </div>
+                                <div class="box-inner">
+                                    <div class="box-inner-wrapper">
+                                        <p>RECEIVED FROM:</p>
+                                        <span id="">GOLD ONE VICTORY LENDING CORPORATION</span>
+                                    </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>AMOUNT RECEIVED:</p> 
+                                        <span id="">{{ isset($loansummary['amountReceived']) ? number_format($loansummary['amountReceived'], 2) : 'not found' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- * Box-5 -->
+                            <!-- <div class="box">
+                                <div class="box-inner">
+                                    <p class="p-bold line-sig">CO-MAKER</p>
+                                    <p>CONTACT NO.</p>
+                                </div>
+                                <div class="box-inner">
+                                    <p class="p-bold line-sig">CLIENT</p>
+                                    <p>CONTACT NO.</p>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            </dialog>
+            <script>
+                //loan summary
+                const receiptVoucherModal = document.querySelector('[data-receipt-voucher-modal]')
+                const openReceiptVoucherModal = document.querySelector('[data-open-receipt-voucher]')
+
+                // * If this element is in the DOM, run else do nothing
+                if (receiptVoucherModal && openReceiptVoucherModal) {
+                    const closeReceiptVoucherModal = document.querySelector('[data-close-receipt-voucher]')
+
+
+                    openReceiptVoucherModal.addEventListener('click', () => {
+                        receiptVoucherModal.showModal();
+                    })
+
+                    closeReceiptVoucherModal.addEventListener('click', () => {
+                        receiptVoucherModal.setAttribute("closing", "");
+                        receiptVoucherModal.addEventListener("animationend", () => {
+                            receiptVoucherModal.removeAttribute("closing");
+                            receiptVoucherModal.close();
+                        }, { once: true });
+                    })
+                    
+                }
+                
+            </script>
         @if(in_array($member['statusID'], [10, 15]))
         <!-- * Rowspan 2: Mode of Release and Denomination and Check Number Toggle -->
         <div class="rowspan">
@@ -2807,7 +2961,9 @@
                 dataNewGroupModal.close();
             });
 
-            
+            window.livewire.on('openUrlPrintingVoucher', data =>{
+                window.open(data.url, '_blank');
+            });
 
 
         })
@@ -3105,105 +3261,6 @@
         // ****** END --- Child Form Toggle ***** //
 
 
-
-        // // * First Degree Relative Job Information
-        // const fdrEmploymentStatus = document.getElementById('fdrEmpStat')
-        // const fdrPreviousJob = document.querySelectorAll('[data-fdr-previous-job]')
-
-        // for (const fdrPreviousJobItems of fdrPreviousJob) {
-        //     fdrPreviousJobItems.style.display = 'none'
-
-        //     fdrEmploymentStatus.addEventListener('change', () => {
-        //         const fdrCurrentJob = document.querySelectorAll('[data-fdr-current-job]')
-
-        //         for (const fdrCurrentJobItems of fdrCurrentJob) {
-        //             // * If Employed is Selected show Current Job / Position
-        //             if (fdrEmploymentStatus.selectedIndex === 1) {
-        //                 fdrPreviousJobItems.style.display = 'none'
-        //                 fdrCurrentJobItems.style.display = 'block'
-        //                     // * If Unemployed is Selected show Previous Job / Position
-        //             } else if (fdrEmploymentStatus.selectedIndex === 2) {
-        //                 fdrPreviousJobItems.style.display = 'block'
-        //                 fdrCurrentJobItems.style.display = 'none'
-        //             }
-        //         }
-
-        //     })
-        // }
-
-
-        // * Business Information Form Toggle
-        // const yesToggle = document.getElementById('formToggleYes')
-        // const noToggle = document.getElementById('formToggleNo')
-
-        // yesToggle.addEventListener('click', _ => {
-
-        //     const businessForm = document.querySelector('[data-business-form]')
-
-        //     if (yesToggle.checked) {
-        //         businessForm.style.display = 'block'
-        //     }
-
-        //     noToggle.addEventListener('click', _ => {
-        //         if (noToggle.checked) {
-        //             businessForm.style.display = 'none'
-        //         }
-        //     })
-
-        // })
-
-        // ***** Assets and Properties ***** //
-        // const vehicleFormToggleYes = document.getElementById('vehicleFormToggleYes')
-        // const vehicleFormToggleNo = document.getElementById('vehicleFormToggleNo')
-        // const vehicleContainer = document.querySelector('[data-vehicle-container]')
-        
-        // vehicleContainer.style.opacity = '.4'
-        // vehicleContainer.style.pointerEvents = 'none'
-
-        // vehicleFormToggleYes.addEventListener('change', () => {
-
-        //     if (vehicleFormToggleYes) {
-        //         vehicleContainer.style.opacity = '1'
-        //         vehicleContainer.style.pointerEvents = 'auto'
-        //     } 
-
-        //     vehicleFormToggleNo.addEventListener('change', () => {
-        //         const vehicle = document.getElementById('ownVehicle')
-        //         if (vehicleFormToggleNo) {
-        //             vehicleContainer.style.opacity = '.4'
-        //             vehicleContainer.style.pointerEvents = 'none'
-        //             vehicle.value = ''
-        //         } 
-        //     })
-
-        // })
-
-        // const propertyFormToggleYes = document.getElementById('propertyFormToggleYes')
-        // const propertyFormToggleNo = document.getElementById('propertyFormToggleNo')
-        // const propertyContainer = document.querySelector('[data-property-container]')
-        
-        // propertyContainer.style.opacity = '.4'
-        // propertyContainer.style.pointerEvents = 'none'
-
-        // propertyFormToggleYes.addEventListener('change', () => {
-
-        //     if (propertyFormToggleYes) {
-        //         propertyContainer.style.opacity = '1'
-        //         propertyContainer.style.pointerEvents = 'auto'
-        //     } 
-
-        //     propertyFormToggleNo.addEventListener('change', () => {
-        //         const property = document.getElementById('ownProperty')
-        //         if (propertyFormToggleNo) {
-        //             propertyContainer.style.opacity = '.4'
-        //             propertyContainer.style.pointerEvents = 'none'
-        //             property.value = ''
-        //         } 
-        //     })
-
-        // })
-
-
         // ***** Add and Subtract Vehicle ***** //
         // * Add Vehicle
         function addVehicle() {
@@ -3253,6 +3310,7 @@
         
         // * Mode of Release Toggle
 
+        
         
     </script>
 </div>

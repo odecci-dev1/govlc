@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Http\Livewire\Transactions\Application;
+
+use Livewire\Component;
+
+class ApplicationPrintingVoucher extends Component
+{
+    public function render()
+    {
+        return view('livewire.transactions.application.application-printing-voucher');
+    }
+}

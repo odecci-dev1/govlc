@@ -15,6 +15,7 @@ use App\Http\Livewire\Transactions\Application\CreateApplicationGroup;
 use App\Http\Livewire\Transactions\Application\ApplicationApprovalList;
 use App\Http\Livewire\Transactions\Application\ApplicationReleasingList;
 use App\Http\Livewire\Transactions\Application\ApplicationList;
+use App\Http\Livewire\Transactions\Application\ApplicationPrintingVoucher;
 use App\Http\Livewire\Maintenance\FieldOfficer\FieldOfficerlist;
 use App\Http\Livewire\Maintenance\FieldOfficer\FieldOfficer;
 use App\Http\Livewire\Maintenance\Holiday\HolidayList;
@@ -92,6 +93,9 @@ Route::get('/tranactions/application/list', ApplicationList::class)->name('appli
 Route::get('/tranactions/application/approval/list', ApplicationApprovalList::class)->name('application.approval');
 Route::get('/tranactions/application/releasing/list', ApplicationReleasingList::class)->name('application.approval');
 Route::get('/tranactions/group/application/create', CreateApplicationGroup::class)->name('application.create.group');
+Route::get('/tranactions/application/printing/{naID}', function(){
+    return view('livewire.transactions.application.application-html');
+});
 Route::get('/tranactions/application/credit/investigation/list', CreditInvestigationApplicationList::class)->name('application.credit.investigation.list');
 Route::get('/tranactions/application/{type}/{naID}', CreateApplication::class)->name('application.view');
 Route::get('/tranactions/application/{type}', CreateApplication::class)->name('application.create');

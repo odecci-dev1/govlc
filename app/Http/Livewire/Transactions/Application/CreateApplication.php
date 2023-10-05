@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Traits\Common;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Support\Facades\URL;
 use Livewire\Component;
 use Symfony\Component\Console\Input\Input;
 
@@ -26,6 +27,7 @@ class CreateApplication extends Component
     public $loanDetails;
     public $loanTypeID;
     public $termsOfPaymentList = [];
+    public $loansummary = [];
 
     public $cntmemchild;
     public $inpchild = []; 
@@ -883,31 +885,31 @@ class CreateApplication extends Component
     public function signForRelease(){
         try{          
 
-            $this->validate([
-                                'loanDetails.modeOfRelease' => ['required'],
-                                'loanDetails.denomination' => ['required'],
-                                'loanDetails.courier' => ['required'],          
-                                'loanDetails.courierclient' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Client' ? ['required'] : '') : '',  
-                                'loanDetails.courieremployee' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Employee' ? ['required'] : '') : '',  
-                                'loanDetails.couriercno' => ['required'],                                             
-                            ]);
+            // $this->validate([
+            //                     'loanDetails.modeOfRelease' => ['required'],
+            //                     'loanDetails.denomination' => ['required'],
+            //                     'loanDetails.courier' => ['required'],          
+            //                     'loanDetails.courierclient' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Client' ? ['required'] : '') : '',  
+            //                     'loanDetails.courieremployee' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Employee' ? ['required'] : '') : '',  
+            //                     'loanDetails.couriercno' => ['required'],                                             
+            //                 ]);
 
-            $data = [
-                        'ldid' => $this->loanDetails['ldid'],
-                        "note"=> $this->loanDetails['notes'],
-                        'approvedby' => session()->get('auth_userid'),
-                        'naid' => $this->naID,
-                        'approvedLoanAmount' => $this->loanDetails['loanAmount'],                        
-                        'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],                                            
-                        "courier"=> $this->loanDetails['courier'],
-                        "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
-                        "courierCno"=> $this->loanDetails['couriercno'],
-                        "modeOfRelease"=> $this->loanDetails['modeOfRelease'],                       
-                        "modeOfReleaseReference"=> $this->loanDetails['denomination'],          
-                    ];
+            // $data = [
+            //             'ldid' => $this->loanDetails['ldid'],
+            //             "note"=> $this->loanDetails['notes'],
+            //             'approvedby' => session()->get('auth_userid'),
+            //             'naid' => $this->naID,
+            //             'approvedLoanAmount' => $this->loanDetails['loanAmount'],                        
+            //             'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],                                            
+            //             "courier"=> $this->loanDetails['courier'],
+            //             "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
+            //             "courierCno"=> $this->loanDetails['couriercno'],
+            //             "modeOfRelease"=> $this->loanDetails['modeOfRelease'],                       
+            //             "modeOfReleaseReference"=> $this->loanDetails['denomination'],          
+            //         ];
 
-             
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);                                 
+            $this->emit('openUrlPrintingVoucher', ['url' => URL::to('/').'/tranactions/application/printing/'.$this->naID , 'title' => 'This is the title', 'message' => 'This is the message']);
+            //$crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);                                 
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully signed for releasing', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -1221,7 +1223,7 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                //dd($data);    
+                // dd($data);    
                 //ditoviewing
                 $this->searchedmemId =  $data['memId'];
 
@@ -1263,7 +1265,11 @@ class CreateApplication extends Component
                             $this->termsOfPaymentList[$loanterms['topId']] = ['topId' => $loanterms['topId'],'termsofPayment' => $loanterms['termsofPayment'],'loanTypeId' => $loanterms['loanTypeId']];   
                         }
                     }
-                                                             
+
+                    //loan summary
+                    $getloansummary = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanSummary/GetLoanSummary', [ 'naid' => $this->naID ]);                  
+                    $this->loansummary = isset($getloansummary[0]) ? $getloansummary[0] : [];      
+                    //dd($this->loansummary);                                                   
                 }
                 $this->loanDetails['remarks'] = $data['individualLoan'][0]['remarks'];
                 $this->loanDetails['ci_time'] = $this->calculateTimeDifference($data['dateCreated'], Carbon::now());    
