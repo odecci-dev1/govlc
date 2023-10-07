@@ -10,16 +10,12 @@
 
         <!-- * Choose Type of Loan -->
         <div class="rowspan">
-            <div style="display: flex;">
-                <div style="width: 50%;">
-                    <h3 style="font-size: 1.9rem;">Choose Type of Loan</h3>
-                </div>
-                <div style="width: 50%;">
-                    <h3 style="font-size: 1.9rem;">Choose Terms Of Payment</h3>
-                </div>
-            </div>
-            <div style="display: flex;">
-                <div style="width: 50%;">
+                    <h3>Choose Type of Loan</h3>
+
+                    <!-- * Type Of Loan Dropdown Menu -->
+                    <div class="loan-type-dropdown">
+
+                        <!-- * Type Of Loan -->
                         <div class="input-wrapper">
 
                             <div class="select-box">
@@ -46,38 +42,10 @@
                                 </div>
 
                             </div>
-                            @error('loantype') <span class="text-required fw-bold">{{ $message }}</span>@enderror
+                            
                         </div>
-                </div>
-                <div style="width: 50%;">
-                        <div class="input-wrapper">
 
-                            <div class="select-box">
-
-                                <div class="options-container" data-type-opt-con2>
-                                @if($termsOfPaymentList)
-                                    @foreach($termsOfPaymentList as $mtermsOfPaymentList)
-                                        <div class="option" data-type-loan-opt2 data-individual-loan-link2>                                        
-                                            <input type="radio" wire:model="loanterms" class="radio" value="{{ $mtermsOfPaymentList['topId'] }}" id="loanterms{{ $mtermsOfPaymentList['topId'] }}" name="loanterms" />
-                                            <label for="loanterms{{ $mtermsOfPaymentList['topId'] }}">
-                                                <h4>{{ $mtermsOfPaymentList['termsofPayment'] }}</h4>
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                @endif    
-                                    
-                                </div>
-                                
-                                <div class="selected" style="font-weight: bold; font-size: 1.3rem;" data-type-loan-select2>
-                                    {{ isset($loanterms) ? $termsOfPaymentList[$loanterms]['termsofPayment'] : '' }}
-                                </div>
-
-                            </div>
-                            @error('loanterms') <span class="text-required fw-bold">{{ $message }}</span>@enderror
-                        </div>
-                </div>
-            </div>
-                    
+                    </div>
         </div>
 
         <!-- * Search for existing member -->

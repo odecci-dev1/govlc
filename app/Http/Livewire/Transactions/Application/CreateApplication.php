@@ -553,8 +553,8 @@ class CreateApplication extends Component
                                 "f_RTTB"=> '',
                                 "business"=> $businesses,
                                 "loanAmount"=> $input['member']['loanAmount'] ??= '0',
-                                'loanTypeId' => $this->loanTypeID,
-                                "termsOfPayment"=> $input['member']['termsOfPayment'] ??= '',
+                                'loanTypeId' => $this->loanDetails['loanTypeID'],
+                                "termsOfPayment"=> $this->loanDetails['loantermsID'] ??= '',
                                 "purpose"=> $input['member']['purpose'] ??= '',
                                 "child"=> $childs,
                                 "appliances"=> $appliances,
@@ -1071,7 +1071,11 @@ class CreateApplication extends Component
         $this->member['old_attachments'] = [];
         $this->type = $type;     
         $this->termsOfPaymentList = collect([]);
-        $this->loanTypeID = $request->loanTypeID;        
+
+        $this->loanDetails['loanTypeID'] = $request->loanTypeID;   
+        $this->loanDetails['loantermsID'] = $request->loantermsID; 
+        $this->loanDetails['loantermsName'] = $request->loantermsName;  
+             
         $this->member['civil_Status'] = '';       
         $this->member['emp_Status'] = '';
         $this->member['f_Emp_Status'] = '';
@@ -1183,7 +1187,7 @@ class CreateApplication extends Component
                 $this->member['f_CompanyName'] = 'SOEN'; 
                 $this->member['f_RTTB'] = '';     
                 $this->member['loanAmount'] = '30000'; 
-                $this->member['termsOfPayment'] = '12 months'; 
+                $this->member['termsOfPayment'] = $this->loanDetails['loantermsName']; 
                 $this->member['purpose'] = 'For Business'; 
         
                 $this->comaker['co_Fname'] = 'Thea'; 
@@ -1223,7 +1227,7 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                // dd($data);    
+                dd($data);    
                 //ditoviewing
                 $this->searchedmemId =  $data['memId'];
 
@@ -1233,6 +1237,8 @@ class CreateApplication extends Component
                     $this->loanDetails['loanAmount'] = $data['individualLoan'][0]['loanAmount'];
                     $this->loanDetails['purpose'] = $data['purpose'];
                     $this->loanDetails['terms'] = $data['termsOfPayment']; //$data['individualLoan'][0]['terms'];
+                    //$this->loanDetails['loantermsID'] = $request->loantermsID; 
+                    //$this->loanDetails['loantermsName'] = $request->loantermsName;  
                     
                     $this->loanDetails['noofnopayment'] = 0; 
                     $this->loanDetails['noofloans'] = 0; 
@@ -1259,7 +1265,7 @@ class CreateApplication extends Component
 
                     $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loanDetails['loanTypeID']]);                  
                     $loanterms = $loanterms->json();
-                    //dd( $loanterms );
+                   
                     if( $loanterms ){
                         foreach( $loanterms  as  $loanterms ){
                             $this->termsOfPaymentList[$loanterms['topId']] = ['topId' => $loanterms['topId'],'termsofPayment' => $loanterms['termsofPayment'],'loanTypeId' => $loanterms['loanTypeId']];   

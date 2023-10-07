@@ -2248,7 +2248,7 @@
                 <!-- * Terms Of Payment -->
                 <div class="input-wrapper">
                     <span>Terms Of Payment</span>
-                    <input wire:model.lazy="member.termsOfPayment" type="text" >
+                    <input wire:model.lazy="member.termsOfPayment" disabled type="text" >
                     @error('member.termsOfPayment') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 

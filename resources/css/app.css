@@ -15000,6 +15000,7 @@ body {
     font-weight: 700;
     color: #d6a330;
 }
+/* dito */
 .main-dashboard
     .na-form-con
     .na-container-wrapper
@@ -19506,6 +19507,10 @@ body {
 .text-required {
     color: #ff0000 !important;
     font-size: 14px !important;
+}
+
+.fw-bold{
+    font-weight: bold;
 }
 
 .full-screen-div {

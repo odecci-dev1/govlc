@@ -380,7 +380,24 @@
                     selected.innerHTML = option.querySelector("label").innerHTML;
                     optionsContainer.classList.remove("active");
                 });
-            });          
+            });   
+            
+            // ** Loan Type terms
+                
+            const selected2 = document.querySelector('[data-type-loan-select2]')
+            const optionsContainer2 = document.querySelector('[data-type-opt-con2')
+            const optionsList2 = document.querySelectorAll('[data-type-loan-opt2]')
+
+            selected2.addEventListener("click", () => {
+                optionsContainer2.classList.toggle("active");
+            });
+
+            optionsList2.forEach(option => {
+                option.addEventListener("click", () => {
+                    selected2.innerHTML = option.querySelector("label").innerHTML;
+                    optionsContainer2.classList.remove("active");
+                });
+            });    
 
             // * Linked to Individual Loan
             const individualLoanOpt = document.querySelector('[data-individual-loan-link]')

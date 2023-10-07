@@ -12,24 +12,33 @@ class NewApplicationModal extends Component
     public $newappmodelkeyword = '';
 
     public $loantype;
+    public $loanterms;
     public $loantypeList;
     public $loantypename = '';
+    public $termsOfPaymentList = [];
+
+    public function messages(){
+        $messages = [];
+        $messages['loantype.required'] = 'Please select loan type';
+        $messages['loanterms.required'] = 'Please select loan terms';
+        return $messages;
+    }
 
     public function searchExistingMembers($value){
         $this->memberlist = $value;
     }
 
     public function createIndividualLoan($value, $loanid){
-      
+        $this->validate([ 'loantype' => 'required', 'loanterms' => 'required' ]);
         if($value == ''){
             return redirect()->action(
-                [CreateApplication::class], ['type' => 'create', 'naID' => '', 'loanTypeID' => $loanid]
+                [CreateApplication::class], ['type' => 'create', 'naID' => '', 'loanTypeID' => $loanid, 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
             );
         }
         else{          
             // return redirect()->to('/tranactions/application/create/'.$value);
             return redirect()->action(
-                [CreateApplication::class], ['type' => 'create', 'naID' => $value, 'loanTypeID' => $loanid]
+                [CreateApplication::class], ['type' => 'create', 'naID' => $value, 'loanTypeID' => $loanid, 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
             );
         }
        
@@ -73,7 +82,16 @@ class NewApplicationModal extends Component
     {
         $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => $this->newappmodelkeyword]);       
         $this->memberlist = $data->json();  
-        // dd($data);             
+
+        $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loantype]);                  
+        $loanterms = $loanterms->json();
+       
+        if( $loanterms ){
+            foreach( $loanterms  as  $loanterms ){
+                $this->termsOfPaymentList[$loanterms['topId']] = ['topId' => $loanterms['topId'],'termsofPayment' => $loanterms['termsofPayment'],'loanTypeId' => $loanterms['loanTypeId']];   
+            }
+        }
+        //dd($this->loantype);             
         return view('livewire.modals.new-application-modal');
     }
 }
