@@ -87,6 +87,7 @@ class NewApplicationModal extends Component
         $loanterms = $loanterms->json();
        
         if( $loanterms ){
+            $this->termsOfPaymentList = [];
             foreach( $loanterms  as  $loanterms ){
                 $this->termsOfPaymentList[$loanterms['topId']] = ['topId' => $loanterms['topId'],'termsofPayment' => $loanterms['termsofPayment'],'loanTypeId' => $loanterms['loanTypeId']];   
             }

@@ -19524,6 +19524,14 @@ body {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
+.img-edit {
+    width: 1.5rem;
+    height: 1.5rem;
+    position: absolute;
+    margin-left: 10px;
+ }
+
+
 /* Editor: Ace
 Description: Addtional script for design adjustment
 Date: 10-03-2023

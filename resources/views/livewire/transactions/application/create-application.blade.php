@@ -68,7 +68,7 @@
                             <!-- <a href="new-application-approval.html"> -->
                                 <button type="button" wire:click="submitForApproval" class="button" data-submit-for-approval>Submit for approval</button>
                             <!-- </a> -->
-                            <button type="submit" class="declineButton">Decline</button>
+                            <button type="submit" class="declineButton" data-open-application-decline>Decline</button>
                         </div>
                     </div>
                     <textarea wire:model.lazy="loanDetails.remarks" class="wrapper-2"></textarea>
@@ -242,7 +242,7 @@
 
             <!-- * Mode of Release -->
             <div class="input-wrapper">
-                <span>Mode of Release</span>
+                <span>Mode of Release <img class="img-edit" style="{{ in_array($member['statusID'], [10]) ? 'visibility: visible' : '' }}" src="{{ URL::to('/') }}/assets/icons/modal-icon/asking.svg" alt=""></span>
                 <div class="select-box">
 
                     <div class="options-container" data-option-con10>
@@ -278,12 +278,14 @@
             @if(isset($loanDetails['modeOfRelease']))               
                 <div class="input-wrapper" data-toggle-mor-1>
                     @if($loanDetails['modeOfRelease'] == 'Cash')
-                        <span>Denomination</span>
+                        <span>Denomination <img class="img-edit" style="{{ in_array($member['statusID'], [10]) ? 'visibility: visible' : '' }}" src="{{ URL::to('/') }}/assets/icons/modal-icon/asking.svg" alt=""></span>
+                        <input autocomplete="off" wire:model.lazy="loanDetails.denomination" type="text" id="denomination" name="denomination">
                     @endif
                     @if($loanDetails['modeOfRelease'] == 'Check')
                         <span>Check Number</span>
+                        <input autocomplete="off" wire:model.lazy="loanDetails.denomination" type="text" id="denomination" name="denomination">
                     @endif
-                    <input autocomplete="off" wire:model.lazy="loanDetails.denomination" type="text" id="denomination" name="denomination">
+                   
                     @error('loanDetails.denomination') <span class="text-required">{{ $message }}</span> @enderror
                 </div>                                            
             @endif
@@ -331,11 +333,56 @@
                 <!-- dito -->
             </div>
 
-            <!-- * Purpose -->           
+            <!-- * Purpose --> 
+            <!-- * Terms of Payment -->
             <div class="input-wrapper">
-                <span>Purpose</span>
-                <input wire:model.lazy="loanDetails.purpose" disabled autocomplete="off" type="text" >
+                <span>Terms of Payment</span>
+                <!-- <input disabled wire:model.lazy="loanDetails.terms" autocomplete="off" type="text" > -->
+                <div class="select-box"  style="{{ in_array($member['statusID'], [10, 15]) ? 'pointer-events: none; color: #808080;' : '' }}">
+
+                                <div class="options-container" data-type-opt-con>
+                     
+                                    @if(isset($termsOfPaymentList))
+                                        @foreach($termsOfPaymentList as $topList)
+                                        <div class="option" data-type-loan-opt data-individual-loan-link>
+
+                                            <input type="radio" wire:model="loanDetails.topId" class="radio" value="{{ $topList['topId'] }}" id="topId{{ $topList['topId'] }}" name="top" />
+                                            <label for="topId{{ $topList['topId'] }}">
+                                                <h4>{{ $topList['termsofPayment'] }}</h4>
+                                            </label>
+
+                                        </div>
+                                        @endforeach
+                                    @endif
+                                    
+                                </div>
+                                
+                                <div class="selected" style="font-weight: bold;" data-type-loan-select>
+                                    {{ $getLoanTermsname != '' ? $getLoanTermsname : $loanDetails['terms'] }}
+                                </div>
+
+                </div>
+                @error('loanDetails.topId') <span class="text-required">{{ $message }}</span> @enderror
             </div>
+
+            <script>
+                              
+            const selected = document.querySelector('[data-type-loan-select]')
+            const optionsContainer = document.querySelector('[data-type-opt-con')
+            const optionsList = document.querySelectorAll('[data-type-loan-opt]')
+
+            selected.addEventListener("click", () => {
+                optionsContainer.classList.toggle("active");
+            });
+
+            optionsList.forEach(option => {
+                option.addEventListener("click", () => {
+                    //selected.innerHTML = option.querySelector("label").innerHTML;
+                    optionsContainer.classList.remove("active");
+                });
+            });  
+            </script>          
+           
         
             @if($member['statusID'] == 9)   
                
@@ -385,61 +432,101 @@
         <!-- * Rowspan 3: Terms of Payment, Number of No Payment, Number of Loans, and Change Loan Payment Button -->
         <div class="rowspan">
 
-            <!-- * Terms of Payment -->
             <div class="input-wrapper">
-                <span>Terms of Payment</span>
-                <!-- <input disabled wire:model.lazy="loanDetails.terms" autocomplete="off" type="text" > -->
-                <div class="select-box"  style="{{ in_array($member['statusID'], [10, 15]) ? 'pointer-events: none; color: #808080;' : '' }}">
-
-                                <div class="options-container" data-type-opt-con>
-                                    <div class="option" data-type-loan-opt data-individual-loan-link>
-
-                                        <input type="radio" wire:model="loanDetails.topId" class="radio" value="{{ $member['termsOfPayment'] }}" id="topId{{ $member['termsOfPayment'] }}" name="top" />
-                                        <label for="topId{{ $member['termsOfPayment'] }}">
-                                            <h4>{{ $member['termsOfPayment'] }}  <span style="font-weight: normal; color: #737373;">(user input)</span></h4>
-                                        </label>
-
-                                    </div>
-                                    @if(isset($termsOfPaymentList))
-                                        @foreach($termsOfPaymentList as $topList)
-                                        <div class="option" data-type-loan-opt data-individual-loan-link>
-
-                                            <input type="radio" wire:model="loanDetails.topId" class="radio" value="{{ $topList['topId'] }}" id="topId{{ $topList['topId'] }}" name="top" />
-                                            <label for="topId{{ $topList['topId'] }}">
-                                                <h4>{{ $topList['termsofPayment'] }}</h4>
-                                            </label>
-
-                                        </div>
-                                        @endforeach
-                                    @endif
-                                    
-                                </div>
-                                
-                                <div class="selected" style="font-weight: bold;" data-type-loan-select>
-                                    {{ $getLoanTermsname != '' ? $getLoanTermsname : $loanDetails['terms'] }}
-                                </div>
-
-                </div>
-                @error('loanDetails.topId') <span class="text-required">{{ $message }}</span> @enderror
+                <span>Purpose</span>
+                <input wire:model.lazy="loanDetails.purpose" disabled autocomplete="off" type="text" >
             </div>
 
-            <script>
-                              
-            const selected = document.querySelector('[data-type-loan-select]')
-            const optionsContainer = document.querySelector('[data-type-opt-con')
-            const optionsList = document.querySelectorAll('[data-type-loan-opt]')
+           
+            @if($member['statusID'] == 9)   
+             <!-- * Number of No Payment -->
+            <div class="input-wrapper">
+                <span>Savings</span>
+                <input wire:model.lazy="loanDetails.savings" autocomplete="off" type="number">
+                @error('loanDetails.savings') <span class="text-required">{{ $message }}</span> @enderror
+            </div>
 
-            selected.addEventListener("click", () => {
-                optionsContainer.classList.toggle("active");
-            });
+            <!-- * Number of Loans -->
+            <div class="input-wrapper">
+                <span>Notarial Fee</span>
+                <input wire:model.lazy="loanDetails.notarialFee" autocomplete="off" type="number">
+                @error('loanDetails.notarialFee') <span class="text-required">{{ $message }}</span> @enderror
+            </div>
+            @endif
 
-            optionsList.forEach(option => {
-                option.addEventListener("click", () => {
-                    //selected.innerHTML = option.querySelector("label").innerHTML;
-                    optionsContainer.classList.remove("active");
-                });
-            });  
-            </script>
+            @if($member['statusID'] == 10)   
+             <!-- * Number of No Payment -->
+            <div class="input-wrapper">
+                <span>Total Savings</span>
+                <input wire:model.lazy="loanDetails.totalSavings" autocomplete="off" type="number">
+                @error('loanDetails.savings') <span class="text-required">{{ $message }}</span> @enderror
+            </div>
+
+            <!-- * Number of Loans -->
+            <div class="input-wrapper">
+                <span>Savings To Be Use <img class="img-edit" src="{{ URL::to('/') }}/assets/icons/modal-icon/asking.svg" alt=""></span>
+                <input wire:model.lazy="loanDetails.savingsToUse" autocomplete="off" type="number">
+                @error('loanDetails.notarialFee') <span class="text-required">{{ $message }}</span> @enderror
+            </div>
+            @endif
+
+            @if(in_array($member['statusID'], [9]))    
+            <!-- * Change Loan Payment -->
+            <!-- <div class="input-wrapper">
+                <button type="button" class="button">Change Loan Payment</button>
+            </div> -->
+            @else
+                <div class="input-wrapper input-wrapper-decline">
+                    <button type="button" class="declineButton" data-open-application-decline>Decline</button>
+                </div>
+            @endif
+
+        </div>
+
+        @if($member['statusID'] == 9)   
+        <div class="rowspan">
+
+            <div class="input-wrapper">
+                <span>Advance Payment</span>
+                <input wire:model.lazy="loanDetails.advancePayment" autocomplete="off" type="text" >
+                @error('loanDetails.advancePayment') <span class="text-required">{{ $message }}</span> @enderror
+            </div>
+
+            <!-- * Number of No Payment -->
+            <div class="input-wrapper">
+                <span>Interest</span>
+                <input wire:model.lazy="loanDetails.interest" autocomplete="off" type="number">
+                @error('loanDetails.interest') <span class="text-required">{{ $message }}</span> @enderror
+            </div>
+
+            <!-- * Number of Loans -->
+            <div class="input-wrapper" style="padding-bottom: 0;">
+                <span>Releasing Amount</span>
+                <input wire:model.lazy="loanDetails.releasingAmount" autocomplete="off" type="number">
+                @error('loanDetails.releasingAmount') <span class="text-required">{{ $message }}</span> @enderror
+            </div>
+             <!-- * Decline Button -->
+             @if($member['statusID'] == 9)    
+            <div class="input-wrapper input-wrapper-decline">
+                <button type="button" class="declineButton" data-open-application-decline>Decline</button>
+            </div>
+            @elseif($member['statusID'] == 10)  
+            <!-- <div class="input-wrapper input-wrapper-decline">
+                <button type="button" class="declineButton">Cancel</button>
+            </div>   -->
+            @endif
+        </div>
+        @endif
+
+        <div class="rowspan">
+
+            @if($member['statusID'] == 9)   
+            <div class="input-wrapper">
+                <span>Daily Amount Due</span>
+                <input wire:model.lazy="loanDetails.dailyAmountDue" autocomplete="off" type="text" >
+                @error('loanDetails.dailyAmountDue') <span class="text-required">{{ $message }}</span> @enderror
+            </div>
+            @endif
 
             <!-- * Number of No Payment -->
             <div class="input-wrapper">
@@ -452,17 +539,7 @@
                 <span>Number of Loans</span>
                 <input disabled wire:model.lazy="loanDetails.noofloans" autocomplete="off" type="number">
             </div>
-            @if(in_array($member['statusID'], [9]))    
-            <!-- * Change Loan Payment -->
-            <!-- <div class="input-wrapper">
-                <button type="button" class="button">Change Loan Payment</button>
-            </div> -->
-            @else
-                <div class="input-wrapper input-wrapper-decline">
-                    <button type="button" class="declineButton" data-open-application-decline>Decline</button>
-                </div>
-            @endif
-
+             
         </div>
 
         <!-- * Rowspan 4: Approved by:, Notes and Decline Button -->
@@ -480,16 +557,7 @@
                 <input {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.notes" autocomplete="off" type="text" >
             </div>
 
-            <!-- * Decline Button -->
-            @if($member['statusID'] == 9)    
-            <div class="input-wrapper input-wrapper-decline">
-                <button type="button" class="declineButton">Decline</button>
-            </div>
-            @elseif($member['statusID'] == 10)  
-            <!-- <div class="input-wrapper input-wrapper-decline">
-                <button type="button" class="declineButton">Cancel</button>
-            </div>   -->
-            @endif
+           
 
         </div>
 
@@ -2930,6 +2998,47 @@
                                     </div>
                                 </dialog>
                                 <!-- employee searching -->
+
+                                <!-- modal for declining -->
+                                <dialog class="na-application-decline-modal" data-application-decline-modal>
+                                    <!-- * Modal Container -->
+                                    <div class="modal-container">
+
+                                            <!-- * Reason for declining Modal Container -->
+                                            <div class="application-decline-modal-container">
+
+                                                <!-- * Button Wrapper -->
+                                                <div class="button-wrapper">
+                                                    <button type="button" data-close-application-decline>
+                                                            <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="close">
+                                                    </button>
+                                                </div>
+
+                                                <!-- * Small Container -->
+                                                <div class="small-con">
+
+                                                        <!-- * Rowspan 1: Header -->
+                                                        <div class="rowspan">
+                                                            <h2>Reason for declining</h2>
+                                                        </div>
+
+                                                        <!-- * Rowspan 2: Reason for declining Container -->
+                                                        <div class="rowspan">
+                                                            <textarea name="" rows="15" id=""placeholder="Enter the reason here..."></textarea>
+                                                        </div>
+                                                        
+                                                        <!-- * Rowspan 3: Button Wrapper -->
+                                                        <div class="rowspan">
+                                                            <button type="button" class="button" data-submit-decline-reason>Submit</button>
+                                                        </div>
+
+                                                </div>
+
+                                            </div>
+                                    </div>
+
+                                </dialog>
+                                <!-- modal for declining -->
     </form>
     <script>
 
@@ -3310,7 +3419,43 @@
         
         // * Mode of Release Toggle
 
-        
+        // * Decline Application Modal
+        // ***** Modal with Submit Button redirect to another page ***** //
+        function submitModalFunction(open, close, submit, modal, url) {
+            open.addEventListener('click', () => {
+                modal.showModal()
+            })
+
+            close.addEventListener('click', () => {
+                modal.setAttribute("closing", "");
+                modal.addEventListener("animationend", () => {
+                    modal.removeAttribute("closing")
+                    modal.close()
+                }, { once: true })
+            
+            })
+
+            submit.addEventListener("click", () => {
+                location.href = url
+            })
+        }
+
+        const declineApplicationModal = document.querySelector('[data-application-decline-modal]')
+
+        if (declineApplicationModal) {
+            const openDeclineApplicationModal = document.querySelector('[data-open-application-decline]')
+            const closeDeclineApplicationModal = document.querySelector('[data-close-application-decline]')
+            const submitDeclineReason = document.querySelector('[data-submit-decline-reason]')
+            url = 'new-application.html'
+
+            submitModalFunction(
+                openDeclineApplicationModal, 
+                closeDeclineApplicationModal,
+                submitDeclineReason,
+                declineApplicationModal,
+                url)
+
+        }
         
     </script>
 </div>

@@ -21,11 +21,10 @@ class FieldOfficerlist extends Component
     }
     
     public function render()
-    {
-        // $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/OfficerList');  
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFullname', ['fullname' => $this->keyword]);  
+    { 
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterPaginate', ['fullname' => $this->keyword, 'page' => 1, 'pageSize' => 50]);  
+        //dd($data);
         $this->list = $data->json();        
-        // dd($this->list);     
         return view('livewire.maintenance.field-officer.field-officerlist');
     }
 }

@@ -57,7 +57,7 @@
                                 <div class="options-container" data-type-opt-con2>
                                 @if($termsOfPaymentList)
                                     @foreach($termsOfPaymentList as $mtermsOfPaymentList)
-                                        <div class="option" data-type-loan-opt2 data-individual-loan-link2>                                        
+                                        <div class="option" data-type-loan-opt2 >                                        
                                             <input type="radio" wire:model="loanterms" class="radio" value="{{ $mtermsOfPaymentList['topId'] }}" id="loanterms{{ $mtermsOfPaymentList['topId'] }}" name="loanterms" />
                                             <label for="loanterms{{ $mtermsOfPaymentList['topId'] }}">
                                                 <h4>{{ $mtermsOfPaymentList['termsofPayment'] }}</h4>
@@ -69,7 +69,7 @@
                                 </div>
                                 
                                 <div class="selected" style="font-weight: bold; font-size: 1.3rem;" data-type-loan-select2>
-                                    {{ isset($loanterms) ? $termsOfPaymentList[$loanterms]['termsofPayment'] : '' }}
+                                    {{ isset($loanterms) ? isset($termsOfPaymentList[$loanterms]['termsofPayment']) ? $termsOfPaymentList[$loanterms]['termsofPayment'] : '' : '' }}
                                 </div>
 
                             </div>

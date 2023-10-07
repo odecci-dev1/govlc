@@ -21,7 +21,7 @@ class FieldArea extends Component
     public $location;
     public $foid;
     public $fullname;
-    public $keyword;
+    public $keyword = '';
     public $keywordunassigned = '';
 
     public $searchfokeyword = '';
@@ -87,6 +87,7 @@ class FieldArea extends Component
     {      
         $this->getUnassigned();          
         $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AreaFilter', ['areaName' => $this->keyword]);  
+        // dd($data);
         $this->list = $data->json();    
         // dd($this->list);
         
