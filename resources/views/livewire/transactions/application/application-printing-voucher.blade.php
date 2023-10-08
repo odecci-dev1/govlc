@@ -101,13 +101,34 @@
                                                 <p class="p-red-text">FIRST PAYMENT:</p>
                                                 <span id="">{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : 'not found' }}</span>
                                             </div>
+                                            <div class="box-inner-wrapper">
+                                                <p>HOLIDAYS:</p>
+                                                <span id=""></span>
+                                            </div>
+                                            <div class="box-inner-wrapper">
+                                                <p>USED SAVINGS:</p>
+                                                <span id=""></span>
+                                            </div>
+                                            <div class="box-inner-wrapper">
+                                                <p>LIFE INSURANCE:</p>
+                                                <span id=""></span>
+                                            </div>
+                                            <div class="box-inner-wrapper">
+                                                <p>DEDUCTED INTEREST:</p>
+                                                <span id=""></span>
+                                            </div>
                                         </div>
                                         <div class="box-inner">
                                             <p>{{ isset($loansummary['loanAmount']) ? number_format($loansummary['loanAmount'], 2) : 'not found' }}</p>
                                             <p>{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : 'not found' }}</p>
                                             <p>{{ isset($loansummary['notarialFee']) ? number_format($loansummary['notarialFee'], 2) : 'not found' }}</p>
-                                            <p class="underline">{{ isset($loansummary['total_LoanInsuraneAmount']) ? number_format($loansummary['total_LoanInsuraneAmount'], 2) : 'not found' }}</p>
+                                            <p class="underline">{{ isset($loansummary['loanInsurance']) ? number_format($loansummary['loanInsurance'], 2) : 'not found' }}</p>
                                             <p class="p-bold underline-thick">{{ isset($loansummary['total_LoanReceivable']) ? number_format($loansummary['total_LoanReceivable'], 2) : 'not found' }}</p>
+                                            <p>&nbsp;</p>
+                                            <p>holidays</p>
+                                            <p>used saving</p>
+                                            <p>life insurance</p>
+                                            <p>deducted interest</p>
                                         </div>
                                     </div>
                                     <!--  Box-3 -->
@@ -136,7 +157,7 @@
                                             </div>
                                             <div class="box-inner-wrapper">
                                                 <p>AMOUNT RECEIVED:</p> 
-                                                <span id="">{{ isset($loansummary['amountReceived']) ? number_format($loansummary['amountReceived'], 2) : 'not found' }}</span>
+                                                <span id="">{{ isset($loansummary['total_LoanReceivable']) ? number_format($loansummary['total_LoanReceivable'], 2) : 'not found' }}</span>
                                             </div>
                                         </div>
                                     </div>

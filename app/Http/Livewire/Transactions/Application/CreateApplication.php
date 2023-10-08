@@ -860,12 +860,17 @@ class CreateApplication extends Component
                                 'loanDetails.loanAmount' => ['required', 'numeric', 'min:1'],
                                 'loanDetails.topId' => ['required'],
                             ]);
+
             $data = [
                         'ldid' => $this->loanDetails['ldid'],
                         'note' => isset($this->loanDetails['notes']) ? $this->loanDetails['notes'] : '',
                         'approvedby' => session()->get('auth_userid'),
                         'naid' => $this->naID,
-                        'approvedLoanAmount' => $this->loanDetails['loanAmount'],
+                        'approvedReleasingAmount' => $this->loanDetails['total_LoanReceivable'],
+                        'approvedNotarialFee' => $this->loanDetails['notarialFee'],
+                        'approveedInterest' => $this->loanDetails['total_InterestAmount'],
+                        'approvedAdvancePayment' => $this->loanDetails['advancePayment'],
+                        'approvedDailyAmountDue' => $this->loanDetails['dailyCollectibles'],
                         'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],
                         'courier' => '',
                         'courierName' => '',
@@ -873,8 +878,9 @@ class CreateApplication extends Component
                         'modeOfRelease' => '',
                         'modeOfReleaseReference' => '',                        
                     ];
-            // dd($data);        
+            //dd($data);        
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Approval/ApproveReleasing', $data);          
+            // dd($crt);
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully approve for releasing', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -1274,7 +1280,13 @@ class CreateApplication extends Component
 
                     //loan summary
                     $getloansummary = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanSummary/GetLoanSummary', [ 'naid' => $this->naID ]);                  
-                    $this->loansummary = isset($getloansummary[0]) ? $getloansummary[0] : [];      
+                    $this->loansummary = isset($getloansummary[0]) ? $getloansummary[0] : [];     
+                    $this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : ''; 
+                    $this->loanDetails['notarialFee'] = isset($getloansummary[0]) ? $this->loansummary['notarialFee'] : ''; 
+                    $this->loanDetails['advancePayment'] = isset($getloansummary[0]) ? $this->loansummary['advancePayment'] : ''; 
+                    $this->loanDetails['total_InterestAmount'] = isset($getloansummary[0]) ? $this->loansummary['total_InterestAmount'] : '';
+                    $this->loanDetails['total_LoanReceivable'] = isset($getloansummary[0]) ? $this->loansummary['total_LoanReceivable'] : '';
+                    $this->loanDetails['dailyCollectibles'] = isset($getloansummary[0]) ? $this->loansummary['dailyCollectibles'] : '';
                     //dd($this->loansummary);                                                   
                 }
                 $this->loanDetails['remarks'] = $data['individualLoan'][0]['remarks'];

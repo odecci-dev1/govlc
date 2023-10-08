@@ -19537,6 +19537,11 @@ body.print-portrait .page {
     border: 1px solid #d6a330 !important;
 }
 
+.select-disabled{
+    pointer-events: none; 
+    color: #808080;
+}
+
 /* Editor: Ace
 Description: Addtional script for design adjustment
 Date: 10-03-2023

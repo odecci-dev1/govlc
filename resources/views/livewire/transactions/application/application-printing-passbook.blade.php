@@ -64,7 +64,7 @@
                                         <!-- * Box-1 -->
                                         <div class="box">
                                             <div class="fill-wrap">
-                                                <p class="p-fill p-bold">Name: </p>
+                                                <p class="p-fill p-bold">Name: Jumar</p>
                                             </div>
                                             <div class="fill-wrap">
                                                 <p class="p-fill p-bold">Address:</p>

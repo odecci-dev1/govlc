@@ -158,7 +158,7 @@
                                     <p>{{ isset($loansummary['loanAmount']) ? number_format($loansummary['loanAmount'], 2) : 'not found' }}</p>
                                     <p>{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : 'not found' }}</p>
                                     <p>{{ isset($loansummary['notarialFee']) ? number_format($loansummary['notarialFee'], 2) : 'not found' }}</p>
-                                    <p class="underline">{{ isset($loansummary['total_LoanInsuraneAmount']) ? number_format($loansummary['total_LoanInsuraneAmount'], 2) : 'not found' }}</p>
+                                    <p class="underline">{{ isset($loansummary['loanInsurance']) ? number_format($loansummary['loanInsurance'], 2) : 'not found' }}</p>
                                     <p class="underline-thick">{{ isset($loansummary['total_LoanReceivable']) ? number_format($loansummary['total_LoanReceivable'], 2) : 'not found' }}</p>
                                 </div>
                             </div>
@@ -188,7 +188,7 @@
                                     </div>
                                     <div class="box-inner-wrapper">
                                         <p>AMOUNT RECEIVED:</p> 
-                                        <span id="">{{ isset($loansummary['amountReceived']) ? number_format($loansummary['amountReceived'], 2) : 'not found' }}</span>
+                                        <span id="">{{ isset($loansummary['total_LoanReceivable']) ? number_format($loansummary['total_LoanReceivable'], 2) : 'not found' }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -242,7 +242,7 @@
 
             <!-- * Mode of Release -->
             <div class="input-wrapper">
-                <span>Mode of Release <img class="img-edit" style="{{ in_array($member['statusID'], [10]) ? 'visibility: visible' : '' }}" src="{{ URL::to('/') }}/assets/icons/modal-icon/asking.svg" alt=""></span>
+                <span>Mode of Release</span>
                 <div class="select-box">
 
                     <div class="options-container " data-option-con10>
@@ -328,7 +328,7 @@
             <!-- * Loan Amount -->
             <div class="input-wrapper">
                 <span>Loan Amount</span>
-                <input wire:model.lazy="loanDetails.loanAmount"  {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} autocomplete="off" type="text" >
+                <input wire:model.lazy="loanDetails.loanAmount"  disabled autocomplete="off" type="text" >
                 @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror
                 <!-- dito -->
             </div>
@@ -441,9 +441,9 @@
             @if($member['statusID'] == 9)   
              <!-- * Number of No Payment -->
             <div class="input-wrapper">
-                <span>Savings</span>
-                <input wire:model.lazy="loanDetails.savings" autocomplete="off" type="number">
-                @error('loanDetails.savings') <span class="text-required">{{ $message }}</span> @enderror
+                <span>Total Savings</span>
+                <input wire:model.lazy="loanDetails.totalSavingsAmount" disabled autocomplete="off" type="number">
+                @error('loanDetails.totalSavingsAmount') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
@@ -495,15 +495,15 @@
             <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Interest</span>
-                <input wire:model.lazy="loanDetails.interest" autocomplete="off" type="number">
+                <input wire:model.lazy="loanDetails.total_InterestAmount" autocomplete="off" type="number">
                 @error('loanDetails.interest') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper" style="padding-bottom: 0;">
                 <span>Releasing Amount</span>
-                <input wire:model.lazy="loanDetails.releasingAmount" autocomplete="off" type="number">
-                @error('loanDetails.releasingAmount') <span class="text-required">{{ $message }}</span> @enderror
+                <input wire:model.lazy="loanDetails.total_LoanReceivable" autocomplete="off" type="number">
+                @error('loanDetails.total_LoanReceivable') <span class="text-required">{{ $message }}</span> @enderror
             </div>
              <!-- * Decline Button -->
              @if($member['statusID'] == 9)    
@@ -523,8 +523,8 @@
             @if($member['statusID'] == 9)   
             <div class="input-wrapper">
                 <span>Daily Amount Due</span>
-                <input wire:model.lazy="loanDetails.dailyAmountDue" autocomplete="off" type="text" >
-                @error('loanDetails.dailyAmountDue') <span class="text-required">{{ $message }}</span> @enderror
+                <input wire:model.lazy="loanDetails.dailyCollectibles" autocomplete="off" type="text" >
+                @error('loanDetails.dailyCollectibles') <span class="text-required">{{ $message }}</span> @enderror
             </div>
             @endif
 
@@ -611,7 +611,7 @@
                                     <!-- * Primary Search Bar -->
                                     <div class="primary-search-bar">
                                         <div class="row">
-                                            <input wire:model.lazy="loanDetails.courieremployee" wire:click="openSearchEmployee" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="search" placeholder="Search" autocomplete="off">
+                                            <input wire:model.lazy="loanDetails.courieremployee" wire:click="openSearchEmployee" style="{{ $member['statusID'] == 10 ? 'border: 1px solid #d6a330 !important;' : '' }} font-size: 1.3rem;" type="search" placeholder="Search" autocomplete="off">
                                             <button type="button">                                                
                                             </button>
                                         </div>

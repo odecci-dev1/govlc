@@ -262,6 +262,12 @@ class LoanTypes extends Component
 
     public function render()
     {
+        if(isset($this->inpterms['collectionTypeId'])){
+            if($this->inpterms['collectionTypeId'] == 3){
+                $this->inpterms['interestType'] = 'Custom';
+                $this->inpterms['interestApplied'] = 'Monthly';
+            }
+        }
         return view('livewire.maintenance.loan-types.loan-types');
     }
 }

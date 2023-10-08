@@ -192,7 +192,7 @@
                         <div style="width:  100%; display: flex;">                           
                             <div  style="width:  100%;">
                                 <div class="input-inner-select-wrapper">
-                                    <div class="select-box">
+                                    <div class="select-box {{ isset($inpterms['collectionTypeId']) ? ($inpterms['collectionTypeId'] == 3 ? 'select-disabled' : '') : ''  }}">
                                         <div class="options-container" data-option-con2>
                                             <div class="option" data-option-item2>
                                                 <input type="radio" class="radio" wire:model.lazy="inpterms.interestType" class="radio" name="interestType" id="interestType1" value="Compound"/>
@@ -223,7 +223,7 @@
                         <div style="width:  100%; display: flex;">                           
                             <div  style="width:  100%;">
                                 <div class="input-inner-select-wrapper">
-                                    <div class="select-box">
+                                    <div class="select-box {{ isset($inpterms['collectionTypeId']) ? ($inpterms['collectionTypeId'] == 3 ? 'select-disabled' : '') : ''  }}">
                                         <div class="options-container" data-option-con9>
                                             <div class="option" data-option-item9>
                                                 <input type="radio" class="radio" wire:model.lazy="inpterms.interestApplied" class="radio" name="interestApplied" id="interestApplied1" value="Monthly"/>
