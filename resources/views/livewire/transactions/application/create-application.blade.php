@@ -245,7 +245,7 @@
                 <span>Mode of Release <img class="img-edit" style="{{ in_array($member['statusID'], [10]) ? 'visibility: visible' : '' }}" src="{{ URL::to('/') }}/assets/icons/modal-icon/asking.svg" alt=""></span>
                 <div class="select-box">
 
-                    <div class="options-container" data-option-con10>
+                    <div class="options-container " data-option-con10>
 
                         <div class="option" data-option-item10>
 
@@ -267,7 +267,7 @@
 
                     </div>
 
-                    <div class="selected" style="font-weight: bold;" data-option-select10>
+                    <div class="selected {{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" style="font-weight: bold;" data-option-select10>
                         {{ isset($loanDetails['modeOfRelease']) ? $loanDetails['modeOfRelease'] : '' }}
                     </div>                    
                 </div>
@@ -279,11 +279,11 @@
                 <div class="input-wrapper" data-toggle-mor-1>
                     @if($loanDetails['modeOfRelease'] == 'Cash')
                         <span>Denomination <img class="img-edit" style="{{ in_array($member['statusID'], [10]) ? 'visibility: visible' : '' }}" src="{{ URL::to('/') }}/assets/icons/modal-icon/asking.svg" alt=""></span>
-                        <input autocomplete="off" wire:model.lazy="loanDetails.denomination" type="text" id="denomination" name="denomination">
+                        <input autocomplete="off" wire:model.lazy="loanDetails.denomination" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="text" id="denomination" name="denomination">
                     @endif
                     @if($loanDetails['modeOfRelease'] == 'Check')
                         <span>Check Number</span>
-                        <input autocomplete="off" wire:model.lazy="loanDetails.denomination" type="text" id="denomination" name="denomination">
+                        <input autocomplete="off" wire:model.lazy="loanDetails.denomination" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="text" id="denomination" name="denomination">
                     @endif
                    
                     @error('loanDetails.denomination') <span class="text-required">{{ $message }}</span> @enderror
@@ -358,7 +358,7 @@
                                 </div>
                                 
                                 <div class="selected" style="font-weight: bold;" data-type-loan-select>
-                                    {{ $getLoanTermsname != '' ? $getLoanTermsname : $loanDetails['terms'] }}
+                                    {{ $getLoanTermsname != '' ? $getLoanTermsname : $loanDetails['loantermsName'] }}
                                 </div>
 
                 </div>
@@ -458,14 +458,14 @@
              <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Total Savings</span>
-                <input wire:model.lazy="loanDetails.totalSavings" autocomplete="off" type="number">
+                <input wire:model.lazy="loanDetails.totalSavings" disabled autocomplete="off" type="number">
                 @error('loanDetails.savings') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper">
-                <span>Savings To Be Use <img class="img-edit" src="{{ URL::to('/') }}/assets/icons/modal-icon/asking.svg" alt=""></span>
-                <input wire:model.lazy="loanDetails.savingsToUse" autocomplete="off" type="number">
+                <span>Savings To Be Use</span>
+                <input wire:model.lazy="loanDetails.savingsToUse" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
                 @error('loanDetails.notarialFee') <span class="text-required">{{ $message }}</span> @enderror
             </div>
             @endif
@@ -557,8 +557,6 @@
                 <input {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.notes" autocomplete="off" type="text" >
             </div>
 
-           
-
         </div>
 
         </div>    
@@ -613,7 +611,7 @@
                                     <!-- * Primary Search Bar -->
                                     <div class="primary-search-bar">
                                         <div class="row">
-                                            <input wire:model.lazy="loanDetails.courieremployee" wire:click="openSearchEmployee"  type="search" placeholder="Search" autocomplete="off">
+                                            <input wire:model.lazy="loanDetails.courieremployee" wire:click="openSearchEmployee" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="search" placeholder="Search" autocomplete="off">
                                             <button type="button">                                                
                                             </button>
                                         </div>
@@ -629,7 +627,7 @@
                                 <div class="input-wrapper" data-client-name-toggle>
                                     <div class="input-wrapper">
                                         <span>Client Name</span>
-                                        <input wire:model.lazy="loanDetails.courierclient" autocomplete="off" type="text" >
+                                        <input wire:model.lazy="loanDetails.courierclient" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" autocomplete="off" type="text" >
                                         @error('loanDetails.courierclient') <span class="text-required">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
@@ -637,14 +635,16 @@
 
                             </div>
 
+                            @if($loanDetails['courier'] != '')
                             <!-- * Contact Number -->
                             <div class="input-wrapper" data-contact-number-toggle>
                                 <div class="input-wrapper">
                                     <span>Contact No:</span>
-                                    <input wire:model.lazy="loanDetails.couriercno" autocomplete="off" type="number">
+                                    <input wire:model.lazy="loanDetails.couriercno" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
                                     @error('loanDetails.couriercno') <span class="text-required">{{ $message }}</span> @enderror
                                 </div>
                             </div>
+                            @endif
                             @endif
 
 

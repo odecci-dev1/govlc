@@ -1060,6 +1060,7 @@ class CreateApplication extends Component
     public function getLoanTermsname($topid = ''){
         $termsofPayment = '';
         $loantypelist = $this->termsOfPaymentList->where('topId', $topid)->first();
+       
         if($loantypelist){
             $termsofPayment = $loantypelist['termsofPayment'];
         }
@@ -1239,8 +1240,7 @@ class CreateApplication extends Component
                     $this->loanDetails['loanAmount'] = $data['individualLoan'][0]['loanAmount'];
                     $this->loanDetails['purpose'] = $data['purpose'];
                     //$this->loanDetails['terms'] = $data['termsOfPayment']; //$data['individualLoan'][0]['terms'];
-                
-                    
+                                    
                     $this->loanDetails['noofnopayment'] = 0; 
                     $this->loanDetails['noofloans'] = 0; 
                                         
@@ -1250,7 +1250,6 @@ class CreateApplication extends Component
                     $this->loanDetails['app_ApprovedBy_1_name'] = $this->getUserName($data['individualLoan'][0]['app_ApprovedBy_1']);
                     $this->loanDetails['app_ApprovalDate_1_timeint'] = $this->calculateTimeDifference($data['individualLoan'][0]['app_ApprovalDate_1'], Carbon::now());
                     
-
                     $ciuserid = isset($data['individualLoan'][0]['cI_ApprovedBy']) ? $data['individualLoan'][0]['cI_ApprovedBy'] : '';                
                     $this->loanDetails['approvedBy'] = $this->getUserName($ciuserid);                                                           
                     $this->loanDetails['notes'] = isset($data['individualLoan'][0]['app_Note']) ? $data['individualLoan'][0]['app_Note'] : ''; 

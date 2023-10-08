@@ -291,7 +291,7 @@
         // * Application Module: Receipt Voucher Button (Printables)
         // ***** Okay Button (Passbook Front)
         if (proceedQueryModalButton) {
-            url = '/KC/transactions/new-application-passbook-print.html'
+            url = '{{ URL::to("/") }}/tranactions/application/passbook/printing/{{ $naID }}'
             openModal(openQueryModalButton, queryModal)
             closeModal(closeQueryModalButton, queryModal)
             proceedButton(proceedQueryModalButton, queryModal, url)

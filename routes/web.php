@@ -93,6 +93,9 @@ Route::get('/tranactions/application/list', ApplicationList::class)->name('appli
 Route::get('/tranactions/application/approval/list', ApplicationApprovalList::class)->name('application.approval');
 Route::get('/tranactions/application/releasing/list', ApplicationReleasingList::class)->name('application.approval');
 Route::get('/tranactions/group/application/create', CreateApplicationGroup::class)->name('application.create.group');
+Route::get('/tranactions/application/passbook/printing/{naID}', function(){
+    return view('livewire.transactions.application.application-html-passbook');
+});
 Route::get('/tranactions/application/printing/{naID}', function(){
     return view('livewire.transactions.application.application-html');
 });
