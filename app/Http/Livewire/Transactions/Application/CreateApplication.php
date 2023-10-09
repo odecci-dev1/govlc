@@ -51,6 +51,11 @@ class CreateApplication extends Component
 
     public $emplist = [];
     public $searchempkeyword = '';
+
+    public $imgprofile;
+    public $imgcoprofile;
+    public $imgmemsign;
+    public $imgcosign;
     
     public function rules(){                
         $rules = [];      
@@ -101,8 +106,10 @@ class CreateApplication extends Component
         $rules['member.loanAmount'] = 'required';
         $rules['member.termsOfPayment'] = 'required';
         $rules['member.purpose'] = 'required';
-        $rules['member.profile'] = 'required';  
-        $rules['member.attachments'] = 'required';  
+        $rules['member.profile'] = '';  
+        $rules['imgprofile'] = isset($this->member['profile']) ? '' : 'required';  
+        $rules['member.attachments'] = 'required'; 
+        $rules['imgmemsign'] = isset($this->member['profile']) ? '' : 'required';  
 
         $rules['comaker.co_Fname'] = 'required';
         $rules['comaker.co_Lname'] = 'required';
@@ -133,7 +140,11 @@ class CreateApplication extends Component
         $rules['comaker.co_CompanyName'] = 'required';
         $rules['comaker.co_CompanyID'] = '';
         $rules['comaker.co_Emp_Status'] = 'required';
-        $rules['comaker.remarks'] = '';      
+        $rules['comaker.profile'] = '';  
+        $rules['imgcoprofile'] = isset($this->comaker['profile']) ? '' : 'required';  
+        $rules['comaker.attachments'] = 'required';  
+        $rules['imgcosign'] = isset($this->member['profile']) ? '' : 'required';  
+        // $rules['comaker.remarks'] = '';      
         
 
         if(isset($this->member['civil_Status'])){
@@ -253,6 +264,7 @@ class CreateApplication extends Component
         $messages['member.termsOfPayment.required'] = 'Enter terms of payment';
         $messages['member.purpose.required'] = 'Enter purpose of loan';
         $messages['member.profile.required'] = 'Please insert picture of borrower';
+        $messages['imgprofile'] = 'Please insert picture of borrower';
         $messages['member.attachments.required'] = 'Please include at least one documents referring to borrower';
 
         $messages['comaker.co_Fname.required'] = 'Enter first name';
@@ -280,6 +292,8 @@ class CreateApplication extends Component
         $messages['comaker.co_CompanyName.required'] = 'Enter company name';    
         $messages['comaker.co_CompanyID.required'] = 'Enter company address';    
         $messages['comaker.co_Emp_Status.required'] = 'Enter employement status';   
+        $messages['imgcoprofile'] = 'Please insert picture of comaker';
+        $messages['comaker.attachments.required'] = 'Please include at least one documents referring to comaker';
 
         $messages['loanDetails.loanAmount.required'] = 'Please enter loan amount'; 
         $messages['loanDetails.loanAmount.min'] = 'Loan amount must be greater that 0';
@@ -361,54 +375,134 @@ class CreateApplication extends Component
         $this->member['statusID'] = $status;
     }
 
-    public function storeProfileImage(){             
+    public function storeProfileImage(){           
         $profilename = '';
-        if(isset($this->member['profile'])){
-            if($this->member['profile'] == $this->member['old_profile']){
-                $profilename = $this->member['profile'];  
+        if($this->imgprofile){
+            $deletefiles = [];
+            if(isset($this->member['profile'])){
+                $deletefiles[] = 'public/members_profile/'.$this->member['profile'];
             }
-            else{             
-                $deletefiles = [];
-                if(isset($this->member['old_profile'])){
-                    $deletefiles[] = 'public/members_profile/'.$this->member['old_profile'];
-                }
-                //Storage::delete($deletefiles);       
-                
-                $time = time();          
-                $profilename = 'members_profile_'.$time;         
-                $this->member['profile']->storeAs('public/members_profile', $profilename);    
-            }                           
-        }    
-        return $profilename;
+            Storage::delete($deletefiles);       
+            
+            $time = time();          
+            $profilename = 'members_profile_'.$time.'.'.$this->imgprofile->getClientOriginalExtension();         
+            $this->imgprofile->storeAs('public/members_profile', $profilename);    
+        }
+        else{
+            $profilename = $this->member['profile'];  
+        }  
+        return $profilename;       
+    }
+
+    public function storeCoProfileImage(){           
+        $profilename = '';
+        if($this->imgcoprofile){
+            $deletefiles = [];
+            if(isset($this->comaker['profile'])){
+                $deletefiles[] = 'public/comakers_profile/'.$this->comaker['profile'];
+            }
+            Storage::delete($deletefiles);       
+            
+            $time = time();          
+            $profilename = 'comakers_profile'.$time.'.'.$this->imgcoprofile->getClientOriginalExtension();         
+            $this->imgcoprofile->storeAs('public/comakers_profile', $profilename);    
+        }
+        else{
+            $profilename = $this->comaker['profile'];  
+        }  
+        return $profilename;       
     }
     
     public function storeAttachments(){
         $memattachements = [];      
         if($this->member['attachments'] == $this->member['old_attachments']){
-            // $memattachements = $this->member['old_attachments'];
-            foreach( $this->member['old_attachments'] as $attch){
-                $memattachements[] = [ 'fileName' =>  $attch, 'filePath' => $attch ];
-            }           
+            $memattachements = $this->member['attachments'];
         }
         else{            
             if(isset($this->member['attachments'])){    
                 $deletefiles = [];
                 if(isset($this->member['old_attachments'])){
                     foreach($this->member['old_attachments'] as $oldfiles){
-                        $deletefiles[] = 'public/members_attachments/'.$oldfiles;
+                        $deletefiles[] = 'public/members_attachments/'.$oldfiles['filePath'];
                     }
                 }
-                //Storage::delete($deletefiles);       
+                Storage::delete($deletefiles);       
                 foreach ($this->member['attachments'] as $attachments) {
                     $time = time();
                     $filename = 'members_attachments_'.$time.'_'.$attachments->getClientOriginalName();
-                    $attachments->storeAs('public/members_attachments', $filename);                      
-                    $memattachements[] = [ 'fileName' =>  $filename, 'filePath' => $filename ];
+                    $attachments->storeAs('public/members_attachments', $filename);   
+                    $memattachements[] = [ 'fileName' => $filename , 'filePath' => $filename ];
+                }
+            }
+        }
+
+        return $memattachements;
+        //
+        
+    }
+
+    public function storeCoAttachments(){
+        if($this->comaker['attachments'] == $this->comaker['old_attachments']){
+            $memattachements = $this->comaker['attachments'];
+        }
+        else{            
+            if(isset($this->comaker['attachments'])){    
+                $deletefiles = [];
+                if(isset($this->comaker['old_attachments'])){
+                    foreach($this->comaker['old_attachments'] as $oldfiles){
+                        $deletefiles[] = 'public/comakers_attachments/'.$oldfiles['filePath'];
+                    }
+                }
+                Storage::delete($deletefiles);       
+                foreach ($this->comaker['attachments'] as $attachments) {
+                    $time = time();
+                    $filename = 'comakers_attachments_'.$time.'_'.$attachments->getClientOriginalName();
+                    $attachments->storeAs('public/comakers_attachments', $filename);   
+                    $memattachements[] = [ 'fileName' => $filename , 'filePath' => $filename ];
                 }
             }
         }
         return $memattachements;
     }
+
+    public function storeSignature(){           
+        $profilename = '';
+        if($this->imgmemsign){
+            $deletefiles = [];
+            if(isset($this->member['signature'])){
+                $deletefiles[] = 'public/members_signature/'.$this->member['signature'];
+            }
+            Storage::delete($deletefiles);       
+            
+            $time = time();          
+            $profilename = 'members_signature_'.$time.'.'.$this->imgmemsign->getClientOriginalExtension();         
+            $this->imgmemsign->storeAs('public/members_signature', $profilename);    
+        }
+        else{
+            $profilename = $this->member['signature'];  
+        }  
+        return $profilename;       
+    }
+
+    public function storeCoSignature(){           
+        $profilename = '';
+        if($this->imgcosign){
+            $deletefiles = [];
+            if(isset($this->comaker['signature'])){
+                $deletefiles[] = 'public/comakers_signature/'.$this->comaker['signature'];
+            }
+            Storage::delete($deletefiles);       
+            
+            $time = time();          
+            $profilename = 'comakers_signature_'.$time.'.'.$this->imgcosign->getClientOriginalExtension();         
+            $this->imgcosign->storeAs('public/comakers_signature', $profilename);    
+        }
+        else{
+            $profilename = $this->comaker['signature'];  
+        }  
+        return $profilename;       
+    }
+
 
     public function store($type = 1){               
         try {                        
@@ -594,25 +688,20 @@ class CreateApplication extends Component
                                 "applicationStatus" => $type == 1 ? 7 : 8,
                                 "profileName"=> $this->storeProfileImage(),
                                 "profileFilePath"=> $this->storeProfileImage(),
-                                "co_ProfileName"=> "string",
-                                "co_ProfileFilePath"=> "string",
+                                "co_ProfileName"=> $this->storeCoProfileImage(),
+                                "co_ProfileFilePath"=> $this->storeCoProfileImage(),
                                 "requirementsFile"=> $this->storeAttachments(),                                                                                   
                                 "signatureUpload"=> [
                                     [
-                                      "fileName"=> "string",
-                                      "filePath"=> "string"
+                                      "fileName"=> $this->storeSignature(),
+                                      "filePath"=> $this->storeSignature()
                                     ]
                                   ],
-                                  "co_RequirementsFile"=> [
-                                    [
-                                      "fileName"=> "string",
-                                      "filePath"=> "string"
-                                    ]
-                                  ],
+                                  "co_RequirementsFile"=> $this->storeCoAttachments(),
                                   "co_SignatureUpload"=> [
                                     [
-                                      "fileName"=> "string",
-                                      "filePath"=> "string"
+                                      "fileName"=> $this->storeCoSignature(),
+                                      "filePath"=> $this->storeCoSignature()
                                     ]
                                   ],
                                   "userId"=> session()->get('auth_userid'),
@@ -709,7 +798,7 @@ class CreateApplication extends Component
                 }
             }
             $bdate = date('Y-m-d', strtotime($input['member']['dob']));
-
+          
             $data = [
                         [
                             "fname"=> $input['member']['fname'] ??= '',
@@ -762,6 +851,7 @@ class CreateApplication extends Component
                             "famId"=> $this->member['famId'], 
                             "business"=> $businesses,
                             "loanAmount"=> $input['member']['loanAmount'] ??= '0',
+                            'loanTypeId' => $this->loanDetails['loanTypeID'],
                             "termsOfPayment"=>  $this->loanDetails['loantermsID'] ??= '',
                             "purpose"=> $input['member']['purpose'] ??= '',
                             "child"=> $childs,
@@ -802,8 +892,8 @@ class CreateApplication extends Component
                             "applicationStatus" => $type == 1 ? 7 : 8,
                             "profileName"=> $this->storeProfileImage(),
                             "profileFilePath"=> $this->storeProfileImage(),                            
-                            "co_ProfileName"=> "string",
-                            "co_ProfileFilePath"=> "string",
+                            "co_ProfileName"=>  $this->storeCoProfileImage(),
+                            "co_ProfileFilePath"=>  $this->storeCoProfileImage(),
                             "requirementsFile"=> $this->storeAttachments(),    
                             "signatureUpload"=> [
                                 [
@@ -811,12 +901,7 @@ class CreateApplication extends Component
                                   "filePath"=> "string"
                                 ]
                               ],                                    
-                            "co_RequirementsFile"=> [
-                                    [
-                                    "fileName"=> "string",
-                                    "filePath"=> "string"
-                                    ]
-                                ],
+                            "co_RequirementsFile"=> $this->storeCoAttachments(),
                             "co_SignatureUpload"=> [
                                     [
                                     "fileName"=> "string",
@@ -824,14 +909,14 @@ class CreateApplication extends Component
                                     ]
                                 ],
                             "userId"=> session()->get('auth_userid'),
-                            "naid"=> session()->get('auth_userid')
+                            "naid"=> $this->naID
                         ]
                     ];
                     //dd($data);                                   
                     // $extension = $request->file('filename')->getClientOriginalExtension();
                  
                     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                    
-                    //dd( $crt);
+                    //dd( $data);
                     return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> $type == 1 ? 'Application successfully updated' : 'Application successfully submited for CI', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -876,11 +961,12 @@ class CreateApplication extends Component
                         'courierName' => '',
                         'courierCno' => '',
                         'modeOfRelease' => '',
-                        'modeOfReleaseReference' => '',                        
+                        'modeOfReleaseReference' => '', 
+                        'totalSavingsUsed' => $this->loanDetails['totalSavingsAmount'] != '' ? $this->loanDetails['totalSavingsAmount'] : 0,                             
                     ];
             //dd($data);        
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Approval/ApproveReleasing', $data);          
-            // dd($crt);
+            //dd($crt);
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully approve for releasing', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -891,31 +977,40 @@ class CreateApplication extends Component
     public function signForRelease(){
         try{          
 
-            // $this->validate([
-            //                     'loanDetails.modeOfRelease' => ['required'],
-            //                     'loanDetails.denomination' => ['required'],
-            //                     'loanDetails.courier' => ['required'],          
-            //                     'loanDetails.courierclient' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Client' ? ['required'] : '') : '',  
-            //                     'loanDetails.courieremployee' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Employee' ? ['required'] : '') : '',  
-            //                     'loanDetails.couriercno' => ['required'],                                             
-            //                 ]);
+            $this->validate([
+                                'loanDetails.modeOfRelease' => ['required'],
+                                'loanDetails.denomination' => ['required'],
+                                'loanDetails.courier' => ['required'],          
+                                'loanDetails.courierclient' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Client' ? ['required'] : '') : '',  
+                                'loanDetails.courieremployee' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Employee' ? ['required'] : '') : '',  
+                                'loanDetails.couriercno' => ['required'], 
+                                'loanDetails.savingsToUse' => ['required'],                                                                
+                            ]);
 
-            // $data = [
-            //             'ldid' => $this->loanDetails['ldid'],
-            //             "note"=> $this->loanDetails['notes'],
-            //             'approvedby' => session()->get('auth_userid'),
-            //             'naid' => $this->naID,
-            //             'approvedLoanAmount' => $this->loanDetails['loanAmount'],                        
-            //             'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],                                            
-            //             "courier"=> $this->loanDetails['courier'],
-            //             "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
-            //             "courierCno"=> $this->loanDetails['couriercno'],
-            //             "modeOfRelease"=> $this->loanDetails['modeOfRelease'],                       
-            //             "modeOfReleaseReference"=> $this->loanDetails['denomination'],          
-            //         ];
-
+            $data = [
+                        'ldid' => $this->loanDetails['ldid'],
+                        "note"=> $this->loanDetails['notes'],
+                        'approvedby' => session()->get('auth_userid'),
+                        'naid' => $this->naID,
+                        "approvedReleasingAmount"=> 0,
+                        "approvedNotarialFee"=> 0,
+                        "approvedAdvancePayment"=> 0,
+                        "approveedInterest"=> 0,
+                        "approvedDailyAmountDue"=> 0,
+                        'approvedLoanAmount' => $this->loanDetails['loanAmount'],                        
+                        'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],                                            
+                        "courier"=> $this->loanDetails['courier'],
+                        "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
+                        "courierCno"=> $this->loanDetails['couriercno'],
+                        "modeOfRelease"=> $this->loanDetails['modeOfRelease'],                       
+                        "modeOfReleaseReference"=> $this->loanDetails['denomination'], 
+                        "totalSavingsUsed" => $this->loanDetails['savingsToUse'],         
+                    ];
+                 
+             
             $this->emit('openUrlPrintingVoucher', ['url' => URL::to('/').'/tranactions/application/printing/'.$this->naID , 'title' => 'This is the title', 'message' => 'This is the message']);
-            //$crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);                                 
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);                                 
+            //dd($crt);     
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully signed for releasing', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -940,13 +1035,19 @@ class CreateApplication extends Component
                         "note"=> $this->loanDetails['notes'],
                         'approvedby' => session()->get('auth_userid'),
                         'naid' => $this->naID,
+                        "approvedReleasingAmount" => 0,
+                        "approvedNotarialFee" => 0,
+                        "approvedAdvancePayment" => 0,
+                        "approveedInterest" => 0,
+                        "approvedDailyAmountDue" => 0,
                         'approvedLoanAmount' => $this->loanDetails['loanAmount'],                        
                         'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],                                            
                         "courier"=> $this->loanDetails['courier'],
                         "courierName"=> $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
                         "courierCno"=> $this->loanDetails['couriercno'],
                         "modeOfRelease"=> $this->loanDetails['modeOfRelease'],                       
-                        "modeOfReleaseReference"=> $this->loanDetails['denomination'],          
+                        "modeOfReleaseReference"=> $this->loanDetails['denomination'],  
+                        "totalSavingsUsed" => 0                                
                     ];
       
            
@@ -1075,7 +1176,12 @@ class CreateApplication extends Component
 
     public function mount($type = 'create', Request $request){
         $this->member['old_profile'] = '';
+        $this->member['old_signature'] = '';
         $this->member['old_attachments'] = [];
+
+        $this->comaker['old_attachments'] = [];
+        $this->comaker['old_profile'] = '';
+        $this->comaker['old_signature'] = '';
         $this->type = $type;     
         $this->termsOfPaymentList = collect([]);
       
@@ -1237,12 +1343,11 @@ class CreateApplication extends Component
                 //dd($data);    
                 //ditoviewing
                 $this->searchedmemId =  $data['memId'];
+                $this->loanDetails['loanTypeID'] = $data['individualLoan'][0]['loanTypeID'];
                 $this->loanDetails['loantermsID'] = $data['termsOfPayment']; 
                 $this->loanDetails['loantermsName'] = $data['individualLoan'][0]['nameOfTerms'];  
-
                 if($data['applicationStatus'] >= 9){
-                    $this->loanDetails['loanType'] = isset($data['individualLoan'][0]['loanType']) ? $data['individualLoan'][0]['loanType'] : '';
-                    $this->loanDetails['loanTypeID'] = $data['individualLoan'][0]['loanTypeID'];
+                    $this->loanDetails['loanType'] = isset($data['individualLoan'][0]['loanType']) ? $data['individualLoan'][0]['loanType'] : '';                  
                     $this->loanDetails['loanAmount'] = $data['individualLoan'][0]['loanAmount'];
                     $this->loanDetails['purpose'] = $data['purpose'];
                     //$this->loanDetails['terms'] = $data['termsOfPayment']; //$data['individualLoan'][0]['terms'];
@@ -1287,13 +1392,18 @@ class CreateApplication extends Component
                     $this->loanDetails['total_InterestAmount'] = isset($getloansummary[0]) ? $this->loansummary['total_InterestAmount'] : '';
                     $this->loanDetails['total_LoanReceivable'] = isset($getloansummary[0]) ? $this->loansummary['total_LoanReceivable'] : '';
                     $this->loanDetails['dailyCollectibles'] = isset($getloansummary[0]) ? $this->loansummary['dailyCollectibles'] : '';
-                    //dd($this->loansummary);                                                   
+
+                    $this->loanDetails['totalSavings'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
+                    //dd($getloansummary);                                                   
                 }
                 $this->loanDetails['remarks'] = $data['individualLoan'][0]['remarks'];
                 $this->loanDetails['ci_time'] = $this->calculateTimeDifference($data['dateCreated'], Carbon::now());    
                 
                 //images and files
                 $files = $data['files'];
+                $this->member['attachments'] = [];
+                $this->member['profile'] = '';
+                $this->member['signature'] = '';
                 if($files){
                     foreach($files as $mfiles){
                         if($mfiles['fileType'] == 'Profile'){
@@ -1301,11 +1411,43 @@ class CreateApplication extends Component
                         }
 
                         if($mfiles['fileType'] == 'File'){
-                            $this->member['attachments'][] = $mfiles['filePath'];
+                            $this->member['attachments'][] = [ 'fileName' => $mfiles['filePath'] , 'filePath' => $mfiles['filePath'] ];
+                        }
+
+                        if($mfiles['fileType'] == 'Singature'){
+                            $this->member['signature'] = $mfiles['filePath'];
                         }
                     }
                     $this->member['old_attachments'] = $this->member['attachments'];
-                    $this->member['old_profile'] = $this->member['profile'];
+                    $this->member['old_profile'] = $this->member['profile'];                  
+                    $this->member['old_signature'] = $this->member['signature'];
+                }
+
+                $cofiles = $data['co_Files'];
+                $this->comaker['attachments'] = [];
+                $this->comaker['profile'] = '';
+                $this->comaker['signature'] = '';
+                if($cofiles){
+                    
+                    foreach($cofiles as $cfiles){
+                      
+                        if($cfiles['fileType'] == 'Profile'){
+                            $this->comaker['profile'] = $cfiles['filePath'];
+                            
+                        }
+
+                        if($cfiles['fileType'] == 'File'){
+                            $this->comaker['attachments'][] = [ 'fileName' => $cfiles['filePath'] , 'filePath' => $cfiles['filePath'] ];                
+                        }
+
+                        if($cfiles['fileType'] == 'Singature'){
+                            $this->comaker['signature'] = $cfiles['filePath'];
+                        }
+                    }                   
+
+                    $this->comaker['old_attachments'] = $this->comaker['attachments'];
+                    $this->comaker['old_profile'] = $this->comaker['profile'];   
+                    $this->comaker['old_signature'] = $this->comaker['signature'];
                 }
                 //images and files
             

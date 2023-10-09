@@ -454,19 +454,21 @@
             </div>
             @endif
 
-            @if($member['statusID'] == 10)   
+            @if($member['statusID'] >= 10)   
              <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Total Savings</span>
                 <input wire:model.lazy="loanDetails.totalSavings" disabled autocomplete="off" type="number">
-                @error('loanDetails.savings') <span class="text-required">{{ $message }}</span> @enderror
+                @error('loanDetails.totalSavings') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper">
+                @if($member['statusID'] == 10)   
                 <span>Savings To Be Use</span>
-                <input wire:model.lazy="loanDetails.savingsToUse" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
-                @error('loanDetails.notarialFee') <span class="text-required">{{ $message }}</span> @enderror
+                <input wire:model.lazy="loanDetails.savingsToUse" {{ $member['statusID'] == 10 ? '' : 'disabled' }} class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
+                @error('loanDetails.savingsToUse') <span class="text-required">{{ $message }}</span> @enderror
+                @endif
             </div>
             @endif
 
@@ -496,7 +498,7 @@
             <div class="input-wrapper">
                 <span>Interest</span>
                 <input wire:model.lazy="loanDetails.total_InterestAmount" autocomplete="off" type="number">
-                @error('loanDetails.interest') <span class="text-required">{{ $message }}</span> @enderror
+                @error('loanDetails.total_InterestAmount') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
@@ -983,54 +985,70 @@
                     <div class="colspan">                       
                         <!-- * Upload Image -->
                         <div class="input-wrapper">
-                            @if(file_exists(public_path('storage/members_profile/'.(isset($this->member['profile']) ? $this->member['profile'] : 'xxxxxxxxx'))))                                
-                                <input type="image" class="profile" style="padding: 2px;" src="{{ asset('storage/members_profile/'.$member['profile']) }}" alt="upload-image">                                             
-                            @elseif(isset($member['profile']))
-                                <input type="image" class="profile" style="padding: 2px;" src="{{ $member['profile']->temporaryUrl() }}" alt="upload-image">                                             
+                            @if($imgprofile)
+                                <img type="image" class="profile" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image">
                             @else
-                                <input type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
-                            @endif         
+                                @if(file_exists(public_path('storage/members_profile/'.(isset($member['profile']) ? $member['profile'] : 'xxxx'))))
+                                    <img type="image" class="profile" src="{{ asset('storage/members_profile/'.$member['profile']) }}" alt="upload-image" />                                                                     
+                                @else
+                                    <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                                @endif 
+                            @endif             
                         </div>
-                        @error('member.profile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
+                        @error('imgprofile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <div class="btn-wrapper">
                             <!-- * Upload Button -->
-                            <input type="file"  wire:model="member.profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                            <input type="file"  wire:model="imgprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                             <!-- * Attach Button -->
                             <input type="file" wire:model="member.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
                         </div>
                         @error('member.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <div class="file-wrapper" data-attach-file-container>
                           
-                            @if(isset($member['attachments']))
+                        @if(isset($member['attachments']))
                                 @if($member['attachments'] == $member['old_attachments'])                            
+                                    @foreach($member['attachments'] as $attachments)                                                     
+                                        <div type="button" class="fileButton">
+                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">                                           
+                                            @if(file_exists(public_path('storage/members_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
+                                                @php
+                                                    $getfilename = $attachments['filePath'];
+                                                    $filenamearray = explode("_", $getfilename);
+                                                    $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
+                                                @endphp                                               
+                                                <a href="{{ asset('storage/members_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
+                                                    {{ strlen($filename) > 10 ? strtolower(substr($filename, 0, 10)) . '...' : $filename }}
+                                                </a>                                               
+                                            @endif                                
+                                        </div>                                        
+                                    @endforeach
+                                @else
+                                    @if(isset($member['attachments']))                            
                                         @foreach($member['attachments'] as $attachments)                                                     
                                             <div type="button" class="fileButton">
-                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">                                           
-                                                @if(file_exists(public_path('storage/members_attachments/'.(isset($attachments) ? $attachments : $attachments->getClientOriginalName() ))))
-                                                    @php
-                                                        $getfilename = $attachments;
-                                                        $filenamearray = explode("_", $getfilename);
-                                                        $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
-                                                    @endphp                                               
-                                                    <a href="{{ url('storage/members_attachments/'.$attachments) }}" title="{{ $filename }}" target="_blank">                                                                                              
-                                                        {{ strlen($filename) > 10 ? strtolower(substr($filename, 0, 10)) . '...' : $filename }}asd
-                                                    </a>                                               
-                                                @endif                                
-                                            </div>                                        
+                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                <a href="{{ $attachments->path() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
+                                                    {{ strlen($attachments->getClientOriginalName()) > 10 ? strtolower(substr($attachments->getClientOriginalName(), 0, 10)) . '...' : $attachments->getClientOriginalName() }}
+                                                </a>                                       
+                                            </div>
+                                            <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
                                         @endforeach
-                                @else
-                                        @if(isset($member['attachments']))                            
-                                            @foreach($member['attachments'] as $attachments)                                                     
-                                                <div type="button" class="fileButton">
-                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                                    <a href="" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
-                                                        {{ strlen($attachments->getClientOriginalName()) > 10 ? strtolower(substr($attachments->getClientOriginalName(), 0, 10)) . '...' : $attachments->getClientOriginalName() }}
-                                                    </a>                                       
-                                                </div>                                                
-                                            @endforeach
-                                        @endif   
-                                @endif  
+                                    @endif   
+                                @endif   
+                                
+                            @else
+                                @if(isset($member['attachments']))                            
+                                    @foreach($member['attachments'] as $attachments)                                                     
+                                        <div type="button" class="fileButton">
+                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                            <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>                                       
+                                        </div>
+                                        <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
+                                    @endforeach
+                                @endif   
                             @endif
+                            <!-- end -->                            
+                            
                          
                         </div>
 
@@ -2624,30 +2642,67 @@
 
                                 <!-- * Upload Image -->
                                 <div class="input-wrapper" data-upload-image-co-borrower-hover-container>                                   
-                                    @if(isset($comaker['profile']))
-                                    <input type="image" style="width: 150px; height: 150px;" src="{{ $comaker['profile']->temporaryUrl() }}" alt="upload-image">
+                                    @if($imgcoprofile)
+                                        <img type="image" class="profile" src="{{ $imgcoprofile->temporaryUrl() }}" alt="upload-image">
                                     @else
-                                    <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image">
-                                    @endif      
+                                        @if(file_exists(public_path('storage/comakers_profile/'.(isset($comaker['profile']) ? $comaker['profile'] : 'xxxx'))))
+                                            <img type="image" class="profile" src="{{ asset('storage/comakers_profile/'.$comaker['profile']) }}" alt="upload-image" />                                                                     
+                                        @else
+                                            <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                                        @endif 
+                                    @endif             
                                 </div>
-                                @error('comaker.profile') <span class="error">{{ $message }}</span> @enderror
+                                @error('imgcoprofile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                                 <div class="btn-wrapper">
                                         <!-- * Upload Button -->
-                                        <input type="file"  wire:model="comaker.profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                                        <input type="file"  wire:model="imgcoprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                                         <!-- * Attach Button -->
                                         <input type="file" wire:model="comaker.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
+                                        @error('comaker.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div class="file-wrapper" data-attach-file-container2>
                                 @if(isset($comaker['attachments']))
-                                    @foreach($comaker['attachments'] as $comakerattachments)
-                                
-                                        <div type="button" class="fileButton">
-                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                            <a href="{{ $comakerattachments->path() }}" target="_blank" alt="file.png">{{ $comakerattachments->getClientOriginalName() }}</a>                                       
-                                        </div>
-                                        <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $comakerattachments->getClientOriginalName() }}</button> -->
-                                    @endforeach
+                                    @if($comaker['attachments'] == $comaker['old_attachments'])                            
+                                        @foreach($comaker['attachments'] as $attachments)                                                     
+                                            <div type="button" class="fileButton">
+                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">                                           
+                                                @if(file_exists(public_path('storage/comakers_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
+                                                    @php
+                                                        $getfilename = $attachments['filePath'];
+                                                        $filenamearray = explode("_", $getfilename);
+                                                        $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
+                                                    @endphp                                               
+                                                    <a href="{{ asset('storage/comakers_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
+                                                        {{ strlen($filename) > 10 ? strtolower(substr($filename, 0, 10)) . '...' : $filename }}
+                                                    </a>                                               
+                                                @endif                                
+                                            </div>                                        
+                                        @endforeach
+                                    @else
+                                        @if(isset($comaker['attachments']))                            
+                                            @foreach($comaker['attachments'] as $attachments)                                                     
+                                                <div type="button" class="fileButton">
+                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                    <a href="{{ $attachments->path() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
+                                                        {{ strlen($attachments->getClientOriginalName()) > 10 ? strtolower(substr($attachments->getClientOriginalName(), 0, 10)) . '...' : $attachments->getClientOriginalName() }}
+                                                    </a>                                       
+                                                </div>
+                                                <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
+                                            @endforeach
+                                        @endif   
+                                    @endif   
+                                    
+                                @else
+                                    @if(isset($comaker['attachments']))                            
+                                        @foreach($comaker['attachments'] as $attachments)                                                     
+                                            <div type="button" class="fileButton">
+                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>                                       
+                                            </div>
+                                            <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
+                                        @endforeach
+                                    @endif   
                                 @endif
                                 </div>
 
@@ -2843,14 +2898,24 @@
                     <!-- * Applicant Signature Picture Upload -->
                     <div class="input-wrapper">
                         <div class="signature-wrapper-2">
-                            <img id="applicantSig">
+                            
+                            @if($imgmemsign)
+                                <img type="image" class="profile" src="{{ $imgmemsign->temporaryUrl() }}" alt="upload-image">
+                            @else
+                                @if(file_exists(public_path('storage/members_signature/'.(isset($member['signature']) ? $member['signature'] : 'xxxx'))))
+                                    <img type="image" id="applicantSig" src="{{ asset('storage/members_signature/'.$member['signature']) }}" alt="upload-image" />                                                                     
+                                @else
+                                    <img id="applicantSig">                                              
+                                @endif 
+                            @endif       
                             <span>Applicant’s Signature</span>
                         </div>
                     </div>
 
                     <!-- * Upload Applicant Signature Button -->
                     <div class="input-wrapper">
-                        <input type="file" class="input-image" id="imageUploadApplicantSign">
+                        <!-- <input type="file" class="input-image" id="imageUploadApplicantSign"> -->
+                        <input type="file"  wire:model="imgmemsign" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
                     </div>
 
                 </div>
@@ -2870,15 +2935,23 @@
 
                     <!-- * Co-Maker Signature Picture Upload -->
                     <div class="input-wrapper">
-                        <div class="signature-wrapper-2">
-                            <img id="comSig">
+                        <div class="signature-wrapper-2">                          
+                            @if($imgcosign)
+                                <img type="image" class="profile" src="{{ $imgcosign->temporaryUrl() }}" alt="upload-image">
+                            @else
+                                @if(file_exists(public_path('storage/comakers_signature/'.(isset($comaker['signature']) ? $comaker['signature'] : 'xxxx'))))
+                                    <img type="image" id="comSig" src="{{ asset('storage/comakers_signature/'.$comaker['signature']) }}" alt="upload-image" />                                                                     
+                                @else
+                                    <img id="comSig">                                       
+                                @endif 
+                            @endif       
                             <span>Co-Maker Signature</span>
                         </div>
                     </div>
 
                     <!-- * Upload Co-Maker Signature Button -->
                     <div class="input-wrapper">
-                        <input type="file" class="input-image" id="imageUploadCoMakerSign">
+                    <input type="file"  wire:model="imgcosign" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
                     </div>
 
                 </div>
