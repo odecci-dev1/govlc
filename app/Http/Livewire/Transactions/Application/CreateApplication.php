@@ -673,7 +673,8 @@ class CreateApplication extends Component
                                 "f_Emp_Status"=> '1', 
                                 "f_Job"=> $input['member']['f_Job'] ??= '',
                                 "f_CompanyName"=> $input['member']['f_CompanyName'] ??= '',
-                                "f_RTTB"=> '',
+                                "f_RTTB"=> '', 
+                                "famId"=> "string", ///check if caused error not exist latest working
                                 "business"=> $businesses,
                                 "loanAmount"=> $input['member']['loanAmount'] ??= '0',
                                 'loanTypeId' => $this->loanDetails['loanTypeID'],
@@ -711,6 +712,7 @@ class CreateApplication extends Component
                                 "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
                                 "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
                                 "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
+                                "co_CompanyAddress"=> "string",///check if caused error not exist latest working
                                 "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
                                 "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
                                 "remarks"=> '',
@@ -741,7 +743,7 @@ class CreateApplication extends Component
                     //dd($data);                          
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                // dd( $data );
+                //dd( $crt );
                 $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
                 $getlast = $getlast->json();
                 // dd($getlast);
@@ -1243,10 +1245,10 @@ class CreateApplication extends Component
                 $this->loanDetails['loantermsName'] = $request->loantermsName;  
 
                 if($request->naID != ''){                        
-                    $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'MemId', 'values' => $request->naID]]);                 
+                    $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $request->naID]]);                 
                     $resdata = $value->json();                          
                     $data =  $resdata[0];  
-
+                    //dd( $data);
                     $this->member['fname'] = $data['fname'];  
                     $this->member['lname'] = $data['lname'];
                     $this->member['mname'] = $data['mname'];
@@ -1257,11 +1259,11 @@ class CreateApplication extends Component
                     $this->member['civil_Status'] = $data['civil_Status'];  
                     $this->member['cno'] = $data['cno']; 
                     $this->member['country'] = $data['country']; 
-                    $this->member['dob'] = date('m/d/Y', strtotime($data['dob']));
+                    $this->member['dob'] = date('Y-m-d', strtotime($data['dob']));
                     $this->member['emailAddress'] = $data['emailAddress']; 
                     $this->member['gender'] = $data['gender'];
                     $this->member['houseNo'] = $data['houseNo'];
-                    $this->member['house_Stats'] = $data['house_Stats']; 
+                    $this->member['house_Stats'] = $data['houseStatus_Id']; 
                     $this->member['pob'] = $data['pob'];
                     $this->member['province'] = $data['province']; 
                     $this->member['yearsStay'] = $data['yearsStay'];
@@ -1666,7 +1668,7 @@ class CreateApplication extends Component
                 $this->member['civil_Status'] = $data['civil_Status'];  
                 $this->member['cno'] = $data['cno']; 
                 $this->member['country'] = $data['country']; 
-                $this->member['dob'] = date('m/d/Y', strtotime($data['dob']));
+                $this->member['dob'] = date('Y-m-d', strtotime($data['dob']));
                 $this->member['emailAddress'] = $data['emailAddress']; 
                 $this->member['gender'] = $data['gender'];
                 $this->member['houseNo'] = $data['houseNo'];
