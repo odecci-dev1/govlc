@@ -20,6 +20,7 @@
             </div>
         @endif
     <!-- * New Application Progress Bar Container -->
+    @if($type != 'details')
     <div class="na-progress-bar-container">
         <div class="progress-bar-level">
 
@@ -48,6 +49,7 @@
 
         </div>
     </div>
+    @endif
 
     @if($errors->any())
     <div class="na-requirements-sec">
@@ -422,14 +424,18 @@
                             
             @elseif($member['statusID'] == 10)
             <!-- * Approve for Releasing Button -->
-            <div class="input-wrapper input-wrapper-release">
-                <button type="button" wire:click="signForRelease" class="releaseButton" data-sign-for-releasing-button>Sign For Releasing</button>
-            </div>
+                @if($type != 'details')
+                <div class="input-wrapper input-wrapper-release">
+                    <button type="button" wire:click="signForRelease" class="releaseButton" data-sign-for-releasing-button>Sign For Releasing</button>
+                </div>
+                @endif
             @elseif($member['statusID'] == 15)
-            <div class="input-wrapper input-wrapper-release">
-                <button type="button" wire:click="completeApplication" class="releaseButton" data-application-complete-button>Complete</button>
-            </div>
-            @endif
+                @if($type != 'details')
+                <div class="input-wrapper input-wrapper-release">
+                    <button type="button" wire:click="completeApplication" class="releaseButton" data-application-complete-button>Complete</button>
+                </div>
+                @endif
+                @endif
 
         </div>
 
@@ -482,9 +488,11 @@
                 <button type="button" class="button">Change Loan Payment</button>
             </div> -->
             @else
+                @if($type != 'details')
                 <div class="input-wrapper input-wrapper-decline">
                     <button type="button" class="declineButton" data-open-application-decline>Decline</button>
                 </div>
+                @endif
             @endif
 
         </div>
@@ -695,8 +703,10 @@
                         </a>
                         @elseif($type == 'view')
                             @if($member['statusID'] == 7)
+                                @if($type != 'details')
                                 <button wire:click="update(1)" type="button" class="button" data-save>Update</button>
                                 <button wire:click="update(2)" onclick="showAskingDialog()" type="button" class="button" data-save>Submit And Proceed to CI</button>                      
+                                @endif
                             @elseif($member['statusID'] == 8)
                                 <div class="CI-time-wrapper">
                                     <img src="{{ URL::to('/') }}/assets/icons/time.svg" alt="Time">
@@ -1000,11 +1010,14 @@
                             @endif             
                         </div>
                         @error('imgprofile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
+                        
                         <div class="btn-wrapper">
+                            @if($type != 'details')
                             <!-- * Upload Button -->
                             <input type="file"  wire:model="imgprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                             <!-- * Attach Button -->
-                            <input type="file" wire:model="member.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
+                            <input type="file"  wire:model="member.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
+                            @endif
                         </div>
                         @error('member.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <div class="file-wrapper" data-attach-file-container>
@@ -1889,8 +1902,9 @@
             </div>
 
             <!-- * Rowspan 2: Business Name, Business Type and Business Address -->
+            
             <div class="rowspan">
-
+            @if($type != 'details')
                 <!-- * Business Name -->
                 <div class="input-wrapper">
                     <span>Business Name</span>
@@ -1911,12 +1925,12 @@
                     <input wire:model.lazy="membusinfo.businessAddress" type="text">
                     @error('membusinfo.businessAddress') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
-
+            @endif            
             </div>
 
             <!-- * Rowspan 3: Rented or Owned, Years Of Business, Number Of Employees, Salary / Day, Value Of Stocks and Amount Of Sales / Day  -->
             <div class="rowspan">
-
+            @if($type != 'details')
                 <div class="input-wrapper">
 
                     <div class="box-wrap">
@@ -1971,7 +1985,7 @@
                     <input wire:model.lazy="membusinfo.aos" type="text">
                     @error('membusinfo.aos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
-
+            @endif            
             </div>
 
             <!-- * Rowspan 4: Add Business and Attach Files Buttons -->
@@ -1981,10 +1995,12 @@
                 <div class="btn-wrapper">
 
                     <!-- * Add Business -->
+                    @if($type != 'details')
                     <button wire:click="addBusinessInfo" type="button">Add Business</button>
 
                     <!-- * Attach Files -->
                     <button type="button">Attach Files</button>
+                    @endif
 
                 </div>
 
@@ -2356,6 +2372,8 @@
     </div>
 
     <!-- * Container 8: Co-Maker New Application Form Fields -->
+
+    @if($type != 'details')
     <div class="na-container-wrapper-2">
 
         <!-- * Container 5: New Application Form Fields and Buttons -->
@@ -2659,9 +2677,11 @@
                                 @error('imgcoprofile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                                 <div class="btn-wrapper">
                                         <!-- * Upload Button -->
+                                        @if($type != 'details')
                                         <input type="file"  wire:model="imgcoprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                                         <!-- * Attach Button -->
                                         <input type="file" wire:model="comaker.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
+                                        @endif
                                         @error('comaker.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                                 </div>
 
@@ -2723,7 +2743,9 @@
         </div>
 
     </div>
+    @endif
 
+    @if( $type != 'details' )
     <!-- * Container 9: Co-Maker Job Information Input Fields -->
     <div class="na-container-3">
 
@@ -2866,6 +2888,7 @@
         </div>
 
     </div>
+    @endif
 
     <!-- * Container 12: Signature Field -->
     <div class="na-container-12">
@@ -2919,7 +2942,9 @@
                     <!-- * Upload Applicant Signature Button -->
                     <div class="input-wrapper">
                         <!-- <input type="file" class="input-image" id="imageUploadApplicantSign"> -->
+                        @if($type != 'details')
                         <input type="file"  wire:model="imgmemsign" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        @endif
                     </div>
 
                 </div>
@@ -2955,7 +2980,9 @@
 
                     <!-- * Upload Co-Maker Signature Button -->
                     <div class="input-wrapper">
-                    <input type="file"  wire:model="imgcosign" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        @if($type != 'details')
+                        <input type="file"  wire:model="imgcosign" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        @endif
                     </div>
 
                 </div>

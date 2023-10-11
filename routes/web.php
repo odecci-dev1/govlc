@@ -100,6 +100,7 @@ Route::get('/tranactions/application/printing/{naID}', function(){
     return view('livewire.transactions.application.application-html');
 });
 Route::get('/tranactions/application/credit/investigation/list', CreditInvestigationApplicationList::class)->name('application.credit.investigation.list');
+Route::get('/members/{type}/{naID}', CreateApplication::class)->name('application.view');
 Route::get('/tranactions/application/{type}/{naID}', CreateApplication::class)->name('application.view');
 Route::get('/tranactions/application/{type}', CreateApplication::class)->name('application.create');
 Route::get('/tranactions/application/credit/investigation/view/{memId}', CreditInvestigationApplication::class)->name('application.credit.investigation');

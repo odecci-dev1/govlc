@@ -242,6 +242,12 @@ class LoanTypes extends Component
             }
         }
 
+        if($loanid == ''){
+            $this->inpterms['noAdvancePayment'] = 1;
+            $this->inpterms['oldFormula'] = 2;
+            $this->inpterms['deductInterest'] = 2;
+        }
+
         $collType = $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/GetCollectionType');
         $collType = $collType->json();
         if($collType){

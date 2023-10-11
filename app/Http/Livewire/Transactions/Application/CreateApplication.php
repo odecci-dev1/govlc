@@ -741,9 +741,10 @@ class CreateApplication extends Component
                     //dd($data);                          
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                // dd( $crt );
-                $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                 
+                // dd( $data );
+                $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
                 $getlast = $getlast->json();
+                // dd($getlast);
    
                 return redirect()->to('/tranactions/application/view/'.$getlast['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
             }
@@ -1010,8 +1011,7 @@ class CreateApplication extends Component
 
     public function signForRelease(){
         try{          
-
-            //dito
+           
             $this->validate([
                                 'loanDetails.modeOfRelease' => ['required'],
                                 'loanDetails.denomination' => ['required'],
@@ -1236,8 +1236,7 @@ class CreateApplication extends Component
         $loandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
         $this->member['loanAmount'] = isset($loandetails['loamamount']) ? $loandetails['loamamount'] : '';
         $this->member['termsOfPayment'] = isset($loandetails['paymentterms']) ? $loandetails['paymentterms'] : '';
-        $this->member['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';
-
+        $this->member['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';       
         if($this->type == 'create'){
                 $this->loanDetails['loanTypeID'] = $request->loanTypeID;   
                 $this->loanDetails['loantermsID'] = $request->loantermsID; 
@@ -1369,7 +1368,7 @@ class CreateApplication extends Component
                 $this->comaker['co_Emp_Status'] = '1'; 
                 $this->comaker['remarks'] = ''; 
         }
-        else if($this->type == 'view'){
+        else if($this->type == 'view' || $this->type == 'details'){
             $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
             //dd($value);
             $resdata = $value->json();             
@@ -1635,9 +1634,6 @@ class CreateApplication extends Component
                         $this->inpappliances['brand'.$appliancescnt] = $mappliances['brand'];                        
                     }
                 }   
-
-                //dd($data);
-                //dito
 
                 $bank= $data['bank'];
                 if(count($bank) > 0){                   

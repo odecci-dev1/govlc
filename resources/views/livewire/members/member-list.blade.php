@@ -51,7 +51,7 @@
     <!-- * Container 1: All Members Header, Buttons, and Searchbar -->
     <div class="am-con-1">
     <h2>Members</h2>
-    <p class="p-1">(Please select member type or loan type)</p>
+    <p class="p-1">(Please select member status or loan type)</p>
 
     <!-- * Button Container -->
     <div class="container">
@@ -60,14 +60,14 @@
         <div class="wrapper">
 
             <!-- * Add New Button -->
-            <button data-member-new-application><span>Add New</span></button>
+        
 
             <!-- * Member Type Dropdown Button -->
             <div class="borrower-dropdown" data-bor-dropdown>
 
                 <!-- * Member Type Button -->
                 <button class="link dropdown" data-bor-dropdown-button>
-                    <span data-bor-dropdown-button>Member Type</span>
+                    <span data-bor-dropdown-button>Member Status</span>
                     <img src="{{ URL::to('/') }}/assets/icons/white-carret-down.svg" alt="carret-down"data-bor-dropdown-button>
                 </button>
 
@@ -77,14 +77,14 @@
                     <!-- * Borrower -->
                     <a href="" data-member-borrower>
                         <li>
-                            <span>Borrower</span>
+                            <span>Active</span>
                         </li>
                     </a>
 
                     <!-- * Co-Borrower -->
                     <a href="" data-member-co-borrower>
                         <li>
-                            <span>Co-Borrower</span>
+                            <span>Inactive</span>
                         </li>
                     </a>
 
@@ -133,7 +133,7 @@
             <!-- * Primary Search Bar -->
             <div class="primary-search-bar">
                 <div class="row">
-                    <input type="search" id="searchInput" name="search" placeholder="Search" autocomplete="off">
+                    <input type="search" wire:model="keyword" placeholder="Search" autocomplete="off">
                     <button>
                     </button>
                 </div>
@@ -174,9 +174,6 @@
                 </th>
 
                 <!-- * Co-borrower -->
-                <th>
-                    <span class="th-name">Co-borrower</span>
-                </th>
 
                 <!-- * Current Loan -->
                 <th>
@@ -207,722 +204,53 @@
 
 
             <!-- * All Members Data -->
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-
-                <!-- * Checkbox Opt -->
-                <td>
-                    <input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox>
-                </td>
-
-                <td>
-
-                    <!-- * Borrower Data -->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
-                        <span class="td-name">Dela Cruz, Juana</span>
-                    </div>
-
-                </td>
-
-                <td>
-
-                    <!-- * Co-Makers Data-->
-                    <div class="td-wrapper">
-                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg" alt="Alfreds Futterkiste">
-                        <span class="td-name">Palermo, Juliana</span>
-                    </div>
-
-                </td>
-
-                <!-- * Current Loan Data-->
-                <td class="td-curLoan">
-                    18,000.00
-                </td>
-
-                <!-- * Outstading Balance Data-->
-                <td class="td-bal">
-                    10,000.00
-                </td>
-
-                <!-- * Due Date Info-->
-                <td class="td-due">
-                    June 4, 2023
-                </td>
-
-                <!-- * Table View and Trash Button -->
-                <td class="td-btns">
-                    <div class="td-btn-wrapper">
-                        <button class="a-btn-view-2">View</button>
-                        <button class="a-btn-trash-2">Trash</button>
-                    </div>
-                </td>
-
-            </tr>
-
-
+            
+            @if($list)              
+                @foreach($list as $l)
+                <tr>
+
+                    <!-- * Checkbox Opt -->
+                    <td>
+                        <input type="checkbox" class="checkbox" id="checkbox" data-checkbox>
+                    </td>
+
+                    <td>
+
+                        <!-- * Borrower Data -->
+                        <div class="td-wrapper">
+                            <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
+                            <span class="td-name">{{ $l['borrower'] }}</span>
+                        </div>
+
+                    </td>
+
+                    <!-- * Current Loan Data-->
+                    <td class="td-curLoan">
+                        {{ number_format($l['loanAmount'], 2) }}
+                    </td>
+
+                    <!-- * Outstading Balance Data-->
+                    <td class="td-bal">
+                        10,000.00 - 
+                    </td>
+
+                    <!-- * Due Date Info-->
+                    <td class="td-due">
+                        June 4, 2023 -
+                    </td>
+
+                    <!-- * Table View and Trash Button -->
+                    <td class="td-btns">
+                        <div class="td-btn-wrapper">
+                            <a href="{{ URL::to('/') }}/members/details/{{ $l['naid'] }}" class="a-btn-view-2">View</a>
+                            <button class="a-btn-trash-2">Trash</button>
+                        </div>
+                    </td>
+
+                </tr>
+                @endforeach
+            @endif    
+           
         </table>
     </div>
 
