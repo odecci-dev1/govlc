@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Modals;
 use Illuminate\Support\Facades\Http;
 use App\Http\Livewire\Transactions\Application\CreateApplication;
+use App\Http\Livewire\Transactions\Application\CreateApplicationGroup;
 
 use Livewire\Component;
 
@@ -29,19 +30,26 @@ class NewApplicationModal extends Component
     }
 
     public function createIndividualLoan($value, $loanid){
+      
         $this->validate([ 'loantype' => 'required', 'loanterms' => 'required' ]);
-        if($value == ''){
+        if(in_array($loanid, ['LT-02'])){
             return redirect()->action(
-                [CreateApplication::class], ['type' => 'create', 'naID' => '', 'loanTypeID' => $loanid, 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
+                [CreateApplicationGroup::class], ['type' => 'create', 'loanTypeID' => $loanid, 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
             );
         }
-        else{          
-            // return redirect()->to('/tranactions/application/create/'.$value);
-            return redirect()->action(
-                [CreateApplication::class], ['type' => 'create', 'naID' => $value, 'loanTypeID' => $loanid, 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
-            );
+        else{
+            if($value == ''){
+                return redirect()->action(
+                    [CreateApplication::class], ['type' => 'create', 'naID' => '', 'loanTypeID' => $loanid, 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
+                );
+            }
+            else{          
+                // return redirect()->to('/tranactions/application/create/'.$value);
+                return redirect()->action(
+                    [CreateApplication::class], ['type' => 'create', 'naID' => $value, 'loanTypeID' => $loanid, 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
+                );
+            }
         }
-       
     }
 
     public function redirectToGroupLoan(){
@@ -65,9 +73,9 @@ class NewApplicationModal extends Component
     }
 
     public function changeLoanType($loanId){
-        if($loanId == 'LT-02'){
-            $this->redirectToGroupLoan();
-        }
+        // if($loanId == 'LT-02'){
+        //     $this->redirectToGroupLoan();
+        // }
         $this->getLoanTypeName($loanId);
     }
 

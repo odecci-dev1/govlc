@@ -184,7 +184,9 @@
                     <!-- * Terms Of Payment -->
                     <div class="input-wrapper">
                         <span>Terms Of Payment</span>
-                        <input type="text" wire:blur="sessionLoanDetails" wire:model.lazy="loandetails.paymentterms">
+                        <input type="text" disabled  wire:model.lazy="loandetails.paymentterms">
+                        <input type="hidden" disabled wire:model.lazy="loandetails.topId">
+                        <input type="hidden" disabled wire:model.lazy="loandetails.loanTypeID">
                     </div>
 
                     <!-- * Purpose -->

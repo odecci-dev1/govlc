@@ -1218,7 +1218,7 @@ class CreateApplication extends Component
         $this->comaker['old_profile'] = '';
         $this->comaker['old_signature'] = '';
         $this->type = $type;     
-        $this->termsOfPaymentList = collect([]);
+        $this->termsOfPaymentList = collect([]);    
       
         $this->member['civil_Status'] = '';       
         $this->member['emp_Status'] = '';
@@ -1651,9 +1651,10 @@ class CreateApplication extends Component
         }
         else if($this->type == 'add'){
             if($this->naID != ''){             
-                $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'MemId', 'values' => $this->naID]]);                 
+                $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $this->naID]]);                 
+                
                 $resdata = $value->json();                          
-                $data =  $resdata[0];      
+                $data =  $resdata[0];                 
 
                 $this->member['fname'] = $data['fname'];  
                 $this->member['lname'] = $data['lname'];
@@ -1669,16 +1670,12 @@ class CreateApplication extends Component
                 $this->member['emailAddress'] = $data['emailAddress']; 
                 $this->member['gender'] = $data['gender'];
                 $this->member['houseNo'] = $data['houseNo'];
-                $this->member['house_Stats'] = $data['house_Stats']; 
+                $this->member['house_Stats'] = $data['houseStatus_Id']; 
                 $this->member['pob'] = $data['pob'];
                 $this->member['province'] = $data['province']; 
                 $this->member['yearsStay'] = $data['yearsStay'];
                 $this->member['zipCode'] = $data['zipCode'];
 
-                $loandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
-                $this->member['loanAmount'] = isset($loandetails['loamamount']) ? $loandetails['loamamount'] : '';
-                $this->member['termsOfPayment'] = isset($loandetails['paymentterms']) ? $loandetails['paymentterms'] : '';
-                $this->member['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';
             }
             //else{
                 // $this->member['fname'] = '1Jumar';  
@@ -1758,6 +1755,15 @@ class CreateApplication extends Component
                 $this->comaker['co_Emp_Status'] = '1'; 
                 $this->comaker['remarks'] = ''; 
             //}
+            $sessloandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
+            //dd(  $sessloandetails);
+            $this->member['loanAmount'] = isset($sessloandetails['loamamount']) ? $sessloandetails['loamamount'] : '';
+            $this->member['termsOfPayment'] = isset($sessloandetails['paymentterms']) ? $sessloandetails['paymentterms'] : '';
+            $this->member['purpose'] = isset($sessloandetails['purpose']) ? $sessloandetails['purpose'] : '';
+
+            $this->loanDetails['loanTypeID'] = isset($sessloandetails['loanTypeID']) ? $sessloandetails['loanTypeID'] : '';   
+            $this->loanDetails['loantermsID'] = isset($sessloandetails['topId']) ? $sessloandetails['topId'] : '';
+            $this->loanDetails['loantermsName'] = $this->member['termsOfPayment'];  
         }
     }
 
