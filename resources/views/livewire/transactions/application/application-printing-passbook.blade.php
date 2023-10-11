@@ -15,7 +15,7 @@
                         <!-- * Modal Body -->
                         <div class="rowspan">
                             <img src="{{ URL::to('/') }}/assets/icons/modal-icon/asking.svg" alt="Asking">
-                            <p>Are you sure you want to proceed?</p>
+                            <p>Are you sure you done printing?</p>
                         </div>
 
                         <!-- * Yes or No Button -->
@@ -982,7 +982,7 @@
                     modal.removeAttribute("closing");
                     modal.close();
                 }, { once: true });
-                location.href = url
+                window.close();
             })
         }
 

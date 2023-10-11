@@ -5,8 +5,11 @@ namespace App\Http\Livewire\Transactions\Application;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
+use App\Traits\Common;
 class ApplicationReleasingList extends Component
 {
+    
+    use Common;
     public $keyword = '';
 
     public function render()

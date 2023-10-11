@@ -81,7 +81,9 @@
         <div class="rowspan">
             <div class="header-wrapper">
                 <h3>Loan Details</h3>
-                <button type="button" class="viewLoanDetailsButton" data-open-receipt-voucher>View Loan Summary</button>
+                @if($member['statusID'] >= 10)
+                    <button type="button" class="viewLoanDetailsButton" data-open-receipt-voucher>View Loan Summary</button>
+                @endif
             </div>
         </div>
             <!-- * Receipt Voucher Modal -->
@@ -278,15 +280,17 @@
             @if(isset($loanDetails['modeOfRelease']))               
                 <div class="input-wrapper" data-toggle-mor-1>
                     @if($loanDetails['modeOfRelease'] == 'Cash')
-                        <span>Denomination <img class="img-edit" style="{{ in_array($member['statusID'], [10]) ? 'visibility: visible' : '' }}" src="{{ URL::to('/') }}/assets/icons/modal-icon/asking.svg" alt=""></span>
+                        <span>Denomination</span>
                         <input autocomplete="off" wire:model.lazy="loanDetails.denomination" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="text" id="denomination" name="denomination">
+                        @error('loanDetails.denomination') <span class="text-required">{{ $message }}</span> @enderror
                     @endif
                     @if($loanDetails['modeOfRelease'] == 'Check')
                         <span>Check Number</span>
                         <input autocomplete="off" wire:model.lazy="loanDetails.denomination" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="text" id="denomination" name="denomination">
+                        @error('loanDetails.denomination') <span class="text-required">{{ $message }}</span> @enderror
                     @endif
                    
-                    @error('loanDetails.denomination') <span class="text-required">{{ $message }}</span> @enderror
+                  
                 </div>                                            
             @endif
 
@@ -449,7 +453,7 @@
             <!-- * Number of Loans -->
             <div class="input-wrapper">
                 <span>Notarial Fee</span>
-                <input wire:model.lazy="loanDetails.notarialFee" autocomplete="off" type="number">
+                <input wire:model.lazy="loanDetails.notarialFee" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
                 @error('loanDetails.notarialFee') <span class="text-required">{{ $message }}</span> @enderror
             </div>
             @endif
@@ -490,21 +494,21 @@
 
             <div class="input-wrapper">
                 <span>Advance Payment</span>
-                <input wire:model.lazy="loanDetails.advancePayment" autocomplete="off" type="text" >
+                <input wire:model.lazy="loanDetails.advancePayment" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" autocomplete="off" type="text" >
                 @error('loanDetails.advancePayment') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Interest</span>
-                <input wire:model.lazy="loanDetails.total_InterestAmount" autocomplete="off" type="number">
+                <input wire:model.lazy="loanDetails.total_InterestAmount" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
                 @error('loanDetails.total_InterestAmount') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper" style="padding-bottom: 0;">
                 <span>Releasing Amount</span>
-                <input wire:model.lazy="loanDetails.total_LoanReceivable" autocomplete="off" type="number">
+                <input wire:model.lazy="loanDetails.total_LoanReceivable" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
                 @error('loanDetails.total_LoanReceivable') <span class="text-required">{{ $message }}</span> @enderror
             </div>
              <!-- * Decline Button -->
@@ -524,8 +528,8 @@
 
             @if($member['statusID'] == 9)   
             <div class="input-wrapper">
-                <span>Daily Amount Due</span>
-                <input wire:model.lazy="loanDetails.dailyCollectibles" autocomplete="off" type="text" >
+                <span>Collectible</span>
+                <input wire:model.lazy="loanDetails.dailyCollectibles" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" autocomplete="off" type="text" >
                 @error('loanDetails.dailyCollectibles') <span class="text-required">{{ $message }}</span> @enderror
             </div>
             @endif

@@ -1,6 +1,8 @@
 <div>
  
-
+@if(session('mmessage'))
+        <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+    @endif
     <!-- * Main Dashboard -->
     <div class="main-dashboard">
 

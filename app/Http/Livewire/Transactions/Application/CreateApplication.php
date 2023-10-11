@@ -301,7 +301,34 @@ class CreateApplication extends Component
         $messages['loanDetails.loanAmount.min'] = 'Loan amount must be greater that 0';
         $messages['loanDetails.loanAmount.numeric'] = 'Please enter a valid number';
         $messages['loanDetails.topId.required'] = 'Please select terms'; 
+
+        $messages['loanDetails.notarialFee.required'] = 'Notarial fee is required'; 
+        $messages['loanDetails.advancePayment.required'] = 'Advance payment is required';   
+        $messages['loanDetails.total_InterestAmount.required'] = 'Interest amount is required'; 
+        $messages['loanDetails.total_LoanReceivable.required'] = 'Receivable amount is required'; 
+        $messages['loanDetails.dailyCollectibles.required'] = 'Daily amount due is required'; 
         
+        $messages['loanDetails.notarialFee.numeric'] = 'Notarial fee must be a number'; 
+        $messages['loanDetails.advancePayment.numeric'] = 'Advance payment must be a number';   
+        $messages['loanDetails.total_InterestAmount.numeric'] = 'Interest amount must be a number'; 
+        $messages['loanDetails.total_LoanReceivable.numeric'] = 'Receivable amount must be a number'; 
+        $messages['loanDetails.dailyCollectibles.numeric'] = 'Daily amount due must be a number'; 
+
+        $messages['loanDetails.notarialFee.min'] = 'Notarial fee must be greater than 1'; 
+        $messages['loanDetails.advancePayment.min'] = 'Advance payment must be greater than 1';   
+        $messages['loanDetails.total_InterestAmount.min'] = 'Interest amount must be greater than 1'; 
+        $messages['loanDetails.total_LoanReceivable.min'] = 'Receivable amount must be greater than 1'; 
+        $messages['loanDetails.dailyCollectibles.min'] = 'Daily amount due must be greater than 1'; 
+        
+        $messages['loanDetails.modeOfRelease.required'] = 'Please select mode of release'; 
+        $messages['loanDetails.denomination.required'] = 'Please select denomination'; 
+        $messages['loanDetails.savingsToUse.required'] = 'Please select savings to be used'; 
+        $messages['loanDetails.courier.required'] = 'Please select courrier'; 
+        $messages['loanDetails.couriercno.required'] = 'Please enter contact number'; 
+        $messages['loanDetails.courierClient.required'] = 'Please enter client name'; 
+        $messages['loanDetails.courierEmployee.required'] = 'Please select employee'; 
+
+
         if(isset($this->member['civil_Status'])){
             if($this->member['civil_Status'] == 'Married' || $this->member['civil_Status']=='Single'){
                 if(count($this->cntmemchild) > 1){
@@ -946,6 +973,11 @@ class CreateApplication extends Component
             $this->validate([
                                 'loanDetails.loanAmount' => ['required', 'numeric', 'min:1'],
                                 'loanDetails.topId' => ['required'],
+                                'loanDetails.notarialFee' => ['required', 'numeric', 'min:1'],
+                                'loanDetails.advancePayment' => ['required', 'numeric', 'min:1'],
+                                'loanDetails.total_InterestAmount' => ['required', 'numeric', 'min:1'],
+                                'loanDetails.total_LoanReceivable' => ['required', 'numeric', 'min:1'],
+                                'loanDetails.dailyCollectibles' => ['required', 'numeric', 'min:1'],
                             ]);
 
             $data = [
@@ -979,6 +1011,7 @@ class CreateApplication extends Component
     public function signForRelease(){
         try{          
 
+            //dito
             $this->validate([
                                 'loanDetails.modeOfRelease' => ['required'],
                                 'loanDetails.denomination' => ['required'],
