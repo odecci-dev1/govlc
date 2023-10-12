@@ -16,7 +16,7 @@ class FieldOfficerlist extends Component
     public $keyword = '';
 
     public function archive($foid){       
-        // $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/DeleteFO', [ 'foid' => $foid ]);              
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/DeleteFO', [ 'foid' => $foid ]);              
         return redirect()->to('/maintenance/fieldofficer/list')->with(['mmessage'=> 'Filed officer has been archived', 'mword'=> 'Success']);    
     }
     
