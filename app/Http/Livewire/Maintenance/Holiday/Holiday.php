@@ -63,6 +63,7 @@ class Holiday extends Component
             ];
 
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Holiday/UpdateHolidayDetails', $data);           
+            // dd( $crt ); 
             return redirect()->to('/maintenance/holiday/view/'.$this->holid)->with('message', 'Holiday successfully saved');    
         }
         catch (\Exception $e) {           

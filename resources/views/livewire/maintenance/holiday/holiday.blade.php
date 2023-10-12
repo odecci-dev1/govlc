@@ -3,7 +3,9 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script> 
     <!-- * New Holiday Form -->
     <form action="" class="na-form-con" autocomplete="off">
-
+    @if(session('message'))
+    <x-alert :message="session('message')" :words="session('message')" :header="'Success'"></x-alert>   
+    @endif
     <!-- * Container Wrapper: Add New Holiday -->
 
         <!-- * Container 1: Add New Holiday and Buttons -->

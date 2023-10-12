@@ -1,7 +1,9 @@
 <div>    
     <!-- * Holiday Maintenance -->
     <!-- * Container 1: Holiday Maintenance Header, Buttons, and Searchbar -->
-
+    @if(session('message'))
+    <x-alert :message="session('message')" :words="session('message')" :header="'Success'"></x-alert>   
+    @endif
     <div class="m-con-1">
     <h2>Holiday</h2>
     <p class="p-2">Total of <span id="numOfHolidays">20</span> Holidays</p>
