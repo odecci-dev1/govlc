@@ -68,15 +68,14 @@ class NewApplicationModal extends Component
         }
         $this->loantype = 'LT-01';
         $this->loantypeList = $loantypeList;
-        $this->changeLoanType();
+        $this->changeLoanType($this->loantype);
         //dd($this->loantypeList);
     }
 
-    public function changeLoanType(){
+    public function changeLoanType($loanId){
         // if($loanId == 'LT-02'){
         //     $this->redirectToGroupLoan();
         // }
-        $loanId = $this->loantype;
         $this->getLoanTypeName($loanId);
     }
 
@@ -95,7 +94,7 @@ class NewApplicationModal extends Component
 
         $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loantype]);                  
         $loanterms = $loanterms->json();
-       // dd($loanterms);
+       
         if( $loanterms ){
             $this->termsOfPaymentList = [];
             foreach( $loanterms  as  $loanterms ){

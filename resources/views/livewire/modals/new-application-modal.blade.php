@@ -21,58 +21,26 @@
             <div style="display: flex;">
                 <div style="width: 50%;">
                         <div class="input-wrapper">
-
-                            <div class="select-box">
-
-                                <div class="options-container" data-type-opt-con>
-
-                                    @if($loantypeList)
-                                        @foreach($loantypeList as $loantypeList)
-                                        <div class="option" data-type-loan-opt data-individual-loan-link>
-
-                                            <input type="radio" wire:model="loantype" wire:change="changeLoanType('{{ $loantypeList['loanTypeID'] }}')" class="radio" value="{{ $loantypeList['loanTypeID'] }}" id="loantype{{ $loantypeList['loanTypeID'] }}" name="loantype" />
-                                            <label for="loantype{{ $loantypeList['loanTypeID'] }}">
-                                                <h4>{{ $loantypeList['loanTypeName'] }}</h4>
-                                            </label>
-
-                                        </div>
-                                        @endforeach
-                                    @endif
-                                    
-                                </div>
-                                
-                                <div class="selected" style="font-weight: bold;" data-type-loan-select>
-                                    {{ $loantypename }}
-                                </div>
-
-                            </div>
+                            <select  wire:model="loantype" wire:change="changeLoanType">
+                                @if($loantypeList)
+                                    @foreach($loantypeList as $loantypeList)
+                                        <option value="{{ $loantypeList['loanTypeID'] }}">{{ $loantypeList['loanTypeName'] }}</option>
+                                    @endforeach
+                                @endif                                        
+                            </select>          
                             @error('loantype') <span class="text-required fw-bold">{{ $message }}</span>@enderror
                         </div>
                 </div>
                 <div style="width: 50%;">
                         <div class="input-wrapper">
 
-                            <div class="select-box">
-
-                                <div class="options-container" data-type-opt-con2>
+                            <select  wire:model="loanterms">
                                 @if($termsOfPaymentList)
                                     @foreach($termsOfPaymentList as $mtermsOfPaymentList)
-                                        <div class="option" data-type-loan-opt2 >                                        
-                                            <input type="radio" wire:model="loanterms" class="radio" value="{{ $mtermsOfPaymentList['topId'] }}" id="loanterms{{ $mtermsOfPaymentList['topId'] }}" name="loanterms" />
-                                            <label for="loanterms{{ $mtermsOfPaymentList['topId'] }}">
-                                                <h4>{{ $mtermsOfPaymentList['termsofPayment'] }}</h4>
-                                            </label>
-                                        </div>
+                                        <option value="{{ $mtermsOfPaymentList['topId'] }}">{{ $mtermsOfPaymentList['termsofPayment'] }}</option>
                                     @endforeach
-                                @endif    
-                                    
-                                </div>
-                                
-                                <div class="selected" style="font-weight: bold; font-size: 1.3rem;" data-type-loan-select2>
-                                    {{ isset($loanterms) ? isset($termsOfPaymentList[$loanterms]['termsofPayment']) ? $termsOfPaymentList[$loanterms]['termsofPayment'] : '' : '' }}
-                                </div>
-
-                            </div>
+                                @endif                            
+                            </select>                             
                             @error('loanterms') <span class="text-required fw-bold">{{ $message }}</span>@enderror
                         </div>
                 </div>
