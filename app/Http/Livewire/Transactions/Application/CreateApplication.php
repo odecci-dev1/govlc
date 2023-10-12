@@ -1680,25 +1680,25 @@ class CreateApplication extends Component
 
             }
             //else{
-                // $this->member['fname'] = '1Jumar';  
-                // $this->member['lname'] = '1Cave';
-                // $this->member['mname'] = '1Badajos';
-                // $this->member['suffix'] = ''; 
-                // $this->member['age'] = '20'; 
-                // $this->member['barangay'] = 'Rivera';  
-                // $this->member['city'] = 'San Juan'; 
-                // $this->member['civil_Status'] = 'Married';  
-                // $this->member['cno'] = '02233666666'; 
-                // $this->member['country'] = 'Philippines'; 
-                // $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
-                // $this->member['emailAddress'] = 'test@gmail.com'; 
-                // $this->member['gender'] = 'Male';
-                // $this->member['houseNo'] = 'No. 9 GB';
-                // $this->member['house_Stats'] = '2'; 
-                // $this->member['pob'] = 'Bani, Pangasinan';
-                // $this->member['province'] = 'NCR'; 
-                // $this->member['yearsStay'] = '5';
-                // $this->member['zipCode'] = '';            
+                $this->member['fname'] = '1Jumar';  
+                $this->member['lname'] = '1Cave';
+                $this->member['mname'] = '1Badajos';
+                $this->member['suffix'] = ''; 
+                $this->member['age'] = '20'; 
+                $this->member['barangay'] = 'Rivera';  
+                $this->member['city'] = 'San Juan'; 
+                $this->member['civil_Status'] = 'Married';  
+                $this->member['cno'] = '02233666666'; 
+                $this->member['country'] = 'Philippines'; 
+                $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
+                $this->member['emailAddress'] = 'test@gmail.com'; 
+                $this->member['gender'] = 'Male';
+                $this->member['houseNo'] = 'No. 9 GB';
+                $this->member['house_Stats'] = '2'; 
+                $this->member['pob'] = 'Bani, Pangasinan';
+                $this->member['province'] = 'NCR'; 
+                $this->member['yearsStay'] = '5';
+                $this->member['zipCode'] = '';            
                 $this->member['electricBill'] = '250'; 
                 $this->member['waterBill'] = '100'; 
                 $this->member['otherBills'] = '1000'; 

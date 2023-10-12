@@ -280,7 +280,7 @@
                     </div>     
                     <div style="width: 30%; padding-right: 40px;">                            
                         <div style="width:  100%; padding-bottom: 5px;">
-                            <span style="font-size: 1.5rem; color: red;">No Advance Payment ?</span>
+                            <span style="font-size: 1.5rem; color: red;">Allow Advance Payment ?</span>
                         </div>  
                         <div style="width:  100%; display: flex;">                           
                             <div  style="width:  100%;">
@@ -288,12 +288,12 @@
                                     <!-- radio -->
                                     <div class="box-wrap" style="gap: 1rem;">
                                         <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="1" name="noAdvancePayment" id="noAdvancePayment1">
+                                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="2" name="noAdvancePayment" id="noAdvancePayment1">
                                             <span>Yes</span>                                            
                                         </div>
 
                                         <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="2" name="noAdvancePayment" id="noAdvancePayment2">
+                                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="1" name="noAdvancePayment" id="noAdvancePayment2">
                                             <span>No</span>                                            
                                         </div>
                                     </div>

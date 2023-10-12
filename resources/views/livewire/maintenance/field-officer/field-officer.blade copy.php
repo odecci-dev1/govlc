@@ -251,21 +251,23 @@
 
                     <!-- * Upload Image -->
                     <div class="input-wrapper" data-upload-image-field-officer-hover-container>
-                        @if(file_exists(public_path('storage/officer_profile/'.(isset($officer['profile']) ? $officer['profile'] : 'xxxx'))))
-                            <img type="image" class="profile" src="{{ asset('storage/officer_profile/'.$officer['profile']) }}" alt="upload-image" />                                               
-                        @elseif(isset($officer['profile']))
-                            <img type="image" class="profile" src="{{ $officer['profile']->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
+                        @if($imgprofile)
+                            <img type="image" class="profile" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
                         @else
-                            <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
-                        @endif                           
+                            @if(file_exists(public_path('storage/officer_profile/'.(isset($officer['profile']) ? $officer['profile'] : 'xxxx'))))
+                                <img type="image" class="profile" src="{{ asset('storage/officer_profile/'.$officer['profile']) }}" alt="upload-image" />                                                                     
+                            @else
+                                <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                            @endif 
+                        @endif                          
                     </div>
 
                     <!-- * Button Wrapper -->
                     <div class="btn-wrapper">
-                        @error('officer.profile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
+                        @error('imgprofile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <!-- * Upload Button -->
-                        <input type="file" wire:model="officer.profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
-                        <div wire:loading wire:target="officer.profile">Uploading...</div>
+                        <input type="file" wire:model="imgprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        <div wire:loading wire:target="imgprofile">Uploading...</div>
                         <!-- * Attach Button -->
                         <input type="file" wire:model="officer.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-field-officer-file-btn></input>
                         <div wire:loading wire:target="officer.attachments">Uploading...</div>
@@ -403,33 +405,37 @@
                 <!-- * ID Front Image Input -->
                 <div class="input-wrapper">
                     <span>Front</span>
-                    @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['frontID']) ? $officer['frontID'] : 'xxxx'))))                            
-                        <input type="image" src="{{ url('storage/officer_ids/'.$officer['frontID']) }}" alt="Front Image" id="frontImage" name="frontImage">
-                    @elseif(isset($officer['frontID']))                            
-                        <input type="image" src="{{ $officer['frontID']->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                    @if($imgfrontID)
+                        <input type="image" class="profile" src="{{ $imgfrontID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
                     @else
-                        <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">
-                    @endif                                       
+                        @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['frontID']) ? $officer['frontID'] : 'xxxx'))))    
+                            <input type="image" class="profile" src="{{ asset('storage/officer_ids/'.$officer['frontID']) }}" alt="Front Image" id="frontImage" name="frontImage">
+                        @else
+                            <input type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
+                        @endif 
+                    @endif   
                     <div class="btn-wrapper">                
-                        <input type="file" wire:model="officer.frontID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        <input type="file" wire:model="imgfrontID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                     </div>
-                    @error('officer.frontID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
+                    @error('imgfrontID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- * ID Back Image Input -->
                 <div class="input-wrapper">
-                    <span>Back</span>
-                    @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['backID']) ? $officer['backID'] : 'xxxx'))))                            
-                        <input type="image" src="{{ url('storage/officer_ids/'.$officer['backID']) }}" alt="Front Image" id="frontImage" name="frontImage">
-                    @elseif(isset($officer['backID']))                            
-                        <input type="image" src="{{ $officer['backID']->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                    <span>Back</span>                   
+                    @if($imgbackID)
+                        <input type="image" class="profile" src="{{ $imgbackID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
                     @else
-                        <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">
-                    @endif  
+                        @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['backID']) ? $officer['backID'] : 'xxxx'))))    
+                            <input type="image" class="profile" src="{{ asset('storage/officer_ids/'.$officer['backID']) }}" alt="Front Image" id="frontImage" name="frontImage">
+                        @else
+                            <input type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
+                        @endif 
+                    @endif   
                     <div class="btn-wrapper">
-                        <input type="file" wire:model="officer.backID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        <input type="file" wire:model="imgbackID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                     </div>
-                    @error('officer.backID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
+                    @error('imgbackID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                 </div>
 
             </div>
