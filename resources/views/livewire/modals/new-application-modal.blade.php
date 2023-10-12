@@ -35,6 +35,7 @@
                         <div class="input-wrapper">
 
                             <select  wire:model="loanterms">
+                                <option value="">-- select terms --</option>
                                 @if($termsOfPaymentList)
                                     @foreach($termsOfPaymentList as $mtermsOfPaymentList)
                                         <option value="{{ $mtermsOfPaymentList['topId'] }}">{{ $mtermsOfPaymentList['termsofPayment'] }}</option>

@@ -76,6 +76,7 @@ class NewApplicationModal extends Component
         // if($loanId == 'LT-02'){
         //     $this->redirectToGroupLoan();
         // }
+        $this->loanterms = '';
         $loanId = $this->loantype;
         $this->getLoanTypeName($loanId);
     }
