@@ -19,9 +19,9 @@
                 </div>
             </div>
             <div style="display: flex;">
-                <div style="width: 50%;">
+                <div style="width: 50%; padding-right: 4rem;">
                         <div class="input-wrapper">
-                            <select  wire:model="loantype" wire:change="changeLoanType">
+                            <select  wire:model="loantype" wire:change="changeLoanType" class="select-option">
                                 @if($loantypeList)
                                     @foreach($loantypeList as $loantypeList)
                                         <option value="{{ $loantypeList['loanTypeID'] }}">{{ $loantypeList['loanTypeName'] }}</option>
@@ -31,10 +31,10 @@
                             @error('loantype') <span class="text-required fw-bold">{{ $message }}</span>@enderror
                         </div>
                 </div>
-                <div style="width: 50%;">
+                <div style="width: 50%;padding-right: 4rem;">
                         <div class="input-wrapper">
 
-                            <select  wire:model="loanterms">
+                            <select  wire:model="loanterms" class="select-option">
                                 <option value="">-- select terms --</option>
                                 @if($termsOfPaymentList)
                                     @foreach($termsOfPaymentList as $mtermsOfPaymentList)

@@ -135,7 +135,7 @@
                     <!-- * Submenu -->
                     <ul class="sub-menu">
 
-                        <a href="../KC/collection.html" data-nav-link>
+                        <a href="{{ URL::to('/') }}/collection/list" data-nav-link>
                             <li>
                                 <!-- * Collection -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/collection.svg" alt="collection" />

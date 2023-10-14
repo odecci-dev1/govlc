@@ -4,7 +4,7 @@
     <!-- modals -->
 
     <!-- * Filter Modal -->
-    <dialog class="am-filter-modal" data-filter-member-modal>
+    <dialog class="am-filter-modal" data-filter-member-modal wire:ignore.self>
 
         <div class="modal-container-3">
 
@@ -22,45 +22,19 @@
                 <h3>Choose Type of Loan</h3>
                 <!-- * Type Of Loan Dropdown Menu -->
                 <div class="loan-type-dropdown">
-
                     <!-- * Type Of Loan -->
                     <div class="input-wrapper">
 
                         <div class="select-box">
 
-                            <div class="options-container" data-filter-type-opt-con>
-
-                                <div class="option" data-filter-type-loan-opt>
-
-                                    <input type="radio" class="radio" name="category" />
-                                    <label for="Individual Loan">
-                                        <h4>Individual Loan</h4>
-                                    </label>
-
-                                </div>
-
-                                <div class="option" data-filter-type-loan-opt>
-
-                                    <input type="radio" class="radio" name="category" />
-                                    <label for="Group Loan">
-                                        <h4>Group Loan</h4>
-                                    </label>
-
-                                </div>
-
-                                <div class="option" data-filter-type-loan-opt>
-
-                                    <input type="radio" class="radio" name="category" />
-                                    <label for="Sample Loan">
-                                        <h4>Sample Loan</h4>
-                                    </label>
-
-                                </div>
-
-                            </div>
-                            
-                            <div class="selected" data-filter-type-loan-select>
-                            </div>
+                            <select  wire:model="loantype"  class="select-option">
+                                @if($loantypeList)
+                                    @foreach($loantypeList as $loantypeList)
+                                        <option value="{{ $loantypeList['loanTypeID'] }}">{{ $loantypeList['loanTypeName'] }}</option>
+                                    @endforeach
+                                @endif                                        
+                            </select>          
+                            @error('loantype') <span class="text-required fw-bold">{{ $message }}</span>@enderror
 
                         </div>
                     </div>
@@ -74,18 +48,20 @@
 
                 <div class="input-wrapper-modal">
                     <span>Applied Loan Amount</span>
-                    <input autocomplete="off" type="number" id="filterAppliedLoanAmntFrom" name="filterAppliedLoanAmntFrom" placeholder="From">
+                    <input autocomplete="off" wire:model="loanAmountFrom" type="number" placeholder="From">
                 </div>
 
                 <div class="input-wrapper-modal">
-                    <input autocomplete="off" type="number" id="filterAppliedLoanAmntTo" name="filterAppliedLoanAmntTo" placeholder="To">
+                    <input autocomplete="off" wire:model="loanAmountTo" type="number" placeholder="To">
                 </div>
 
             </div>
-
+            <div class="rowspan">
+                <label>Zero (0) value for unfiltered amount</label>
+            </div>
             <!-- * Save Button -->
             <div class="rowspan">
-                <button class="button" data-save-filter-member-modal>Save</button>
+                <button class="button" data-save-filter-member-modal>Close</button>
             </div>
 
         </div>
@@ -269,7 +245,11 @@
                 
                 </tr>
                 @endforeach
-            @endif                        
+            @else
+                    <tr>
+                        <td colspan="8" class="text-required" style="text-align: center; padding: 20px;">No application found</td>
+                    </tr>    
+            @endif              
         </table>
         
         </div>

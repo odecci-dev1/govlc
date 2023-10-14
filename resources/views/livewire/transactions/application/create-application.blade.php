@@ -13,7 +13,7 @@
     @endif
 
     <!-- * New-Application-Form-Container -->
-    <form action="" class="na-form-con" autocomplete="off" >
+    <form action="" class="na-form-con" {{ $member['statusID'] == 7 ? '' : 'disabled' }} >
         @if (session()->has('message'))
             <div class="alert alert-success">
                 {{ session('message') }}
@@ -248,32 +248,11 @@
             <div class="input-wrapper">
                 <span>Mode of Release</span>
                 <div class="select-box">
-
-                    <div class="options-container " data-option-con10>
-
-                        <div class="option" data-option-item10>
-
-                            <input type="radio" wire:model.lazy="loanDetails.modeOfRelease" class="radio" id="modeOfRelease1" name="modeOfRelease" value="Cash" />
-                            <label for="modeOfRelease1">
-                                <h4>Cash</h4>
-                            </label>
-
-                        </div>
-
-                        <div class="option" data-option-item10>
-
-                            <input type="radio" wire:model.lazy="loanDetails.modeOfRelease" class="radio" id="modeOfRelease2" name="modeOfRelease" value="Check" />
-                            <label for="modeOfRelease2">
-                                <h4>Check</h4>
-                            </label>
-
-                        </div>
-
-                    </div>
-
-                    <div class="selected {{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" style="font-weight: bold;" data-option-select10>
-                        {{ isset($loanDetails['modeOfRelease']) ? $loanDetails['modeOfRelease'] : '' }}
-                    </div>                    
+                    <select  wire:model="loanDetails.modeOfRelease" {{ $member['statusID'] == 15 ? 'disabled' : '' }} class="select-option">
+                        <option value="">- - select - -</option>
+                        <option value="Cash">Cash</option>                      
+                        <option value="Check">Check</option>                      
+                    </select>                       
                 </div>
                 @error('loanDetails.modeOfRelease') <span class="text-required">{{ $message }}</span> @enderror
             </div>
@@ -283,12 +262,12 @@
                 <div class="input-wrapper" data-toggle-mor-1>
                     @if($loanDetails['modeOfRelease'] == 'Cash')
                         <span>Denomination</span>
-                        <input autocomplete="off" wire:model.lazy="loanDetails.denomination" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="text" id="denomination" name="denomination">
+                        <input wire:model.lazy="loanDetails.denomination" {{ $member['statusID'] == 15 ? 'disabled' : '' }} class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="text" id="denomination" name="denomination">
                         @error('loanDetails.denomination') <span class="text-required">{{ $message }}</span> @enderror
                     @endif
                     @if($loanDetails['modeOfRelease'] == 'Check')
                         <span>Check Number</span>
-                        <input autocomplete="off" wire:model.lazy="loanDetails.denomination" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="text" id="denomination" name="denomination">
+                        <input wire:model.lazy="loanDetails.denomination" {{ $member['statusID'] == 15 ? 'disabled' : '' }} class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="text" id="denomination" name="denomination">
                         @error('loanDetails.denomination') <span class="text-required">{{ $message }}</span> @enderror
                     @endif
                    
@@ -296,30 +275,7 @@
                 </div>                                            
             @endif
 
-        </div>
-        <script>
-            const selectedOpt10 = document.querySelector('[data-option-select10]');
-
-            if (selectedOpt10) {
-
-                const optionsContainer10 = document.querySelector('[data-option-con10]');
-                const optionsList10 = document.querySelectorAll('[data-option-item10]');
-
-                selectedOpt10.addEventListener("click", () => {
-                    optionsContainer10.classList.toggle("active");
-                });
-
-                optionsList10.forEach(option => {
-                    option.setAttribute('value', option.children[0].value)
-                    option.addEventListener("click", () => {
-                        selectedOpt10.innerHTML = option.querySelector("label").innerHTML;
-                        optionsContainer10.classList.remove("active");
-                        selectedOpt10.setAttribute('value', option.children[0].value);
-                    });
-                });
-            }
-
-        </script>
+        </div>        
         @endif
 
         <!-- * Rowspan 2: Loan Type, Loan Amount, Purpose, and Approve for Releasing Button -->
@@ -328,13 +284,13 @@
             <!-- * Loan Type -->
             <div class="input-wrapper">
                 <span>Loan Type</span>
-                <input wire:model.lazy="loanDetails.loanType" disabled autocomplete="off" type="text">
+                <input wire:model.lazy="loanDetails.loanType" disabled {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
             </div>
 
             <!-- * Loan Amount -->
             <div class="input-wrapper">
                 <span>Loan Amount</span>
-                <input wire:model.lazy="loanDetails.loanAmount"  disabled autocomplete="off" type="text" >
+                <input wire:model.lazy="loanDetails.loanAmount"  disabled {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
                 @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror
                 <!-- dito -->
             </div>
@@ -343,53 +299,19 @@
             <!-- * Terms of Payment -->
             <div class="input-wrapper">
                 <span>Terms of Payment</span>
-                <!-- <input disabled wire:model.lazy="loanDetails.terms" autocomplete="off" type="text" > -->
-                <div class="select-box"  style="{{ in_array($member['statusID'], [10, 15]) ? 'pointer-events: none; color: #808080;' : '' }}">
-
-                                <div class="options-container" data-type-opt-con>
-                     
-                                    @if(isset($termsOfPaymentList))
-                                        @foreach($termsOfPaymentList as $topList)
-                                        <div class="option" data-type-loan-opt data-individual-loan-link>
-
-                                            <input type="radio" wire:model="loanDetails.topId" class="radio" value="{{ $topList['topId'] }}" id="topId{{ $topList['topId'] }}" name="top" />
-                                            <label for="topId{{ $topList['topId'] }}">
-                                                <h4>{{ $topList['termsofPayment'] }}</h4>
-                                            </label>
-
-                                        </div>
-                                        @endforeach
-                                    @endif
-                                    
-                                </div>
-                                
-                                <div class="selected" style="font-weight: bold;" data-type-loan-select>
-                                    {{ $getLoanTermsname != '' ? $getLoanTermsname : $loanDetails['loantermsName'] }}
-                                </div>
-
+                <div class="select-box">
+                    <select  wire:model="loanDetails.topId" {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} class="select-option">                                                              
+                        <option value="">- - select - -</option>     
+                        @if(isset($termsOfPaymentList))
+                            @foreach($termsOfPaymentList as $topList)
+                                <option value="{{ $topList['topId'] }}">{{ $topList['termsofPayment'] }}</option>
+                            @endforeach
+                        @endif                      
+                    </select>      
                 </div>
                 @error('loanDetails.topId') <span class="text-required">{{ $message }}</span> @enderror
             </div>
-
-            <script>
-                              
-            const selected = document.querySelector('[data-type-loan-select]')
-            const optionsContainer = document.querySelector('[data-type-opt-con')
-            const optionsList = document.querySelectorAll('[data-type-loan-opt]')
-
-            selected.addEventListener("click", () => {
-                optionsContainer.classList.toggle("active");
-            });
-
-            optionsList.forEach(option => {
-                option.addEventListener("click", () => {
-                    //selected.innerHTML = option.querySelector("label").innerHTML;
-                    optionsContainer.classList.remove("active");
-                });
-            });  
-            </script>          
-           
-        
+                       
             @if($member['statusID'] == 9)   
                
                     <div class="input-wrapper">   
@@ -444,7 +366,7 @@
 
             <div class="input-wrapper">
                 <span>Purpose</span>
-                <input wire:model.lazy="loanDetails.purpose" disabled autocomplete="off" type="text" >
+                <input wire:model.lazy="loanDetails.purpose" disabled type="text" >
             </div>
 
            
@@ -452,14 +374,14 @@
              <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Total Savings</span>
-                <input wire:model.lazy="loanDetails.totalSavingsAmount" disabled autocomplete="off" type="number">
+                <input wire:model.lazy="loanDetails.totalSavingsAmount" disabled type="number">
                 @error('loanDetails.totalSavingsAmount') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper">
                 <span>Notarial Fee</span>
-                <input wire:model.lazy="loanDetails.notarialFee" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
+                <input wire:model.lazy="loanDetails.notarialFee" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="number">
                 @error('loanDetails.notarialFee') <span class="text-required">{{ $message }}</span> @enderror
             </div>
             @endif
@@ -468,7 +390,7 @@
              <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Total Savings</span>
-                <input wire:model.lazy="loanDetails.totalSavings" disabled autocomplete="off" type="number">
+                <input wire:model.lazy="loanDetails.totalSavings" disabled type="number">
                 @error('loanDetails.totalSavings') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
@@ -476,7 +398,7 @@
             <div class="input-wrapper">
                 @if($member['statusID'] == 10)   
                 <span>Savings To Be Use</span>
-                <input wire:model.lazy="loanDetails.savingsToUse" {{ $member['statusID'] == 10 ? '' : 'disabled' }} class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
+                <input wire:model.lazy="loanDetails.savingsToUse" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="number">
                 @error('loanDetails.savingsToUse') <span class="text-required">{{ $message }}</span> @enderror
                 @endif
             </div>
@@ -502,21 +424,21 @@
 
             <div class="input-wrapper">
                 <span>Advance Payment</span>
-                <input wire:model.lazy="loanDetails.advancePayment" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" autocomplete="off" type="text" >
+                <input wire:model.lazy="loanDetails.advancePayment" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="number" >
                 @error('loanDetails.advancePayment') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Interest</span>
-                <input wire:model.lazy="loanDetails.total_InterestAmount" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
+                <input wire:model.lazy="loanDetails.total_InterestAmount" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="number">
                 @error('loanDetails.total_InterestAmount') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper" style="padding-bottom: 0;">
                 <span>Releasing Amount</span>
-                <input wire:model.lazy="loanDetails.total_LoanReceivable" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
+                <input wire:model.lazy="loanDetails.total_LoanReceivable" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="number">
                 @error('loanDetails.total_LoanReceivable') <span class="text-required">{{ $message }}</span> @enderror
             </div>
              <!-- * Decline Button -->
@@ -537,7 +459,7 @@
             @if($member['statusID'] == 9)   
             <div class="input-wrapper">
                 <span>Collectible</span>
-                <input wire:model.lazy="loanDetails.dailyCollectibles" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" autocomplete="off" type="text" >
+                <input wire:model.lazy="loanDetails.dailyCollectibles" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="number" >
                 @error('loanDetails.dailyCollectibles') <span class="text-required">{{ $message }}</span> @enderror
             </div>
             @endif
@@ -545,13 +467,13 @@
             <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Number of No Payment</span>
-                <input disabled wire:model.lazy="loanDetails.noofnopayment" autocomplete="off" type="number">
+                <input disabled wire:model.lazy="loanDetails.noofnopayment" type="number">
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper">
                 <span>Number of Loans</span>
-                <input disabled wire:model.lazy="loanDetails.noofloans" autocomplete="off" type="number">
+                <input disabled wire:model.lazy="loanDetails.noofloans" type="number">
             </div>
              
         </div>
@@ -562,13 +484,13 @@
             <!-- * Approved by: -->
             <div class="input-wrapper">
                 <span>Approved by (From CI) :</span>
-                <input disabled wire:model.lazy="loanDetails.approvedBy" autocomplete="off" type="text" id="approvedBy" name="approvedBy">
+                <input disabled wire:model.lazy="loanDetails.approvedBy" type="text" id="approvedBy" name="approvedBy">
             </div>
 
             <!-- * Notes -->
             <div class="input-wrapper">
                 <span>Notes &nbsp;<p>(if approving officer is not available)</p></span>
-                <input {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.notes" autocomplete="off" type="text" >
+                <input {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.notes" type="text" >
             </div>
 
         </div>
@@ -602,13 +524,13 @@
                                     <!-- * Employee -->
                                     <div class="radio-btn-wrapper">
                                         <span>Employee</span>
-                                        <input autocomplete="off" type="radio" wire:model.lazy="loanDetails.courier" name="courier" value="Employee" id="employee">
+                                        <input type="radio" wire:model.lazy="loanDetails.courier" {{ $member['statusID'] == 15 ? 'disabled' : '' }} name="courier" value="Employee" id="employee">
                                     </div>
 
                                     <!-- * Client -->
                                     <div class="radio-btn-wrapper">
                                         <span>Client</span>
-                                        <input autocomplete="off" type="radio" wire:model.lazy="loanDetails.courier" name="courier" value="Client" id="client">
+                                        <input type="radio" wire:model.lazy="loanDetails.courier" {{ $member['statusID'] == 15 ? 'disabled' : '' }} name="courier" value="Client" id="client">
                                     </div>
 
                                 </div>
@@ -625,7 +547,7 @@
                                     <!-- * Primary Search Bar -->
                                     <div class="primary-search-bar">
                                         <div class="row">
-                                            <input wire:model.lazy="loanDetails.courieremployee" wire:click="openSearchEmployee" style="{{ $member['statusID'] == 10 ? 'border: 1px solid #d6a330 !important;' : '' }} font-size: 1.3rem;" type="search" placeholder="Search" autocomplete="off">
+                                            <input wire:model.lazy="loanDetails.courieremployee" {{ $member['statusID'] == 15 ? 'disabled' : '' }} wire:click="openSearchEmployee" style="{{ $member['statusID'] == 10 ? 'border: 1px solid #d6a330 !important;' : '' }} font-size: 1.3rem;" type="search" placeholder="Search" >
                                             <button type="button">                                                
                                             </button>
                                         </div>
@@ -641,7 +563,7 @@
                                 <div class="input-wrapper" data-client-name-toggle>
                                     <div class="input-wrapper">
                                         <span>Client Name</span>
-                                        <input wire:model.lazy="loanDetails.courierclient" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" autocomplete="off" type="text" >
+                                        <input wire:model.lazy="loanDetails.courierclient" {{ $member['statusID'] == 15 ? 'disabled' : '' }} class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}"  type="text" >
                                         @error('loanDetails.courierclient') <span class="text-required">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
@@ -654,7 +576,7 @@
                             <div class="input-wrapper" data-contact-number-toggle>
                                 <div class="input-wrapper">
                                     <span>Contact No:</span>
-                                    <input wire:model.lazy="loanDetails.couriercno" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" autocomplete="off" type="number">
+                                    <input wire:model.lazy="loanDetails.couriercno" {{ $member['statusID'] == 15 ? 'disabled' : '' }} class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="number">
                                     @error('loanDetails.couriercno') <span class="text-required">{{ $message }}</span> @enderror
                                 </div>
                             </div>
@@ -735,28 +657,28 @@
                     <!-- * First Name -->
                     <div class="input-wrapper">
                         <span>First Name</span>
-                        <input wire:model.lazy="member.fname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.fname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.fname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
-                        <input wire:model.lazy="member.mname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.mname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.mname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
-                        <input wire:model.lazy="member.lname"  autocomplete="off" type="text">
+                        <input wire:model.lazy="member.lname"  {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.lname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
-                        <input wire:model.lazy="member.suffix" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.suffix" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                     </div>
 
                 </div>
@@ -768,33 +690,11 @@
                     <div class="input-wrapper">
                         <span>Gender</span>
                         <div class="select-box">
-                          
-                            <div class="options-container" data-option-con1>
-
-                                <div class="option"  data-option-item1>
-
-                                    <input type="radio"  wire:model.lazy="member.gender" class="radio" id="Male" value="Male" />
-                                    <label for="Male">
-                                        <h4>Male</h4>
-                                    </label>
-
-                                </div>
-
-                                <div class="option"  data-option-item1>
-
-                                    <input type="radio" wire:model.lazy="member.gender" class="radio" id="Female" value="Female"/>
-                                    <label for="Female">
-                                        <h4>Female</h4>
-                                    </label>
-
-                                </div>
-
-                            </div>
-                            
-                            <div class="selected" style="font-weight: bold;" data-option-select1>
-                                {{ isset($member['gender']) ? $member['gender'] : '' }}
-                            </div>
-
+                            <select  wire:model="member.gender" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                                <option value="">- - select - -</option>     
+                                <option value="Male">Male</option>                                    
+                                <option value="Female">Female</option>                                    
+                            </select>                       
                         </div>
                         @error('member.gender') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
@@ -802,21 +702,21 @@
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.dob" wire:change="getmemberAge" autocomplete="off" type="date"  >
+                        <input wire:model.lazy="member.dob" wire:change="getmemberAge" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date"  >
                         @error('member.dob') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.lazy="member.age" disabled="disabled"  autocomplete="off" type="number"  >
+                        <input wire:model.lazy="member.age" disabled="disabled"  {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number"  >
                         @error('member.age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Place Of Birth -->
                     <div class="input-wrapper">
                         <span>Place Of Birth</span>
-                        <input wire:model.lazy="member.pob" autocomplete="off" type="text"  >
+                        <input wire:model.lazy="member.pob" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text"  >
                         @error('member.pob') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -824,42 +724,12 @@
                     <div class="input-wrapper">
                         <span>Civil Status</span>
                         <div class="select-box">
-
-                            <div class="options-container" data-option-con2>
-
-                                <div class="option" data-option-item2>
-
-                                    <input wire:model="member.civil_Status" type="radio" class="radio" id="mem_Widow" value="Widow" />
-                                    <label for="mem_Widow">
-                                        <h4>Widow</h4>
-                                    </label>
-
-                                </div>
-
-                                <div class="option" data-option-item2>
-
-                                    <input wire:model="member.civil_Status" type="radio" class="radio" id="mem_Married" value="Married"/>
-                                    <label for="mem_Married">
-                                        <h4>Married</h4>
-                                    </label>
-
-                                </div>
-
-                                <div class="option" data-option-item2>
-
-                                    <input wire:model="member.civil_Status" type="radio" class="radio" id="mem_Single" value="Single"/>
-                                    <label for="mem_Single">
-                                        <h4>Single</h4>
-                                    </label>
-
-                                </div>
-
-                            </div>
-                            
-                            <div class="selected" style="font-weight: bold;" data-option-select2>
-                                {{ isset($member['civil_Status']) ? $member['civil_Status'] : '' }}
-                            </div>
-
+                            <select  wire:model="member.civil_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                                <option value="">- - select - -</option>     
+                                <option value="Widow">Widow</option>                                    
+                                <option value="Married">Married</option>   
+                                <option value="Single">Single</option>                                    
+                            </select>          
                         </div>
                         @error('member.civil_Status') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
@@ -873,7 +743,7 @@
                     <div class="input-wrapper">
                         <div class="input-wrapper">
                             <span>Contact Number</span>
-                            <input wire:model.lazy="member.cno" autocomplete="off" type="number">
+                            <input wire:model.lazy="member.cno" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                             @error('member.cno') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -882,7 +752,7 @@
                     <div class="input-wrapper">
                         <div class="input-wrapper">
                             <span>Email Address</span>
-                            <input wire:model.lazy="member.emailAddress" autocomplete="off" type="email">
+                            <input wire:model.lazy="member.emailAddress" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="email">
                             @error('member.emailAddress') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -900,19 +770,19 @@
                             <!-- * Rented -->
                             <div class="radio-btn-wrapper">
                                 <span>Rented</span>
-                                <input  wire:model.lazy="member.house_Stats" autocomplete="off" type="radio" value="1" name="house_Stats" id="mem_rented">
+                                <input  wire:model.lazy="member.house_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" value="1" name="house_Stats" id="mem_rented">
                             </div>
 
                             <!-- * Owned -->
                             <div class="radio-btn-wrapper">
                                 <span>Owned</span>
-                                <input  wire:model.lazy="member.house_Stats" autocomplete="off" type="radio" value="2" name="house_Stats" id="mem_owned">
+                                <input  wire:model.lazy="member.house_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" value="2" name="house_Stats" id="mem_owned">
                             </div>
 
                             <!-- * Free Use -->
                             <div class="radio-btn-wrapper">
                                 <span>Free Use</span>
-                                <input  wire:model.lazy="member.house_Stats" autocomplete="off" type="radio" value="3" name="house_Stats" id="mem_freeUse">
+                                <input  wire:model.lazy="member.house_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" value="3" name="house_Stats" id="mem_freeUse">
                             </div>
 
                         </div>
@@ -922,7 +792,7 @@
                     <!-- * House No./ Bldg. No./ Room No./ Subdivision/ Street -->
                     <div class="input-wrapper">
                         <span>House No./ Bldg. No./ Room No./ Subdivision/ Street</span>
-                        <input wire:model.lazy="member.houseNo" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.houseNo" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.houseNo') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -934,28 +804,28 @@
                     <!-- * Barangay -->
                     <div class="input-wrapper">
                         <span>Barangay</span>
-                        <input wire:model.lazy="member.barangay" autocomplete="off" type="text" >
+                        <input wire:model.lazy="member.barangay" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
                         @error('member.barangay') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * City / Municipality -->
                     <div class="input-wrapper">
                         <span>City / Municipality</span>
-                        <input wire:model.lazy="member.city" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.city" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.city') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Province / Region -->
                     <div class="input-wrapper">
                         <span>Province / Region</span>
-                        <input wire:model.lazy="member.province" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.province" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.province') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Country -->
                     <div class="input-wrapper">
                         <span>Country</span>
-                        <input wire:model.lazy="member.country" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.country" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.country') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -968,13 +838,13 @@
                     <!-- * Zip Code -->
                     <div class="input-wrapper">
                         <span>Zip Code</span>
-                        <input wire:model.lazy="member.zipCode" type="number">
+                        <input wire:model.lazy="member.zipCode" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                     </div>
 
                     <!-- * Years Of Stay -->
                     <div class="input-wrapper">
                         <span>Years of stay on the mentioned address</span>
-                        <input wire:model.lazy="member.yearsStay" type="number">
+                        <input wire:model.lazy="member.yearsStay" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                         @error('member.yearsStay') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1014,9 +884,9 @@
                         <div class="btn-wrapper">
                             @if($type != 'details')
                             <!-- * Upload Button -->
-                            <input type="file"  wire:model="imgprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                            <input type="file"  wire:model="imgprofile" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                             <!-- * Attach Button -->
-                            <input type="file"  wire:model="member.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
+                            <input type="file"  wire:model="member.attachments" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
                             @endif
                         </div>
                         @error('member.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
@@ -1083,28 +953,28 @@
                         <!-- * Electricity Bill -->
                         <div class="input-wrapper">
                             <span>Electricity Bill</span>
-                            <input wire:model.lazy="member.electricBill" type="number">
+                            <input wire:model.lazy="member.electricBill" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                             @error('member.electricBill') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Water Bill -->
                         <div class="input-wrapper">
                             <span>Water Bill</span>
-                            <input wire:model.lazy="member.waterBill" type="number">
+                            <input wire:model.lazy="member.waterBill" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                             @error('member.waterBill') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Other Bills -->
                         <div class="input-wrapper">
                             <span>Other Bills</span>
-                            <input wire:model.lazy="member.otherBills" type="number">
+                            <input wire:model.lazy="member.otherBills" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                             @error('member.otherBills') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Daily Expenses -->
                         <div class="input-wrapper">
                             <span>Daily Expenses</span>
-                            <input wire:model.lazy="member.dailyExpenses" type="number">
+                            <input wire:model.lazy="member.dailyExpenses" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                             @error('member.dailyExpenses') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -1249,32 +1119,12 @@
                 <!-- * Employment Status -->
                 <div class="input-wrapper">
                     <span>Employment Status</span>
-                    <div class="select-box">                   
-                        <div class="options-container" data-option-con3>
-
-                            <div class="option" data-option-item3>
-
-                                <input wire:model.lazy="member.emp_Status" type="radio" class="radio" id="Employed" value="1" />
-                                <label for="Employed">
-                                    <h4>Employed</h4>
-                                </label>
-
-                            </div>
-
-                            <div class="option" data-option-item3>
-
-                                <input wire:model.lazy="member.emp_Status" type="radio" class="radio" id="Unemployed" value="0"/>
-                                <label for="Unemployed">
-                                    <h4>Unemployed</h4>
-                                </label>
-                            </div>
-
-                        </div>
-                        
-                        <div class="selected" style="font-weight: bold;" data-option-select3>
-                            {{ $member['emp_Status'] != '' ? ($member['emp_Status'] == 1 ? 'Employed' : 'Unemployed') : '' }}
-                        </div>
-
+                    <div class="select-box">        
+                        <select  wire:model="member.emp_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                            <option value="">- - select - -</option>     
+                            <option value="1">Employed</option>                            
+                            <option value="0">Unemployed</option>                            
+                        </select>                                             
                     </div>
                     @error('member.emp_Status') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
@@ -1285,16 +1135,16 @@
                     <!-- * Current Job -->
                     @if(isset($member['emp_Status']))
                         @if($member['emp_Status'] == '1' || $member['emp_Status'] == '')
-                            <span data-current-job>Current Job / Position</span>
-                            <input wire:model.lazy="member.jobDescription"  type="text" data-current-job>
+                            <span>Current Job / Position</span>
+                            <input wire:model.lazy="member.jobDescription" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @endif
                     @endif
 
                     <!-- * Previous Job -->
                     @if(isset($member['emp_Status']))
                         @if($member['emp_Status'] == '0')
-                        <span  data-previous-job>Previous Job / Position</span>
-                        <input wire:model.lazy="member.jobDescription" type="text" data-previous-job>
+                        <span>Previous Job / Position</span>
+                        <input wire:model.lazy="member.jobDescription" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @endif
                     @endif
                     @error('member.jobDescription') <span class="text-required">{{ $message }}</span>@enderror
@@ -1303,14 +1153,14 @@
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input wire:model.lazy="member.yos" type="text">
+                    <input wire:model.lazy="member.yos" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                     @error('member.yos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Company Name -->
                 <div class="input-wrapper">
                     <span>Company Name</span>
-                    <input wire:model.lazy="member.companyName" type="text">
+                    <input wire:model.lazy="member.companyName" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                     @error('member.companyName') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -1322,21 +1172,21 @@
                 <!-- * Company Address -->
                 <div class="input-wrapper">
                     <span>Company Address</span>
-                    <input wire:model.lazy="member.companyAddress" type="text">
+                    <input wire:model.lazy="member.companyAddress" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                     @error('member.companyAddress') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Monthly Salary -->
                 <div class="input-wrapper">
                     <span>Monthly Salary</span>
-                    <input wire:model.lazy="member.monthlySalary" type="number">
+                    <input wire:model.lazy="member.monthlySalary" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                     @error('member.monthlySalary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Other Source Of Income -->
                 <div class="input-wrapper">
                     <span>Other Source Of Income</span>
-                    <input  wire:model.lazy="member.otherSOC" type="text">
+                    <input  wire:model.lazy="member.otherSOC" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                     @error('member.otherSOC') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -1350,13 +1200,13 @@
 
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
-                            <input  wire:model="member.bO_Status" autocomplete="off" type="radio" name="mem_bO_Status" value="1" >
+                            <input  wire:model="member.bO_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="mem_bO_Status" value="1" >
                             <span>Yes</span>
                         </div>
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
-                            <input  wire:model="member.bO_Status" autocomplete="off" type="radio" name="mem_bO_Status" value="2">
+                            <input  wire:model="member.bO_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="mem_bO_Status" value="2">
                             <span>No</span>
                         </div>
 
@@ -1404,28 +1254,28 @@
                     <!-- * First Name -->
                     <div class="input-wrapper">
                         <span>First Name</span>
-                        <input wire:model.lazy="member.f_Fname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Fname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.f_Fname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
-                        <input wire:model.lazy="member.f_Mname" autocomplete="off" type="text" >
+                        <input wire:model.lazy="member.f_Mname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
                         @error('member.f_Mname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
-                        <input wire:model.lazy="member.f_Lname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Lname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.f_Lname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
-                        <input wire:model.lazy="member.f_Suffix" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Suffix" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.f_Suffix') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1433,14 +1283,14 @@
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.f_DOB" autocomplete="off" type="date">
+                        <input wire:model.lazy="member.f_DOB" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
                         @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.lazy="member.f_Age" autocomplete="off" type="number">
+                        <input wire:model.lazy="member.f_Age" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                         @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1452,54 +1302,14 @@
                     <div class="input-wrapper">
                         <span>Employment Status</span>
                         <div class="select-box">
-
-                            <div class="options-container" data-option-con7>
-
-                                <div class="option" data-option-item7>
-
-                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Employed" value="1" />
-                                    <label for="f_mem_Employed">
-                                        <h4>Employed</h4>
-                                    </label>
-
-                                </div>
-
-                                <div class="option" data-option-item7>
-
-                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Unemployed" value="0"/>
-                                    <label for="f_mem_Unemployed">
-                                        <h4>Unemployed</h4>
-                                    </label>
-
-                                </div>
-
-                            </div>
-                            
-                            <div class="selected" style="font-weight: bold;" data-option-select7>
-                                {{ $member['f_Emp_Status'] != '' ? ($member['f_Emp_Status'] == 1 ? 'Employed' : 'Unemployed') : '' }}
-                            </div>
-
+                            <select  wire:model="member.f_Emp_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                                <option value="">- - select - -</option>     
+                                <option value="1">Employed</option>                            
+                                <option value="0">Unemployed</option>                            
+                            </select>                                                             
                         </div>
                         @error('member.f_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
-
-                    <script>
-                        // ** Select Dropdown 7
-                        const selectedOpt7 = document.querySelector('[data-option-select7]');
-                        const optionsContainer7 = document.querySelector('[data-option-con7]');
-                        const optionsList7 = document.querySelectorAll('[data-option-item7]');  
-                        selectedOpt7.addEventListener("click", () => {                              
-                            optionsContainer7.classList.toggle("active");
-                        });
-
-                        optionsList7.forEach(option => {
-                            option.addEventListener("click", () => {
-                                selectedOpt7.innerHTML = option.querySelector("label").innerHTML;
-                                optionsContainer7.classList.remove("active");
-                            });
-                        });
-                       
-                    </script>
 
                     <!-- * Current Job / Position -->
                     <div class="input-wrapper">
@@ -1507,16 +1317,16 @@
                         <!-- * Current Job -->
                         @if(isset($member['f_Emp_Status']))
                             @if($member['f_Emp_Status'] == '1' || $member['f_Emp_Status'] == '')
-                            <span data-spouse-current-job>Current Job / Position</span>
-                            <input wire:model.lazy="member.f_Job" type="text" data-spouse-current-job>
+                            <span>Current Job / Position</span>
+                            <input wire:model.lazy="member.f_Job" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                             @endif
                         @endif
 
                         @if(isset($member['f_Emp_Status']))
                             @if($member['f_Emp_Status'] == '0')
                             <!-- * Previous Job -->
-                            <span data-spouse-previous-job>Previous Job / Position</span>
-                            <input wire:model.lazy="member.f_Job" type="text" data-spouse-previous-job>
+                            <span>Previous Job / Position</span>
+                            <input wire:model.lazy="member.f_Job" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                             @endif
                         @endif
                         @error('member.f_Job') <span class="text-required">{{ $message }}</span>@enderror
@@ -1525,14 +1335,14 @@
                     <!-- * Years Of Service -->
                     <div class="input-wrapper">
                         <span>Years Of Service</span>
-                        <input wire:model.lazy="member.f_YOS" type="text">
+                        <input wire:model.lazy="member.f_YOS" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                         @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Company Name -->
                     <div class="input-wrapper">
                         <span>Company Name</span>
-                        <input wire:model.lazy="member.f_CompanyName" type="text">
+                        <input wire:model.lazy="member.f_CompanyName" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.f_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1548,7 +1358,7 @@
                     <!-- * Current Job / Position -->
                     <div class="input-wrapper">
                         <span>Number Of Dependants</span>
-                        <input  wire:model.lazy="member.f_NOD" type="number">
+                        <input  wire:model.lazy="member.f_NOD" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                         @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1577,44 +1387,44 @@
                             <!-- * First Name -->
                             <div class="input-wrapper">
                                 <span>First Name</span>
-                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" autocomplete="off" type="text" >
+                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
                                 @error('inpchild.fname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Middle Name -->
                             <div class="input-wrapper">
                                 <span>Middle Name</span>
-                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" autocomplete="off" type="text">
+                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.mname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Last Name -->
                             <div class="input-wrapper">
                                 <span>Last Name</span>
-                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" autocomplete="off" type="text">
+                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.lname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Age -->
                             <div class="input-wrapper">
                                 <span>Age</span>
-                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" autocomplete="off" type="number">
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                                 @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Name Of School -->
                             <div class="input-wrapper">
                                 <span>Name Of School</span>
-                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" autocomplete="off" type="text">
+                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.school'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Add and Subtract Button  -->
                             <div class="input-wrapper">
                                 @if($cntchild == 1)
-                                <button type="button" wire:click="addChild">+</button>
+                                <button type="button" wire:click="addChild" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>+</button>
                                 @else
-                                <button type="button" wire:click="subChild({{ $cntchild }})">-</button>
+                                <button type="button" wire:click="subChild({{ $cntchild }})" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>-</button>
                                 @endif
                             </div>                        
                     </div>
@@ -1661,28 +1471,28 @@
                     <!-- * First Name -->
                     <div class="input-wrapper">
                         <span>First Name</span>
-                        <input wire:model.lazy="member.f_Fname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Fname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.f_Fname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
-                        <input wire:model.lazy="member.f_Mname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Mname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.f_Mname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
-                        <input wire:model.lazy="member.f_Lname" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Lname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.f_Lname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
-                        <input wire:model.lazy="member.f_Suffix" autocomplete="off" type="text">
+                        <input wire:model.lazy="member.f_Suffix" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @error('member.f_Suffix') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1690,14 +1500,14 @@
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.f_DOB" autocomplete="off" type="date">
+                        <input wire:model.lazy="member.f_DOB" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
                         @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.lazy="member.f_Age" autocomplete="off" type="number">
+                        <input wire:model.lazy="member.f_Age" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                         @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1833,35 +1643,35 @@
                             <!-- * First Name -->
                             <div class="input-wrapper">
                                 <span>First Name</span>
-                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" autocomplete="off" type="text" >
+                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
                                 @error('inpchild.fname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Middle Name -->
                             <div class="input-wrapper">
                                 <span>Middle Name</span>
-                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" autocomplete="off" type="text">
+                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.mname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Last Name -->
                             <div class="input-wrapper">
                                 <span>Last Name</span>
-                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" autocomplete="off" type="text">
+                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.lname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Age -->
                             <div class="input-wrapper">
                                 <span>Age</span>
-                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" autocomplete="off" type="number">
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                                 @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Name Of School -->
                             <div class="input-wrapper">
                                 <span>Name Of School</span>
-                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" autocomplete="off" type="text">
+                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.school'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
@@ -1904,25 +1714,25 @@
             <!-- * Rowspan 2: Business Name, Business Type and Business Address -->
             
             <div class="rowspan">
-            @if($type != 'details')
+            @if($type != 'details' && $member['statusID'] == 7)
                 <!-- * Business Name -->
                 <div class="input-wrapper">
                     <span>Business Name</span>
-                    <input wire:model.lazy="membusinfo.businessName" type="text" >
+                    <input wire:model.lazy="membusinfo.businessName" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
                     @error('membusinfo.businessName') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Business Type -->
                 <div class="input-wrapper">
                     <span>Business Type</span>
-                    <input wire:model.lazy="membusinfo.businessType" type="text"  >
+                    <input wire:model.lazy="membusinfo.businessType" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text"  >
                     @error('membusinfo.businessType') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Business Address -->
                 <div class="input-wrapper">
                     <span>Business Address</span>
-                    <input wire:model.lazy="membusinfo.businessAddress" type="text">
+                    <input wire:model.lazy="membusinfo.businessAddress" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                     @error('membusinfo.businessAddress') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
             @endif            
@@ -1930,7 +1740,7 @@
 
             <!-- * Rowspan 3: Rented or Owned, Years Of Business, Number Of Employees, Salary / Day, Value Of Stocks and Amount Of Sales / Day  -->
             <div class="rowspan">
-            @if($type != 'details')
+            @if($type != 'details' && $member['statusID'] == 7)
                 <div class="input-wrapper">
 
                     <div class="box-wrap">
@@ -1938,13 +1748,13 @@
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
                             <span>Rented</span>
-                            <input wire:model.lazy="membusinfo.b_status" autocomplete="off" type="radio" name="mem_b_status" value="5">                            
+                            <input wire:model.lazy="membusinfo.b_status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="mem_b_status" value="5">                            
                         </div>
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
                             <span>Owned</span>
-                            <input wire:model.lazy="membusinfo.b_status" autocomplete="off" type="radio" name="mem_b_status" value="6">
+                            <input wire:model.lazy="membusinfo.b_status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="mem_b_status" value="6">
                         </div>
 
                     </div>
@@ -1954,35 +1764,35 @@
                 <!-- * Years Of Business -->
                 <div class="input-wrapper">
                     <span>Years Of Business</span>
-                    <input  wire:model.lazy="membusinfo.yob" type="text">
+                    <input  wire:model.lazy="membusinfo.yob" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                     @error('membusinfo.yob') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Number Of Employees -->
                 <div class="input-wrapper">
                     <span>Number Of Employees</span>
-                    <input wire:model.lazy="membusinfo.noe" type="number">
+                    <input wire:model.lazy="membusinfo.noe" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                     @error('membusinfo.noe') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Salary / Day -->
                 <div class="input-wrapper">
                     <span>Salary / Day</span>
-                    <input wire:model.lazy="membusinfo.salary" type="text">
+                    <input wire:model.lazy="membusinfo.salary" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                     @error('membusinfo.salary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Value Of Stocks -->
                 <div class="input-wrapper">
                     <span>Value Of Stocks</span>
-                    <input wire:model.lazy="membusinfo.vos" type="number">
+                    <input wire:model.lazy="membusinfo.vos" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                     @error('membusinfo.vos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Amount Of Sales / Day -->
                 <div class="input-wrapper">
                     <span>Amount Of Sales / Day</span>
-                    <input wire:model.lazy="membusinfo.aos" type="text">
+                    <input wire:model.lazy="membusinfo.aos" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                     @error('membusinfo.aos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
             @endif            
@@ -1995,11 +1805,11 @@
                 <div class="btn-wrapper">
 
                     <!-- * Add Business -->
-                    @if($type != 'details')
-                    <button wire:click="addBusinessInfo" type="button">Add Business</button>
+                    @if($type != 'details' && $member['statusID'] == 7)
+                    <button wire:click="addBusinessInfo" type="button" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>Add Business</button>
 
                     <!-- * Attach Files -->
-                    <button type="button">Attach Files</button>
+                    <button type="button" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>Attach Files</button>
                     @endif
 
                 </div>
@@ -2094,13 +1904,13 @@
 
                                 <!-- * Yes -->
                                 <div class="radio-btn-wrapper">
-                                    <input wire:model="hasvehicle" name="hasvehicle" autocomplete="off" type="radio"  value="1">
+                                    <input wire:model="hasvehicle" name="hasvehicle" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio"  value="1">
                                     <span>Yes</span>
                                 </div>
 
                                 <!-- * No -->
                                 <div class="radio-btn-wrapper">
-                                    <input wire:model="hasvehicle" name="hasvehicle" autocomplete="off" type="radio"   value="0">
+                                    <input wire:model="hasvehicle" name="hasvehicle" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio"   value="0">
                                     <span>No</span>
                                 </div>
 
@@ -2119,15 +1929,15 @@
                                     <div class="rowspan-2 child" style="{{ isset($hasvehicle) ? ($hasvehicle == 1 ? '' : 'pointer-events: none; opacity: 0.4;') : 'pointer-events: none; opacity: 0.4;' }}">
                                         <!-- * Vehicle Input Field -->
                                         <div class="input-wrapper">
-                                            <input wire:model.lazy="inpvehicle.vehicle{{ $key }}" autocomplete="off" type="text">
+                                            <input wire:model.lazy="inpvehicle.vehicle{{ $key }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                                             @error('inpvehicle.vehicle'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                         </div>                                       
                                         <!-- * Add and Subtract Button  -->
                                         <div class="input-wrapper">
                                             @if($key == 1)
-                                            <button type="button" wire:click="addVehicle">+</button>
+                                            <button type="button" wire:click="addVehicle" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>+</button>
                                             @else
-                                            <button type="button" wire:click="subVehicle({{ $key }})">-</button>
+                                            <button type="button" wire:click="subVehicle({{ $key }})" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>-</button>
                                             @endif
                                         </div>
 
@@ -2158,13 +1968,13 @@
 
                                 <!-- * Yes -->
                                 <div class="radio-btn-wrapper">
-                                    <input wire:model="hasproperties" autocomplete="off" type="radio" name="hasproperties" value="1" >
+                                    <input wire:model="hasproperties" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="hasproperties" value="1" >
                                     <span>Yes</span>
                                 </div>
 
                                 <!-- * No -->
                                 <div class="radio-btn-wrapper">
-                                    <input wire:model="hasproperties" autocomplete="off" type="radio" name="hasproperties" value="0">
+                                    <input wire:model="hasproperties" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="hasproperties" value="0">
                                     <span>No</span>
                                 </div>
 
@@ -2183,16 +1993,16 @@
                                         <div class="rowspan-2 child"  style="{{ isset($hasproperties) ? ($hasproperties == 1 ? '' : 'pointer-events: none; opacity: 0.4;') : 'pointer-events: none; opacity: 0.4;' }}">
                                             <!-- * Vehicle Input Field -->
                                             <div class="input-wrapper">
-                                                <input wire:model="inpproperties.property{{ $key }}"  autocomplete="off" type="text">
+                                                <input wire:model="inpproperties.property{{ $key }}"  {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                                                 @error('inpproperties.property'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                             </div>
 
                                             <!-- * Add and Subtract Button  -->
                                             <div class="input-wrapper">
                                             @if($key == 1)
-                                                <button type="button" wire:click="addProperty">+</button>
+                                                <button type="button" wire:click="addProperty" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>+</button>
                                             @else
-                                                <button type="button" wire:click="subProperty({{ $key }})">-</button>
+                                                <button type="button" wire:click="subProperty({{ $key }})" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>-</button>
                                             @endif
                                             </div>
 
@@ -2236,23 +2046,23 @@
                                 <!-- * Appliances -->
                                 <div class="input-wrapper">
                                     <span>Appliances</span>
-                                    <input wire:model="inpappliances.appliance{{ $key }}" autocomplete="off" type="text">
+                                    <input wire:model="inpappliances.appliance{{ $key }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                                     @error('inpappliances.appliance'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                 </div>
 
                                 <!-- * Brand / Model -->
                                 <div class="input-wrapper">
                                     <span>Brand / Model</span>
-                                    <input wire:model="inpappliances.brand{{ $key }}" autocomplete="off" type="text">
+                                    <input wire:model="inpappliances.brand{{ $key }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                                     @error('inpappliances.brand'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                 </div>
 
                                 <!-- * Add and Subtract Button  -->
                                 <div class="input-wrapper">
                                     @if($key == 1)
-                                    <button type="button" wire:click="addAppliances">+</button>
+                                    <button type="button" wire:click="addAppliances" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>+</button>
                                     @else
-                                    <button type="button" wire:click="subAppliances({{ $key }})">-</button>
+                                    <button type="button" wire:click="subAppliances({{ $key }})" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>-</button>
                                     @endif
                                 </div>
                             </div>
@@ -2289,23 +2099,23 @@
                                     <!-- * Bank account -->
                                     <div class="input-wrapper">
                                         <span>Bank account</span>
-                                        <input wire:model="inpbank.account{{ $key }}" autocomplete="off" type="bankAcc">
+                                        <input wire:model="inpbank.account{{ $key }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="bankAcc">
                                         @error('inpbank.account'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                     </div>
 
                                     <!-- * Address -->
                                     <div class="input-wrapper">
                                         <span>Address</span>
-                                        <input wire:model="inpbank.address{{ $key }}" autocomplete="off" type="bankAddr">
+                                        <input wire:model="inpbank.address{{ $key }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="bankAddr">
                                         @error('inpbank.address'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                     </div>
 
                                     <!-- * Add and Subtract Button  -->
                                     <div class="input-wrapper">
                                         @if($key == 1)
-                                        <button type="button" wire:click="addBank">+</button>
+                                        <button type="button" wire:click="addBank" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>+</button>
                                         @else
-                                        <button type="button" wire:click="subBank({{ $key }})">-</button>
+                                        <button type="button" wire:click="subBank({{ $key }})" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>-</button>
                                         @endif
                                     </div>
 
@@ -2347,7 +2157,7 @@
                 <!-- * Applied Loan Amount -->
                 <div class="input-wrapper">
                     <span>Applied Loan Amount</span>
-                    <input wire:model.lazy="member.loanAmount" type="number">
+                    <input wire:model.lazy="member.loanAmount" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                     @error('member.loanAmount') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2361,7 +2171,7 @@
                 <!-- * Purpose -->
                 <div class="input-wrapper">
                     <span>Purpose</span>
-                    <input wire:model.lazy="member.purpose" type="text">
+                    <input wire:model.lazy="member.purpose" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                     @error('member.purpose') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2398,28 +2208,28 @@
                         <!-- * First Name -->
                         <div class="input-wrapper">
                             <span>First Name</span>
-                            <input wire:model.lazy="comaker.co_Fname" autocomplete="off" type="text" id="fName" name="fName">
+                            <input wire:model.lazy="comaker.co_Fname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" id="fName" name="fName">
                             @error('comaker.co_Fname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Middle Name -->
                         <div class="input-wrapper">
                             <span>Middle Name</span>
-                            <input wire:model.lazy="comaker.co_Mname" autocomplete="off" type="text" id="midName" name="midName">
+                            <input wire:model.lazy="comaker.co_Mname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" id="midName" name="midName">
                             @error('comaker.co_Mname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Last Name -->
                         <div class="input-wrapper">
                             <span>Last Name</span>
-                            <input wire:model.lazy="comaker.co_Lname" autocomplete="off" type="text" id="lName" name="lName">
+                            <input wire:model.lazy="comaker.co_Lname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" id="lName" name="lName">
                             @error('comaker.co_Lname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Suffix -->
                         <div class="input-wrapper">
                             <span>Suffix</span>
-                            <input wire:model.lazy="comaker.co_Suffix" autocomplete="off" type="text" id="suffix" name="suffix">
+                            <input wire:model.lazy="comaker.co_Suffix" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" id="suffix" name="suffix">
                             @error('comaker.co_Suffix') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2432,33 +2242,11 @@
                         <div class="input-wrapper">
                             <span>Gender</span>
                             <div class="select-box">
-
-                                <div class="options-container" data-option-con4>
-
-                                    <div class="option"  data-option-item4>
-
-                                        <input type="radio" wire:model="comaker.co_Gender" id="comakerGendermale" class="radio" value="Male" />
-                                        <label for="comakerGendermale">
-                                            <h4>Male</h4>
-                                        </label>
-
-                                    </div>
-
-                                    <div class="option"  data-option-item4>
-
-                                        <input type="radio" wire:model="comaker.co_Gender" id="comakerGenderfemale" class="radio" value="Female"/>
-                                        <label for="comakerGenderfemale">
-                                            <h4>Female</h4>
-                                        </label>
-
-                                    </div>
-
-                                </div>
-                                
-                                <div class="selected" style="font-weight: bold;" data-option-select4>
-                                    {{ isset($comaker['co_Gender']) ? $comaker['co_Gender'] : '' }}
-                                </div>
-
+                                <select  wire:model="comaker.co_Gender" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                                    <option value="">- - select - -</option>
+                                    <option value="Male">Male</option>                      
+                                    <option value="Female">Female</option>                      
+                                </select>      
                             </div>
                             @error('comaker.co_Gender') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
@@ -2466,21 +2254,21 @@
                         <!-- * Date Of Birth -->
                         <div class="input-wrapper">
                             <span>Date Of Birth</span>
-                            <input wire:model.lazy="comaker.co_DOB" autocomplete="off" type="date">
+                            <input wire:model.lazy="comaker.co_DOB" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
                             @error('comaker.co_DOB') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Age -->
                         <div class="input-wrapper">
                             <span>Age</span>
-                            <input wire:model.lazy="comaker.co_Age" autocomplete="off" type="number" id="age" name="age">
+                            <input wire:model.lazy="comaker.co_Age" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number" id="age" name="age">
                             @error('comaker.co_Age') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Place Of Birth -->
                         <div class="input-wrapper">
                             <span>Place Of Birth</span>
-                            <input wire:model.lazy="comaker.co_POB" autocomplete="off" type="text" id="poBirth" name="poBirth">
+                            <input wire:model.lazy="comaker.co_POB" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" id="poBirth" name="poBirth">
                             @error('comaker.co_POB') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2488,42 +2276,12 @@
                         <div class="input-wrapper">
                             <span>Civil Status</span>
                             <div class="select-box">
-
-                                <div class="options-container" data-option-con5>
-
-                                    <div class="option" data-option-item5>
-
-                                        <input wire:model="comaker.co_Civil_Status" type="radio" id="comakerWidow" name="co_Civil_Status" class="radio" value="Widow" />
-                                        <label for="comakerWidow">
-                                            <h4>Widow</h4>
-                                        </label>
-
-                                    </div>
-
-                                    <div class="option" data-option-item5>
-
-                                        <input wire:model="comaker.co_Civil_Status" type="radio" id="comakerMarried" name="co_Civil_Status" class="radio" value="Married"/>
-                                        <label for="comakerMarried">
-                                            <h4>Married</h4>
-                                        </label>
-
-                                    </div>
-
-                                    <div class="option" data-option-item5>
-
-                                        <input wire:model="comaker.co_Civil_Status" type="radio" id="comakerSingle" name="co_Civil_Status" class="radio" value="Single"/>
-                                        <label for="comakerSingle">
-                                            <h4>Single</h4>
-                                        </label>
-
-                                    </div>
-
-                                </div>
-                                
-                                <div class="selected" style="font-weight: bold;" data-option-select5>
-                                    {{ isset($comaker['co_Civil_Status']) ? $comaker['co_Civil_Status'] : '' }}
-                                </div>
-
+                                <select  wire:model="comaker.co_Civil_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                                    <option value="">- - select - -</option>
+                                    <option value="Widow">Widow</option>                      
+                                    <option value="Married">Married</option>                      
+                                    <option value="Single">Single</option>       
+                                </select>   
                             </div>
                             @error('comaker.co_Civil_Status') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
@@ -2537,7 +2295,7 @@
                         <div class="input-wrapper">
                             <div class="input-wrapper">
                                 <span>Contact Number</span>
-                                <input wire:model.lazy="comaker.co_Cno" autocomplete="off" type="number">
+                                <input wire:model.lazy="comaker.co_Cno" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                                 @error('comaker.co_Cno') <span class="text-required">{{ $message }}</span>@enderror
                             </div>
                         </div>
@@ -2546,7 +2304,7 @@
                         <div class="input-wrapper">
                             <div class="input-wrapper">
                                 <span>Email Address</span>
-                                <input wire:model.lazy="comaker.co_EmailAddress" autocomplete="off" type="email">
+                                <input wire:model.lazy="comaker.co_EmailAddress" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="email">
                                 @error('comaker.co_EmailAddress') <span class="text-required">{{ $message }}</span>@enderror
                             </div>
                         </div>
@@ -2564,19 +2322,19 @@
                                 <!-- * Rented -->
                                 <div class="radio-btn-wrapper">
                                     <span>Rented</span>
-                                    <input wire:model.lazy="comaker.co_House_Stats" autocomplete="off" type="radio" name="co_House_Stats" value="1">
+                                    <input wire:model.lazy="comaker.co_House_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="co_House_Stats" value="1">
                                 </div>
 
                                 <!-- * Owned -->
                                 <div class="radio-btn-wrapper">
                                     <span>Owned</span>
-                                    <input wire:model.lazy="comaker.co_House_Stats" autocomplete="off" type="radio" name="co_House_Stats" value="2">
+                                    <input wire:model.lazy="comaker.co_House_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="co_House_Stats" value="2">
                                 </div>
 
                                 <!-- * Free Use -->
                                 <div class="radio-btn-wrapper">
                                     <span>Free Use</span>
-                                    <input wire:model.lazy="comaker.co_House_Stats" autocomplete="off" type="radio" name="co_House_Stats" value="3">
+                                    <input wire:model.lazy="comaker.co_House_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="co_House_Stats" value="3">
                                 </div>
 
                             </div>
@@ -2586,7 +2344,7 @@
                         <!-- * House No./ Bldg. No./ Room No./ Subdivision/ Street -->
                         <div class="input-wrapper">
                             <span>House No./ Bldg. No./ Room No./ Subdivision/ Street</span>
-                            <input  wire:model.lazy="comaker.co_HouseNo" autocomplete="off" type="text">
+                            <input  wire:model.lazy="comaker.co_HouseNo" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                             @error('comaker.co_HouseNo') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2598,28 +2356,28 @@
                         <!-- * Barangay -->
                         <div class="input-wrapper">
                             <span>Barangay</span>
-                            <input  wire:model.lazy="comaker.co_Barangay" autocomplete="off" type="text">
+                            <input  wire:model.lazy="comaker.co_Barangay" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                             @error('comaker.co_Barangay') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * City / Municipality -->
                         <div class="input-wrapper">
                             <span>City / Municipality</span>
-                            <input  wire:model.lazy="comaker.co_City" autocomplete="off" type="text">
+                            <input  wire:model.lazy="comaker.co_City" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                             @error('comaker.co_City') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Province / Region -->
                         <div class="input-wrapper">
                             <span>Province / Region</span>
-                            <input  wire:model.lazy="comaker.co_Province" autocomplete="off" type="text" >
+                            <input  wire:model.lazy="comaker.co_Province" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
                             @error('comaker.co_Province') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Country -->
                         <div class="input-wrapper">
                             <span>Country</span>
-                            <input  wire:model.lazy="comaker.co_Country" autocomplete="off" type="text">
+                            <input  wire:model.lazy="comaker.co_Country" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                             @error('comaker.co_Country') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2632,14 +2390,14 @@
                         <!-- * Zip Code -->
                         <div class="input-wrapper">
                             <span>Zip Code</span>
-                            <input wire:model.lazy="comaker.co_ZipCode" type="number" id="zipCode" name="zipCode">
+                            <input wire:model.lazy="comaker.co_ZipCode" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                             @error('comaker.co_ZipCode') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Years Of Stay -->
                         <div class="input-wrapper">
                             <span>Years of stay on the mentioned address</span>
-                            <input wire:model.lazy="comaker.co_YearsStay" type="number" id="yoStay" name="yoStay">
+                            <input wire:model.lazy="comaker.co_YearsStay" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                             @error('comaker.co_YearsStay') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2678,9 +2436,9 @@
                                 <div class="btn-wrapper">
                                         <!-- * Upload Button -->
                                         @if($type != 'details')
-                                        <input type="file"  wire:model="imgcoprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                                        <input type="file"  wire:model="imgcoprofile" class="input-image upload-profile-image-btn" {{ $member['statusID'] == 7 ? '' : 'disabled' }} accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                                         <!-- * Attach Button -->
-                                        <input type="file" wire:model="comaker.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
+                                        <input type="file" wire:model="comaker.attachments" class="input-image attach-file-btn" {{ $member['statusID'] == 7 ? '' : 'disabled' }} accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
                                         @endif
                                         @error('comaker.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                                 </div>
@@ -2767,32 +2525,15 @@
             <div class="rowspan">
 
 
-                <!-- * Employment Status -->
+                <!-- * Employment Status --> 
                 <div class="input-wrapper">
                     <span>Employment Status</span>
-                    <div class="select-box">                      
-                        <div class="options-container" data-option-con6>
-                           
-                            <div class="option" data-option-item6>
-                                <input wire:model.lazy="comaker.co_Emp_Status" type="radio"  id="comakerEmployed"  class="radio" value="1" />
-                                <label for="comakerEmployed">
-                                    <h4>Employed</h4>
-                                </label>
-                            </div>                              
-                           
-                            <div class="option" data-option-item6>
-                                <input wire:model.lazy="comaker.co_Emp_Status" type="radio"  id="comakerUnemployed"  class="radio" value="0"/>
-                                <label for="comakerUnemployed">
-                                    <h4>Unemployed</h4>
-                                </label>
-                            </div>
-
-                        </div>
-                        
-                        <div class="selected" style="font-weight: bold;" data-option-select6>                           
-                            {{ $comaker['co_Emp_Status'] != '' ? ($comaker['co_Emp_Status'] == 1 ? 'Employed' : 'Unemployed') : '' }}
-                        </div>
-
+                    <div class="select-box">   
+                        <select  wire:model="comaker.co_Emp_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                            <option value="">- -select - -</option>     
+                            <option value="1">Employed</option>                            
+                            <option value="0">Unemployed</option>                            
+                        </select>                                                     
                     </div>
                     @error('comaker.co_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
                 </div>                
@@ -2803,16 +2544,16 @@
                     @if(isset($comaker['co_Emp_Status']))
                         @if($comaker['co_Emp_Status'] == '1' || $comaker['co_Emp_Status'] == '')
                         <!-- * Current Job -->
-                        <span data-cb-current-job>Current Job / Position</span>
-                        <input wire:model.lazy="comaker.co_JobDescription" type="text"  data-cb-current-job>
+                        <span>Current Job / Position</span>
+                        <input wire:model.lazy="comaker.co_JobDescription" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @endif
                     @endif    
 
                     @if(isset($comaker['co_Emp_Status']))
                         @if($comaker['co_Emp_Status'] == '0')
                         <!-- * Previous Job -->
-                        <span data-cb-previous-job>Previous Job / Position</span>
-                        <input wire:model.lazy="comaker.co_JobDescription" type="text" data-cb-previous-job>
+                        <span>Previous Job / Position</span>
+                        <input wire:model.lazy="comaker.co_JobDescription" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                         @endif
                     @endif
                     @error('comaker.co_JobDescription') <span class="text-required">{{ $message }}</span>@enderror
@@ -2821,14 +2562,14 @@
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input wire:model.lazy="comaker.co_YOS" type="text" id="yoService" name="yoService">
+                    <input wire:model.lazy="comaker.co_YOS" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                     @error('comaker.co_YOS') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Company Name -->
                 <div class="input-wrapper">
                     <span>Company Name</span>
-                    <input wire:model.lazy="comaker.co_CompanyName" type="text" id="compName" name="compName">
+                    <input wire:model.lazy="comaker.co_CompanyName" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                     @error('comaker.co_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2841,21 +2582,21 @@
                 <!-- * Company Address -->
                 <div class="input-wrapper">
                     <span>Company Address</span>
-                    <input wire:model.lazy="comaker.co_CompanyID" type="text" id="compAddr" name="compAddr">
+                    <input wire:model.lazy="comaker.co_CompanyID" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                     @error('comaker.co_CompanyID') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Monthly Salary -->
                 <div class="input-wrapper">
                     <span>Monthly Salary</span>
-                    <input wire:model.lazy="comaker.co_MonthlySalary" type="number" id="monthSal" name="monthSal">
+                    <input wire:model.lazy="comaker.co_MonthlySalary" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                     @error('comaker.co_MonthlySalary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Other Source Of Income -->
                 <div class="input-wrapper">
                     <span>Other Source Of Income</span>
-                    <input wire:model.lazy="comaker.co_OtherSOC" type="text" id="othSorOfInc" name="othSorOfInc">
+                    <input wire:model.lazy="comaker.co_OtherSOC" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
                     @error('comaker.co_OtherSOC') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2869,13 +2610,13 @@
 
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
-                            <input wire:model.lazy="comaker.co_BO_Status" autocomplete="off" type="radio" name="co_BO_Status" value="1">
+                            <input wire:model.lazy="comaker.co_BO_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="co_BO_Status" value="1">
                             <span>Yes</span>
                         </div>
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
-                            <input  wire:model.lazy="comaker.co_BO_Status" autocomplete="off" type="radio" name="co_BO_Status" value="0">
+                            <input  wire:model.lazy="comaker.co_BO_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="co_BO_Status" value="0">
                             <span>No</span>
                         </div>
 
@@ -2943,7 +2684,7 @@
                     <div class="input-wrapper">
                         <!-- <input type="file" class="input-image" id="imageUploadApplicantSign"> -->
                         @if($type != 'details')
-                        <input type="file"  wire:model="imgmemsign" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        <input type="file"  wire:model="imgmemsign" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
                         @endif
                     </div>
 
@@ -2981,7 +2722,7 @@
                     <!-- * Upload Co-Maker Signature Button -->
                     <div class="input-wrapper">
                         @if($type != 'details')
-                        <input type="file"  wire:model="imgcosign" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        <input type="file"  wire:model="imgcosign" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
                         @endif
                     </div>
 
@@ -3217,311 +2958,7 @@
 
         })
 
-        // *** END --- Loan and Payement History Modal *** //
-        
-        // ** Select Dropdown 1
-        const selectedOpt1 = document.querySelector('[data-option-select1]');
-        const optionsContainer1 = document.querySelector('[data-option-con1]');
-        const optionsList1 = document.querySelectorAll('[data-option-item1]');
-       
-        selectedOpt1.addEventListener("click", () => {           
-            optionsContainer1.classList.toggle("active");
-        });
-
-        optionsList1.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt1.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer1.classList.remove("active");
-            });
-        });
-
-
-        // ** Select Dropdown 2
-        const selectedOpt2 = document.querySelector('[data-option-select2]');
-        const optionsContainer2 = document.querySelector('[data-option-con2]');
-        const optionsList2 = document.querySelectorAll('[data-option-item2]');
-
-        selectedOpt2.addEventListener("click", () => {
-            optionsContainer2.classList.toggle("active");
-        });
-
-        optionsList2.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt2.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer2.classList.remove("active");
-            });
-        });
- 
-        // ** Select Dropdown 3
-        const selectedOpt3 = document.querySelector('[data-option-select3]');
-        const optionsContainer3 = document.querySelector('[data-option-con3]');
-        const optionsList3 = document.querySelectorAll('[data-option-item3]');
-
-        selectedOpt3.addEventListener("click", () => {
-            optionsContainer3.classList.toggle("active");
-        });
-
-        optionsList3.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt3.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer3.classList.remove("active");
-            });
-        });
-
-        // ** Select Dropdown 4
-        const selectedOpt4 = document.querySelector('[data-option-select4]');
-        const optionsContainer4 = document.querySelector('[data-option-con4]');
-        const optionsList4 = document.querySelectorAll('[data-option-item4]');
-
-        selectedOpt4.addEventListener("click", () => {
-            optionsContainer4.classList.toggle("active");
-        });
-
-        optionsList4.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt4.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer4.classList.remove("active");
-            });
-        });
-
-
-        // ** Select Dropdown 5
-        const selectedOpt5 = document.querySelector('[data-option-select5]');
-        const optionsContainer5 = document.querySelector('[data-option-con5]');
-        const optionsList5 = document.querySelectorAll('[data-option-item5]');
-
-        selectedOpt5.addEventListener("click", () => {
-            optionsContainer5.classList.toggle("active");
-        });
-
-        optionsList5.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt5.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer5.classList.remove("active");
-            });
-        });
-
-
-        // * Civil Status Selector Form Toggle
-        // const famBGFormSingle = document.querySelector('[data-family-background-single]')
-        // const famBGFormMarried = document.querySelector('[data-family-background-married]')
-
-        // optionsContainer2.children[0].addEventListener('click', () => {
-        //     famBGFormSingle.style.display = 'none'
-        //     famBGFormMarried.style.display = 'none'
-        // })
-        // optionsContainer2.children[1].addEventListener('click', () => {
-        //     famBGFormSingle.style.display = 'none'
-        //     famBGFormMarried.style.display = 'block'
-        // })
-        // optionsContainer2.children[2].addEventListener('click', () => {
-        //     famBGFormMarried.style.display = 'none'
-        //     famBGFormSingle.style.display = 'block'
-        // })
-
-        // ** Select Dropdown 6
-        const selectedOpt6 = document.querySelector('[data-option-select6]');
-        const optionsContainer6 = document.querySelector('[data-option-con6]');
-        const optionsList6 = document.querySelectorAll('[data-option-item6]');
-
-        selectedOpt6.addEventListener("click", () => {
-            optionsContainer6.classList.toggle("active");
-        });
-
-        optionsList6.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt6.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer6.classList.remove("active");
-            });
-        });
-
-
-        // * Co-Borrower Job Information
-        // const cbPreviousJob = document.querySelectorAll('[data-cb-previous-job]')
-        // const cbCurrentJob = document.querySelectorAll('[data-cb-current-job]')
-
-
-        // for (const cbPreviousJobItems of cbPreviousJob) {
-        //     cbPreviousJobItems.style.display = 'none'
-
-        //     for (const cbCurrentJobItems of cbCurrentJob) {
-
-        //         optionsContainer6.firstElementChild.addEventListener('click', () => {
-        //             cbPreviousJobItems.style.display = 'none'
-        //             cbCurrentJobItems.style.display = 'block'
-        //         })
-
-        //         optionsContainer6.lastElementChild.addEventListener('click', () => {
-        //             cbPreviousJobItems.style.display = 'block'
-        //             cbCurrentJobItems.style.display = 'none'
-        //         })
-
-        //     }
-        // }
-        
-
-
-        // ** Select Dropdown 8       
-
-        // * Spouse Job Information
-        // const fdrPreviousJob = document.querySelectorAll('[data-fdr-previous-job]')
-        // const fdrCurrentJob = document.querySelectorAll('[data-fdr-current-job]')
-
-        // for (const fdrPreviousJobItems of fdrPreviousJob) {
-        //     fdrPreviousJobItems.style.display = 'none'
-
-        //     for (const fdrCurrentJobItems of fdrCurrentJob) {
-
-        //         optionsContainer8.firstElementChild.addEventListener('click', () => {
-        //             fdrPreviousJobItems.style.display = 'none'
-        //             fdrCurrentJobItems.style.display = 'block'
-        //         })
-
-        //         optionsContainer8.lastElementChild.addEventListener('click', () => {
-        //             fdrPreviousJobItems.style.display = 'block'
-        //             fdrCurrentJobItems.style.display = 'none'
-        //         })
-
-        //     }
-        // }
-
-        // ** Loan Type Dropdown
-          
-
-
-        // ****** Child Form Toggle ***** //
-
-        // * Add Child (Married)
-        const childForm = document.querySelector('[data-child]')
-        const childContainer = document.querySelector('[data-child-container]')
-
-        let cloneCount = 1
-
-
-        function addChild() {
-
-            childForm.setAttribute('id', 'child-1')
-
-            // * Clone the original element
-            const clonedChild = childForm.cloneNode(true)
-
-            // * Increment the clone count and modify the ID
-            cloneCount++
-            const newId = `child-${cloneCount}`
-            clonedChild.id = newId
-
-            // * Hide the increment button
-            clonedChild.lastElementChild.children[0].style.visibility = 'hidden'
-
-
-            // * Append the cloned element to the target container
-            childContainer.appendChild(clonedChild)
-
-        }
-
-        // * Subtract Child (Married)
-        function subChild() {
-
-            // * Reset cloneCount when decrement
-            cloneCount = 1
-
-            // * Remove the the next sibling of child-1
-            if (childContainer.children[7].nextElementSibling !== null) {
-                childContainer.lastElementChild.remove()
-            }
-
-        }
-
-        // * Add Child (Single)
-        function addChildSingle() {
-
-            const childForm = document.querySelector('[data-child-2]')
-            const childContainer = document.querySelector('[data-child-container-2]')
-
-            childForm.setAttribute('id', 'child-1')
-
-            // * Clone the original element
-            const clonedChild = childForm.cloneNode(true)
-
-            // * Increment the clone count and modify the ID
-            cloneCount++
-            const newId = `child-${cloneCount}`
-            clonedChild.id = newId
-
-            // * Hide the increment button
-            clonedChild.lastElementChild.children[0].style.visibility = 'hidden'
-
-
-            // * Append the cloned element to the target container
-            childContainer.appendChild(clonedChild)
-        }
-
-        // * Subtract Child (Single)
-        function subChildSingle() {
-
-            const childContainer = document.querySelector('[data-child-container-2]')
-
-            // * Reset cloneCount when decrement
-            cloneCount = 1
-
-            // * Remove the the next sibling of child-1
-            if (childContainer.children[7].nextElementSibling !== null) {
-                childContainer.lastElementChild.remove()
-            }
-
-        }
-
-        // ****** END --- Child Form Toggle ***** //
-
-
-        // ***** Add and Subtract Vehicle ***** //
-        // * Add Vehicle
-        function addVehicle() {
-
-            const vehicleForm = document.querySelector('[data-vehicle]')
-
-            vehicleForm.setAttribute('id', 'vehicle-1')
-
-            // * Clone the original element
-            const clonedChild = vehicleForm.cloneNode(true)
-
-            // * Increment the clone count and modify the ID
-            cloneCount++
-            const newId = `vehicle-${cloneCount}`
-            clonedChild.id = newId
-
-            // * Hide the increment button
-            clonedChild.lastElementChild.children[1].children[0].style.visibility = 'hidden'
-
-
-            // * Append the cloned element to the target container
-            vehicleContainer.appendChild(clonedChild)
-
-        }
-
-        // * Subtract Vehicle
-        function subVehicle() {
-
-            const vehicleContainer = document.querySelector('[data-vehicle-container]')
-
-            // * Reset cloneCount when decrement
-            cloneCount = 1
-
-            // * Remove the the next sibling of child-1
-            if (vehicleContainer.firstElementChild.nextElementSibling !== null) {
-                vehicleContainer.lastElementChild.remove()
-            }
-
-        }
-
-        // ***** END ---- Add and Subtract Vehicle ***** //
-
-
-        // ***** Add and Subtract Property ***** //
-
-        // ** Select Dropdown 10 (Mode of Payment)
-        
-        // * Mode of Release Toggle
+        // *** END --- Loan and Payement History Modal *** //   
 
         // * Decline Application Modal
         // ***** Modal with Submit Button redirect to another page ***** //

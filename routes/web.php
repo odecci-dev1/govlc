@@ -108,10 +108,8 @@ Route::get('/tranactions/application/credit/investigation/view/{memId}', CreditI
 
 
 //collection
-Route::get('/collection/collection/list',CollectionList::class);
-Route::get('/collection/collection/{collectionId}',Collection::class);
+Route::get('/collection/list',CollectionList::class);
+Route::get('/collection/create',Collection::class);
 Route::get('/collection/collection/area/{areaCode}',CollectionPrint::class);
-Route::get('/collection/collection/area/{areaCode}',CollectionPrint::class);
-
 Route::get('/collection/remittance/{areaCode}',CollectionRemittance::class);
 //collection

@@ -314,8 +314,8 @@ class CreateApplication extends Component
         $messages['loanDetails.total_LoanReceivable.numeric'] = 'Receivable amount must be a number'; 
         $messages['loanDetails.dailyCollectibles.numeric'] = 'Daily amount due must be a number'; 
 
-        $messages['loanDetails.notarialFee.min'] = 'Notarial fee must be greater than 1'; 
-        $messages['loanDetails.advancePayment.min'] = 'Advance payment must be greater than 1';   
+        $messages['loanDetails.notarialFee.min'] = 'Notarial fee must not be negative'; 
+        $messages['loanDetails.advancePayment.min'] = 'Advance payment must not be negative';   
         $messages['loanDetails.total_InterestAmount.min'] = 'Interest amount must be greater than 1'; 
         $messages['loanDetails.total_LoanReceivable.min'] = 'Receivable amount must be greater than 1'; 
         $messages['loanDetails.dailyCollectibles.min'] = 'Daily amount due must be greater than 1'; 
@@ -963,6 +963,7 @@ class CreateApplication extends Component
                         'remarks' => isset($this->loanDetails['remarks']) ? $this->loanDetails['remarks'] : '',
                         'userId' => session()->get('auth_userid'),
                     ];
+                    // dd($data);
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Credit/CreditSubmitforApproval', $data);  
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully submited', 'mword'=> 'Success']);
         }
@@ -976,8 +977,8 @@ class CreateApplication extends Component
             $this->validate([
                                 'loanDetails.loanAmount' => ['required', 'numeric', 'min:1'],
                                 'loanDetails.topId' => ['required'],
-                                'loanDetails.notarialFee' => ['required', 'numeric', 'min:1'],
-                                'loanDetails.advancePayment' => ['required', 'numeric', 'min:1'],
+                                'loanDetails.notarialFee' => ['required', 'numeric', 'min:0'],
+                                'loanDetails.advancePayment' => ['required', 'numeric', 'min:0'],
                                 'loanDetails.total_InterestAmount' => ['required', 'numeric', 'min:1'],
                                 'loanDetails.total_LoanReceivable' => ['required', 'numeric', 'min:1'],
                                 'loanDetails.dailyCollectibles' => ['required', 'numeric', 'min:1'],
@@ -1233,7 +1234,7 @@ class CreateApplication extends Component
         $this->bank[1] = [  'account' => '', 'address' => '' ];
 
         $this->comaker['co_Emp_Status'] = '';
-        $this->member['statusID'] = '';
+        $this->member['statusID'] = '7';
 
         $loandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
         $this->member['loanAmount'] = isset($loandetails['loamamount']) ? $loandetails['loamamount'] : '';
@@ -1410,8 +1411,9 @@ class CreateApplication extends Component
                     $this->loanDetails['courierclient'] = $data['individualLoan'][0]['courerierName'];
                     $this->loanDetails['couriercno'] = $data['individualLoan'][0]['courierCNo'];
 
-                    $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loanDetails['loanTypeID']]);                  
+                    $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loanDetails['loanTypeID']]);                                    
                     $loanterms = $loanterms->json();
+                    // dd($loanterms);
                    
                     if( $loanterms ){
                         foreach( $loanterms  as  $loanterms ){
@@ -1421,16 +1423,25 @@ class CreateApplication extends Component
 
                     //loan summary
                     $getloansummary = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanSummary/GetLoanSummary', [ 'naid' => $this->naID ]);                  
-                    //dd($getloansummary);  
-                    $this->loansummary = isset($getloansummary[0]) ? $getloansummary[0] : [];     
-                    $this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : ''; 
-                    $this->loanDetails['notarialFee'] = isset($getloansummary[0]) ? $this->loansummary['notarialFee'] : ''; 
-                    $this->loanDetails['advancePayment'] = isset($getloansummary[0]) ? $this->loansummary['advancePayment'] : ''; 
-                    $this->loanDetails['total_InterestAmount'] = isset($getloansummary[0]) ? $this->loansummary['total_InterestAmount'] : '';
-                    $this->loanDetails['total_LoanReceivable'] = isset($getloansummary[0]) ? $this->loansummary['total_LoanReceivable'] : '';
-                    $this->loanDetails['dailyCollectibles'] = isset($getloansummary[0]) ? $this->loansummary['dailyCollectibles'] : '';
+                    $this->loansummary = isset($getloansummary[0]) ? $getloansummary[0] : [];   
+                    //dd($this->loansummary);
+                              
+                    // $this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : ''; 
+                    // $this->loanDetails['notarialFee'] = isset($getloansummary[0]) ? $this->loansummary['notarialFee'] : ''; 
+                    // $this->loanDetails['advancePayment'] = isset($getloansummary[0]) ? $this->loansummary['advancePayment'] : ''; 
+                    // $this->loanDetails['total_InterestAmount'] = isset($getloansummary[0]) ? $this->loansummary['total_InterestAmount'] : '';
+                    // $this->loanDetails['total_LoanReceivable'] = isset($getloansummary[0]) ? $this->loansummary['total_LoanReceivable'] : '';
+                    // $this->loanDetails['dailyCollectibles'] = isset($getloansummary[0]) ? $this->loansummary['dailyCollectibles'] : '';
+                    // $this->loanDetails['totalSavings'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
 
+                    $this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
+                    $this->loanDetails['notarialFee'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['notarialFee'] :  $this->loansummary['approvedNotarialFee']) : ''; 
+                    $this->loanDetails['advancePayment'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['advancePayment'] :  $this->loansummary['approvedAdvancePayment']) : ''; 
+                    $this->loanDetails['total_InterestAmount'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['total_InterestAmount'] :  $this->loansummary['approveedInterest']) : ''; 
+                    $this->loanDetails['total_LoanReceivable'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['total_LoanReceivable'] :  $this->loansummary['approvedReleasingAmount']) : ''; 
+                    $this->loanDetails['dailyCollectibles'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['dailyCollectibles'] :  $this->loansummary['approvedDailyAmountDue']) : ''; 
                     $this->loanDetails['totalSavings'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
+                   
                                                                      
                 }
                 $this->loanDetails['remarks'] = $data['individualLoan'][0]['remarks'];
