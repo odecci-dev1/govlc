@@ -23,7 +23,7 @@ class LoanTypes extends Component
         $rules = [];   
         $rules['loantype.loanTypeName'] = ['required'];    
         $rules['terms'] = ['required'];      
-        $rules['loantype.savings'] = 'required';  
+        $rules['loantype.savings'] = '';  
         $rules['loantype.loanAmount_Min'] = [''];   
         $rules['loantype.loanAmount_Max'] = [''];         
         return $rules;
@@ -49,12 +49,31 @@ class LoanTypes extends Component
         $messages['terms.required'] = 'Please add terms of payment';  
 
         $messages['inpterms.nameOfTerms.required'] = 'Name of terms is required.';        
-        $messages['inpterms.days.required'] = 'No. of days is required.';  
-        $messages['inpterms.days.numeric'] = 'No. of days is should be a number.';  
-        $messages['inpterms.days.min'] = 'No. of days is should be greater than 0.';                      
+        $messages['inpterms.terms.required'] = 'Terms is required.';  
+        $messages['inpterms.terms.numeric'] = 'Terms should be a number.';                      
         $messages['inpterms.interestRate.required'] = 'Interest rate is required.';  
+        $messages['inpterms.interestRate.numeric'] = 'Interest rate should be a number.';  
         $messages['inpterms.interestType.required'] = 'Interest type is required.';    
-        $messages['inpterms.formula.required'] = 'Select formula from the list.';                     
+        $messages['inpterms.formula.required'] = 'Select formula from the list.';    
+        $messages['inpterms.collectionTypeId.required'] = 'Select collection type';   
+        $messages['inpterms.interestApplied.required'] = 'Interest applied is required.';    
+        $messages['inpterms.noAdvancePayment.required'] = 'Please select one.';    
+        $messages['inpterms.oldFormula.required'] = 'Please select one.';    
+        $messages['inpterms.notarialFeeOrigin.required'] = 'Notarial fee origin is required.';   
+        $messages['inpterms.lessThanAmountTYpe.required'] = 'Please select one.';   
+        $messages['inpterms.lessThanNotarialAmount.required'] = 'Please enter amount.';  
+        $messages['inpterms.lessThanNotarialAmount.numeric'] = 'Please enter a number.';  
+        $messages['inpterms.greaterThanEqualAmountType.required'] = 'Please select one.';   
+        $messages['inpterms.greaterThanEqualNotarialAmount.required'] = 'Please enter amount.';  
+        $messages['inpterms.greaterThanEqualNotarialAmount.numeric'] = 'Please enter a number.';          
+        $messages['inpterms.loanInsuranceAmountType.required'] = 'Please select one.';   
+        $messages['inpterms.loanInsuranceAmount.required'] = 'Please enter amount.';  
+        $messages['inpterms.loanInsuranceAmount.numeric'] = 'Please enter a number.';          
+        $messages['inpterms.lifeInsuranceAmountType.required'] = 'Please select one.';   
+        $messages['inpterms.lifeInsuranceAmount.required'] = 'Please enter amount.';  
+        $messages['inpterms.lifeInsuranceAmount.numeric'] = 'Please enter a number.'; 
+        $messages['inpterms.deductInterest.required'] = 'Please select one.'; 
+
         return $messages;        
     }
 
@@ -92,7 +111,7 @@ class LoanTypes extends Component
         $data = [
                     'loanTypeName' =>  $inputs['loantype']['loanTypeName'],
                     'loanTypeID' => $this->loantypeID,
-                    'savings' =>  $inputs['loantype']['savings'],
+                    'savings' =>  isset($inputs['loantype']['savings']) ? $inputs['loantype']['savings'] : 0,
                     'loanAmount_Min' =>  isset($inputs['loantype']['loanAmount_Min']) ? $inputs['loantype']['loanAmount_Min'] : 0,
                     'loanAmount_Max' =>  isset($inputs['loantype']['loanAmount_Max']) ? $inputs['loantype']['loanAmount_Max'] : 0,
                     'terms' => $terms
@@ -102,7 +121,7 @@ class LoanTypes extends Component
         if($this->loantypeID == ''){
             $savemsg = 'Loan type successfully saved';
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/SaveLoanType', $data);            
-            // dd($crt);
+            //dd($crt);
             $getLasLoanId = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/GetlastLoanTypeDetails');  
             $getLasLoanId =  $getLasLoanId->json();
             $this->loantypeID = $getLasLoanId['loanTypeID'];
@@ -116,30 +135,43 @@ class LoanTypes extends Component
     }
     
     public function addTerms(){
-        $lastcnt = array_key_last($this->terms);   
+        if(isset($this->inpterms['termsKey'])){
+            if($this->inpterms['termsKey'] > 0){             
+                $lastcnt = $this->inpterms['termsKey'];
+            }
+            else{                
+                $lastcnt = array_key_last($this->terms) + 1;   
+            }
+        }
+        else{           
+            $lastcnt = array_key_last($this->terms) + 1;   
+        }
+      
         $data = $this->validate([                                    
                                     'inpterms.nameOfTerms' => ['required'],
-                                    'inpterms.interestRate' => ['required', 'numeric', 'min:1'],
+                                    'inpterms.interestRate' => ['required', 'numeric'],
                                     'inpterms.interestType' => ['required'],  
                                     'inpterms.formula' => ['required'],
                                     'inpterms.interestApplied' => ['required'],                                                                
-                                    'inpterms.terms' => ['required'],  
+                                    'inpterms.terms' => ['required', 'numeric'],  
                                     'inpterms.oldFormula' => ['required'],    
-                                    'inpterms.noAdvancePayment' => ['required'],    
+                                    'inpterms.noAdvancePayment' => ['required'],                                      
+                                    'inpterms.collectionTypeId' => ['required'],    
                                     'inpterms.notarialFeeOrigin' => ['required'],    
-                                    'inpterms.lessThanNotarialAmount' => ['required'],    
+                                    'inpterms.lessThanNotarialAmount' => ['required', 'numeric'],    
                                     'inpterms.lessThanAmountTYpe' => ['required'], 
-                                    'inpterms.greaterThanEqualNotarialAmount' => ['required'],  
+                                    'inpterms.greaterThanEqualNotarialAmount' => ['required', 'numeric'],  
                                     'inpterms.greaterThanEqualAmountType' => ['required'],  
-                                    'inpterms.loanInsuranceAmount' => ['required'],  
+                                    'inpterms.loanInsuranceAmount' => ['required', 'numeric'],  
                                     'inpterms.loanInsuranceAmountType' => ['required'],  
-                                    'inpterms.lifeInsuranceAmount' => ['required'],  
+                                    'inpterms.lifeInsuranceAmount' => ['required', 'numeric'],  
                                     'inpterms.lifeInsuranceAmountType' => ['required'],
-                                    'inpterms.deductInterest' => ['required'],      
-                                    'inpterms.collectionTypeId' => ['required'],                                            
+                                    'inpterms.deductInterest' => ['required'],                                              
                                 ]);
 
-        $this->terms[$lastcnt + 1] = [  'nameOfTerms' => $data['inpterms']['nameOfTerms'],
+                               
+
+        $this->terms[$lastcnt] = [  'nameOfTerms' => $data['inpterms']['nameOfTerms'],
                                         'interestRate' => $data['inpterms']['interestRate'],
                                         'interestType' => $data['inpterms']['interestType'],                                         
                                         'formula' => $data['inpterms']['formula'], 
@@ -147,31 +179,60 @@ class LoanTypes extends Component
                                         'terms' => $data['inpterms']['terms'], 
                                         'oldFormula' => $data['inpterms']['oldFormula'], 
                                         'noAdvancePayment' => $data['inpterms']['noAdvancePayment'], 
-                                        'notarialFeeOrigin' => $data['inpterms']['notarialFeeOrigin'], 
-                                        'lessThanNotarialAmount' => $data['inpterms']['lessThanNotarialAmount'], 
-                                        'lessThanAmountTYpe' => $data['inpterms']['lessThanAmountTYpe'], 
-                                        'greaterThanEqualNotarialAmount' => $data['inpterms']['greaterThanEqualNotarialAmount'], 
-                                        'greaterThanEqualAmountType' => $data['inpterms']['greaterThanEqualAmountType'], 
-                                        'loanInsuranceAmount' => $data['inpterms']['loanInsuranceAmount'],   
-                                        'loanInsuranceAmountType' => $data['inpterms']['loanInsuranceAmountType'],   
-                                        'lifeInsuranceAmount' => $data['inpterms']['lifeInsuranceAmount'], 
-                                        'lifeInsuranceAmountType' => $data['inpterms']['lifeInsuranceAmountType'], 
-                                        'deductInterest' => $data['inpterms']['deductInterest'], 
+                                        'notarialFeeOrigin' => isset($data['inpterms']['notarialFeeOrigin']) ? $data['inpterms']['notarialFeeOrigin'] : '', 
+                                        'lessThanNotarialAmount' => isset($data['inpterms']['lessThanNotarialAmount']) ? $data['inpterms']['lessThanNotarialAmount'] : 0, 
+                                        'lessThanAmountTYpe' => isset($data['inpterms']['lessThanAmountTYpe']) ? $data['inpterms']['lessThanAmountTYpe'] : '', 
+                                        'greaterThanEqualNotarialAmount' => isset($data['inpterms']['greaterThanEqualNotarialAmount']) ? $data['inpterms']['greaterThanEqualNotarialAmount'] : 0, 
+                                        'greaterThanEqualAmountType' => isset($data['inpterms']['greaterThanEqualAmountType']) ? $data['inpterms']['greaterThanEqualAmountType'] : '', 
+                                        'loanInsuranceAmount' => isset($data['inpterms']['loanInsuranceAmount']) ? $data['inpterms']['loanInsuranceAmount'] : 0,   
+                                        'loanInsuranceAmountType' => isset($data['inpterms']['loanInsuranceAmountType']) ? $data['inpterms']['loanInsuranceAmountType'] : '',   
+                                        'lifeInsuranceAmount' => isset($data['inpterms']['lifeInsuranceAmount']) ? $data['inpterms']['lifeInsuranceAmount'] : 0, 
+                                        'lifeInsuranceAmountType' => isset($data['inpterms']['lifeInsuranceAmountType']) ? $data['inpterms']['lifeInsuranceAmountType'] : '', 
+                                        'deductInterest' => isset($data['inpterms']['deductInterest']) ? $data['inpterms']['deductInterest'] : 2, 
                                         'collectionTypeId' => $data['inpterms']['collectionTypeId'],                         
                                      ];
 
         $this->resetterms();                        
     }
 
-    public function resetterms(){                                                             
+    public function removeTerms($key){
+        unset($this->terms[$key]);
+    }
+
+    public function editTerms($key){
+        $inp =  $this->terms[$key];
+        $this->inpterms['termsKey'] = $key;
+        $this->inpterms['nameOfTerms'] = $inp['nameOfTerms'];
+        $this->inpterms['interestRate'] = $inp['interestRate'];
+        $this->inpterms['interestType'] = $inp['interestType'];
+        $this->inpterms['formula'] = $inp['formula'];;
+        $this->inpterms['interestApplied'] = $inp['interestApplied'];
+        $this->inpterms['terms'] = $inp['terms'];
+        $this->inpterms['oldFormula'] = $inp['oldFormula'];
+        $this->inpterms['noAdvancePayment'] = $inp['noAdvancePayment'];
+        $this->inpterms['notarialFeeOrigin'] = $inp['notarialFeeOrigin'];
+        $this->inpterms['lessThanNotarialAmount'] = $inp['lessThanNotarialAmount'];    
+        $this->inpterms['lessThanAmountTYpe'] = $inp['lessThanAmountTYpe'];
+        $this->inpterms['greaterThanEqualNotarialAmount'] = $inp['greaterThanEqualNotarialAmount'];
+        $this->inpterms['greaterThanEqualAmountType'] = $inp['greaterThanEqualAmountType'];
+        $this->inpterms['loanInsuranceAmount'] = $inp['loanInsuranceAmount'];
+        $this->inpterms['loanInsuranceAmountType'] = $inp['loanInsuranceAmountType'];
+        $this->inpterms['lifeInsuranceAmount'] = $inp['lifeInsuranceAmount'];
+        $this->inpterms['lifeInsuranceAmountType'] = $inp['lifeInsuranceAmountType'];
+        $this->inpterms['deductInterest'] = $inp['deductInterest'];
+        $this->inpterms['collectionTypeId'] = $inp['collectionTypeId'];
+    }
+
+    public function resetterms(){            
+        $this->inpterms['termsKey'] = 0;                                                 
         $this->inpterms['nameOfTerms'] = null;
         $this->inpterms['interestRate'] = null;
         $this->inpterms['interestType'] = null;
         $this->inpterms['formula'] = null;
         $this->inpterms['interestApplied'] = null;  
         $this->inpterms['terms'] = null;
-        $this->inpterms['oldFormula'] = null;
-        $this->inpterms['noAdvancePayment'] = null;
+        $this->inpterms['oldFormula'] = 2;
+        $this->inpterms['noAdvancePayment'] = 2;
         $this->inpterms['notarialFeeOrigin'] = null;
         $this->inpterms['lessThanNotarialAmount'] = null;    
         $this->inpterms['lessThanAmountTYpe'] = null;
@@ -181,7 +242,7 @@ class LoanTypes extends Component
         $this->inpterms['loanInsuranceAmountType'] = null;
         $this->inpterms['lifeInsuranceAmount'] = null;
         $this->inpterms['lifeInsuranceAmountType'] = null;
-        $this->inpterms['deductInterest'] = null;
+        $this->inpterms['deductInterest'] = 2;
         $this->inpterms['collectionTypeId'] = null;
     }
 
@@ -216,7 +277,6 @@ class LoanTypes extends Component
             if( $termsofPayment ){
                 foreach($termsofPayment as $termsofPayment){
                     $cnt = $cnt + 1;                                                    
-
                     $this->terms[$cnt] = [  'nameOfTerms' => $termsofPayment['nameOfTerms'],
                                             'interestRate' => $termsofPayment['interestRate'],
                                             'interestType' => $termsofPayment['iR_Type'],                                         
@@ -239,14 +299,12 @@ class LoanTypes extends Component
                                             'collectionTypeId' => $termsofPayment['typeOfCollectionID'],
                                          ];
                 }
-            }
+            }         
         }
 
-        if($loanid == ''){
-            $this->inpterms['noAdvancePayment'] = 1;
-            $this->inpterms['oldFormula'] = 2;
-            $this->inpterms['deductInterest'] = 2;
-        }
+        $this->inpterms['noAdvancePayment'] = 1;
+        $this->inpterms['oldFormula'] = 2;
+        $this->inpterms['deductInterest'] = 2;
 
         $collType = $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/GetCollectionType');
         $collType = $collType->json();
@@ -271,6 +329,11 @@ class LoanTypes extends Component
         if(isset($this->inpterms['collectionTypeId'])){
             if($this->inpterms['collectionTypeId'] == 3){
                 $this->inpterms['interestType'] = 'Custom';
+                $this->inpterms['interestApplied'] = 'Monthly';
+            }
+        }
+        if(isset($this->inpterms['interestType'])){
+            if( $this->inpterms['interestType'] == 'Compound' ){
                 $this->inpterms['interestApplied'] = 'Monthly';
             }
         }

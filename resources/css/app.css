@@ -19515,6 +19515,11 @@ body.print-portrait .page {
     font-weight: bold;
 }
 
+
+.fw-normal{
+    font-weight: normal !important;
+}
+
 .full-screen-div {
     background: red;
     position: fixed;
