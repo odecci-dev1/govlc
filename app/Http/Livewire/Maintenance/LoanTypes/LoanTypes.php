@@ -246,6 +246,11 @@ class LoanTypes extends Component
         $this->inpterms['collectionTypeId'] = null;
     }
 
+    public function archive($loantypeID){       
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/DeleteLoanType', [ 'loanTypeID' => $loantypeID ]);              
+        //dd($loantypeID);
+        return redirect()->to('/maintenance/loantypes/list')->with('mmessage', 'Loan type has been trashed');    
+    }
 
     public function mount($loanid = ''){
         if($loanid != ''){

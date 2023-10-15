@@ -1,6 +1,9 @@
 <div>
+    @if($showDialog == 1)
+        <x-dialog :message="'Are you sure you want to trash this data '" :xmid="$mid" :confirmaction="'archive'" :header="'Trash'"></x-dialog>   
+    @endif
     @if(session('mmessage'))
-            <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+        <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif
     <!-- * New Loan Types Form -->
     <form action="" class="na-form-con" autocomplete="off">
@@ -27,6 +30,9 @@
                         <div class="btn-wrapper">                        
                             <!-- * Save -->
                             <button type="button" wire:click="save" class="button" data-save>{{ $loantypeID =='' ? 'Save' : 'Update' }}</button>
+                            @if($loantypeID !='')
+                            <button type="button" onclick="showDialog('{{ $loantypeID }}')" class="button" data-save>Trash</button>
+                            @endif
                         </div>
                     </div>
 
@@ -541,7 +547,7 @@
 
                                         <!-- * Advance payment formula -->
                                         <td>
-                                            {{ $formulaList[$value['formula']]['formula'] }}
+                                            {!! isset($formulaList[$value['formula']]['formula']) ? $formulaList[$value['formula']]['formula'] : '<span class="text-required">formula not found</span>' !!}
                                         </td>
 
                                         <!-- * Action -->
@@ -579,3 +585,14 @@
 
     </form>
 </div>
+<script>
+    document.addEventListener('livewire:load', function () {
+        window.showDialog = function($mid){              
+            @this.call('showDialog', $mid);        
+        };
+
+        window.archive = function($mid){
+            @this.call('archive', $mid);       
+        };
+    })
+</script>
