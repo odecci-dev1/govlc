@@ -123,7 +123,7 @@
                                             <p>{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : 'not found' }}</p>
                                             <p>{{ isset($loansummary['notarialFee']) ? number_format($loansummary['notarialFee'], 2) : 'not found' }}</p>
                                             <p class="underline">{{ isset($loansummary['loanInsurance']) ? number_format($loansummary['loanInsurance'], 2) : 'not found' }}</p>
-                                            <p class="p-bold underline-thick">{{ isset($loansummary['total_LoanReceivable']) ? number_format($loansummary['total_LoanReceivable'], 2) : 'not found' }}</p>
+                                            <p class="p-bold underline-thick">{{ isset($loansummary['approvedReleasingAmount']) ? number_format($loansummary['approvedReleasingAmount'], 2) : 'not found' }}</p>
                                             <p>&nbsp;</p>
                                             <p>holidays</p>
                                             <p>used saving</p>
