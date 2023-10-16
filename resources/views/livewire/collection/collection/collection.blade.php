@@ -1,161 +1,9 @@
  <!-- * Collection Viewing Container Wrapper -->
  @include('livewire.collection.collection.collection-cash-denomination-modal')
  <!-- * Reject Modal -->
- <dialog class="na-application-decline-modal" data-collection-reject-modal>
+ @include('livewire.collection.collection.collection-reject-reason-modal')
 
-     <!-- * Modal Container -->
-     <div class="modal-container">
-
-         <!-- * Reason for rejecting Modal Container -->
-         <div class="application-decline-modal-container">
-
-             <!-- * Button Wrapper -->
-             <div class="button-wrapper">
-                 <button type="button" data-close-collection-reject-button>
-                     <img src="../../res/assets/icons/x-circle.svg" alt="close">
-                 </button>
-             </div>
-
-             <!-- * Small Container -->
-             <div class="small-con">
-
-                 <!-- * Rowspan 1: Header -->
-                 <div class="rowspan">
-                     <h2>Reason for rejecting</h2>
-                 </div>
-
-                 <!-- * Rowspan 2: Reason for rejecting Container -->
-                 <div class="rowspan">
-                     <textarea name="" rows="15" id=""placeholder="Enter the reason here..."></textarea>
-                 </div>
-
-                 <!-- * Rowspan 3: Button Wrapper -->
-                 <div class="rowspan">
-                     <button type="button" class="button" data-submit-collection-reject-button>Submit</button>
-                 </div>
-
-             </div>
-
-         </div>
-     </div>
-
- </dialog>
-
- <!-- * Collection Summary Modal -->
- <dialog class="cl-summary-modal" data-collection-summary-modal>
-
-     <!-- * Modal Container -->
-     <div class="modal-container">
-
-         <!-- * Reason for rejecting Modal Container -->
-         <div class="inner-modal-container">
-
-             <!-- * Button Wrapper -->
-             <div class="button-wrapper">
-                 <button type="button" data-close-collection-summary-button>
-                     <img src="../../res/assets/icons/x-circle.svg" alt="close">
-                 </button>
-             </div>
-
-             <!-- * Small Container -->
-             <div class="small-con">
-
-                 <!-- * Rowspan 1: Header -->
-                 <div class="rowspan">
-                     <h2>Summary</h2>
-                     <button class="button-2" data-collection-summary-print-button>Print</button>
-                 </div>
-
-                 <!-- * Rowspan 2: Table -->
-                 <div class="rowspan table">
-
-                     <table>
-                         <!-- * Table Header -->
-                         <tr>
-                             <th>Area</th>
-                             <th>Total Collectible:</th>
-                             <th>Total Balance:</th>
-                             <th>Total Savings:</th>
-                             <th>Total Advance:</th>
-                             <th>Total Lapses:</th>
-                             <th>Total Collected Amount</th>
-                         </tr>
-
-                         <!-- * Table Data -->
-                         <tr>
-                             <td>Area 1</td>
-                             <td>600.00</td>
-                             <td>34,350.00</td>
-                             <td>550.00</td>
-                             <td>200.00</td>
-                             <td>2,200.00</td>
-                             <td>550.00</td>
-                         </tr>
-
-                         <tr>
-                             <td>Area 2</td>
-                             <td>600.00</td>
-                             <td>34,350.00</td>
-                             <td>550.00</td>
-                             <td>200.00</td>
-                             <td>2,200.00</td>
-                             <td>550.00</td>
-                         </tr>
-
-                         <tr>
-                             <td>Area 3</td>
-                             <td>600.00</td>
-                             <td>34,350.00</td>
-                             <td>550.00</td>
-                             <td>200.00</td>
-                             <td>2,200.00</td>
-                             <td>550.00</td>
-                         </tr>
-
-                         <tr>
-                             <td>Area 4</td>
-                             <td>600.00</td>
-                             <td>34,350.00</td>
-                             <td>550.00</td>
-                             <td>200.00</td>
-                             <td>2,200.00</td>
-                             <td>550.00</td>
-                         </tr>
-
-                         <tr>
-                             <td>Area 5</td>
-                             <td>600.00</td>
-                             <td>34,350.00</td>
-                             <td>550.00</td>
-                             <td>200.00</td>
-                             <td>2,200.00</td>
-                             <td>550.00</td>
-                         </tr>
-
-                     </table>
-
-
-                 </div>
-
-                 <!-- * Rowspan 3: Footer -->
-                 <div class="rowspan">
-                     <p>Grand Total</p>
-                     <p>3,000.00</p>
-                     <p>21,750.00</p>
-                     <p>2,750.00</p>
-                     <p>1,000.00</p>
-                     <p>11,000.00</p>
-                     <p class="textPrimary">2,750.00</p>
-                 </div>
-
-             </div>
-
-         </div>
-
-     </div>
-
- </dialog>
-
+ @include('livewire.collection.collection.collection-summary-modal')
  <div class="can-container-wrapper">
 
      <!-- * Collection Add New Container 1 -->
@@ -168,140 +16,16 @@
              <!-- * All Areas Dropdown Button -->
              <div class="borrower-dropdown" data-bor-dropdown>
 
-                 <!-- * All Areas Button -->
-                 <button class="link dropdown" data-bor-dropdown-button>
-                     <span data-bor-dropdown-button>All Areas</span>
-                     <img src="{{ URL::to('/') }}/assets/icons/white-carret-down.svg"
-                         alt="carret-down"data-bor-dropdown-button>
-                 </button>
+                <!-- * All Areas Button -->
+                <div class="select-box">
+                    <select  wire:model="status" class="select-option-menu">
+                        <option value="">All Areas</option>     
+                        <option value="Active">Active</option>                                    
+                        <option value="Inactive">Inactive</option>                                    
+                    </select>                       
+                </div>         
 
-                 <!-- * Submenu -->
-                 <!-- <ul class="dropdown-menu"> -->
-
-                 <!-- * Area 1 -->
-                 <!-- <li>
-                                    <div class="box-1">
-                                        <h4 id="collectionAreaNum">Area 1</h4>
-                                    </div>
-                                    <div class="box-2">
-                                        <div class="inner-box-1">
-                                            <p>Expected Collection</p>
-                                            <span id="expectedCollection">13,000.00</span>
-                                        </div>
-                                        <div class="inner-box-2">
-                                            <p>Penalty</p>
-                                            <span id="collectionPenalty">0.00</span>
-                                        </div>
-                                    </div>
-                                </li> -->
-
-                 <!-- * Area 2 -->
-                 <!-- <li>
-                                    <div class="box-1">
-                                        <h4 id="collectionAreaNum">Area 2</h4>
-                                    </div>
-                                    <div class="box-2">
-                                        <div class="inner-box-1">
-                                            <p>Expected Collection</p>
-                                            <span id="expectedCollection">13,000.00</span>
-                                        </div>
-                                        <div class="inner-box-2">
-                                            <p>Penalty</p>
-                                            <span id="collectionPenalty">0.00</span>
-                                        </div>
-                                    </div>
-                                </li> -->
-
-                 <!-- * Area 3 -->
-                 <!-- <li>
-                                    <div class="box-1">
-                                        <h4 id="collectionAreaNum">Area 3</h4>
-                                    </div>
-                                    <div class="box-2">
-                                        <div class="inner-box-1">
-                                            <p>Expected Collection</p>
-                                            <span id="expectedCollection">13,000.00</span>
-                                        </div>
-                                        <div class="inner-box-2">
-                                            <p>Penalty</p>
-                                            <span id="collectionPenalty">0.00</span>
-                                        </div>
-                                    </div>
-                                </li> -->
-
-                 <!-- * Area 4 -->
-                 <!-- <li>
-                                    <div class="box-1">
-                                        <h4 id="collectionAreaNum">Area 4</h4>
-                                    </div>
-                                    <div class="box-2">
-                                        <div class="inner-box-1">
-                                            <p>Expected Collection</p>
-                                            <span id="expectedCollection">13,000.00</span>
-                                        </div>
-                                        <div class="inner-box-2">
-                                            <p>Penalty</p>
-                                            <span id="collectionPenalty">0.00</span>
-                                        </div>
-                                    </div>
-                                </li> -->
-
-                 <!-- * Area 5 -->
-                 <!-- <li>
-                                    <div class="box-1">
-                                        <h4 id="collectionAreaNum">Area 5</h4>
-                                    </div>
-                                    <div class="box-2">
-                                        <div class="inner-box-1">
-                                            <p>Expected Collection</p>
-                                            <span id="expectedCollection">13,000.00</span>
-                                        </div>
-                                        <div class="inner-box-2">
-                                            <p>Penalty</p>
-                                            <span id="collectionPenalty">0.00</span>
-                                        </div>
-                                    </div>
-                                </li> -->
-
-
-                 <!-- * Area 5 -->
-                 <!-- <li>
-                                    <div class="box-1">
-                                        <h4>Area 1</h4>
-                                    </div>
-                                    <div class="box-2">
-                                        <div class="inner-box-1">
-                                            <p>Expected Collection</p>
-                                            <span id="expectedCollection">13,000.00</span>
-                                        </div>
-                                        <div class="inner-box-2">
-                                            <p>Penalty</p>
-                                            <span id="collectionPenalty">0.00</span>
-                                        </div>
-                                    </div>
-                                </li> -->
-
-
-                 <!-- * Area 5 -->
-                 <!-- <li>
-                                    <div class="box-1">
-                                        <h4>Area 1</h4>
-                                    </div>
-                                    <div class="box-2">
-                                        <div class="inner-box-1">
-                                            <p>Expected Collection</p>
-                                            <span id="expectedCollection">13,000.00</span>
-                                        </div>
-                                        <div class="inner-box-2">
-                                            <p>Penalty</p>
-                                            <span id="collectionPenalty">0.00</span>
-                                        </div>
-                                    </div>
-                                </li> -->
-
-
-                 <!-- </ul> -->
-
+                
              </div>
 
              <div class="area-menu-container">
@@ -532,7 +256,7 @@
                          <td>
 
                              <!-- * Client No. -->
-                             <img src="../../res/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana">
+                             <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana">
 
                          </td>
 
@@ -656,7 +380,7 @@
                          <td>
 
                              <!-- * Client No. -->
-                             <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="Dela Cruz, Juana">
+                             <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-2.svg" alt="Dela Cruz, Juana">
 
                          </td>
 
@@ -780,7 +504,7 @@
                          <td>
 
                              <!-- * Client No. -->
-                             <img src="../../res/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana">
+                             <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana">
 
                          </td>
 
@@ -904,7 +628,7 @@
                          <td>
 
                              <!-- * Client No. -->
-                             <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="Dela Cruz, Juana">
+                             <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-2.svg" alt="Dela Cruz, Juana">
 
                          </td>
 
@@ -1028,7 +752,7 @@
                          <td>
 
                              <!-- * Client No. -->
-                             <img src="../../res/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana">
+                             <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana">
 
                          </td>
 
@@ -1152,7 +876,7 @@
                          <td>
 
                              <!-- * Client No. -->
-                             <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="Dela Cruz, Juana">
+                             <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-2.svg" alt="Dela Cruz, Juana">
 
                          </td>
 
@@ -1276,7 +1000,7 @@
                          <td>
 
                              <!-- * Client No. -->
-                             <img src="../../res/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana">
+                             <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana">
 
                          </td>
 
@@ -1400,7 +1124,7 @@
                          <td>
 
                              <!-- * Client No. -->
-                             <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="Dela Cruz, Juana">
+                             <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-2.svg" alt="Dela Cruz, Juana">
 
                          </td>
 
