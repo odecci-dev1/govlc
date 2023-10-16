@@ -123,7 +123,7 @@
                                             <p>{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : 'not found' }}</p>
                                             <p>{{ isset($loansummary['notarialFee']) ? number_format($loansummary['notarialFee'], 2) : 'not found' }}</p>
                                             <p class="underline">{{ isset($loansummary['loanInsurance']) ? number_format($loansummary['loanInsurance'], 2) : 'not found' }}</p>
-                                            <p class="p-bold underline-thick">{{ isset($loansummary['approvedReleasingAmount']) ? number_format($loansummary['approvedReleasingAmount'], 2) : 'not found' }}</p>
+                                            <p class="p-bold underline-thick">{{ isset($loansummary['approvedReleasingAmount']) ? ($loansummary['approvedReleasingAmount'] == '' ? '0' : number_format($loansummary['approvedReleasingAmount'], 2)) : 'not found' }}</p>
                                             <p>&nbsp;</p>
                                             <p>holidays</p>
                                             <p>used saving</p>
@@ -157,7 +157,7 @@
                                             </div>
                                             <div class="box-inner-wrapper">
                                                 <p>AMOUNT RECEIVED:</p> 
-                                                <span id="">{{ isset($loansummary['approvedReleasingAmount']) ? number_format($loansummary['approvedReleasingAmount'], 2) : 'not found' }}</span>
+                                                <span id="">{{ isset($loansummary['approvedReleasingAmount']) ? ($loansummary['approvedReleasingAmount'] == '' ? '0' : number_format($loansummary['approvedReleasingAmount'], 2)) : 'not found' }}</span>
                                             </div>
                                         </div>
                                     </div>
