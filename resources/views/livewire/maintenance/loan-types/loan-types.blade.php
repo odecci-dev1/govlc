@@ -466,7 +466,7 @@
                 <div class="rowspan" style="margin-bottom: 20px;">
 
                     <div class="btn-wrapper ">
-                        <button type="button" class="button" wire:click="addTerms">Add to list</button>
+                        <button type="button" class="button" wire:click="addTerms">{{ isset($inpterms['termsKey']) ? ($inpterms['termsKey'] > 0 ? 'Update to list' : 'Add to list') : 'Add to list'}}</button>
                     </div>
 
                 </div>
