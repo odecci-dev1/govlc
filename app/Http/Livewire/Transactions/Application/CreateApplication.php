@@ -743,7 +743,7 @@ class CreateApplication extends Component
                     //dd($data);                          
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                //dd( $crt );
+                // dd( $crt );
                 $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
                 $getlast = $getlast->json();
                 // dd($getlast);
@@ -1380,6 +1380,13 @@ class CreateApplication extends Component
                 //dd($data);    
                 //ditoviewing
                 $this->searchedmemId =  $data['memId'];
+                //get loan payment and history
+              
+                $loanHistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                                    
+                $loanHistory = $loanHistory->json();
+                //dd($loanHistory);
+                //get loan payment and history
+               
                 $this->loanDetails['loanTypeID'] = $data['individualLoan'][0]['loanTypeID'];
                 $this->loanDetails['loantermsID'] = $data['termsOfPayment']; 
                 $this->loanDetails['loantermsName'] = $data['individualLoan'][0]['nameOfTerms'];  
@@ -1782,6 +1789,7 @@ class CreateApplication extends Component
 
     public function render()
     {       
+        //dd(session()->get('auth_userid'));
         $emplist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserListFilter', [ 'page' => 1, 'pageSize' => 50, 'fullname' => $this->searchempkeyword ]);  
         $this->emplist = $emplist->json();    
         $getLoanTermsname = $this->getLoanTermsname(isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : '');

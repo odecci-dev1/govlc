@@ -338,12 +338,11 @@
                                     ago
                                 </p>  <!-- this will show to another approving officer-->                                                            
                             @endif          
-                        @endif    
+                        @endif                          
                         @if($loanDetails['app_ApprovedBy_1'] != session()->get('auth_userid'))
                             <button type="button" wire:click="approveForReleasing" class="button">Approve for Releasing</button>                                   
                         @endif                                                      
-                    </div>       
-                            
+                    </div>                                 
             @elseif($member['statusID'] == 10)
             <!-- * Approve for Releasing Button -->
                 @if($type != 'details')

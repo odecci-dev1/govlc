@@ -7,91 +7,67 @@
     <div class="main-dashboard">
 
     <!-- * Filter Modal -->
-    <dialog class="am-filter-modal" data-filter-member-modal>
+    <dialog class="am-filter-modal" data-filter-member-modal wire:ignore.self>
 
-            <div class="modal-container-3">
+        <div class="modal-container-3">
 
-                <!-- * Modal Header and Exit Button -->
-                <div class="modal-header">
-                    <h4>Filter</h4>
-                    <button class="exit-button" data-close-filter-member-modal>
-                        <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="exit">
-                    </button>
-                </div>
-                
-                <!-- * Choose Type of Loan -->
-                <div class="rowspan">
+            <!-- * Modal Header and Exit Button -->
+            <div class="modal-header">
+                <h4>Filter</h4>
+                <button class="exit-button" data-close-filter-member-modal>
+                    <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="exit">
+                </button>
+            </div>
+            
+            <!-- * Choose Type of Loan -->
+            <div class="rowspan">
 
-                    <h3>Choose Type of Loan</h3>
-                    <!-- * Type Of Loan Dropdown Menu -->
-                    <div class="loan-type-dropdown">
+                <h3>Choose Type of Loan</h3>
+                <!-- * Type Of Loan Dropdown Menu -->
+                <div class="loan-type-dropdown">
+                    <!-- * Type Of Loan -->
+                    <div class="input-wrapper">
 
-                        <!-- * Type Of Loan -->
-                        <div class="input-wrapper">
+                        <div class="select-box">
 
-                            <div class="select-box">
+                            <select  wire:model="loantype"  class="select-option">
+                                @if($loantypeList)
+                                    @foreach($loantypeList as $loantypeList)
+                                        <option value="{{ $loantypeList['loanTypeID'] }}">{{ $loantypeList['loanTypeName'] }}</option>
+                                    @endforeach
+                                @endif                                        
+                            </select>          
+                            @error('loantype') <span class="text-required fw-bold">{{ $message }}</span>@enderror
 
-                                <div class="options-container" data-filter-type-opt-con>
-
-                                    <div class="option" data-filter-type-loan-opt>
-
-                                        <input type="radio" class="radio" name="category" />
-                                        <label for="Individual Loan">
-                                            <h4>Individual Loan</h4>
-                                        </label>
-
-                                    </div>
-
-                                    <div class="option" data-filter-type-loan-opt>
-
-                                        <input type="radio" class="radio" name="category" />
-                                        <label for="Group Loan">
-                                            <h4>Group Loan</h4>
-                                        </label>
-
-                                    </div>
-
-                                    <div class="option" data-filter-type-loan-opt>
-
-                                        <input type="radio" class="radio" name="category" />
-                                        <label for="Sample Loan">
-                                            <h4>Sample Loan</h4>
-                                        </label>
-
-                                    </div>
-
-                                </div>
-                                
-                                <div class="selected" data-filter-type-loan-select>
-                                </div>
-
-                            </div>
                         </div>
-
                     </div>
 
-                </div>
-
-                <!-- * Applied Loan Amount -->
-                <div class="rowspan">
-
-                    <div class="input-wrapper-modal">
-                        <span>Applied Loan Amount</span>
-                        <input autocomplete="off" type="number" id="filterAppliedLoanAmntFrom" name="filterAppliedLoanAmntFrom" placeholder="From">
-                    </div>
-
-                    <div class="input-wrapper-modal">
-                        <input autocomplete="off" type="number" id="filterAppliedLoanAmntTo" name="filterAppliedLoanAmntTo" placeholder="To">
-                    </div>
-
-                </div>
-
-                <!-- * Save Button -->
-                <div class="rowspan">
-                    <button class="button" data-save-filter-member-modal>Save</button>
                 </div>
 
             </div>
+
+            <!-- * Applied Loan Amount -->
+            <div class="rowspan">
+
+                <div class="input-wrapper-modal">
+                    <span>Applied Loan Amount</span>
+                    <input autocomplete="off" wire:model="loanAmountFrom" type="number" placeholder="From">
+                </div>
+
+                <div class="input-wrapper-modal">
+                    <input autocomplete="off" wire:model="loanAmountTo" type="number" placeholder="To">
+                </div>
+
+            </div>
+            <div class="rowspan">
+                <label>Zero (0) value for unfiltered amount</label>
+            </div>
+            <!-- * Save Button -->
+            <div class="rowspan">
+                <button class="button" data-save-filter-member-modal>Close</button>
+            </div>
+
+        </div>
 
     </dialog>
 
@@ -239,3 +215,37 @@
     </div>
 
 </div>
+<script>
+        
+        const filterMemberModal = document.querySelector('[data-filter-member-modal]')
+
+        if (filterMemberModal) {
+            
+            const openFilterMemberModal = document.querySelector('[data-open-filter-member-modal]')
+            const closeFilterMemberModal = document.querySelector('[data-close-filter-member-modal]')
+            const saveFilterMemberModal = document.querySelector('[data-save-filter-member-modal]')
+            
+            openFilterMemberModal.addEventListener('click', () => {
+                filterMemberModal.showModal()
+            })
+            
+            closeFilterMemberModal.addEventListener('click', () => {
+                filterMemberModal.setAttribute("closing", "");
+                filterMemberModal.addEventListener("animationend", () => {
+                    filterMemberModal.removeAttribute("closing");
+                    filterMemberModal.close();
+                }, { once: true });
+            
+            })
+            
+            saveFilterMemberModal.addEventListener('click', () => {
+                filterMemberModal.setAttribute("closing", "");
+                filterMemberModal.addEventListener("animationend", () => {
+                    filterMemberModal.removeAttribute("closing");
+                    filterMemberModal.close();
+                }, { once: true });
+            
+            })
+
+        }
+    </script>
