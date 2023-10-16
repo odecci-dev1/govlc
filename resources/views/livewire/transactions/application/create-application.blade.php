@@ -547,7 +547,7 @@
                                     <!-- * Primary Search Bar -->
                                     <div class="primary-search-bar">
                                         <div class="row">
-                                            <input wire:model.lazy="loanDetails.courieremployee" {{ $member['statusID'] == 15 ? 'disabled' : '' }} wire:click="openSearchEmployee" style="{{ $member['statusID'] == 10 ? 'border: 1px solid #d6a330 !important;' : '' }} font-size: 1.3rem;" type="search" placeholder="Search" >
+                                            <input wire:model.lazy="loanDetails.courieremployee" {{ $member['statusID'] == 15 ? 'disabled' : '' }} wire:focus="openSearchEmployee" style="{{ $member['statusID'] == 10 ? 'border: 1px solid #d6a330 !important;' : '' }} font-size: 1.3rem;" type="search" placeholder="Search" >
                                             <button type="button">                                                
                                             </button>
                                         </div>

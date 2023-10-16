@@ -19572,6 +19572,13 @@ input:disabled, select:disabled, textarea:disabled{
     opacity: 1;
 }
 
+.btn-add-icon{
+    background-color: #d6a330;
+    color: #FFFFFF;
+    font-weight: 700;
+    border-radius: 0.3rem;
+}
+
 /* Editor: Ace
 Description: Addtional script for design adjustment
 Date: 10-03-2023

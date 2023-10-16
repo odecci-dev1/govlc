@@ -12,61 +12,94 @@ class FieldArea extends Component
 
     use Common;
 
-    public $unassigned = [];
-    public $selectedunassigned = [];
-    public $list = [];
-    public $folist = [];
+    public $areaID = '';
+    public $keyword = '';
 
     public $areaName;
-    public $location;
     public $foid;
     public $fullname;
-    public $keyword = '';
-    public $keywordunassigned = '';
+    public $selectedLocations;
 
+    public $keywordunassigned = '';  
+    public $unassignedLocations;
+    
     public $searchfokeyword = '';
 
     public function rules(){
         $rules = [];
-        $rules['areaName'] = ['required'];
-        $rules['location'] = ['required'];
+        $rules['areaName'] = ['required'];       
         $rules['foid'] = ['required'];
+        $rules['selectedLocations'] = ['required'];
         $rules['fullname'] = ['required'];
         return $rules;
     }
 
     public function messages(){
         $messages = [];
-        $messages['areaName.required'] = 'Please enter area name';
-        $messages['areaName.location'] = 'Please select unassigned locations';
-        $messages['areaName.foid'] = 'Please field officer';
-        $messages['areaName.foid'] = 'Please field officer';
+        $messages['areaName.required'] = 'Please enter area name';     
+        $messages['selectedLocations.required'] = 'Please select locations from unassigned';     
+        $messages['areaName.foid'] = 'Please field officer';        
         return $messages;
     }
 
-    public function removeSelUnassigned($mkey){
-        $key = array_search($mkey, $this->selectedunassigned);
-        if ($key !== false) {
-            unset($this->selectedunassigned[$key]);
-        }
-        $this->setLocationName();           
-    }
-
     public function store(){
-        $this->validate(); 
-        $data = [];
-        if(count($this->selectedunassigned) > 0){
-            foreach($this->selectedunassigned as $selun){                    
-                $data[] = [
-                    'areaName' => $this->areaName,
-                    'location' => $this->unassigned[$selun],
-                    'foid' =>  $this->foid,         
-                ]; 
+        $this->validate();     
+        $locations = [];           
+        if(count($this->selectedLocations) > 0){
+            foreach($this->selectedLocations as $sel){                    
+                $locations[] = $sel['location'];
             }
         }     
-        //dd( $data );             
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AssigningFieldArea', $data);          
-        return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved');    
+        $data = [
+                    'areaName' => $this->areaName,
+                    'location' => $locations,
+                    'foid' => $this->foid,
+                ];               
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AssigningFieldArea', $data);                 
+        return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved');       
+    }
+
+    public function update(){
+        $this->validate();     
+        $locations = [];           
+        if(count($this->selectedLocations) > 0){
+            foreach($this->selectedLocations as $sel){                    
+                $locations[] = $sel['location'];
+            }
+        }     
+        $data = [
+                    'areaID' => $this->areaID,
+                    'areaName' => $this->areaName,
+                    'location' => $locations,
+                    'foid' => $this->foid,
+                ];     
+
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/UpdateArea', $data);                        
+        return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully updated');    
+    }
+
+    public function selectArea($AreaID = ''){
+        $this->resetFields();
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/GetAreaDetails', ['AreaID' => $AreaID]);          
+        $data = $data->json();
+        if(isset($data[0])){
+            $inp = $data[0]; 
+            //dd($inp);    
+            $this->areaID = $inp['areaID'];
+            $this->areaName = $inp['areaName'];            
+            $this->foid = $inp['foid'];
+            $this->fullname = $inp['fullname'];
+            
+            $locations = $inp['location'];
+            if($locations){
+                foreach($locations as $loc){
+                    $this->selectedLocations[$loc['location']] = ['location' => $loc['location'], 'stat' => 1]; 
+                }
+            }
+        }
+        else{
+            //session
+        }
     }
 
     public function openSearchOfficer(){                 
@@ -79,51 +112,54 @@ class FieldArea extends Component
         $this->emit('closeSearchFOModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
     }
 
+    public function removeFromSelected($location, $stat){
+        $this->selectedLocations->forget($location);     
+        $this->unassignedLocations[$location] = ['location' => $location, 'stat' => $stat];  
+    }
+
+    public function addToSelected($location, $stat){
+        $this->selectedLocations[$location] = ['location' => $location, 'stat' => $stat]; 
+        $this->unassignedLocations->forget($location);      
+    }
+
+    public function resetFields(){
+        $this->areaID = '';
+        $this->areaName = null;
+        $this->foid = null;
+        $this->fullname = null;    
+        $this->selectedLocations = collect([]);
+
+        if($this->unassignedLocations){
+            foreach ($this->unassignedLocations as $key => $value) {
+                if($value['stat'] == 1){
+                    $this->unassignedLocations->forget($key);   
+                }
+            }
+        }
+        
+    }
+
     public function mount(){
-        // $this->selectedunassigned = collect([]);
+        $this->unassignedLocations = collect([]);
+        $this->selectedLocations = collect([]);
+        $munassigned = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/UnAssignedLocationListPaginate', ['Areaname' => $this->keywordunassigned, 'page' => 1, 'pageSize' => 50]);                
+        $unassignedLocations = $munassigned->json();    
+        if(isset($unassignedLocations)){
+            foreach($unassignedLocations as $unassignedLocations){
+                $this->unassignedLocations[$unassignedLocations['location']] = ['location' => $unassignedLocations['location'], 'stat' => 0]; 
+            }
+        }        
     }
 
     public function render()
-    {      
-        $this->getUnassigned();          
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AreaFilter', ['areaName' => $this->keyword]);  
-        // dd($data);
+    {                      
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AreaFilter', ['areaName' => $this->keyword]);          
         $this->list = $data->json();    
-        // dd($this->list);
-        
+
         $fodata = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFullname', ['fullname' => $this->searchfokeyword]);  
-        $this->folist = $fodata->json();    
+        $this->folist = $fodata->json();         
         return view('livewire.maintenance.field-area.field-area');
     }
 
-    public function setLocationName(){     
-        $location = '';
-        $cntun = 1;
-        if(count($this->selectedunassigned) > 0){
-            foreach($this->selectedunassigned as $selun){
-                if($cntun == count($this->selectedunassigned)){
-                    $location .= $this->unassigned[$selun];
-                }
-                else{
-                    $location .= $this->unassigned[$selun] . ', ';
-                }
-                $cntun = $cntun + 1;
-            }
-        }           
-        $this->location =  $location;       
-    }
 
-    public function getUnassigned(){       
-        $this->unassigned = [];       
-        $unassigned = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/UnAssignedFilter', ['location' => $this->keywordunassigned]);         
-      
-        $unassigned = $unassigned->json();  
-        
-       
-        if($unassigned){
-            foreach($unassigned as $unass){
-                $this->unassigned[$unass['areaID']] = $unass['location'];
-            }
-        }       
-    }
 }

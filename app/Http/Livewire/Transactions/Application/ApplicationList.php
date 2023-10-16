@@ -26,7 +26,7 @@ class ApplicationList extends Component
         }
        
         $this->loantypeList = $loantypeList; 
-        $this->loantype = 'LT-02';
+        $this->loantype = 'LT-01';
     }
     
     public function render()

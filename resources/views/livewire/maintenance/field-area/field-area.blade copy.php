@@ -36,7 +36,7 @@
                         <div class="input-wrapper">
                             <span>Area Name</span>
                             <input autocomplete="off" wire:model.lazy="areaName">
-                            @error('areaName') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                            @error('areaName') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Location -->
@@ -44,15 +44,16 @@
                             <span>Location</span>
                             <div class="locations-container">
                                 <div class="chip-container" id="mLocationContainer">
-                                    <!-- <span class="tb-chip" data-tb-chip=""><span wire:click="removeSelUnassigned('')" class="tb-chips-w-x"></span></span>                                                     -->
-                                    @if(isset($selectedLocations))
-                                        @foreach($selectedLocations as $key => $value)
-                                            <span class="tb-chip" data-tb-chip="">{{ $value['location'] }}<span wire:click="removeFromSelected('{{ $value['location'] }}', {{ $value['stat'] }})" class="tb-chips-w-x"></span></span>
+                                    @if(count($selectedlocations) > 0)
+                                        @foreach($selectedlocations as $key => $value)
+                                            <span class="tb-chip" data-tb-chip="">{{ $value['value'] }}<span wire:click="removeSelUnassigned('{{ $value['value'] }}')" class="tb-chips-w-x"></span></span>
                                         @endforeach
                                     @endif
-                                </div>                                
+                                    <!-- <span class="tb-chip" data-tb-chip="">Bocaue<span class="tb-chips-w-x"></span></span>                                    -->
+                                </div>
+                                <!-- <input class="input-chips" autocomplete="off" type="text" id="mInputLocation" name="mLocation"> -->
                             </div>
-                            @error('selectedLocations') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                            @error('selectedlocations') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Search Wrapper -->
@@ -60,9 +61,9 @@
                             <span>Field Officer</span>
                             <!-- * Search Bar -->                            
                             <div class="search-wrap">                               
-                                <input type="hidden" wire:model.lazy="foid" placeholder="field officer id" >
+                                <input type="text" wire:model.lazy="foid" placeholder="field officer id" >
                                 <input type="search" readonly wire:model.lazy="fullname" placeholder="Search" >    
-                                @error('foid') <span class="text-required fw-normal">{{ $message }}</span>@enderror                            
+                                @error('foid') <span class="text-required">{{ $message }}</span>@enderror                            
                             </div>
                             <div class="input-wrapper" style="padding-top: 20px;">
                                 <button type="button" wire:click="openSearchOfficer"  id="data-open-new-group-modal" class="button">Search Field Officer</button>
@@ -75,17 +76,10 @@
                     <!-- * Rowspan 3: Save Button -->
                     <div class="rowspan">
 
-                        @if($areaID == '')
                         <!-- * Save Button -->
                         <div class="input-wrapper">
                             <button type="button" wire:click="store" class="button">Save</button>
                         </div>
-                        @else
-                        <div class="input-wrapper" style="display: inline;">
-                            <button type="button" wire:click="resetFields" class="button">Cancel</button>
-                            <button type="button" wire:click="update" class="button">Update</button>
-                        </div>                       
-                        @endif
 
                     </div>
 
@@ -144,6 +138,7 @@
                                         <th style="text-align: center;"><span class="th-name">Action</span></th>
 
                                     </tr>
+
                                     @if($list)              
                                         @foreach($list as $l)
                                         <tr wire:click="selectArea('{{ $l['areaID'] }}')" data-area-maintenance>
@@ -174,8 +169,7 @@
 
                                         </tr>
                                         @endforeach
-                                    @endif 
-                                                                    
+                                    @endif                                       
                                 </table>
 
                             </div>
@@ -240,7 +234,7 @@
                                     <tr>
 
                                         <!-- * Checkbox ALl-->
-                                        <th></th>
+                                        <th><input type="checkbox" class="checkbox" data-select-all-checkbox></th>
 
                                         <!-- * Locations -->
                                         <th><span class="th-name">Locations</span></th>
@@ -249,22 +243,27 @@
 
 
                                     <!-- * Un-assigned Locations Data -->
-                                    @if(isset($unassignedLocations))
-                                        @foreach($unassignedLocations as $unassigned)
+                                    @if($unassigned)
+                                        @foreach($unassigned as $unvalue )
                                         <tr>
+
+                                            <!-- * Checkbox Opt -->
                                             <td>
-                                                <!-- <input wire:model="chkunassigned"   value="{{ $unassigned['location'] }}" type="checkbox" class="checkbox" > -->
-                                                <button type="button" wire:click="addToSelected('{{ $unassigned['location'] }}', {{ $unassigned['stat'] }})" class="btn-add-icon"> + </button>
+                                                <input wire:model="chkunassigned" wire:change="setLocation" value="{{ $unvalue }}" type="checkbox" class="checkbox" >
                                             </td>
 
                                             <!-- * Data Locations-->
                                             <td class="td-name">
-                                                {{ $unassigned['location'] }}
+                                                {{ $unvalue }}
                                             </td>
+
+
                                         </tr>
                                         @endforeach
-                                    @endif                                   
-                                </table>                             
+                                    @endif
+
+                                </table>
+                                {{ var_export($chkunassigned) }}    
                             </div>
 
                             <!-- * Pagination Container -->
