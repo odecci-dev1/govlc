@@ -2,50 +2,6 @@
     
 <main>
 
-    <dialog class="am-filter-modal" data-filter-member-modal>
-
-    <div class="modal-container">
-
-        <!-- * Modal Header and Exit Button -->
-        <div class="modal-header">
-            <h4>Filter</h4>
-            <button class="exit-button" data-close-filter-member-modal>
-                <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="exit">
-            </button>
-        </div>
-
-        <!-- * Current Loan -->
-        <div class="rowspan">
-
-            <div class="input-wrapper-modal">
-                <span>Current Loan</span>
-                <input autocomplete="off" type="number" id="filterCurrentLoanFrom" name="filterCurrentLoanFrom" placeholder="From">
-            </div>
-
-            <div class="input-wrapper-modal">
-                <input autocomplete="off" type="number" id="filterCurrentLoanTo" name="filterCurrentLoanTo" placeholder="To">
-            </div>
-
-        </div>
-
-        <!-- * Outstanding Balance -->
-        <div class="rowspan">
-
-            <div class="input-wrapper-modal">
-                <span>Outstanding Balance</span>
-                <input autocomplete="off" type="number" id="filterOutstandingBal" name="filterOutstandingBal">
-            </div>
-
-        </div>
-
-        <!-- * Save Button -->
-        <div class="rowspan">
-            <button class="button" data-save-filter-member-modal>Save</button>
-        </div>
-
-    </div>
-
-    </dialog>
 
     <!-- * All Members' Containers -->
     <!-- * Container 1: All Members Header, Buttons, and Searchbar -->
@@ -65,60 +21,34 @@
             <!-- * Member Type Dropdown Button -->
             <div class="borrower-dropdown" data-bor-dropdown>
 
-                <!-- * Member Type Button -->
-                <button class="link dropdown" data-bor-dropdown-button>
-                    <span data-bor-dropdown-button>Member Status</span>
-                    <img src="{{ URL::to('/') }}/assets/icons/white-carret-down.svg" alt="carret-down"data-bor-dropdown-button>
-                </button>
+                <!-- * Member Type Button -->             
 
-                <!-- * Submenu -->
-                <ul class="dropdown-menu">
-
-                    <!-- * Borrower -->
-                    <a href="" data-member-borrower>
-                        <li>
-                            <span>Active</span>
-                        </li>
-                    </a>
-
-                    <!-- * Co-Borrower -->
-                    <a href="" data-member-co-borrower>
-                        <li>
-                            <span>Inactive</span>
-                        </li>
-                    </a>
-
-                </ul>
+                <div class="select-box" style="width: 20rem;">
+                    <select  wire:model="status" class="select-option-menu">
+                        <option value="">All Status</option>     
+                        <option value="Active">Active</option>                                    
+                        <option value="Inactive">Inactive</option>                                    
+                    </select>                       
+                </div>                
 
             </div>
 
             <!-- * Type Of Loan Dropdown Button -->
             <div class="borrower-dropdown" data-bor-dropdown>
 
-                <!-- * Borrower Button -->
-                <button class="link dropdown" data-bor-dropdown-button>
-                    <span data-bor-dropdown-button>Type Of Loan</span>
-                    <img src="{{ URL::to('/') }}/assets/icons/white-carret-down.svg" alt="carret-down"data-bor-dropdown-button>
-                </button>
+                <div class="select-box" style="width: 40rem;">
+                    <select  wire:model="loantype" class="select-option-menu">
+                        <option value="">All Types Of Loan</option>     
+                        @if($loantypeList)
+                            @if($loantypeList)
+                                @foreach($loantypeList as $loantypeList)
+                                    <option value="{{ $loantypeList['loanTypeID'] }}">{{ $loantypeList['loanTypeName'] }}</option>
+                                @endforeach
+                            @endif           
+                        @endif                              
+                    </select>                       
+                </div>
 
-                <!-- * Submenu -->
-                <ul class="dropdown-menu">
-
-                    <!-- * Collateral Loan -->
-                    <a href="" data-member-borrower>
-                        <li>
-                            <span>Collateral Loan</span>
-                        </li>
-                    </a>
-
-                    <!-- * Group Loan -->
-                    <a href="" data-member-group-loan>
-                        <li>
-                            <span>Group Loan</span>
-                        </li>
-                    </a>
-
-                </ul>
 
             </div>
 
@@ -128,7 +58,7 @@
         <div class="wrapper">
 
             <!-- * Filter Button -->
-            <button data-open-filter-member-modal><img src="{{ URL::to('/') }}/assets/icons/filter.svg" alt="filter"></button>
+           
 
             <!-- * Primary Search Bar -->
             <div class="primary-search-bar">
@@ -171,6 +101,10 @@
                 <!-- * Borrower -->
                 <th>
                     <span class="th-name">Borrower</span>
+                </th>
+
+                <th>
+                    <span class="th-name">Status</span>
                 </th>
 
                 <!-- * Co-borrower -->
@@ -224,6 +158,10 @@
 
                     </td>
 
+                    <td>
+                        {{ $l['mem_status'] }}
+                    </td>
+
                     <!-- * Current Loan Data-->
                     <td class="td-curLoan">
                         {{ number_format($l['loanAmount'], 2) }}
@@ -231,12 +169,12 @@
 
                     <!-- * Outstading Balance Data-->
                     <td class="td-bal">
-                        10,000.00 - 
+                        10,000.00
                     </td>
 
                     <!-- * Due Date Info-->
                     <td class="td-due">
-                        June 4, 2023 -
+                        June 4, 2023
                     </td>
 
                     <!-- * Table View and Trash Button -->

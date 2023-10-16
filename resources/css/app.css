@@ -19557,7 +19557,25 @@ body.print-portrait .page {
     border-radius: 1rem;
 }
 
+.select-option-menu{
+    background-color: #d6a330;
+    height: 3.5rem;
+    box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    border: none;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    border-radius: 1rem;
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
 .select-option:focus{
+    border: none;
+    outline: none;
+}
+
+
+.select-option-menu:focus{
     border: none;
     outline: none;
 }

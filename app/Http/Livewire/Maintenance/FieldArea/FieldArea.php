@@ -147,7 +147,8 @@ class FieldArea extends Component
     public function mount(){
         $this->unassignedLocations = collect([]);
         $this->selectedLocations = collect([]);
-        $munassigned = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/UnAssignedLocationListPaginate', ['Areaname' => $this->keywordunassigned, 'page' => 1, 'pageSize' => 50]);                
+        $munassigned = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/UnAssignedLocationListPaginate', ['Areaname' => 'c', 'page' => 1, 'pageSize' => 50]);                
+        // dd($munassigned);
         $unassignedLocations = $munassigned->json();    
         if(isset($unassignedLocations)){
             foreach($unassignedLocations as $unassignedLocations){

@@ -27,45 +27,24 @@
 
                 <!-- * Link Wrapper -->
                 <!-- * Dashboard -->
-                <a href="../KC/dashboard.html" data-nav-link>
-                    <li class="link" no-data-dropdown>
-                        <!-- * Overview -->
-                        <img src="{{ URL::to('/') }}/assets/icons/overview.svg" alt="overview" />
-                        <p>Overview</p>
-                    </li>
-                </a>
+                <div class="dropdown" data-dropdown>
 
+                    <a href="{{ URL::to('/') }}/dashboard" class="link " data-dropdown-button>
+                        <img src="{{ URL::to('/') }}/assets/icons/overview.svg" alt="members" data-dropdown-button />
+                        <p data-dropdown-button>Overview</p>
+                    </a>
+
+                </div>
+               
                 <!-- * Link Wrapper w/ SubMenu -->
                 <!-- * Members -->
                 <div class="dropdown" data-dropdown>
 
-                    <li class="link dropdown" data-dropdown-button>
-                        <!-- * Members -->
+                    <a href="{{ URL::to('/') }}/members" class="link " data-dropdown-button>
                         <img src="{{ URL::to('/') }}/assets/icons/members.svg" alt="members" data-dropdown-button />
                         <p data-dropdown-button>Members</p>
-                    </li>
+                    </a>
 
-                    <!-- * Submenu -->
-                    <ul class="sub-menu">
-
-                        <a href="{{ URL::to('/') }}/members" data-nav-link>
-                            <li>
-                                <!-- * All Members -->
-                                <img src="{{ URL::to('/') }}/assets/icons/sub-menu/all-members.svg" alt="all-members" />
-                                <span>All Members</span>
-                            </li>
-                        </a>
-
-                        <!-- 
-                        <a href="../KC/new-member.html" data-nav-link>
-                            <li> -->
-                        <!-- * New Member -->
-                        <!-- <img src="{{ URL::to('/') }}/assets/icons/sub-menu/new-member.svg" alt="new-member" />
-                                <span>New Member</span>
-                            </li>
-                        </a> -->
-
-                    </ul>
                 </div>
 
                 <!-- * Link Wrapper w/ SubMenu -->
@@ -127,40 +106,11 @@
                 <!-- * Collection -->
                 <div class="dropdown" data-dropdown>
 
-                    <li class="link dropdown" data-dropdown-button>
+                    <a href="{{ URL::to('/') }}/collection/list" class="link " data-dropdown-button>
                         <img src="{{ URL::to('/') }}/assets/icons/collection.svg" alt="collection" data-dropdown-button />
                         <p data-dropdown-button>Collection</p>
-                    </li>
+                    </a>
 
-                    <!-- * Submenu -->
-                    <ul class="sub-menu">
-
-                        <a href="{{ URL::to('/') }}/collection/list" data-nav-link>
-                            <li>
-                                <!-- * Collection -->
-                                <img src="{{ URL::to('/') }}/assets/icons/sub-menu/collection.svg" alt="collection" />
-                                <span>Collection</span>
-                            </li>
-                        </a>
-
-                        <a href="../KC/remittance.html" data-nav-link>
-                            <li>
-                                <!-- * Remittance  -->
-                                <img src="{{ URL::to('/') }}/assets/icons/sub-menu/remittance.svg" alt="remittance" />
-                                <span>Remittance</span>
-                            </li>
-                        </a>
-
-
-                        <a href="../KC/areas.html" data-nav-link>
-                            <li>
-                                <!-- * Areas -->
-                                <img src="{{ URL::to('/') }}/assets/icons/sub-menu/areas.svg" alt="areas" />
-                                <span>Areas</span>
-                            </li>
-                        </a>
-
-                    </ul>
                 </div>
 
                 <!-- * Link Wrapper w/ SubMenu -->
