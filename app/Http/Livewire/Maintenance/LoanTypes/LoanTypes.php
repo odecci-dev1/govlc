@@ -203,7 +203,7 @@ class LoanTypes extends Component
         $inp =  $this->terms[$key];
         $this->inpterms['termsKey'] = $key;
         $this->inpterms['nameOfTerms'] = $inp['nameOfTerms'];
-        $this->inpterms['interestRate'] = $inp['interestRate'] * 100;
+        $this->inpterms['interestRate'] = $inp['interestRate'] <= 100 ? $inp['interestRate'] * 100 : $inp['interestRate'];
         $this->inpterms['interestType'] = $inp['interestType'];
         $this->inpterms['formula'] = $inp['formula'];;
         $this->inpterms['interestApplied'] = $inp['interestApplied'];
