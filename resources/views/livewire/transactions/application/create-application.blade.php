@@ -192,7 +192,7 @@
                                     </div>
                                     <div class="box-inner-wrapper">
                                         <p>AMOUNT RECEIVED:</p> 
-                                        <span id="">{{ isset($loansummary['total_LoanReceivable']) ? number_format($loansummary['total_LoanReceivable'], 2) : 'not found' }}</span>
+                                        <span id="">{{ isset($loansummary['approvedReleasingAmount']) ? number_format($loansummary['approvedReleasingAmount'], 2) : 'not found' }}</span>
                                     </div>
                                 </div>
                             </div>
