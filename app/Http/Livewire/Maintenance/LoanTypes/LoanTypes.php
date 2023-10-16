@@ -79,7 +79,7 @@ class LoanTypes extends Component
 
     public function save(){   
         $inputs = $this->validate();
-       
+        //dd($this->terms);
         $terms = [];
         if(count( $this->terms) > 0){
             foreach($this->terms as $key => $value){ 
@@ -97,7 +97,7 @@ class LoanTypes extends Component
                                 'lessThanNotarialAmount' => $value['lessThanNotarialAmount'],  
                                 'lessThanAmountTYpe' => $value['lessThanAmountTYpe'],  
                                 'greaterThanEqualNotarialAmount' => $value['greaterThanEqualNotarialAmount'],  
-                                'greaterThanEqualAmountType' => $value['noAdvancePayment'],  
+                                'greaterThanEqualAmountType' => $value['greaterThanEqualAmountType'],  
                                 'loanInsuranceAmount' => $value['loanInsuranceAmount'], 
                                 'loanInsuranceAmountType' => $value['loanInsuranceAmountType'],       
                                 'lifeInsuranceAmount' => $value['lifeInsuranceAmount'],       
@@ -191,7 +191,7 @@ class LoanTypes extends Component
                                         'deductInterest' => isset($data['inpterms']['deductInterest']) ? $data['inpterms']['deductInterest'] : 2, 
                                         'collectionTypeId' => $data['inpterms']['collectionTypeId'],                         
                                      ];
-
+                                   
         $this->resetterms();                        
     }
 
@@ -203,7 +203,7 @@ class LoanTypes extends Component
         $inp =  $this->terms[$key];
         $this->inpterms['termsKey'] = $key;
         $this->inpterms['nameOfTerms'] = $inp['nameOfTerms'];
-        $this->inpterms['interestRate'] = $inp['interestRate'];
+        $this->inpterms['interestRate'] = $inp['interestRate'] * 100;
         $this->inpterms['interestType'] = $inp['interestType'];
         $this->inpterms['formula'] = $inp['formula'];;
         $this->inpterms['interestApplied'] = $inp['interestApplied'];
@@ -258,7 +258,7 @@ class LoanTypes extends Component
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/LoanTypeFilter', ['loanTypeID' => $this->loantypeID]);            
             $data = $data->json();
             $data = $data[0];
-            // dd($data);
+            //cdd($data);
 
             $this->loantype['loan_amount_Lessthan'] = $data['loan_amount_Lessthan'];
             $this->loantype['loan_amount_GreaterEqual'] = $data['loan_amount_GreaterEqual'];
