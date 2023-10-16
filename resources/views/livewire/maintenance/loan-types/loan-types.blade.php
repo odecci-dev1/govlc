@@ -256,12 +256,12 @@
                                     <!-- radio -->
                                     <div class="box-wrap" style="gap: 1rem;">
                                         <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="2" name="noAdvancePayment" id="noAdvancePayment1">
+                                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="1" name="noAdvancePayment" id="noAdvancePayment1">
                                             <span>Yes</span>                                            
                                         </div>
 
                                         <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="1" name="noAdvancePayment" id="noAdvancePayment2">
+                                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="2" name="noAdvancePayment" id="noAdvancePayment2">
                                             <span>No</span>                                            
                                         </div>
                                     </div>

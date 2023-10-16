@@ -1420,7 +1420,7 @@ class CreateApplication extends Component
 
                     $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loanDetails['loanTypeID']]);                                    
                     $loanterms = $loanterms->json();
-                    // dd($loanterms);
+                    //dd($loanterms);
                    
                     if( $loanterms ){
                         foreach( $loanterms  as  $loanterms ){
@@ -1431,7 +1431,7 @@ class CreateApplication extends Component
                     //loan summary
                     $getloansummary = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanSummary/GetLoanSummary', [ 'naid' => $this->naID ]);                  
                     $this->loansummary = isset($getloansummary[0]) ? $getloansummary[0] : [];   
-                    // dd($this->loansummary);
+                    //dd($this->loansummary);
                               
                     // $this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : ''; 
                     // $this->loanDetails['notarialFee'] = isset($getloansummary[0]) ? $this->loansummary['notarialFee'] : ''; 
