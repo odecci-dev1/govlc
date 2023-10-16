@@ -84,7 +84,34 @@ class LoanTypes extends Component
         if(count( $this->terms) > 0){
             foreach($this->terms as $key => $value){ 
 
-                $terms[] =  [   'nameOfTerms' => $value['nameOfTerms'], 
+                if($this->loantypeID == ''){
+                    $terms[] =  [   'nameOfTerms' => $value['nameOfTerms'], 
+                                    'interestRate' => $value['interestRate'],
+                                    'interestType' => $value['interestType'],
+                                    'loanTypeID' => $this->loantypeID,   
+                                    'formula' => $value['formula'],  
+                                    'interestApplied' => $value['interestApplied'],  
+                                    'terms' => $value['terms'], 
+                                    'oldFormula' => $value['oldFormula'], 
+                                    'noAdvancePayment' => $value['noAdvancePayment'],  
+                                    'notarialFeeOrigin' => $value['notarialFeeOrigin'],  
+                                    'lessThanNotarialAmount' => $value['lessThanNotarialAmount'],  
+                                    'lessThanAmountTYpe' => $value['lessThanAmountTYpe'],  
+                                    'greaterThanEqualNotarialAmount' => $value['greaterThanEqualNotarialAmount'],  
+                                    'greaterThanEqualAmountType' => $value['greaterThanEqualAmountType'],  
+                                    'loanInsuranceAmount' => $value['loanInsuranceAmount'], 
+                                    'loanInsuranceAmountType' => $value['loanInsuranceAmountType'],       
+                                    'lifeInsuranceAmount' => $value['lifeInsuranceAmount'],       
+                                    'lifeInsuranceAmountType' => $value['lifeInsuranceAmountType'],       
+                                    'deductInterest' => $value['deductInterest'], 
+                                    'collectionTypeId' => $value['collectionTypeId'],                                          
+                                ];
+                }
+                else
+                {
+                    $terms[] =  [
+                                'topId' => $value['topId'],          
+                                'nameOfTerms' => $value['nameOfTerms'], 
                                 'interestRate' => $value['interestRate'],
                                 'interestType' => $value['interestType'],
                                 'loanTypeID' => $this->loantypeID,   
@@ -103,8 +130,9 @@ class LoanTypes extends Component
                                 'lifeInsuranceAmount' => $value['lifeInsuranceAmount'],       
                                 'lifeInsuranceAmountType' => $value['lifeInsuranceAmountType'],       
                                 'deductInterest' => $value['deductInterest'], 
-                                'collectionTypeId' => $value['collectionTypeId'],                                          
+                                'collectionTypeId' => $value['collectionTypeId'],                                                                     
                             ];
+                }            
             }
         }
        
@@ -121,7 +149,7 @@ class LoanTypes extends Component
         if($this->loantypeID == ''){
             $savemsg = 'Loan type successfully saved';
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/SaveLoanType', $data);            
-            //dd($crt);
+            
             $getLasLoanId = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/GetlastLoanTypeDetails');  
             $getLasLoanId =  $getLasLoanId->json();
             $this->loantypeID = $getLasLoanId['loanTypeID'];
@@ -129,6 +157,8 @@ class LoanTypes extends Component
         else{
             $savemsg = 'Loan type successfully updated';
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/UpdateLoanType', $data);
+
+            //dd($crt);
           
         }               
         return redirect()->to('/maintenance/loantypes/view/' . $this->loantypeID)->with('mmessage', $savemsg);     
@@ -189,9 +219,10 @@ class LoanTypes extends Component
                                         'lifeInsuranceAmount' => isset($data['inpterms']['lifeInsuranceAmount']) ? $data['inpterms']['lifeInsuranceAmount'] : 0, 
                                         'lifeInsuranceAmountType' => isset($data['inpterms']['lifeInsuranceAmountType']) ? $data['inpterms']['lifeInsuranceAmountType'] : '', 
                                         'deductInterest' => isset($data['inpterms']['deductInterest']) ? $data['inpterms']['deductInterest'] : 2, 
-                                        'collectionTypeId' => $data['inpterms']['collectionTypeId'],                         
+                                        'collectionTypeId' => $data['inpterms']['collectionTypeId'],      
+                                        'topId' => isset($this->inpterms['topId']) ? $this->inpterms['topId'] : null,                         
                                      ];
-                                   
+        //dd($this->terms);                           
         $this->resetterms();                        
     }
 
@@ -221,6 +252,7 @@ class LoanTypes extends Component
         $this->inpterms['lifeInsuranceAmountType'] = $inp['lifeInsuranceAmountType'];
         $this->inpterms['deductInterest'] = $inp['deductInterest'];
         $this->inpterms['collectionTypeId'] = $inp['collectionTypeId'];
+        $this->inpterms['topId'] = $inp['topId'];
     }
 
     public function resetterms(){            
@@ -244,6 +276,7 @@ class LoanTypes extends Component
         $this->inpterms['lifeInsuranceAmountType'] = null;
         $this->inpterms['deductInterest'] = 2;
         $this->inpterms['collectionTypeId'] = null;
+        $this->inpterms['topId'] = null;
     }
 
     public function archive($loantypeID){       
@@ -277,7 +310,7 @@ class LoanTypes extends Component
             $this->loantype['lifeInsurance'] = $data['lifeInsurance'];
             $this->loantype['lifeI_Type'] = $data['lifeI_Id'];
 
-            $termsofPayment = $data['termsofPayment'];
+            $termsofPayment = $data['termsofPayment'];         
             $cnt = 0;
             if( $termsofPayment ){
                 foreach($termsofPayment as $termsofPayment){
@@ -285,7 +318,7 @@ class LoanTypes extends Component
                     $this->terms[$cnt] = [  'nameOfTerms' => $termsofPayment['nameOfTerms'],
                                             'interestRate' => $termsofPayment['interestRate'],
                                             'interestType' => $termsofPayment['iR_Type'],                                         
-                                            'loanTypeID' => $this->loantypeID,
+                                            'loanTypeID' => $this->loantypeID,                                           
                                             'formula' => $termsofPayment['formulaID'],
                                             'interestApplied' => $termsofPayment['interestApplied'],
                                             'terms' => $termsofPayment['terms'],
@@ -302,6 +335,7 @@ class LoanTypes extends Component
                                             'lifeInsuranceAmountType' => $termsofPayment['lifeI_TypeID'],
                                             'deductInterest' => $termsofPayment['deductInterest'],
                                             'collectionTypeId' => $termsofPayment['typeOfCollectionID'],
+                                            'topId' => $termsofPayment['topId'],
                                          ];
                 }
             }         

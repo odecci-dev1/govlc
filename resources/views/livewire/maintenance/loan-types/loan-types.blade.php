@@ -467,6 +467,11 @@
 
                     <div class="btn-wrapper ">
                         <button type="button" class="button" wire:click="addTerms">{{ isset($inpterms['termsKey']) ? ($inpterms['termsKey'] > 0 ? 'Update to list' : 'Add to list') : 'Add to list'}}</button>
+                        @if(isset($inpterms['termsKey']))
+                            @if($inpterms['termsKey'] > 0)
+                                <button type="button" class="button" wire:click="resetterms">Cancel</button>
+                            @endif
+                        @endif
                     </div>
 
                 </div>

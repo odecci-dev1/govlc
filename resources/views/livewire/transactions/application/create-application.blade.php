@@ -155,7 +155,7 @@
                                     </div>
                                     <div class="box-inner-wrapper p-red-text">
                                         <p class="p-red-text">FIRST PAYMENT:</p>
-                                        <span id="">{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : 'not found' }}</span>
+                                        <span id="">{{ isset($loansummary['advancePayment']) ? number_format($loansummary['advancePayment'], 2) : 'not found' }}</span>
                                     </div>
                                 </div>
                                 <div class="box-inner">
