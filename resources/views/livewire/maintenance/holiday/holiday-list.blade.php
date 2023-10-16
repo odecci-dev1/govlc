@@ -22,8 +22,7 @@
         <!-- * Search Wrapper -->
         <div class="wrapper">
 
-            <!-- * Filter Button -->
-            <button><img src="{{ URL::to('/') }}/assets/icons/filter.svg" alt="filter"></button>
+            <!-- * Filter Button -->           
 
             <!-- * Search Bar -->
             <div class="search-wrap">

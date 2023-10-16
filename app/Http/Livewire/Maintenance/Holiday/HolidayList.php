@@ -5,8 +5,11 @@ namespace App\Http\Livewire\Maintenance\Holiday;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
+use App\Traits\Common;
+
 class HolidayList extends Component
 {
+    use Common;
     public $list = [];
     
     public function render()

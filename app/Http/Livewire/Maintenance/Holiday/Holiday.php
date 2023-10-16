@@ -5,8 +5,12 @@ namespace App\Http\Livewire\Maintenance\Holiday;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
+use App\Traits\Common;
+
 class Holiday extends Component
 {
+
+    use Common;
 
     public $name;
     public $day;
