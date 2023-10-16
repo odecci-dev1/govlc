@@ -1,4 +1,7 @@
 <div>
+    @if($showDialog == 1)
+        <x-dialog :message="'Are you sure you want to trash this data '" :xmid="$mid" :confirmaction="'archive'" :header="'Trash'"></x-dialog>   
+    @endif
     @if(session('mmessage'))
         <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif
@@ -146,21 +149,21 @@
                                     </tr>
                                     @if($list)              
                                         @foreach($list as $l)
-                                        <tr wire:click="selectArea('{{ $l['areaID'] }}')" data-area-maintenance>
+                                        <tr>
                                             <!-- * Checkbox Opt -->                                            
 
                                             <!-- * Data Area Name-->
-                                            <td class="td-name" data-area-name>
+                                            <td  wire:click="selectArea('{{ $l['areaID'] }}')" class="td-name" data-area-name>
                                                {{ $l['areaName'] }}
                                             </td>
 
                                             <!-- * Data Locations-->
-                                            <td class="td-name" data-area-location>
+                                            <td  wire:click="selectArea('{{ $l['areaID'] }}')" class="td-name" data-area-location>
                                                 {{ $l['location'] }}
                                             </td>
 
                                             <!-- * Data Field Officer-->
-                                            <td class="td-field-off" data-area-field-officer>
+                                            <td  wire:click="selectArea('{{ $l['areaID'] }}')" class="td-field-off" data-area-field-officer>
                                                 {{ $l['fullname'] }}
                                             </td>
 
@@ -168,7 +171,7 @@
                                             <td class="td-btns" data-area-button>
                                                 <div class="td-btn-wrapper">
                                                     <!-- <button class="a-btn-view">View</button> -->
-                                                    <button class="a-btn-trash-2" data-area-trash-btn>Trash</button>
+                                                    <button type="button" onclick="showDialog('{{ $l['areaID'] }}')" class="a-btn-trash-2" data-area-trash-btn>Trash</button>
                                                 </div>
                                             </td>
 
@@ -403,6 +406,14 @@
     </dialog>
         <script>
             document.addEventListener('livewire:load', function() {
+                window.showDialog = function($mid){            
+                    @this.call('showDialog', $mid);        
+                };
+
+                window.archive = function($mid){
+                    @this.call('trash', $mid);       
+                };
+                
                 const dataNewGroupModal = document.querySelector('[data-new-group-modal]')
                 const openNewGroupModal = document.querySelector('#data-open-new-group-modal')
                 const closeNewGroupModal = document.querySelector('#data-close-new-group-modal')

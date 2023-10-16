@@ -78,6 +78,11 @@ class FieldArea extends Component
         return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully updated');    
     }
 
+    public function trash($areaID){
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/DeleteAreas', ["areaID" => $areaID]);                              
+        return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully trashed');   
+    }
+
     public function selectArea($AreaID = ''){
         $this->resetFields();
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/GetAreaDetails', ['AreaID' => $AreaID]);          
