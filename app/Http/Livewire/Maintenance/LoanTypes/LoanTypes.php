@@ -339,7 +339,7 @@ class LoanTypes extends Component
         }
         if(isset($this->inpterms['interestType'])){
             if( $this->inpterms['interestType'] == 'Compound' ){
-                $this->inpterms['interestApplied'] = 'Monthly';
+                $this->inpterms['interestApplied'] = '';
             }
         }
         return view('livewire.maintenance.loan-types.loan-types');
