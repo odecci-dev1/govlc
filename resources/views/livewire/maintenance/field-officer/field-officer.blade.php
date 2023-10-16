@@ -64,33 +64,14 @@
                 <div class="input-wrapper">
                     <span>Gender</span>
                     <div class="select-box">
-
-                        <div class="options-container" data-option-con1>
-
-                            <div class="option" data-option-item1>
-
-                                <input type="radio" wire:model.lazy="officer.gender" class="radio" id="male" value="Male" />
-                                <label for="male">
-                                    <h4>Male</h4>
-                                </label>
-
-                            </div>
-
-                            <div class="option" data-option-item1>
-
-                                <input type="radio" wire:model.lazy="officer.gender" class="radio" id="female" value="Female" />
-                                <label for="female">
-                                    <h4>Female</h4>
-                                </label>
-
-                            </div>
-
+                        <div class="select-box">
+                            <select  wire:model="officer.gender" class="select-option">
+                                <option value="">- - select - -</option>     
+                                <option value="Male">Male</option>                                    
+                                <option value="Female">Female</option>                                    
+                            </select>                       
                         </div>
-
-                        <div class="selected" style="font-weight: bold;" data-option-select1>
-                            {{ isset($officer['gender']) ? $officer['gender'] : '' }}
-                        </div>
-
+                        
                     </div>
                     @error('officer.gender') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
@@ -120,40 +101,13 @@
                 <div class="input-wrapper">
                     <span>Civil Status</span>
                     <div class="select-box">
-
-                        <div class="options-container" data-option-con2>
-
-                            <div class="option" data-option-item2>
-
-                                <input type="radio" wire:model.lazy="officer.civilStatus" id="Widow" class="radio"  value="Widow" />
-                                <label for="Widow">
-                                    <h4>Widow</h4>
-                                </label>
-
-                            </div>
-
-                            <div class="option" data-option-item2>
-
-                                <input type="radio" wire:model.lazy="officer.civilStatus" id="Married" class="radio" value="Married" />
-                                <label for="Married">
-                                    <h4>Married</h4>
-                                </label>
-
-                            </div>
-
-                            <div class="option" data-option-item2>
-
-                                <input type="radio" wire:model.lazy="officer.civilStatus" id="Single" class="radio"  value="Single" />
-                                <label for="Single">
-                                    <h4>Single</h4>
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                        <div class="selected" style="font-weight: bold;" data-option-select2>
-                            {{ isset($officer['civilStatus']) ? $officer['civilStatus'] : '' }}
+                        <div class="select-box">
+                            <select  wire:model="officer.civilStatus" class="select-option">
+                                <option value="">- - select - -</option>     
+                                <option value="Widow">Widow</option>                                    
+                                <option value="Married">Married</option>      
+                                <option value="Single">Single</option>                                     
+                            </select>                       
                         </div>
 
                     </div>
@@ -363,27 +317,15 @@
                 <span>Valid ID Presented</span>
                 <div class="select-box">
 
-                    <div class="options-container" data-option-con3>
-
+                    <select  wire:model="officer.typeID" class="select-option">
+                        <option value="">- - select - -</option>     
                         @if(count($idtypes) > 0)
                             @foreach($idtypes as $midtypes)
-                            <div class="option"  data-option-item3>
-
-                                <input type="radio" {{ isset($officer['typeID']) ? ($officer['typeID'] == $midtypes['typeID'] ? 'checked' : '') : '' }} wire:model.lazy="officer.typeID" wire:change="getIdTypeName('{{ $midtypes['type'] }}')" name="typeID" id="idtype{{ $midtypes['typeID'] }}" class="radio"  value="{{ $midtypes['typeID'] }}" />
-                                <label  for="idtype{{ $midtypes['typeID'] }}" style="width: 100%; height: 100%;">
-                                    <h4>{{ $midtypes['type'] }}</h4>
-                                </label>
-
-                            </div>
+                            <option value="{{ $midtypes['typeID'] }}">{{ $midtypes['type'] }}</option>     
                             @endforeach
-                        @endif                                              
-
-                    </div>
-
-                    <div class="selected" style="font-weight: bold;"  data-option-select3>
-                        {{ isset($idtypename) ? $idtypename : '' }}
-                    </div>
-
+                        @endif     
+                    </select>          
+                    
                 </div>
                 @error('officer.typeID') <span class="text-required">{{ $message }}</span>@enderror
             </div>
@@ -487,52 +429,6 @@
                 @this.call('archive', $mid);       
             };
         })
-        // ** Select Dropdown 1
-        const selectedOpt1 = document.querySelector('[data-option-select1]');
-        const optionsContainer1 = document.querySelector('[data-option-con1]');
-        const optionsList1 = document.querySelectorAll('[data-option-item1]');
-       
-        selectedOpt1.addEventListener("click", () => {           
-            optionsContainer1.classList.toggle("active");
-        });
-
-        optionsList1.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt1.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer1.classList.remove("active");
-            });
-        });
-
-        // ** Select Dropdown 2
-        const selectedOpt2 = document.querySelector('[data-option-select2]');
-        const optionsContainer2 = document.querySelector('[data-option-con2]');
-        const optionsList2 = document.querySelectorAll('[data-option-item2]');
-
-        selectedOpt2.addEventListener("click", () => {
-            optionsContainer2.classList.toggle("active");
-        });
-
-        optionsList2.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt2.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer2.classList.remove("active");
-            });
-        });
-
-        // ** Select Dropdown 3
-        const selectedOpt3 = document.querySelector('[data-option-select3]');
-        const optionsContainer3 = document.querySelector('[data-option-con3]');
-        const optionsList3 = document.querySelectorAll('[data-option-item3]');
-
-        selectedOpt3.addEventListener("click", () => {
-            optionsContainer3.classList.toggle("active");
-        });
-
-        optionsList3.forEach(option => {
-            option.addEventListener("click", () => {
-                // selectedOpt3.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer3.classList.remove("active");
-            });
-        });
+      
 </script>
 </div>

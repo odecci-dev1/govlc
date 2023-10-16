@@ -1,8 +1,8 @@
+ <div>
  <!-- * Collection Viewing Container Wrapper -->
  @include('livewire.collection.collection.collection-cash-denomination-modal')
  <!-- * Reject Modal -->
  @include('livewire.collection.collection.collection-reject-reason-modal')
-
  @include('livewire.collection.collection.collection-summary-modal')
  <div class="can-container-wrapper">
 
@@ -28,10 +28,29 @@
                 
              </div>
 
-             <div class="area-menu-container">
-
+             <div class="area-menu-container">             
                  <!-- * Area Menu -->
                  <ul class="area-menu">
+
+                    @if($areas)
+                        @foreach($areas as $area)
+                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}')" >
+                            <div class="box-1">
+                                <h4 id="collectionAreaNum">{{ $area['areaName'] }}</h4>
+                            </div>
+                            <div class="box-2">
+                                <div class="inner-box-1">
+                                    <p>Expected Collection</p>
+                                    <span id="expectedCollection">{{ number_format($area['expectedCollection'], 2) }}</span>
+                                </div>
+                                <div class="inner-box-2">
+                                    <p>Penalty</p>
+                                    <span id="collectionPenalty">{{ number_format($area['expectedCollection'] - $area['total_collectedAmount'], 2) }}</span>
+                                </div>
+                            </div>
+                        </li>
+                        @endforeach
+                    @endif
 
                      <!-- * Area 1 -->
                      <li data-area-menu>
@@ -1281,6 +1300,7 @@
 
      </div>
 
+ </div>
  </div>
  <script>
      // * Add New Collection
