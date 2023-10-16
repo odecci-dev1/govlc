@@ -175,11 +175,11 @@
                                 <div class="box-inner">
                                     <div class="box-inner-wrapper">
                                         <p>PREPARED BY:</p>
-                                        <span id="">{{ session()->get('auth_name') }}</span>
+                                        <span id="">{{ isset($loansummary['createdBy']) ? $loansummary['createdBy'] : 'not found' }}</span>
                                     </div>
                                     <div class="box-inner-wrapper">
                                         <p>APPROVED BY:</p>
-                                        <span id="">{{ isset($loansummary['app_ApprovedBy_2']) ? $loansummary['app_ApprovedBy_2'] : 'not found' }}</span>
+                                        <span id="">{{ isset($loansummary['releasedBy']) ? $loansummary['releasedBy'] : 'not found' }}</span>
                                     </div>
                                     <div class="box-inner-wrapper">
                                         <p>RELEASED THRU CASH</p>
