@@ -13,7 +13,6 @@ class CreateApplicationGroup extends Component
 
     use Common;
 
-    public $test = 'hello';
     public $members = [];
     public $memberlist = [];
     public $groupname;
@@ -64,14 +63,24 @@ class CreateApplicationGroup extends Component
         dd($crt);
     }
 
-    public function mount(Request $request){  
-        $this->groupname = session('sessgroupname') !==null ? session('sessgroupname') : null;
-        $loandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
-        $this->loandetails['loamamount'] = isset($loandetails['loamamount']) ? $loandetails['loamamount'] : '';
-        $this->loandetails['paymentterms'] = isset($request->loantermsName) ? $request->loantermsName : (isset($loandetails['paymentterms']) ? $loandetails['paymentterms'] : '');
-        $this->loandetails['topId'] = isset($request->loantermsID) ? $request->loantermsID : (isset($loandetails['topId']) ? $loandetails['topId'] : '');
-        $this->loandetails['loanTypeID'] = isset($request->loanTypeID) ? $request->loanTypeID : (isset($loandetails['loanTypeID']) ? $loandetails['loanTypeID'] : '');
-        $this->loandetails['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';      
+    public function mount($groupId = '', Request $request){  
+        if($groupId != ''){
+            $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Group/FilterByGroupID', ['groupID' => $groupId]);       
+            $data = $data->json();
+            //dd( $data );
+            if($data){
+
+            }
+        }
+        else{
+            $this->groupname = session('sessgroupname') !==null ? session('sessgroupname') : null;
+            $loandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
+            $this->loandetails['loamamount'] = isset($loandetails['loamamount']) ? $loandetails['loamamount'] : '';
+            $this->loandetails['paymentterms'] = isset($request->loantermsName) ? $request->loantermsName : (isset($loandetails['paymentterms']) ? $loandetails['paymentterms'] : '');
+            $this->loandetails['topId'] = isset($request->loantermsID) ? $request->loantermsID : (isset($loandetails['topId']) ? $loandetails['topId'] : '');
+            $this->loandetails['loanTypeID'] = isset($request->loanTypeID) ? $request->loanTypeID : (isset($loandetails['loanTypeID']) ? $loandetails['loanTypeID'] : '');
+            $this->loandetails['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';  
+        }    
     }
 
     public function render()

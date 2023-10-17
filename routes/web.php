@@ -92,7 +92,6 @@ Route::get('/maintenance/fieldarea', FieldArea::class)->name('fieldarea');
 Route::get('/tranactions/application/list', ApplicationList::class)->name('application.list');
 Route::get('/tranactions/application/approval/list', ApplicationApprovalList::class)->name('application.approval');
 Route::get('/tranactions/application/releasing/list', ApplicationReleasingList::class)->name('application.approval');
-Route::get('/tranactions/group/application/create', CreateApplicationGroup::class)->name('application.create.group');
 Route::get('/tranactions/application/passbook/printing/{naID}', function(){
     return view('livewire.transactions.application.application-html-passbook');
 });
@@ -104,6 +103,9 @@ Route::get('/members/{type}/{naID}', CreateApplication::class)->name('applicatio
 Route::get('/tranactions/application/{type}/{naID}', CreateApplication::class)->name('application.view');
 Route::get('/tranactions/application/{type}', CreateApplication::class)->name('application.create');
 Route::get('/tranactions/application/credit/investigation/view/{memId}', CreditInvestigationApplication::class)->name('application.credit.investigation');
+
+Route::get('/tranactions/group/application/create', CreateApplicationGroup::class)->name('application.create.group');
+Route::get('/tranactions/group/application/view/{groupId}', CreateApplicationGroup::class)->name('application.create.group');
 //transactions
 
 

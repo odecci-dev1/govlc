@@ -13,7 +13,7 @@
     @endif
 
     <!-- * New-Application-Form-Container -->
-    <form action="" class="na-form-con" {{ $member['statusID'] == 7 ? '' : 'disabled' }} >
+    <form autocomplete="off" class="na-form-con" {{ $member['statusID'] == 7 ? '' : 'disabled' }} >
         @if (session()->has('message'))
             <div class="alert alert-success">
                 {{ session('message') }}
@@ -248,7 +248,7 @@
             <div class="input-wrapper">
                 <span>Mode of Release</span>
                 <div class="select-box">
-                    <select  wire:model="loanDetails.modeOfRelease" {{ $member['statusID'] == 15 ? 'disabled' : '' }} class="select-option">
+                    <select  wire:model="loanDetails.modeOfRelease" {{ $member['statusID'] == 15 ? 'disabled' : '' }} class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }} select-option">
                         <option value="">- - select - -</option>
                         <option value="Cash">Cash</option>                      
                         <option value="Check">Check</option>                      
@@ -542,17 +542,18 @@
                                 <!-- * Search Wrapper -->
                                 <div class="input-wrapper" data-employee-search-toggle>
                                     <span>Employee Name</span>
-    
-                                    <!-- * Primary Search Bar -->
-                                    <div class="primary-search-bar">
-                                        <div class="row">
-                                            <input wire:model.lazy="loanDetails.courieremployee" {{ $member['statusID'] == 15 ? 'disabled' : '' }} wire:focus="openSearchEmployee" style="{{ $member['statusID'] == 10 ? 'border: 1px solid #d6a330 !important;' : '' }} font-size: 1.3rem;" type="search" placeholder="Search" >
-                                            <button type="button">                                                
-                                            </button>
+                                    <div style="display: flex;">
+
+                                        <!-- * Filter Button -->
+                                        <button type="button" wire:click="openSearchEmployee" >
+                                            <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="filter" />
+                                        </button>
+
+                                        <!-- * Search Bar -->
+                                        <div class="search-wrap" style="width: 100%;">
+                                            <input type="search"  wire:model.lazy="loanDetails.courieremployee" {{ $member['statusID'] == 15 ? 'disabled' : '' }} style="{{ $member['statusID'] == 10 ? 'border: 1px solid #d6a330 !important;' : '' }}" placeholder="Search" />                                           
                                         </div>
-                                        <div  class="result-box" data-search-results>
-                                        </div>
-                                    </div>
+                                    </div>                                   
                                     @error('loanDetails.courieremployee') <span class="text-required">{{ $message }}</span> @enderror
                                 </div>                                
                                 @endif

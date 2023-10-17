@@ -325,8 +325,8 @@ class CreateApplication extends Component
         $messages['loanDetails.savingsToUse.required'] = 'Please select savings to be used'; 
         $messages['loanDetails.courier.required'] = 'Please select courrier'; 
         $messages['loanDetails.couriercno.required'] = 'Please enter contact number'; 
-        $messages['loanDetails.courierClient.required'] = 'Please enter client name'; 
-        $messages['loanDetails.courierEmployee.required'] = 'Please select employee'; 
+        $messages['loanDetails.courierclient.required'] = 'Please enter client name'; 
+        $messages['loanDetails.courieremployee.required'] = 'Please select employee'; 
 
 
         if(isset($this->member['civil_Status'])){
@@ -1022,7 +1022,7 @@ class CreateApplication extends Component
                                 'loanDetails.courierclient' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Client' ? ['required'] : '') : '',  
                                 'loanDetails.courieremployee' => isset($this->loanDetails['courier']) ? ($this->loanDetails['courier'] == 'Employee' ? ['required'] : '') : '',  
                                 'loanDetails.couriercno' => ['required'], 
-                                'loanDetails.savingsToUse' => ['required'],                                                                
+                                'loanDetails.savingsToUse' => '',                                                                
                             ]);
 
             $data = [
@@ -1042,7 +1042,7 @@ class CreateApplication extends Component
                         "courierCno"=> $this->loanDetails['couriercno'],
                         "modeOfRelease"=> $this->loanDetails['modeOfRelease'],                       
                         "modeOfReleaseReference"=> $this->loanDetails['denomination'], 
-                        "totalSavingsUsed" => $this->loanDetails['savingsToUse'],         
+                        "totalSavingsUsed" => isset($this->loanDetails['savingsToUse']) ? $this->loanDetails['savingsToUse'] : 0,         
                     ];
                  
              
