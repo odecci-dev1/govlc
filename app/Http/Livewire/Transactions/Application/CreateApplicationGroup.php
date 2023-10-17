@@ -65,14 +65,20 @@ class CreateApplicationGroup extends Component
 
     public function mount($groupId = '', Request $request){  
         if($groupId != ''){
+            session()->put('sessgroupId', $groupId);
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Group/FilterByGroupID', ['groupID' => $groupId]);       
             $data = $data->json();
-            //dd( $data );
+            dd( $data );
             if($data){
 
             }
         }
         else{
+            if(session('memdata')){
+                foreach(session('memdata') as $memdata){
+                    $this->members[] = $memdata;
+                }
+            }       
             $this->groupname = session('sessgroupname') !==null ? session('sessgroupname') : null;
             $loandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
             $this->loandetails['loamamount'] = isset($loandetails['loamamount']) ? $loandetails['loamamount'] : '';
@@ -89,12 +95,7 @@ class CreateApplicationGroup extends Component
         $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => $this->searchkeyword]);       
         //dd( $data );
         $this->memberlist = $data->json();           
-     
-        if(session('memdata')){
-            foreach(session('memdata') as $memdata){
-                $this->members[] = $memdata;
-            }
-        }       
+           
         return view('livewire.transactions.application.create-application-group');
     }
 }

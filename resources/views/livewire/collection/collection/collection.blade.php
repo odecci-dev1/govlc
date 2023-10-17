@@ -93,11 +93,20 @@
              </div>
 
              <!-- * Inner-inner Container 1 -->
-             <div class="inner-inner-container {{ $areaID != '' ? 'show-print-remit-buttons' : '' }}" data-print-remit-buttons>
-                 <button type="button" class="button-2-green" data-open-cash-denomination-button>Collect</button>
-                 <button type="button" class="button-2-alert" data-open-collection-reject-button>Reject</button>
-                 <button type="button" class="button-2" data-collection-print-button>Print</button>
-                 <button type="button" class="button-2" data-collection-remit-button>Remit</button>
+             <div class="inner-inner-container {{ $areaID != '' ? 'show-print-remit-buttons' : '' }}" data-print-remit-buttons>    
+                @php
+                    $checkDetails = $areaDetails->where('areaID', $areaID)->where('payment_Status', 'PAID')->first();
+                    $checkArea = $areaDetails->where('areaID', $areaID)->first();                 
+                @endphp
+                @if($checkDetails)
+                <button type="button" class="button-2-green" data-open-cash-denomination-button>Collect</button>
+                <button type="button" class="button-2-alert" data-open-collection-reject-button>Reject</button>
+                @endif
+                
+                @if($checkArea)
+                @endif
+                <button type="button" class="button-2" data-collection-print-button>Print</button>
+                <button type="button" class="button-2" data-collection-remit-button>Remit</button>
              </div>
 
          </div>
@@ -172,7 +181,7 @@
                         @php 
                             $cnt = $cnt + 1;
                         @endphp
-                        <tr data-area-menu-toggle data-details-wrapper-dropdown onclick="showDetails('{{ $cnt }}')" class="{{ $areaID != '' ? 'show-area-details' : '' }}">
+                        <tr data-area-menu-toggle data-details-wrapper-dropdown onclick="showDetails('{{ $cnt }}')" class="{{ $areaID != '' ? ($mdetails['areaID'] == $areaID ? 'show-area-details' : '') : '' }}" style="{{ $areaID != '' ? ($mdetails['areaID'] == $areaID ? '' : 'display:none;') : 'display:none;' }}">
 
                             <td>                            
                                 <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana">
@@ -184,7 +193,7 @@
 
                             <td>                             
                                 <div class="td-wrapper">                                
-                                    <span class="td-name">{{ $mdetails['borrower'] }}</span>
+                                    <span class="td-name">{{ $mdetails['borrower'] }} - {{ $mdetails['areaID'] }}</span>
                                 </div>
                             </td>
 
