@@ -6396,7 +6396,8 @@ body {
     .dropdown-menu
     li
     .box-2:hover {
-    background-color: rgba(214, 163, 48, 0.8);
+    /* background-color: rgba(214, 163, 48, 0.8); dito */ 
+    opacity: 0.9;
 }
 .can-container-wrapper
     .can-container-1
@@ -6529,7 +6530,8 @@ body {
     .area-menu
     li
     .box-2:hover {
-    background-color: rgba(214, 163, 48, 0.8);
+    /* background-color: rgba(214, 163, 48, 0.8); dito*/
+    opacity: 0.9;
 }
 .can-container-wrapper
     .can-container-1
@@ -6538,9 +6540,21 @@ body {
     .area-menu
     .view-selected-area
     .box-2 {
+    background-color: #666666;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.can-container-wrapper
+    .can-container-1
+    .wrapper
+    .area-menu-container
+    .area-menu
+    .area-has-ref
+    .box-2 {
     background-color: #29292b;
     border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
+
 .can-container-wrapper
     .can-container-1
     .wrapper

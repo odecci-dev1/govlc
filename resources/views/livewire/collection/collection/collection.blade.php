@@ -17,13 +17,13 @@
              <div class="borrower-dropdown" data-bor-dropdown>
 
                 <!-- * All Areas Button -->
-                <div class="select-box">
+                <!-- <div class="select-box">
                     <select  wire:model="status" class="select-option-menu">
                         <option value="">All Areas</option>     
                         <option value="Active">Active</option>                                    
                         <option value="Inactive">Inactive</option>                                    
                     </select>                       
-                </div>         
+                </div>          -->
 
                 
              </div>
@@ -84,10 +84,14 @@
                  </div>
 
                  <!-- * Details Wrapper 1 -->
+                 @php
+                    $countDetails = $areaDetails->where('areaID', $areaID)->count();
+                    $checkArea = $areaDetails->where('areaID', $areaID)->first();                 
+                @endphp
                  <div class="wrapper-1">
-                     <span>Total of 3 Items</span>
-                     <span>Area No. 1</span>
-                     <span>Ref Number: ABPA120230525</span>
+                     <span>Total of {{ $countDetails }} Items</span>
+                     <span>{{ $checkArea ? $checkArea['areaName'] : '' }}</span>
+                     <span>Ref Number: {{ $checkArea ? ($checkArea['collection_RefNo'] != 'PENDING' ? $checkArea['collection_RefNo'] : '________________________') : '________________________' }}</span>
                  </div>
 
              </div>
@@ -95,18 +99,19 @@
              <!-- * Inner-inner Container 1 -->
              <div class="inner-inner-container {{ $areaID != '' ? 'show-print-remit-buttons' : '' }}" data-print-remit-buttons>    
                 @php
-                    $checkDetails = $areaDetails->where('areaID', $areaID)->where('payment_Status', 'PAID')->first();
-                    $checkArea = $areaDetails->where('areaID', $areaID)->first();                 
+                    $checkDetails = $areaDetails->where('areaID', $areaID)->where('payment_Status', 'PAID')->first();                                
                 @endphp
                 @if($checkDetails)
                 <button type="button" class="button-2-green" data-open-cash-denomination-button>Collect</button>
                 <button type="button" class="button-2-alert" data-open-collection-reject-button>Reject</button>
                 @endif
-                
-                @if($checkArea)
-                @endif
                 <button type="button" class="button-2" data-collection-print-button>Print</button>
-                <button type="button" class="button-2" data-collection-remit-button>Remit</button>
+                @if($checkArea)
+                    @if($checkArea['collection_RefNo'] != 'PENDING')
+                        <button type="button" class="button-2" data-collection-remit-button>Remit</button>
+                    @endif
+                @endif                
+               
              </div>
 
          </div>
@@ -188,7 +193,7 @@
                             </td>
 
                             <td>
-                                <span class="td-num"></span>
+                                <span class="td-num">{{ $cnt }}</span>
                             </td>
 
                             <td>                             
