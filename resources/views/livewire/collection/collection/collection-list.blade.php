@@ -18,7 +18,7 @@
                 <div class="wrapper">
 
                     <!-- * Add New Button -->
-                    <a href="{{ URL::to('/') }}/collection/create" class="button" data-add-new-collection>
+                    <a href="{{ URL::to('/') }}/collection/view" class="button" data-add-new-collection>
                         <span>Add New</span>
                     </a>
 
@@ -88,288 +88,58 @@
                     </tr>
 
                     <!-- * Table Data -->
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ABPA120230525</span>
+                    @if($list)
+                        @foreach($list as $l)
+                        <tr>
+                            @php
+                                $dateCreated = new DateTime($l['dateCreated']);
+                            @endphp
+                            <!-- * Date -->
+                            <td>
+                                <div class="td-wrapper">
+                                    <span class="td-num"></span>
+                                    <div class="td-inner-wrapper">
+                                        <span class="td-name">{{ $dateCreated->format('F d, Y') }}</span>
+                                        <span>{{ $l['collection_RefNo'] }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
+                            </td>
 
-                        <!-- * Total Collectible -->
-                        <td>
-                            500.00
-                        </td>
+                            <!-- * Total Collectible -->
+                            <td>
+                                {{ number_format($l['totalCollectible'], 2) }}
+                            </td>
 
-                        <!-- * Total Balance -->
-                        <td>
-                            5,000.00
-                        </td>
+                            <!-- * Total Balance -->
+                            <td>
+                                {{ number_format($l['total_Balance'], 2) }}
+                            </td>
 
-                        <!-- * Total Savings -->
-                        <td>
-                            500.00
-                        </td>
+                            <!-- * Total Savings -->
+                            <td>
+                                {{ number_format($l['total_savings'], 2) }}
+                            </td>
 
-                        <!-- * Total Advance -->
-                        <td>
-                            500.00
-                        </td>
+                            <!-- * Total Advance -->
+                            <td>
+                                {{ number_format($l['total_advance'], 2) }}
+                            </td>
 
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
+                            <!-- * Total Lapses -->
+                            <td>
+                                {{ number_format($l['total_lapses'], 2) }}
+                            </td>
 
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ATRT120230398</span>
+                            <!-- * Table View Button -->
+                            <td class="td-btns">
+                                <div class="td-btn-wrapper">
+                                    <a href="{{ URL::to('/') }}/collection/view/{{ $l['collection_RefNo'] }}" class="a-btn-view-3" data-view-collection>View</a>
                                 </div>
-                            </div>
-                        </td>
+                            </td>
 
-                        <!-- * Total Collectible -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Balance -->
-                        <td>
-                            4,000.00
-                        </td>
-
-                        <!-- * Total Savings -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Advance -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
-
-
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ATRT120230398</span>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- * Total Collectible -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Balance -->
-                        <td>
-                            4,000.00
-                        </td>
-
-                        <!-- * Total Savings -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Advance -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
-
-
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ATRT120230398</span>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- * Total Collectible -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Balance -->
-                        <td>
-                            4,000.00
-                        </td>
-
-                        <!-- * Total Savings -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Advance -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
-
-
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ATRT120230398</span>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- * Total Collectible -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Balance -->
-                        <td>
-                            4,000.00
-                        </td>
-
-                        <!-- * Total Savings -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Advance -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
-
-
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ATRT120230398</span>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- * Total Collectible -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Balance -->
-                        <td>
-                            4,000.00
-                        </td>
-
-                        <!-- * Total Savings -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Advance -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
-
-
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-
+                        </tr>
+                        @endforeach
+                    @endif                    
                 </table>
 
             </div>

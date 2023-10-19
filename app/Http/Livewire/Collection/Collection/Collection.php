@@ -4,26 +4,40 @@ namespace App\Http\Livewire\Collection\Collection;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\URL;
 
 class Collection extends Component
 {
 
     public $areas = [];
     public $areaID = '';
+    public $foid = '';
+    public $folist = [];
 
     public $areaDetails = [];    
     public $areaDetailsFooter = [];
+
+    public function print(){
+        $print = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/PrintCollection', ['areaID' => $this->areaID, 'foid' => $this->foid]);    
+        $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID]);      
+        //$crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);                                    
+        return redirect()->to('/collection/view');
+        //$this->areaID = $this->areaID;       
+    }
     
-    public function getCollectionDetails($areaID){
+    public function getCollectionDetails($areaID, $foid){
         if($this->areaID == ''){
             $this->areaID = $areaID;       
+            $this->foid = $foid;
         }
         else{
             if($this->areaID == $areaID){
-                $this->areaID = '';       
+                $this->areaID = '';  
+                $this->foid = '';     
             }
             else{
-                $this->areaID = $areaID;       
+                $this->areaID = $areaID;    
+                $this->foid = $foid;   
             }
         }
 
@@ -61,9 +75,18 @@ class Collection extends Component
                     }                                                 
                 }
             }
-            //dd($this->areaDetailsFooter);
+            //dd($this->areas);
             //dd( $this->areaDetails->where('areaID', 'AREA-021') );    
         }
+
+        $mfolist = collect([]);
+        $folist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerList');  
+        $folist = $folist->json();
+        if($folist){
+            $mfolist = collect($folist);
+        }
+        $this->folist = $mfolist->sortBy('lname');
+        //dd($this->folist);
     }
 
     public function render()

@@ -33,7 +33,7 @@
                  <ul class="area-menu">
                     @if($areas)
                         @foreach($areas as $area)
-                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}')" class="{{ $areaID == $area['areaID'] ? 'view-selected-area' : '' }}">
+                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['foid'] }}')" class="{{ $areaID == $area['areaID'] ? 'view-selected-area' : '' }}">
                             <div class="box-1">
                                 <h4 id="collectionAreaNum">{{ $area['areaName'] }}</h4>
                             </div>
@@ -68,10 +68,13 @@
                      <!-- * Collection Officer Search Bar -->
                      <div class="primary-search-bar">
                          <div class="row">
-                             <input type="search" id="searchInput" name="search" placeholder="Search"
-                                 autocomplete="off">
-                             <button>
-                             </button>
+                            <select wire:model="foid" class="select-option-menu" style="width: 40rem;{{ $areaID != '' ? '' : 'visibility: hidden;' }}">                                
+                                @if($folist)
+                                    @foreach($folist as $fo)
+                                    <option value="{{ $fo['foid'] }}">{{ $fo['lname'] }}, {{ $fo['mname'] }} {{ $fo['mname'] }}</option>           
+                                    @endforeach
+                                @endif                                  
+                            </select>      
                          </div>
                          <div class="result-box" data-search-results>
                          </div>
@@ -91,7 +94,7 @@
                  <div class="wrapper-1">
                      <span>Total of {{ $countDetails }} Items</span>
                      <span>{{ $checkArea ? $checkArea['areaName'] : '' }}</span>
-                     <span>Ref Number: {{ $checkArea ? ($checkArea['collection_RefNo'] != 'PENDING' ? $checkArea['collection_RefNo'] : '________________________') : '________________________' }}</span>
+                     <span>Ref Number: {{ $checkArea ? ($checkArea['area_RefNo'] != 'PENDING' ? $checkArea['area_RefNo'] : '________________________') : '________________________' }}</span>
                  </div>
 
              </div>
@@ -105,10 +108,10 @@
                 <button type="button" class="button-2-green" data-open-cash-denomination-button>Collect</button>
                 <button type="button" class="button-2-alert" data-open-collection-reject-button>Reject</button>
                 @endif
-                <button type="button" class="button-2" data-collection-print-button>Print</button>
+                <button type="button" wire:click="print" class="button-2" data-collection-print-button>Print</button>
                 @if($checkArea)
                     @if($checkArea['collection_RefNo'] != 'PENDING')
-                        <button type="button" class="button-2" data-collection-remit-button>Remit</button>
+                        <a href="{{ URL::to('/') }}/collection/remittance/{{ $checkArea['area_RefNo'] }}" class="button-2" data-collection-remit-button>Remit</a>
                     @endif
                 @endif                
                
@@ -349,6 +352,10 @@
  <script>
     document.addEventListener('livewire:load', function () {
         // open-wrapper,  open-details
+        window.livewire.on('openUrlPrintingStub', data =>{
+            window.open(data.url, '_blank');
+        });
+
         window.showDetails = function($cnt){              
             const trElem = document.getElementById("tr"+$cnt);
             const tdElem = document.getElementById("td"+$cnt);

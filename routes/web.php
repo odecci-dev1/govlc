@@ -111,7 +111,11 @@ Route::get('/tranactions/group/application/view/{groupId}', CreateApplicationGro
 
 //collection
 Route::get('/collection/list',CollectionList::class);
-Route::get('/collection/create',Collection::class);
-Route::get('/collection/collection/area/{areaCode}',CollectionPrint::class);
-Route::get('/collection/remittance/{areaCode}',CollectionRemittance::class);
+Route::get('/collection/view/{collRefNo?}',Collection::class);
+Route::get('/collection/remittance/{areaRefNo}',CollectionRemittance::class);
+// Route::get('/collection/print/area/{areaID}',CollectionPrint::class);
+Route::get('/collection/print/area/{areaID}', function(){
+    return view('livewire.collection.collection.collection-html');
+});
+
 //collection

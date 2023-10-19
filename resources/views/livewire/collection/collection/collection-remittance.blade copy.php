@@ -293,7 +293,7 @@
                         <td class="td-btns">
 
                             <div class="td-btn-wrapper">
-                                <button wire:click="setRemmittInfo('{{ $l['naid'] }}')" type="button" class="a-btn-view-3" data-open-remit-modal>Remit</button>
+                                <button wire:click="setRemmittInfo({{ $l['naid'] }})" type="button" class="a-btn-view-3" data-open-remit-modal>Remit</button>
                             </div>
 
                         </td>
