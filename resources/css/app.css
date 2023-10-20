@@ -19613,28 +19613,42 @@ input:disabled, select:disabled, textarea:disabled{
 
 
 /* loading */
-.center-loading-container{
-    background-color: red;
-    width: 150px;margin: auto;
+.full-screen-div-loading {
+    background: red;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.center-loading-container{   
+    width: 30%;
+    margin: auto;
     top: 30%;
     position: relative;
 }
+.loading-text{
+    color: #d6a330 ;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
 .lds-dual-ring {
-
-    width: 80px;
-    height: 80px;
-  
+    width: 70px;
+    height: 70px;  
     margin: auto;
   }
   .lds-dual-ring:after {
     content: " ";
     display: block;
-    width: 64px;
-    height: 64px;
+    width: 50px;
+    height: 50px;
     margin: 8px;
     border-radius: 50%;
-    border: 6px solid #fff;
-    border-color: #fff transparent #fff transparent;
+    border: 6px solid #d6a330;
+    border-color: #d6a330 transparent #fff transparent;
     animation: lds-dual-ring 1.2s linear infinite;
   }
   @keyframes lds-dual-ring {

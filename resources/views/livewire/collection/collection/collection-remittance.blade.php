@@ -2,7 +2,7 @@
 @if(session('mmessage'))
     <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
 @endif
-<dialog class="fe-modal" data-field-expense-modal>
+<dialog class="fe-modal" data-field-expense-modal wire:ignore.self>
     <div class="modal-container">
 
         <!-- * Modal Header and Exit Button -->
@@ -11,8 +11,10 @@
 
             <!-- * Add and Subtract Button  -->
             <div class="button-wrapper">
-                <button class="button" onclick="addExpenses()">Add Expense</button>
-                <button type="button" class="addOrSubButton" onclick="subExpenses()">-</button>
+                <!-- <button class="button" onclick="addExpenses()">Add Expense</button> -->
+                <button class="button" wire:click="addExpenses">Add Expense</button>
+                <!-- <button type="button" class="addOrSubButton" onclick="subExpenses()">-</button> -->
+                <button type="button" class="addOrSubButton" wire:click="subExpenses">-</button>
             </div>
 
         </div>
@@ -21,39 +23,43 @@
         <div class="box-wrap" data-expenses-container>
             <div class="rowspan child" data-expenses>
 
-                <!-- * Expense Description -->
-                <div class="input-wrapper">
-                    <input autocomplete="off"class="input" type="text" id="expenseDesc" name="expenseDesc"
-                        placeholder="Expense Description">
-                </div>
-
-                <!-- * Amount -->
-                <div class="input-wrapper-add">
-
-                    <div class="inner-container-wrapper">
-
-                        <!-- * Input Inner Wrapper -->
-                        <div class="input-inner-wrapper">
-                            <input autocomplete="off" class="input" type="number" id="amount" name="amount"
-                                placeholder="Amount">
+                @if($expcnt)
+                    @foreach($expcnt as $cnt)
+                        <!-- * Expense Description -->
+                        <div class="input-wrapper">
+                            <input autocomplete="off" wire:model.lazy="expenses.expense{{ $cnt }}" class="input" type="text" placeholder="Expense Description">
+                            @error('expenses.expense'.$cnt) <span class="text-required fw-normal" style="margin-bottom: 0;">{{ $message }}</span> @enderror
                         </div>
 
-                    </div>
+                        <!-- * Amount -->
+                        <div class="input-wrapper-add" style="margin-bottom: 2rem;">
 
-                </div>
+                            <div class="inner-container-wrapper">
+
+                                <!-- * Input Inner Wrapper -->
+                                <div class="input-inner-wrapper">
+                                    <input autocomplete="off" wire:model.lazy="expenses.amount{{ $cnt }}" wire:blur="getTotalExp" class="input" type="number" placeholder="Amount">
+                                   
+                                </div>
+
+                            </div>
+                            @error('expenses.amount'.$cnt) <span class="text-required fw-normal" style="margin-bottom: 0;">{{ $message }}</span> @enderror
+                        </div>
+                    @endforeach
+                @endif
 
             </div>
         </div>
 
         <!-- * Total -->
         <div class="box-wrap">
-            <p>Total <span id="totalFieldExpense">300</span></p>
+            <p>Total <span id="totalFieldExpense">{{ $totalexp }}</span></p>
         </div>
 
         <!-- * Cancel and Save Button -->
         <div class="box-wrap">
-            <button class="a-btn-trash" data-close-field-expense-modal>Cancel</button>
-            <button class="button" data-save-field-expense-modal>Save</button>
+            <button class="a-btn-trash" wire:click="cancelExpenses" data-close-field-expense-modal>Cancel</button>
+            <button class="button" wire:click="saveExpenses">Save</button>
         </div>
 
     </div>
@@ -77,38 +83,43 @@
             <div class="input-wrapper">
                 <span>Amount Collected</span>
                 <input autocomplete="off" type="text" wire:model.lazy="reminfo.amntCollected"  wire:blur="computeLapses" name="amntCollected">
+                @error('reminfo.amntCollected') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
 
             <!-- * Savings -->
             <div class="input-wrapper">
                 <span>Savings</span>
                 <input autocomplete="off" type="text" wire:model.lazy="reminfo.savings" name="savings">
+                @error('reminfo.savings') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
 
             <!-- * Lapses -->
             <div class="input-wrapper">
                 <span>Lapses</span>
                 <input autocomplete="off" type="text" wire:model.lazy="reminfo.lapses" name="lapses" disabled>
+                @error('reminfo.lapses') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
 
             <!-- * Advance -->
             <div class="input-wrapper">
                 <span>Advance</span>
                 <input autocomplete="off" type="text" wire:model.lazy="reminfo.advance" name="advance" disabled>
+                @error('reminfo.advance') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
 
             <!-- * Mode of Payment -->
             <div class="input-wrapper">
                 <span>Mode of Payment</span>
                 <input autocomplete="off" type="text" wire:model.lazy="reminfo.modeOfPayment" name="mod">
+                @error('reminfo.modeOfPayment') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
 
         </div>
 
         <!-- * Cancel and Save Button -->
         <div class="box-wrap">
-            <button class="a-btn-trash" data-close-remit-modal>Cancel</button>
-            <button wire:click="remit" class="button" data-save-remit-modal>Save</button>
+            <button class="a-btn-trash" wire:click="resetRemittance" data-close-remit-modal>Cancel</button>
+            <button wire:click="remit" class="button">Save</button>
         </div>
 
     </div>
@@ -508,34 +519,34 @@
             const isMobile = window.innerWidth <= 430
 
             // * If mobile viewport
-            if (isMobile) {
-                saveFieldExpenseBtn.removeAttribute('data-save-field-expense-modal');
-                saveFieldExpenseBtn.setAttribute('data-show-total-remittance', '');
+            // if (isMobile) {
+            //     saveFieldExpenseBtn.removeAttribute('data-save-field-expense-modal');
+            //     saveFieldExpenseBtn.setAttribute('data-show-total-remittance', '');
 
-            } else {
+            // } else {
 
-                saveFieldExpenseBtn.removeAttribute('data-show-total-remittance', '');
-                saveFieldExpenseBtn.setAttribute('data-save-field-expense-modal', '');
+            //     saveFieldExpenseBtn.removeAttribute('data-show-total-remittance', '');
+            //     saveFieldExpenseBtn.setAttribute('data-save-field-expense-modal', '');
 
-            }
+            // }
 
-            if (saveFieldExpenseBtn.matches('[data-save-field-expense-modal]')) {
-                saveFieldExpenseBtn.addEventListener('click', () => {
-                    showMoreDetailsFieldExp.forEach((button) => {
-                        button.classList.add('show-more-details')
-                    })
-                    totalRemittanceFooter.classList.add('show-remittance-footer')
-                    totalRemittanceFooterMobile.setAttribute("show", "")
-                    fieldExpenseModal.setAttribute("closing", "")
-                    fieldExpenseModal.addEventListener("animationend", () => {
-                        fieldExpenseModal.removeAttribute("closing")
-                        fieldExpenseModal.close();
-                    }, {
-                        once: true
-                    });
-                })
+            // if (saveFieldExpenseBtn.matches('[data-save-field-expense-modal]')) {
+            //     saveFieldExpenseBtn.addEventListener('click', () => {
+            //         showMoreDetailsFieldExp.forEach((button) => {
+            //             button.classList.add('show-more-details')
+            //         })
+            //         totalRemittanceFooter.classList.add('show-remittance-footer')
+            //         totalRemittanceFooterMobile.setAttribute("show", "")
+            //         fieldExpenseModal.setAttribute("closing", "")
+            //         fieldExpenseModal.addEventListener("animationend", () => {
+            //             fieldExpenseModal.removeAttribute("closing")
+            //             fieldExpenseModal.close();
+            //         }, {
+            //             once: true
+            //         });
+            //     })
 
-            }
+            // }
 
         }
 
