@@ -12,6 +12,17 @@
         <x-asking-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-asking-dialog>   
     @endif
 
+    <!-- <div class="full-screen-div">
+        <div class="center-loading-container">
+            <div>
+                <div class="lds-dual-ring"></div>
+            </div>
+            <div>
+                <span>Loading</span>
+            </div>
+        </div>
+        
+    </div> -->
     <!-- * New-Application-Form-Container -->
     <form autocomplete="off" class="na-form-con" {{ $member['statusID'] == 7 ? '' : 'disabled' }} >
         @if (session()->has('message'))

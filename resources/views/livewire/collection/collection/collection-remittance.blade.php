@@ -1,4 +1,7 @@
-<div>
+<div class="na-form-con">
+@if(session('mmessage'))
+    <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+@endif
 <dialog class="fe-modal" data-field-expense-modal>
     <div class="modal-container">
 
@@ -58,7 +61,7 @@
 </dialog>
 
 <!-- * Remit Modal -->
-<dialog class="re-modal" data-remit-modal>
+<dialog class="re-modal" data-remit-modal wire:ignore.self>
 
     <div class="modal-container">
 
@@ -73,31 +76,31 @@
             <!-- * Amount Collected -->
             <div class="input-wrapper">
                 <span>Amount Collected</span>
-                <input autocomplete="off" type="text" id="amntCollected" name="amntCollected">
+                <input autocomplete="off" type="text" wire:model.lazy="reminfo.amntCollected"  wire:blur="computeLapses" name="amntCollected">
             </div>
 
             <!-- * Savings -->
             <div class="input-wrapper">
                 <span>Savings</span>
-                <input autocomplete="off" type="text" id="savings" name="savings">
+                <input autocomplete="off" type="text" wire:model.lazy="reminfo.savings" name="savings">
             </div>
 
             <!-- * Lapses -->
             <div class="input-wrapper">
                 <span>Lapses</span>
-                <input autocomplete="off" type="text" id="lapses" name="lapses">
+                <input autocomplete="off" type="text" wire:model.lazy="reminfo.lapses" name="lapses" disabled>
             </div>
 
             <!-- * Advance -->
             <div class="input-wrapper">
                 <span>Advance</span>
-                <input autocomplete="off" type="text" id="advance" name="advance">
+                <input autocomplete="off" type="text" wire:model.lazy="reminfo.advance" name="advance" disabled>
             </div>
 
             <!-- * Mode of Payment -->
             <div class="input-wrapper">
                 <span>Mode of Payment</span>
-                <input autocomplete="off" type="text" id="mod" name="mod">
+                <input autocomplete="off" type="text" wire:model.lazy="reminfo.modeOfPayment" name="mod">
             </div>
 
         </div>
@@ -105,15 +108,12 @@
         <!-- * Cancel and Save Button -->
         <div class="box-wrap">
             <button class="a-btn-trash" data-close-remit-modal>Cancel</button>
-            <button class="button" data-save-remit-modal>Save</button>
+            <button wire:click="remit" class="button" data-save-remit-modal>Save</button>
         </div>
 
     </div>
 
 </dialog>
-
-<div class="na-form-con">
-
     <!-- * Collection List Containers -->
     <!-- * Container 1: User list Header, Buttons, and Searchbar -->
 
@@ -468,7 +468,7 @@
 
     </div>
     </div>
-</div>
+
 <script>
     // ***** Field Expense Modal ***** //
 
@@ -604,7 +604,6 @@
     const showRemittedBtn = document.querySelector('[data-show-remitted-button]')
 
     if (remitModal) {
-
         openRemitModalBtn.forEach((button) => {
             button.addEventListener('click', () => {
                 remitModal.showModal()
