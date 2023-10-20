@@ -10,19 +10,19 @@ class CollectionRemittance extends Component
     public $areaRefNo;
     public $list;
 
+    public $memid = '';
+
     public function setRemmittInfo($naid = ''){
         $appdtl = $this->list->where('naid', $naid)->first();
-        //dd($appdtl);
+        $this->memid =  $appdtl ?  $appdtl['memId'] : '';
+    }
+
+    public function computeLapses(){
         $data = [
-                    "memId"=> $appdtl['memId'],
-                    "savings"=> 0,
-                    "modeOfPayment"=> "string",
-                    "areaRefno"=> "string",
-                    "amountCollected"=> 500,
-                    "advancePayment"=> 0,
-                    "lapses"=> 0,
-                    "userId"=> "string"
-                ];
+            "memId"=> "MEM-02",
+            "areaRefno"=> "AREA-04420231019-02",
+            "amountCollected"=> 500
+        ];
         $compute = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/RemitAmountCollectedComputation', $data);  
         dd( $compute );
     }
@@ -37,8 +37,7 @@ class CollectionRemittance extends Component
         $data = $data->json();
         if($data){
             $this->list = collect($data);
-        }
-        //dd( $this->list );
+        }   
         return view('livewire.collection.collection.collection-remittance');
     }
 }
