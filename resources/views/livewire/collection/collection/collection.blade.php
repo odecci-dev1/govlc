@@ -168,12 +168,12 @@
 
                          <!-- * Amount Due -->
                          <th>
-                             <span class="th-name">Amount Due</span>
+                             <span class="th-name">Balance</span>
                          </th>
 
                          <!-- * Balance -->
                          <th>
-                             <span class="th-name">Balance</span>
+                             <span class="th-name">Past Due</span>
                          </th>
 
                          <!-- * Overall Savings -->
@@ -240,7 +240,7 @@
 
                             <!-- * Balance -->
                             <td>
-                                2,350.00
+                                {{ number_format($mdetails['pastDue'], 2) }}
                             </td>
 
                             <!-- * Overall Savings -->

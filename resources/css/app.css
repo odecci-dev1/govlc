@@ -6858,7 +6858,7 @@ body {
     table
     th
     span.th-name {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 700;
 }
 .can-container-wrapper
@@ -6919,7 +6919,7 @@ body {
 }
 .can-container-wrapper .can-container-2 .wrapper-2 .table-container table td {
     padding: 1rem 0;
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 .can-container-wrapper
     .can-container-2
@@ -7026,7 +7026,7 @@ body {
     .box
     h4 {
     padding-bottom: 1rem;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
 }
 .can-container-wrapper
     .can-container-2
@@ -7076,7 +7076,7 @@ body {
     .box-wrapper
     p {
     padding: 0.5rem 0;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 .can-container-wrapper
     .can-container-2
@@ -7330,18 +7330,7 @@ body {
     font-size: 1rem;
     font-weight: 700;
 }
-.print-collection-container
-    .printables-container
-    .page
-    .body-wrapper
-    .table-container
-    table
-    tr:first-of-type {
-    background: none;
-    filter: blur(0);
-    box-shadow: none;
-    border-bottom: 1px solid #e0dfdf;
-}
+
 .print-collection-container
     .printables-container
     .page
@@ -7611,6 +7600,14 @@ body {
     filter: blur(0);
     box-shadow: none;
     border-bottom: 1px solid #e0dfdf;
+}
+.printables-container
+    .page
+    .body-wrapper
+    .table-container
+    table
+    tr:not(:first-of-type) {
+    border-bottom: 1px dashed #29292b;
 }
 .printables-container
     .page

@@ -22,6 +22,7 @@ class CollectionPrint extends Component
 
         $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID]);  
         $details = $details->json();
+        //dd($details);
         if($details){
             $details = $details[0];                       
             $collections = $details['collection'];

@@ -1,6 +1,6 @@
-<div>
+    <div class="na-form-con">
     <!-- modals -->
-       <livewire:modals.new-application-modal  :type="''" :mid="isset($id) ? $id : ''"/> 
+    <livewire:modals.new-application-modal  :type="''" :mid="isset($id) ? $id : ''"/> 
     <!-- modals -->
 
     <!-- * Filter Modal -->
@@ -67,9 +67,6 @@
         </div>
 
     </dialog>
-
-    <div class="na-form-con">
-
     <!-- * Application List Containers -->
     <!-- * Container 1: User list Header, Buttons, and Searchbar -->
 
@@ -251,7 +248,7 @@
                 @endforeach
             @else
                     <tr>
-                        <td colspan="8" class="text-required" style="text-align: center; padding: 20px;">No application found</td>
+                        <td colspan="9" class="text-required" style="text-align: center; padding: 20px;">No application found</td>
                     </tr>    
             @endif              
         </table>
@@ -260,7 +257,6 @@
 
     </div>
 
-    </div>
     <script>
         
         const filterMemberModal = document.querySelector('[data-filter-member-modal]')

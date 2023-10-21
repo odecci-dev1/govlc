@@ -82,8 +82,8 @@ class Collection extends Component
         $this->validate(['rejectReason' => 'required']);
         $data = [
             "areaID"=> $this->areaID,
-            "foid" => $this->foid,          
-            "reason" => $this->rejectReason,          
+            "remarks" => $this->rejectReason,  
+            "foid" => $this->foid,                             
         ];
         $collect = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Reject', $data);    
         $this->emit('RESPONSE_CLOSE_REJECTION_MODAL', ['url' => URL::to('/').'/collection/view/'.$this->areaID]);            
