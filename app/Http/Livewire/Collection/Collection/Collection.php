@@ -144,7 +144,7 @@ class Collection extends Component
                 }
             }
             //dd( $this->areaDetails );
-            //dd($this->areas);
+            //dd($this->areaDetails);
             //dd( $this->areaDetails->where('areaID', 'AREA-021') );    
         }
 

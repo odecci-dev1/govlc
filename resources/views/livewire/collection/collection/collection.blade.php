@@ -36,11 +36,15 @@
                  <ul class="area-menu">
                     @if($areas)
                         @foreach($areas as $area)
-                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['foid'] }}')" class="{{ $areaID == $area['areaID'] ? 'view-selected-area' : '' }}">
+                        @php 
+                            $checkIfPaid = $areaDetails->where('areaID', $area['areaID'])->where('payment_Status', 'Paid')->first();       
+                            $checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();                 
+                        @endphp
+                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['foid'] }}')" class="{{ $areaID == $area['areaID'] ? 'view-selected-area' : '' }} {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
                             <div class="box-1">
                                 <h4 id="collectionAreaNum">{{ $area['areaName'] }}</h4>
                             </div>
-                            <div class="box-2">
+                            <div class="box-2" style="position: relative;">
                                 <div class="inner-box-1">
                                     <p>Expected Collection</p>
                                     <span id="expectedCollection">{{ number_format($area['expectedCollection'], 2) }}</span>
@@ -51,6 +55,10 @@
                                         $penalty = $area['expectedCollection'] - $area['total_collectedAmount'];
                                     @endphp
                                     <span id="collectionPenalty">{{ number_format(($penalty < 0 ? 0 : $penalty), 2) }}</span>
+                                    @if( $checkIfPaid )
+                                    <img src="{{ URL::to('/') }}/assets/icons/circle-check.svg" alt="upload-image" 
+                                         style="height: 2rem; width: 2rem; position: absolute; right: 8px; bottom: 8px;" />    
+                                    @endif      
                                 </div>
                             </div>
                         </li>
@@ -91,7 +99,7 @@
                  <!-- * Details Wrapper 1 -->
                  @php
                     $countDetails = $areaDetails->where('areaID', $areaID)->count();
-                    $checkArea = $areaDetails->where('areaID', $areaID)->first();                 
+                    $checkArea = $areaDetails->where('areaID', $areaID)->first();       
                  @endphp
                  <div class="wrapper-1">
                      <span>Total of {{ $countDetails }} Items</span>
