@@ -12,7 +12,13 @@
 
              <!-- * All Areas Dropdown Button -->
              <div class="borrower-dropdown" data-bor-dropdown>
-
+                    @php 
+                           $totalAreaCollected = $areas->sum('total_collectedAmount');
+                      @endphp 
+                     <!-- * Summary Container total_collectedAmount -->
+                     <div class="summary-container" style="visibility: {{ $totalAreaCollected > 0 ? 'visible' : 'hidden' }};" data-collection-summary-container> 
+                         <p class="textPrimary" data-open-collection-summary-button>View Summary</p>
+                     </div>
                 <!-- * All Areas Button -->
                 <!-- <div class="select-box">
                     <select  wire:model="status" class="select-option-menu">
@@ -71,7 +77,7 @@
                             <select wire:model="foid" class="select-option-menu" style="width: 40rem;{{ $areaID != '' ? '' : 'visibility: hidden;' }}">                                
                                 @if($folist)
                                     @foreach($folist as $fo)
-                                    <option value="{{ $fo['foid'] }}">{{ $fo['lname'] }}, {{ $fo['mname'] }} {{ $fo['mname'] }}</option>           
+                                        <option value="{{ $fo['foid'] }}">{{ $fo['lname'] }}, {{ $fo['mname'] }} {{ $fo['mname'] }}</option>           
                                     @endforeach
                                 @endif                                  
                             </select>      
@@ -79,18 +85,14 @@
                          <div class="result-box" data-search-results>
                          </div>
                      </div>
-
-                     <!-- * Summary Container -->
-                     <div class="summary-container" data-collection-summary-container>
-                         <p class="textPrimary" data-open-collection-summary-button>View Summary</p>
-                     </div>
+          
                  </div>
 
                  <!-- * Details Wrapper 1 -->
                  @php
                     $countDetails = $areaDetails->where('areaID', $areaID)->count();
                     $checkArea = $areaDetails->where('areaID', $areaID)->first();                 
-                @endphp
+                 @endphp
                  <div class="wrapper-1">
                      <span>Total of {{ $countDetails }} Items</span>
                      <span>{{ $checkArea ? $checkArea['areaName'] : '' }}</span>
@@ -102,11 +104,11 @@
              <!-- * Inner-inner Container 1 -->
              <div class="inner-inner-container {{ $areaID != '' ? 'show-print-remit-buttons' : '' }}" data-print-remit-buttons>    
                 @php
-                    $checkDetails = $areaDetails->where('areaID', $areaID)->sum('collectedAmount');                                
+                    $sumDetails = $areaDetails->where('areaID', $areaID)->sum('collectedAmount');                                
                 @endphp
                
-                <button type="button" style="{{ $checkDetails > 0 ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
-                <button type="button" style="{{ $checkDetails > 0 ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
+                <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
+                <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
             
                 <button type="button" wire:click="print" class="button-2" data-collection-print-button>Print</button>
                 @if($checkArea)
@@ -376,6 +378,26 @@
             window.open(data.url, '_blank');
         });
 
+        window.livewire.on('RESPONSE_CLOSE_DENOMINATIONS_MODAL', data =>{
+          
+                cashDenominationModal.setAttribute("closing", "")
+                cashDenominationModal.addEventListener("animationend", () => {
+                    cashDenominationModal.removeAttribute("closing")
+                    cashDenominationModal.close()
+                }, { once: true })               
+                location.href = data.url
+                
+        });
+
+        window.livewire.on('RESPONSE_CLOSE_REJECTION_MODAL', data =>{
+                rejectCollectionModal.setAttribute("closing", "");
+                rejectCollectionModal.addEventListener("animationend", () => {
+                    rejectCollectionModal.removeAttribute("closing");
+                    rejectCollectionModal.close();
+                }, { once: true });
+                location.href = data.url
+        });
+
         window.showDetails = function($cnt){              
             const trElem = document.getElementById("tr"+$cnt);
             const tdElem = document.getElementById("td"+$cnt);
@@ -402,7 +424,8 @@
         if (collectionSummaryContainer) {
             const collectionSummaryPrintBtn = document.querySelector('[data-collection-summary-print-button]')
             collectionSummaryPrintBtn.addEventListener('click', () => {
-                url = '/KC/collection/collection-summary-print.html'
+                //url = '/KC/collection/collection-summary-print.html'
+                url = '{{ URL::to("/") }}/collection/print/summary'
                 window.open(url)
             })
         }
@@ -410,7 +433,7 @@
         const cashDenominationModal = document.querySelector('[data-cash-denomination-modal]')
         const openCashDenominationBtn = document.querySelector('[data-open-cash-denomination-button]')
         const closeCashDenominationBtn = document.querySelector('[data-close-cash-denomination-button]')
-        const approveCashDenominationBtn = document.querySelector('[data-approve-cash-denomination-button]')
+        // const approveCashDenominationBtn = document.querySelector('[data-approve-cash-denomination-button]')
 
         // * Cash Denomination (collection-collected.html)
         // * Approved Button
@@ -446,20 +469,20 @@
             openCashDenominationBtn.addEventListener('click', () => {
                 cashDenominationModal.showModal()
 
-                approveCashDenominationBtn.addEventListener('click', () => {
-                    areaMenuButton.forEach((button) => {
-                        if (button.matches('.view-selected-area')) {
-                            button.classList.add('area-is-collected')
-                            printRemitButton.classList.remove('show-print-remit-buttons')
-                            // collectionSummaryContainer.classList.add('show-summary')
-                        }
-                        button.style.pointerEvents = 'auto'
-                        if (button.classList.contains('area-is-collected')) {
-                            collectionSummaryContainer.classList.add('show-summary')
-                            button.style.pointerEvents = 'none'
-                        }    
-                    })
-                })
+                // approveCashDenominationBtn.addEventListener('click', () => {
+                //     areaMenuButton.forEach((button) => {
+                //         if (button.matches('.view-selected-area')) {
+                //             button.classList.add('area-is-collected')
+                //             printRemitButton.classList.remove('show-print-remit-buttons')
+                //             // collectionSummaryContainer.classList.add('show-summary')
+                //         }
+                //         button.style.pointerEvents = 'auto'
+                //         if (button.classList.contains('area-is-collected')) {
+                //             collectionSummaryContainer.classList.add('show-summary')
+                //             button.style.pointerEvents = 'none'
+                //         }    
+                //     })
+                // })
             })
             
             closeCashDenominationBtn.addEventListener('click', () => {
@@ -467,19 +490,18 @@
                 cashDenominationModal.addEventListener("animationend", () => {
                     cashDenominationModal.removeAttribute("closing")
                     cashDenominationModal.close()
-                }, { once: true })
-            
+                }, { once: true })            
             })
             
-            approveCashDenominationBtn.addEventListener('click', () => {
-                cashDenominationModal.setAttribute("closing", "")
-                cashDenominationModal.addEventListener("animationend", () => {
-                    cashDenominationModal.removeAttribute("closing")
-                    cashDenominationModal.close()
-                }, { once: true })
-                // url = '/KC/collection/collection-collected.html'
-                // location.href = url
-            })
+            // approveCashDenominationBtn.addEventListener('click', () => {
+            //     cashDenominationModal.setAttribute("closing", "")
+            //     cashDenominationModal.addEventListener("animationend", () => {
+            //         cashDenominationModal.removeAttribute("closing")
+            //         cashDenominationModal.close()
+            //     }, { once: true })
+            //     // url = '/KC/collection/collection-collected.html'
+            //     // location.href = url
+            // })
             
 
 
@@ -508,13 +530,13 @@
             })
             
             submitRejectCollectionBtn.addEventListener('click', () => {
-                rejectCollectionModal.setAttribute("closing", "");
-                rejectCollectionModal.addEventListener("animationend", () => {
-                    rejectCollectionModal.removeAttribute("closing");
-                    rejectCollectionModal.close();
-                }, { once: true });
-                url = '/KC/collection/collection-list.html'
-                location.href = url
+                // rejectCollectionModal.setAttribute("closing", "");
+                // rejectCollectionModal.addEventListener("animationend", () => {
+                //     rejectCollectionModal.removeAttribute("closing");
+                //     rejectCollectionModal.close();
+                // }, { once: true });
+                // url = '/KC/collection/collection-list.html'
+                // location.href = url
             })
 
         }

@@ -117,5 +117,7 @@ Route::get('/collection/remittance/{areaRefNo}',CollectionRemittance::class);
 Route::get('/collection/print/area/{areaID}', function(){
     return view('livewire.collection.collection.collection-html');
 });
-
+Route::get('/collection/print/summary', function(){
+    return view('livewire.collection.collection.collection-summary-html');
+});
 //collection

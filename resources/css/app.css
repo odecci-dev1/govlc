@@ -372,6 +372,10 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
 
 .textPrimary {
     color: #d6a330;
+    font-size: 1.7rem;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .textBold {
@@ -4857,15 +4861,16 @@ body {
     top: 0;
     right: 0;
     transform: translate(-3.6rem, -3.6rem);
-    font-size: 2.3rem;
+    font-size: 1.8rem;
     font-weight: 700;
+    color: #999999;
 }
 .cd-modal .modal-container .box-wrap:nth-of-type(2) .input-wrapper {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 3rem;
+    padding: 0.6rem 3rem;
     border-radius: 1.5rem;
     background-color: #ffffff;
     box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -6698,8 +6703,8 @@ body {
 }
 .can-container-wrapper .can-container-2 .wrapper-0 .summary-container {
     pointer-events: none;
-    opacity: 0;
-    visibility: hidden;
+    /* opacity: 0; */
+    /* visibility: hidden; */
     transition: 300ms ease-in-out;
 }
 .can-container-wrapper

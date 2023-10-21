@@ -39,56 +39,20 @@
                     </tr>
 
                     <!-- * Table Data -->
-                    <tr>
-                        <td>Area 1</td>
-                        <td>600.00</td>
-                        <td>34,350.00</td>
-                        <td>550.00</td>
-                        <td>200.00</td>
-                        <td>2,200.00</td>
-                        <td>550.00</td>
-                    </tr>
-
-                    <tr>
-                        <td>Area 2</td>
-                        <td>600.00</td>
-                        <td>34,350.00</td>
-                        <td>550.00</td>
-                        <td>200.00</td>
-                        <td>2,200.00</td>
-                        <td>550.00</td>
-                    </tr>
-
-                    <tr>
-                        <td>Area 3</td>
-                        <td>600.00</td>
-                        <td>34,350.00</td>
-                        <td>550.00</td>
-                        <td>200.00</td>
-                        <td>2,200.00</td>
-                        <td>550.00</td>
-                    </tr>
-
-                    <tr>
-                        <td>Area 4</td>
-                        <td>600.00</td>
-                        <td>34,350.00</td>
-                        <td>550.00</td>
-                        <td>200.00</td>
-                        <td>2,200.00</td>
-                        <td>550.00</td>
-                    </tr>
-
-                    <tr>
-                        <td>Area 5</td>
-                        <td>600.00</td>
-                        <td>34,350.00</td>
-                        <td>550.00</td>
-                        <td>200.00</td>
-                        <td>2,200.00</td>
-                        <td>550.00</td>
-                    </tr>
-
+                    @if($areas)
+                        @foreach($areas as $mareas)
+                        <tr>
+                            <td>{{ $mareas['areaName'] }}</td>
+                            <td>{{ number_format($mareas['totalCollectible'], 2) }}</td>
+                            <td>{{ number_format($mareas['total_Balance'], 2) }}</td>
+                            <td>{{ number_format($mareas['total_savings'], 2) }}</td>
+                            <td>{{ number_format($mareas['total_advance'], 2) }}</td>
+                            <td>{{ number_format($mareas['total_lapses'], 2) }}</td>
+                            <td>{{ number_format($mareas['total_collectedAmount'], 2) }}</td>
+                        </tr>
+                        @endforeach
+                    @endif    
+                  
                 </table>
 
 
@@ -97,12 +61,12 @@
             <!-- * Rowspan 3: Footer -->
             <div class="rowspan">
                 <p>Grand Total</p>
-                <p>3,000.00</p>
-                <p>21,750.00</p>
-                <p>2,750.00</p>
-                <p>1,000.00</p>
-                <p>11,000.00</p>
-                <p class="textPrimary">2,750.00</p>
+                <p>{{ number_format($areas->sum('totalCollectible'), 2) }}</p>
+                <p>{{ number_format($areas->sum('total_Balance'), 2) }}</p>
+                <p>{{ number_format($areas->sum('total_savings'), 2) }}</p>
+                <p>{{ number_format($areas->sum('total_advance'), 2) }}</p>
+                <p>{{ number_format($areas->sum('total_lapses'), 2) }}</p>
+                <p class="textPrimary">{{ number_format($areas->sum('total_collectedAmount'), 2) }}</p>
             </div>
 
         </div>

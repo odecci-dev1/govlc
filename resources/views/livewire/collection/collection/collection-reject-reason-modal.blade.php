@@ -1,4 +1,4 @@
-<dialog class="na-application-decline-modal" data-collection-reject-modal>
+<dialog class="na-application-decline-modal" data-collection-reject-modal wire:ignore.self>
 
      <!-- * Modal Container -->
      <div class="modal-container">
@@ -23,12 +23,15 @@
 
                  <!-- * Rowspan 2: Reason for rejecting Container -->
                  <div class="rowspan">
-                     <textarea name="" rows="15" id=""placeholder="Enter the reason here..."></textarea>
+                     <textarea wire:model.lazy="rejectReason" rows="15" id=""placeholder="Enter the reason here..."></textarea>                  
                  </div>
 
                  <!-- * Rowspan 3: Button Wrapper -->
-                 <div class="rowspan">
-                     <button type="button" class="button" data-submit-collection-reject-button>Submit</button>
+                 <div class="rowspan">   
+                    @error('rejectReason') 
+                    <span class="text-required" style="margin-right: 2rem;  width: 40rem; margin-top: 0.8rem; font-size: 0.6rem; text-align:right !important;">Please enter reason !</span>
+                    @enderror           
+                    <button type="button" wire:click="reject" class="button" data-submit-collection-reject-button>Submit</button>
                  </div>
 
              </div>

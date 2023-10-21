@@ -78,14 +78,17 @@
             <span id="totalCashDenom">{{ $totalDenomination == 0 ? '-' : number_format($totalDenomination, 2) }}</span>
         </div>
         <div class="inner-box-wrap">
-            <p>COLLECTED AMOUNT</p>
-            <span id="collectedAmnt">{{ number_format($checkDetails, 2) }}</span>
+            <p>COLLECTED AMOUNT</p>            
+            <span id="collectedAmnt">{{ number_format($sumDetails, 2) }}</span>
         </div>
     </div>
 
     <!-- * Approve Button -->
     <div class="box-wrap">
-        <button class="button-2-green" data-approve-cash-denomination-button>Approve</button>
+        @if (session()->has('RESPONSE_NOT_EQUAL_DENOMINATIONS_MODAL'))
+        <span class="text-required" style="margin-right: 2rem; margin-top: 0.1rem; width: 20rem; font-size: 0.6rem;">{{ session('RESPONSE_NOT_EQUAL_DENOMINATIONS_MODAL') }} !</span>
+        @endif
+        <button class="button-2-green" wire:click = "approveDenominations"  data-approve-cash-denomination-button>Approve</button>
     </div>
 
 </div>
