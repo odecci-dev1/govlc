@@ -247,7 +247,7 @@
 
                             <!-- * Status -->
                             <td style="text-transform: capitalize;">
-                                {{ strtolower($mdetails['collection_Status']) }}
+                                {{ strtolower($mdetails['payment_Status']) }}
                             </td>
 
                         </tr>
