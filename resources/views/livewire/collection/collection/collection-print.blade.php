@@ -69,11 +69,17 @@
                     @if($cnt == 0)
                     </div>  
                     @endif  
-                        @if(count($areaDetails) == $countme)                           
+                        @if(count($areaDetails) == $countme)  
+                            @if($cnt == 0)
+                            <div class="box-wrapper">
+                            @endif                      
                             @for($x = 1; $x <= (4 - $cnt); $x++)
                             <div class="box" style="border: none; outline: none;">                               
                             </div>
                             @endfor
+                            @if($cnt == 0)
+                            </div>
+                            @endif  
                         @endif                                             
                   
                     @if($cntheader == 0)
@@ -83,20 +89,14 @@
                         @if(count($areaDetails) == $countme)
                         </div>
                         </div>
+                        @if($cntheader > 4)
                         </div>
+                        @endif
                         @endif
                     @endif                      
                 @endforeach  
             @endif              
       
-        <!-- <div class="footer-wrapper">
-            <div class="footer-inner-wrapper">
-                <p> &lt;<span id="">1/2</span>&gt;</p>
-            </div>
-            <button class="button-2" data-printables-button>PRINT</button>
-        </div> -->
-   
-
     <!-- * Page 2 -->
     <div class="page page-2">        
         <div class="body-wrapper">
