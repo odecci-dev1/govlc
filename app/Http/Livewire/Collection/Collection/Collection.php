@@ -16,13 +16,12 @@ class Collection extends Component
 
     public $areaDetails = [];    
     public $areaDetailsFooter = [];
+    public $infoFooter;
 
     public function print(){
         $print = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/PrintCollection', ['areaID' => $this->areaID, 'foid' => $this->foid]);    
-        $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID]);      
-        //$crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);                                    
-        return redirect()->to('/collection/view');
-        //$this->areaID = $this->areaID;       
+        $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID]);              
+        return redirect()->to('/collection/view');       
     }
     
     public function getCollectionDetails($areaID, $foid){
@@ -39,9 +38,7 @@ class Collection extends Component
                 $this->areaID = $areaID;    
                 $this->foid = $foid;   
             }
-        }
-
-        
+        }       
     }
 
     public function mount(){
@@ -75,6 +72,7 @@ class Collection extends Component
                     }                                                 
                 }
             }
+            //dd( $this->areaDetails );
             //dd($this->areas);
             //dd( $this->areaDetails->where('areaID', 'AREA-021') );    
         }

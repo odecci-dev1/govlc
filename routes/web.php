@@ -111,7 +111,7 @@ Route::get('/tranactions/group/application/view/{groupId}', CreateApplicationGro
 
 //collection
 Route::get('/collection/list',CollectionList::class);
-Route::get('/collection/view/{collRefNo?}',Collection::class);
+Route::get('/collection/view/{areaID?}',Collection::class);
 Route::get('/collection/remittance/{areaRefNo}',CollectionRemittance::class);
 // Route::get('/collection/print/area/{areaID}',CollectionPrint::class);
 Route::get('/collection/print/area/{areaID}', function(){

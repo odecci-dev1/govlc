@@ -12,6 +12,7 @@ class CollectionRemittance extends Component
     public $areaRefNo;
     public $list;
     public $foid = '';
+    public $areaID = '';
 
     public $memid = '';
     public $reminfo;
@@ -172,6 +173,7 @@ class CollectionRemittance extends Component
         if($data){
             $this->list = collect($data);
             $this->foid = $this->list[0]['foid'];
+            $this->areaID = $this->list[0]['areaID'];
         }   
         //dd($this->list);   
         return view('livewire.collection.collection.collection-remittance');

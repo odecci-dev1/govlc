@@ -44,7 +44,10 @@
                                 </div>
                                 <div class="inner-box-2">
                                     <p>Penalty</p>
-                                    <span id="collectionPenalty">{{ number_format($area['expectedCollection'] - $area['total_collectedAmount'], 2) }}</span>
+                                    @php 
+                                        $penalty = $area['expectedCollection'] - $area['total_collectedAmount'];
+                                    @endphp
+                                    <span id="collectionPenalty">{{ number_format(($penalty < 0 ? 0 : $penalty), 2) }}</span>
                                 </div>
                             </div>
                         </li>
@@ -102,9 +105,9 @@
              <!-- * Inner-inner Container 1 -->
              <div class="inner-inner-container {{ $areaID != '' ? 'show-print-remit-buttons' : '' }}" data-print-remit-buttons>    
                 @php
-                    $checkDetails = $areaDetails->where('areaID', $areaID)->where('payment_Status', 'PAID')->first();                                
+                    $checkDetails = $areaDetails->where('areaID', $areaID)->sum('collectedAmount');                                
                 @endphp
-                @if($checkDetails)
+                @if($checkDetails > 0)
                 <button type="button" class="button-2-green" data-open-cash-denomination-button>Collect</button>
                 <button type="button" class="button-2-alert" data-open-collection-reject-button>Reject</button>
                 @endif
@@ -151,6 +154,10 @@
                              <span class="th-name">Collectible</span>
                          </th>
 
+                         <th>
+                             <span class="th-name">Collected Amount</span>
+                         </th>
+
                          <!-- * Amount Due -->
                          <th>
                              <span class="th-name">Amount Due</span>
@@ -191,8 +198,12 @@
                         @endphp
                         <tr data-area-menu-toggle data-details-wrapper-dropdown onclick="showDetails('{{ $cnt }}')" class="{{ $areaID != '' ? ($mdetails['areaID'] == $areaID ? 'show-area-details' : '') : '' }}" style="{{ $areaID != '' ? ($mdetails['areaID'] == $areaID ? '' : 'display:none;') : 'display:none;' }}">
 
-                            <td>                            
-                                <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana">
+                            <td>                                                            
+                                @if(file_exists(public_path('storage/members_profile/'.(isset($mdetails['filePath']) ? $mdetails['filePath'] : 'xxxx'))))                                  
+                                    <img src="{{ asset('storage/members_profile/'.$mdetails['filePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                                @else
+                                    <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
+                                @endif    
                             </td>
 
                             <td>
@@ -201,13 +212,17 @@
 
                             <td>                             
                                 <div class="td-wrapper">                                
-                                    <span class="td-name">{{ $mdetails['borrower'] }} - {{ $mdetails['areaID'] }}</span>
+                                    <span class="td-name">{{ $mdetails['borrower'] }}</span>
                                 </div>
                             </td>
 
                             <!-- * Collectible  -->
                             <td>
                                 {{ number_format($mdetails['dailyCollectibles'], 2) }}
+                            </td>
+
+                            <td>
+                                {{ number_format($mdetails['collectedAmount'], 2) }}
                             </td>
 
                             <!-- * Amount Due -->
@@ -249,10 +264,10 @@
                                             <p>Contact No.:</p>
                                         </div>
                                         <div class="inner-inner-box">
-                                            <p>Juana Dela Cruz</p>
-                                            <p>0917232132</p>
-                                            <p>Melody Ocampo</p>
-                                            <p>0923214379</p>
+                                            <p>{{ $mdetails['borrower'] }}</p>
+                                            <p>{{ $mdetails['cno'] }}</p>
+                                            <p>{{ $mdetails['co_Borrower'] }}</p>
+                                            <p>{{ $mdetails['co_Cno'] }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -267,11 +282,15 @@
                                             <p>Savings:</p>
                                         </div>
                                         <div class="inner-inner-box">
-                                            <p>12,000.00</p>
-                                            <p>June 18, 2023</p>
-                                            <p>August 30, 2023</p>
-                                            <p>Daily</p>
-                                            <p>0.00</p>
+                                            @php
+                                                $realeseDate = new DateTime($mdetails['releasingDate']);
+                                                $dueDate = new DateTime($mdetails['dueDate']);
+                                            @endphp   
+                                            <p>{{ number_format($mdetails['loanPrincipal'], 2) }}</p>
+                                            <p>{{ $realeseDate->format('F d, Y') }}</p>
+                                            <p>{{ $dueDate->format('F d, Y') }}</p>
+                                            <p>{{ $mdetails['typeOfCollection'] }}</p>
+                                            <p>{{ number_format($mdetails['totalSavingsAmount'], 2) }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -280,12 +299,10 @@
                                         <h4>Payment Info</h4>
                                         <div class="box-wrapper">
                                             <div class="inner-inner-box">
-                                                <p>Daily Collectible:</p>
-                                                <p>Min Daily Savings:</p>
+                                                <p>Daily Collectible:</p>                                             
                                             </div>
                                             <div class="inner-inner-box">
-                                                <p>350.00</p>
-                                                <p>10.00</p>
+                                                <p>{{ number_format($mdetails['dailyCollectibles'], 2) }}</p>                                                
                                             </div>
                                         </div>
                                     </div>
@@ -297,8 +314,8 @@
                                                 <p>Advance Collection:</p>
                                             </div>
                                             <div class="inner-inner-box">
-                                                <p>2000.00</p>
-                                                <p>0.00</p>
+                                                <p>{{ number_format($mdetails['lapsePayment'], 2) }}</p>
+                                                <p>{{ number_format($mdetails['advancePayment'], 2) }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -315,31 +332,33 @@
 
              <!-- * Details Wrapper 3 -->
              <div class="wrapper-3">
-
+                @php 
+                    $footer = $areaDetailsFooter->where('areaID', $areaID)->first();
+                @endphp
                  <!-- * Total Collectible: -->
                  <div class="box">
                      <p>Total Collectible:</p>
-                     <span>600.00</span>
+                     <span>{{ $footer ? number_format($footer['totalCollectible'], 2) : '0.00' }}</span>
                  </div>
                  <!-- * Total Balance: -->
                  <div class="box">
                      <p>Total Balance:</p>
-                     <span>4,350.00</span>
+                     <span>{{ $footer ? number_format($footer['total_Balance'], 2) : '0.00' }}</span>
                  </div>
                  <!-- * Total Savings: -->
                  <div class="box">
                      <p>Total Savings:</p>
-                     <span>550.00</span>
+                     <span>{{ $footer ? number_format($footer['total_savings'], 2) : '0.00' }}</span>
                  </div>
                  <!-- * Total Advance: -->
                  <div class="box">
                      <p>Total Advance:</p>
-                     <span>200.00</span>
+                     <span>{{ $footer ? number_format($footer['total_advance'], 2) : '0.00' }}</span>
                  </div>
                  <!-- * Total Lapses: -->
                  <div class="box">
                      <p>Total Lapses:</p>
-                     <span>2,200.00</span>
+                     <span>{{ $footer ? number_format($footer['total_lapses'], 2) : '0.00' }}</span>
                  </div>
              </div>
 

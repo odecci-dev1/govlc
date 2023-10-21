@@ -33,15 +33,12 @@
 
                         <!-- * Amount -->
                         <div class="input-wrapper-add" style="margin-bottom: 2rem;">
-
                             <div class="inner-container-wrapper">
-
                                 <!-- * Input Inner Wrapper -->
                                 <div class="input-inner-wrapper">
                                     <input autocomplete="off" wire:model.lazy="expenses.amount{{ $cnt }}" wire:blur="getTotalExp" class="input" type="number" placeholder="Amount">
                                    
                                 </div>
-
                             </div>
                             @error('expenses.amount'.$cnt) <span class="text-required fw-normal" style="margin-bottom: 0;">{{ $message }}</span> @enderror
                         </div>
@@ -132,7 +129,7 @@
 
         <h2>Reference Number</h2>
         <p class="p-1" id="referenceNumber">
-            ABPA120230525
+            {{ $areaRefNo }}
         </p>
         <p class="p-1b" id="collectionDate">
             July 10, 2023
@@ -193,7 +190,7 @@
 
                 <!-- * Filter Button -->
                 <button data-open-filter-member-modal>
-                    <img src="../../res/assets/icons/filter.svg" alt="filter" />
+                    <img src="{{ URL::to('/') }}/assets/icons/filter.svg" alt="filter" />
                 </button>
 
                 <!-- * Collection Officer Search Bar -->
@@ -226,10 +223,9 @@
                 <tr>
 
                     <!-- * Checkbox ALl-->
-                    <th><input type="checkbox" class="checkbox" data-select-all-checkbox></th>
-
+                  
                     <!-- * Name -->
-                    <th><span class="th-name">Name</span></th>
+                    <th><span class="th-name">Borrower</span></th>
 
                     <!-- * Collectible -->
                     <th><span class="th-name">Collectible</span></th>
@@ -265,14 +261,16 @@
                     @foreach($list as $l)
                     <tr>
 
-                        <!-- * Checkbox -->
-                        <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
+                        <!-- * Checkbox -->                      
 
                         <!-- * Name -->
                         <td>
                             <div class="td-wrapper">
-                                <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="">
-                                <span class="td-num"></span>
+                                @if(file_exists(public_path('storage/members_profile/'.(isset($l['filePath']) ? $l['filePath'] : 'xxxx'))))                                  
+                                    <img src="{{ asset('storage/members_profile/'.$l['filePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                                @else
+                                    <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
+                                @endif                                                           
                                 <span class="td-name">{{ $l['borrower'] }}</span>
                             </div>
                         </td>
@@ -280,7 +278,7 @@
                         <!-- * Co-Makers Data-->
                         <!-- <td>
                                 <div class="td-wrapper">
-                                    <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
+                                    <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-2.svg" alt="">
                                     <span class="td-name">Barbosa, June</span>
                                 </div>
                             </td> -->
