@@ -18,6 +18,23 @@ class Collection extends Component
     public $areaDetailsFooter = [];
     public $infoFooter;
 
+    //cash denominations
+    public $cashDenominations;
+    public $totalDenomination = 0;
+
+    public function getTotalDenomination(){
+        $cd1 = isset($this->cashDenominations['cd1']) ? (is_numeric($this->cashDenominations['cd1']) ? $this->cashDenominations['cd1'] : 0) : 0;
+        $cd5 = isset($this->cashDenominations['cd5']) ? (is_numeric($this->cashDenominations['cd5']) ? $this->cashDenominations['cd5'] : 0) : 0;
+        $cd10 = isset($this->cashDenominations['cd10']) ? (is_numeric($this->cashDenominations['cd10']) ? $this->cashDenominations['cd10'] : 0) : 0;
+        $cd20 = isset($this->cashDenominations['cd20']) ? (is_numeric($this->cashDenominations['cd20']) ? $this->cashDenominations['cd20'] : 0) : 0;
+        $cd50 = isset($this->cashDenominations['cd50']) ? (is_numeric($this->cashDenominations['cd50']) ? $this->cashDenominations['cd50'] : 0) : 0;
+        $cd100 = isset($this->cashDenominations['cd100']) ? (is_numeric($this->cashDenominations['cd100']) ? $this->cashDenominations['cd100'] : 0) : 0;
+        $cd200 = isset($this->cashDenominations['cd200']) ? (is_numeric($this->cashDenominations['cd200']) ? $this->cashDenominations['cd200'] : 0) : 0;
+        $cd500 = isset($this->cashDenominations['cd500']) ? (is_numeric($this->cashDenominations['cd500']) ? $this->cashDenominations['cd500'] : 0) : 0;
+        $cd1000 = isset($this->cashDenominations['cd1000']) ? (is_numeric($this->cashDenominations['cd1000']) ? $this->cashDenominations['cd1000'] : 0) : 0;
+        $this->totalDenomination = ($cd1 * 1) + ($cd5 * 5) + ($cd10 * 10) + ($cd20 * 20) + ($cd50 * 50) + ($cd100 * 100) + ($cd200 * 200) + ($cd500 * 500) + ($cd1000 * 1000);
+    }
+
     public function print(){
         $print = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/PrintCollection', ['areaID' => $this->areaID, 'foid' => $this->foid]);    
         $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID]);              

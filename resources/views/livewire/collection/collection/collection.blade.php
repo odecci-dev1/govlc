@@ -1,9 +1,6 @@
  <div>
  <!-- * Collection Viewing Container Wrapper -->
- @include('livewire.collection.collection.collection-cash-denomination-modal')
- <!-- * Reject Modal -->
- @include('livewire.collection.collection.collection-reject-reason-modal')
- @include('livewire.collection.collection.collection-summary-modal')
+
  <div class="can-container-wrapper">
 
      <!-- * Collection Add New Container 1 -->
@@ -107,14 +104,15 @@
                 @php
                     $checkDetails = $areaDetails->where('areaID', $areaID)->sum('collectedAmount');                                
                 @endphp
-                @if($checkDetails > 0)
-                <button type="button" class="button-2-green" data-open-cash-denomination-button>Collect</button>
-                <button type="button" class="button-2-alert" data-open-collection-reject-button>Reject</button>
-                @endif
+               
+                <button type="button" style="{{ $checkDetails > 0 ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
+                <button type="button" style="{{ $checkDetails > 0 ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
+            
                 <button type="button" wire:click="print" class="button-2" data-collection-print-button>Print</button>
                 @if($checkArea)
+                    <a href="{{ URL::to('/') }}/collection/remittance/{{ $checkArea['area_RefNo'] }}" class="button-2" data-collection-remit-button>Remit</a>
                     @if($checkArea['collection_RefNo'] != 'PENDING')
-                        <a href="{{ URL::to('/') }}/collection/remittance/{{ $checkArea['area_RefNo'] }}" class="button-2" data-collection-remit-button>Remit</a>
+                        
                     @endif
                 @endif                
                
@@ -246,7 +244,7 @@
                             </td>
 
                             <!-- * Status -->
-                            <td style="text-transform: capitalize;">
+                            <td style="text-transform: capitalize; color: {{ $mdetails['payment_Status'] == 'Paid' ? 'green' : 'red' }};">
                                 {{ strtolower($mdetails['payment_Status']) }}
                             </td>
 
@@ -337,7 +335,7 @@
                 @endphp
                  <!-- * Total Collectible: -->
                  <div class="box">
-                     <p>Total Collectible:</p>
+                     <p>Total Collectibles:</p>
                      <span>{{ $footer ? number_format($footer['totalCollectible'], 2) : '0.00' }}</span>
                  </div>
                  <!-- * Total Balance: -->
@@ -365,7 +363,10 @@
          </div>
 
      </div>
-
+    @include('livewire.collection.collection.collection-cash-denomination-modal')
+    <!-- * Reject Modal -->
+    @include('livewire.collection.collection.collection-reject-reason-modal')
+    @include('livewire.collection.collection.collection-summary-modal')
  </div>
  </div>
  <script>
@@ -387,6 +388,214 @@
                 trElem.classList.add("open-wrapper");
                 tdElem.classList.add("open-details");
             }          
-        };       
+        };   
+        
+        
+        // ***** Area Menu Button ***** //
+        // * used in Cash Denomination
+        // * used in Print and Remit Toggle
+        const areaMenuButton = document.querySelectorAll('[data-area-menu]')
+        const printRemitButton = document.querySelector('[data-print-remit-buttons]')
+
+        // ***** Collection Summary Modal ***** //
+        const collectionSummaryContainer = document.querySelector('[data-collection-summary-container]')
+        if (collectionSummaryContainer) {
+            const collectionSummaryPrintBtn = document.querySelector('[data-collection-summary-print-button]')
+            collectionSummaryPrintBtn.addEventListener('click', () => {
+                url = '/KC/collection/collection-summary-print.html'
+                window.open(url)
+            })
+        }
+        // ***** Cash Denomination Modal ***** //
+        const cashDenominationModal = document.querySelector('[data-cash-denomination-modal]')
+        const openCashDenominationBtn = document.querySelector('[data-open-cash-denomination-button]')
+        const closeCashDenominationBtn = document.querySelector('[data-close-cash-denomination-button]')
+        const approveCashDenominationBtn = document.querySelector('[data-approve-cash-denomination-button]')
+
+        // * Cash Denomination (collection-collected.html)
+        // * Approved Button
+
+        areaMenuButton.forEach(button => {
+            button.addEventListener('click', () => {
+
+                // * Current Button Toggled
+                button.classList.toggle('view-selected-area')
+
+                areaMenuButton.forEach(btn => {
+                    // * If current button is toggled, all buttons except the current button
+                    // * will have pointer-events: none; Otherwise, all buttons will have pointer-events: auto.
+                    if (btn !== button) {
+                        btn.style.pointerEvents = button.classList.contains('view-selected-area') ? 'none' : 'auto';
+                    }
+
+                    if (printRemitButton.classList.contains('show-print-remit-buttons')) {
+                        button.style.pointerEvents = 'auto';
+                    }
+                })
+
+                if (collectionSummaryContainer) {
+                    collectionSummaryContainer.classList.remove('show-summary')
+                }
+
+            })
+        })
+
+        if (cashDenominationModal) {
+
+
+            openCashDenominationBtn.addEventListener('click', () => {
+                cashDenominationModal.showModal()
+
+                approveCashDenominationBtn.addEventListener('click', () => {
+                    areaMenuButton.forEach((button) => {
+                        if (button.matches('.view-selected-area')) {
+                            button.classList.add('area-is-collected')
+                            printRemitButton.classList.remove('show-print-remit-buttons')
+                            // collectionSummaryContainer.classList.add('show-summary')
+                        }
+                        button.style.pointerEvents = 'auto'
+                        if (button.classList.contains('area-is-collected')) {
+                            collectionSummaryContainer.classList.add('show-summary')
+                            button.style.pointerEvents = 'none'
+                        }    
+                    })
+                })
+            })
+            
+            closeCashDenominationBtn.addEventListener('click', () => {
+                cashDenominationModal.setAttribute("closing", "")
+                cashDenominationModal.addEventListener("animationend", () => {
+                    cashDenominationModal.removeAttribute("closing")
+                    cashDenominationModal.close()
+                }, { once: true })
+            
+            })
+            
+            approveCashDenominationBtn.addEventListener('click', () => {
+                cashDenominationModal.setAttribute("closing", "")
+                cashDenominationModal.addEventListener("animationend", () => {
+                    cashDenominationModal.removeAttribute("closing")
+                    cashDenominationModal.close()
+                }, { once: true })
+                // url = '/KC/collection/collection-collected.html'
+                // location.href = url
+            })
+            
+
+
+        }
+
+        // ***** Reject Collection Modal ***** //
+
+        const rejectCollectionModal = document.querySelector('[data-collection-reject-modal]')
+        const openRejectCollectionBtn = document.querySelector('[data-open-collection-reject-button]')
+        const closeRejectCollectionBtn = document.querySelector('[data-close-collection-reject-button]')
+        const submitRejectCollectionBtn = document.querySelector('[data-submit-collection-reject-button]')
+
+        if (rejectCollectionModal) {
+
+            openRejectCollectionBtn.addEventListener('click', () => {
+                rejectCollectionModal.showModal()
+            })
+            
+            closeRejectCollectionBtn.addEventListener('click', () => {
+                rejectCollectionModal.setAttribute("closing", "");
+                rejectCollectionModal.addEventListener("animationend", () => {
+                    rejectCollectionModal.removeAttribute("closing");
+                    rejectCollectionModal.close();
+                }, { once: true });
+            
+            })
+            
+            submitRejectCollectionBtn.addEventListener('click', () => {
+                rejectCollectionModal.setAttribute("closing", "");
+                rejectCollectionModal.addEventListener("animationend", () => {
+                    rejectCollectionModal.removeAttribute("closing");
+                    rejectCollectionModal.close();
+                }, { once: true });
+                url = '/KC/collection/collection-list.html'
+                location.href = url
+            })
+
+        }
+
+
+        // ***** Add and Subtract Field Expenses ***** //
+
+        // * Add Expenses
+
+
+        // ***** Remit Modal ***** //
+
+        const remitModal = document.querySelector('[data-remit-modal]')
+        const openRemitModalBtn = document.querySelectorAll('[data-open-remit-modal]')
+        const closeRemitModalBtn = document.querySelector('[data-close-remit-modal]')
+        const saveRemitModalBtn = document.querySelector('[data-save-remit-modal]')
+        const linkToRemittedAllBtn = document.querySelector('[data-link-to-remitted-all]')
+
+        // ***** For Mobile Devices ***** //
+        const showRemittedBtn = document.querySelector('[data-show-remitted-button]')
+
+        if (remitModal) {
+
+            openRemitModalBtn.forEach((button) => {
+                button.addEventListener('click', () => {
+                    remitModal.showModal()
+
+                    saveRemitModalBtn.addEventListener('click', () => {
+                        button.innerText = ''
+                        button.classList.add('remitted')
+                    })
+                })
+            })
+
+            closeRemitModalBtn.addEventListener('click', () => {
+                remitModal.setAttribute("closing", "");
+                remitModal.addEventListener("animationend", () => {
+                    remitModal.removeAttribute("closing");
+                    remitModal.close();
+                }, { once: true });
+            })
+
+            if (saveRemitModalBtn) {
+                saveRemitModalBtn.addEventListener('click', () => {
+                    remitModal.setAttribute("closing", "");
+                    remitModal.addEventListener("animationend", () => {
+                        remitModal.removeAttribute("closing");
+                        remitModal.close();
+                    }, { once: true });
+                })
+            }
+
+        }
+
+        // ***** END ---- Remit Modal ***** //
+
+
+        // ***** Collection Summary Modal ***** //
+
+        const collectionSummaryModal = document.querySelector('[data-collection-summary-modal]')
+        const openCollectionSummaryBtn = document.querySelector('[data-open-collection-summary-button]')
+        const closeCollectionSummaryBtn = document.querySelector('[data-close-collection-summary-button]')
+
+        if (collectionSummaryModal) {
+
+            openCollectionSummaryBtn.addEventListener('click', () => {
+                collectionSummaryModal.showModal()
+            })
+            
+            closeCollectionSummaryBtn.addEventListener('click', () => {
+                collectionSummaryModal.setAttribute("closing", "");
+                collectionSummaryModal.addEventListener("animationend", () => {
+                    collectionSummaryModal.removeAttribute("closing");
+                    collectionSummaryModal.close();
+                }, { once: true });
+            
+            })
+
+        }
+
+
+        
     })
  </script>
