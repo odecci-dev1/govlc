@@ -1329,6 +1329,10 @@ class CreateApplication extends Component
         return $termsofPayment;
     }
 
+    public function getLoanHistory(){
+
+    }
+
     public function mount($type = 'create', Request $request){
         $this->member['old_profile'] = '';
         $this->member['old_signature'] = '';
@@ -1388,27 +1392,7 @@ class CreateApplication extends Component
                     $this->member['province'] = $data['province']; 
                     $this->member['yearsStay'] = $data['yearsStay'];
                     $this->member['zipCode'] = $data['zipCode'];
-                    $this->member['profile'] = $data['profilePath'];
-
-                    // $this->member['fname'] = '1Jumar';  
-                    // $this->member['lname'] = '1Cave';
-                    // $this->member['mname'] = '1Badajos';
-                    // $this->member['suffix'] = ''; 
-                    // $this->member['age'] = '20'; 
-                    // $this->member['barangay'] = 'Rivera';  
-                    // $this->member['city'] = 'San Juan'; 
-                    // $this->member['civil_Status'] = 'Married';  
-                    // $this->member['cno'] = '02233666666'; 
-                    // $this->member['country'] = 'Philippines'; 
-                    // $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
-                    // $this->member['emailAddress'] = 'test@gmail.com'; 
-                    // $this->member['gender'] = 'Male';
-                    // $this->member['houseNo'] = 'No. 9 GB';
-                    // $this->member['house_Stats'] = '2'; 
-                    // $this->member['pob'] = 'Bani, Pangasinan';
-                    // $this->member['province'] = 'NCR'; 
-                    // $this->member['yearsStay'] = '5';
-                    // $this->member['zipCode'] = '';     
+                    $this->member['profile'] = $data['profilePath'];                   
                 }
                 else{
                     $this->member['fname'] = '1Jumar';  
@@ -1574,6 +1558,7 @@ class CreateApplication extends Component
                 }
                 $this->loanDetails['remarks'] = $data['individualLoan'][0]['remarks'];
                 $this->loanDetails['ci_time'] = $this->calculateTimeDifference($data['dateCreated'], Carbon::now());    
+                //dd( Carbon::now() );
                 
                 //images and files
                 $files = $data['files'];
@@ -1605,8 +1590,7 @@ class CreateApplication extends Component
                 $this->comaker['signature'] = '';
                 if($cofiles){
                     
-                    foreach($cofiles as $cfiles){
-                      
+                    foreach($cofiles as $cfiles){                      
                         if($cfiles['fileType'] == 'Profile'){
                             $this->comaker['profile'] = $cfiles['filePath'];
                             
@@ -1706,7 +1690,7 @@ class CreateApplication extends Component
                 $this->comaker['co_CompanyName'] = $data['co_CompanyName']; 
                 $this->comaker['co_CompanyID'] = $data['co_CompanyAddress']; 
                 $this->comaker['co_Emp_Status'] = $data['co_Emp_Status'];                
-                
+                //dd($data);
                 // $this->cntmemchild
                 $child = $data['child'];              
                 if(count($child) > 0){
@@ -1861,9 +1845,7 @@ class CreateApplication extends Component
                 $this->member['f_Job'] = 'Cashier'; 
                 $this->member['f_CompanyName'] = 'SOEN'; 
                 $this->member['f_RTTB'] = '';     
-                // $this->member['loanAmount'] = '30000'; 
-                // $this->member['termsOfPayment'] = '12 months'; 
-                // $this->member['purpose'] = 'For Business'; 
+     
         
                 $this->comaker['co_Fname'] = 'Thea'; 
                 $this->comaker['co_Lname'] = 'Badajos'; 

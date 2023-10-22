@@ -2760,7 +2760,7 @@
                 <!-- * Company Address -->
                 <div class="input-wrapper">
                     <span>Company Address</span>
-                    <input wire:model.lazy="comaker.co_CompanyID" type="text" id="compAddr" name="compAddr">
+                    <input wire:model.lazy="comaker.co_CompanyID" type="text" >
                     @error('comaker.co_CompanyID') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
