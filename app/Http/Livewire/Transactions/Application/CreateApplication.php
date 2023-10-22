@@ -266,7 +266,7 @@ class CreateApplication extends Component
         $messages['member.profile.required'] = 'Please insert picture of borrower';
         $messages['imgprofile'] = 'Please insert picture of borrower';
         $messages['member.attachments.required'] = 'Please include at least one documents referring to borrower';
-        $messages['imgmemsign'] = 'Please insert signature imgae for member';
+        $messages['imgmemsign'] = 'Please insert signature image for member';
 
         $messages['comaker.co_Fname.required'] = 'Enter first name';
         $messages['comaker.co_Lname.required'] = 'Enter last name';
@@ -295,7 +295,7 @@ class CreateApplication extends Component
         $messages['comaker.co_Emp_Status.required'] = 'Enter employement status';   
         $messages['imgcoprofile'] = 'Please insert picture of comaker';
         $messages['comaker.attachments.required'] = 'Please include at least one documents referring to comaker';
-        $messages['imgcosign'] = 'Please insert signature imgae for co maker';
+        $messages['imgcosign'] = 'Please insert signature image for co maker';
 
         $messages['loanDetails.loanAmount.required'] = 'Please enter loan amount'; 
         $messages['loanDetails.loanAmount.min'] = 'Loan amount must be greater that 0';

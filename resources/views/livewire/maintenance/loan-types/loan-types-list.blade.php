@@ -1,10 +1,7 @@
-
-        <!-- * Loan Type Containers -->
-        <!-- * Container 1: All Members Header, Buttons, and Searchbar -->
-
-        <div class="m-con-1">
+<div>
+<div class="m-con-1">
         @if($showDialog == 1)
-            <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
+            <x-dialog :message="'Are you sure you want to trash selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
         @endif
         @if(session('mmessage'))
             <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
@@ -27,7 +24,7 @@
             <div class="wrapper">
                 <!-- * Search Bar -->
                 <div class="search-wrap">
-                    <input type="search" id="search" name="search" placeholder="Search">
+                    <input type="search"wire:model="keyword" placeholder="Search">
                     <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                 </div>
 
@@ -55,7 +52,7 @@
 
                     <!-- * Checkbox ALl-->
                     <th>
-                        <input type="checkbox" class="checkbox" data-select-all-checkbox>
+                        <!-- <input type="checkbox" class="checkbox" data-select-all-checkbox> -->
                     </th>
 
                     <!-- * Loan type name -->
@@ -98,7 +95,7 @@
 
                             <!-- * Checkbox Opt -->
                             <td>
-                                <input type="checkbox" class="checkbox" data-select-checkbox>
+                                <!-- <input type="checkbox" class="checkbox" data-select-checkbox> -->
                             </td>
 
                             <!-- * Loan type name Data-->
@@ -125,7 +122,7 @@
                             <td class="td-btns">
                                 <div class="td-btn-wrapper">
                                     <a href="{{ URL::to('/') }}/maintenance/loantypes/view/{{ $list['loanTypeID'] }}" class="a-btn-view-2">View</a>
-                                    <button class="a-btn-trash-2">Trash</button>
+                                    <button class="a-btn-trash-2" type="button" onclick="showDialog('{{ $list['loanTypeID'] }}')">Trash</button>
                                 </div>
                             </td>
 
@@ -151,5 +148,16 @@
             <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
 
         </div>
-
         </div>
+</div>
+        <script>
+        document.addEventListener('livewire:load', function () {
+            window.showDialog = function($mid){              
+                @this.call('showDialog', $mid);        
+            };
+
+            window.archive = function($mid){
+                @this.call('archive', $mid);       
+            };
+        })
+    </script>

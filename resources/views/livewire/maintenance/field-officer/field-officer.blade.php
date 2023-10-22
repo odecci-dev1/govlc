@@ -223,15 +223,15 @@
                         <input type="file" wire:model="imgprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                         <div wire:loading wire:target="imgprofile">Uploading...</div>
                         <!-- * Attach Button -->
-                        <input type="file" wire:model="officer.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-field-officer-file-btn></input>
+                        <input type="file" wire:model="officer.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-field-officer-file-btn></input>
                         <div wire:loading wire:target="officer.attachments">Uploading...</div>
                         @error('officer.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                     </div>
 
                     <!-- * File Chips Container -->           
-                    <div class="file-wrapper" data-attach-file-container>                   
+                    <div class="file-wrapper" style="padding: 2rem 0rem;" data-attach-file-container>                   
                     
-                            @if(isset($officer['attachments']))
+                            @if(isset($officer['attachments']))                           
                                 @if($officer['attachments'] == $officer['old_attachments'])                            
                                     @foreach($officer['attachments'] as $attachments)                                                     
                                         <div type="button" class="fileButton">
@@ -248,7 +248,7 @@
                                             @endif                                
                                         </div>                                        
                                     @endforeach
-                                @else
+                                @else                            
                                     @if(isset($officer['attachments']))                            
                                         @foreach($officer['attachments'] as $attachments)                                                     
                                             <div type="button" class="fileButton">
@@ -262,7 +262,7 @@
                                     @endif   
                                 @endif   
                                 
-                            @else
+                            @else                              
                                 @if(isset($officer['attachments']))                            
                                     @foreach($officer['attachments'] as $attachments)                                                     
                                         <div type="button" class="fileButton">
@@ -366,12 +366,12 @@
                 <div class="input-wrapper">
                     <span>Back</span>                   
                     @if($imgbackID)
-                        <input type="image" class="profile" src="{{ $imgbackID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                        <img  class="profile" src="{{ $imgbackID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
                     @else
                         @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['backID']) ? $officer['backID'] : 'xxxx'))))    
-                            <input type="image" class="profile" src="{{ asset('storage/officer_ids/'.$officer['backID']) }}" alt="Front Image" id="frontImage" name="frontImage">
+                            <img  class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/'.$officer['backID']) }}" alt="Front Image" id="frontImage" name="frontImage">
                         @else
-                            <input type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
+                            <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
                         @endif 
                     @endif   
                     <div class="btn-wrapper">

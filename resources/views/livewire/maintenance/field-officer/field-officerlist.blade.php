@@ -38,7 +38,7 @@
 
                 <!-- * View Trash Button -->
                 <div class="btn-container">
-                    <button wire:click="showDialog" type="button">View Trash</button>
+                    <button type="button">View Trash</button>
                 </div>
             </div>
 

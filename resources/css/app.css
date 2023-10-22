@@ -7644,7 +7644,7 @@ body.print-portrait .page {
   gap: 1.5rem;
 }
 .main-dashboard .no-form-con .no-container-wrapper .no-container-2 .small-con .box-wrap:first-of-type .colspan .file-wrapper {
-  display: none;
+  /* display: none; by jumz */
 }
 .main-dashboard .no-form-con .no-container-wrapper .no-container-2 .small-con .box-wrap:first-of-type .colspan .file-wrapper.activeFileWrapper {
   display: grid;
