@@ -280,8 +280,7 @@ class LoanTypes extends Component
     }
 
     public function archive($loantypeID){       
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/DeleteLoanType', [ 'loanTypeID' => $loantypeID ]);              
-        //dd($loantypeID);
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/DeleteLoanType', [ 'loanTypeID' => $loantypeID ]);                     
         return redirect()->to('/maintenance/loantypes/list')->with('mmessage', 'Loan type has been trashed');    
     }
 

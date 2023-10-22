@@ -31,7 +31,7 @@
                             <!-- * Save -->
                             <button type="button" wire:click="save" class="button" data-save>{{ $loantypeID =='' ? 'Save' : 'Update' }}</button>
                             @if($loantypeID !='')
-                            <button type="button" onclick="showDialog('{{ $loantypeID }}')" class="button" data-save>Trash</button>
+                            <button type="button" {{ $loantypeID == 'LT-02' ? 'disabled' : '' }} onclick="showDialog('{{ $loantypeID }}')" class="button" data-save>Trash</button>
                             @endif
                         </div>
                     </div>

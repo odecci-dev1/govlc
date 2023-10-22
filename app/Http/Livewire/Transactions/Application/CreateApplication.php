@@ -764,7 +764,7 @@ class CreateApplication extends Component
                     ]];
       
                     // $extension = $request->file('filename')->getClientOriginalExtension();
-                    //dd($data);                          
+                 //dd($data);                          
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
                 // dd( $crt );
@@ -854,13 +854,13 @@ class CreateApplication extends Component
                                         'businessName' => $value['businessName'], 
                                         'businessType' => $value['businessType'],
                                         'businessAddress' => $value['businessAddress'],
-                                        'b_status' => $value['b_status'],
+                                        'b_status' => 1, //$value['b_status'], error
                                         'yob' => $value['yob'],
                                         'noe' => $value['noe'],
                                         'salary' => $value['salary'],
                                         'vos' => $value['vos'],
                                         'aos' => $value['aos'],   
-                                        'businessFiles' => $this->storeBusinessInfoAttachments( $value['attachments'] )
+                                        'businessFiles' => []
                                     ];
                 }
             }
@@ -918,7 +918,7 @@ class CreateApplication extends Component
                             "yos"=> $input['member']['yos'] ??= '0',
                             "monthlySalary"=> $input['member']['monthlySalary'] ??= '0',
                             "otherSOC"=> $input['member']['otherSOC'] ??= '',
-                            "bO_Status"=> $input['member']['bO_Status'] ??= '0',
+                            "bO_Status"=> '1',//$input['member']['bO_Status'] ??= '0',
                             "companyName"=> $input['member']['companyName'] ??= '',
                             "companyAddress"=> $input['member']['companyAddress'] ??= '',
                             "emp_Status"=> $input['member']['emp_Status'] ??= '0',
@@ -1003,9 +1003,11 @@ class CreateApplication extends Component
                         ]
                     ];                                                   
                     // $extension = $request->file('filename')->getClientOriginalExtension();
-                 
+                    //dito
+                    // dd( json_encode($data));
+                    //dd( $data );
                     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                    
-                    //dd( $data);
+                    //dd( $crt);
                     return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> $type == 1 ? 'Application successfully updated' : 'Application successfully submited for CI', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -1477,6 +1479,7 @@ class CreateApplication extends Component
                 //dd($data);    
                 //ditoviewing
                 $this->searchedmemId =  $data['memId'];
+                //dd( $this->searchedmemId );
                 //get loan payment and history
               
                 $loanHistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                                    
@@ -1709,7 +1712,7 @@ class CreateApplication extends Component
                                                         'businessName' => $businfo['businessName'],
                                                         'businessType' => $businfo['businessType'],
                                                         'businessAddress' => $businfo['businessAddress'],                                   
-                                                        'b_status' => $businfo['b_status'],
+                                                        'b_status' => $businfo['b_statusID'],
                                                         'yob' => $businfo['yob'],
                                                         'noe' => $businfo['noe'],
                                                         'salary' => $businfo['salary'],

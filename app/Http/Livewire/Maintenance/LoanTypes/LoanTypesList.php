@@ -4,10 +4,12 @@ namespace App\Http\Livewire\Maintenance\LoanTypes;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use App\Traits\Common;
 
 class LoanTypesList extends Component
 {
 
+    use Common;
     public $keyword = '';
 
     public function render()

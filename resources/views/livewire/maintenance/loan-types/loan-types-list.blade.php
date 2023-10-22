@@ -1,8 +1,14 @@
-<div>
+
         <!-- * Loan Type Containers -->
         <!-- * Container 1: All Members Header, Buttons, and Searchbar -->
 
         <div class="m-con-1">
+        @if($showDialog == 1)
+            <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
+        @endif
+        @if(session('mmessage'))
+            <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+        @endif
         <h2>Loan Types</h2>
         <p class="p-2">Total of <span id="numOFLoanTypes">5</span> loan types</p>
 
@@ -147,4 +153,3 @@
         </div>
 
         </div>
-</div>
