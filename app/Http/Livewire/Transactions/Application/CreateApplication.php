@@ -764,7 +764,7 @@ class CreateApplication extends Component
                     ]];
       
                     // $extension = $request->file('filename')->getClientOriginalExtension();
-                    dd($data);                          
+                    dd(json_encode($data));                          
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
                 // dd( $crt );
