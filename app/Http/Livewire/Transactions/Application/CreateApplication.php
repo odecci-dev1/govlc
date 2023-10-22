@@ -1025,7 +1025,7 @@ class CreateApplication extends Component
                     ];                                                   
                     // $extension = $request->file('filename')->getClientOriginalExtension();
                     //dito
-                    // dd( json_encode($data));
+                    //dd( json_encode($data));
                     //dd( $data );
                     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                    
                     //dd( $crt);
@@ -1497,7 +1497,7 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                dd($data);    
+                //dd($data);    
                 //ditoviewing
                 $this->searchedmemId =  $data['memId'];
                 //dd( $this->searchedmemId );
