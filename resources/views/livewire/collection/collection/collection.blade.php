@@ -85,7 +85,7 @@
                             <select wire:model="foid" class="select-option-menu" style="width: 40rem;{{ $areaID != '' ? '' : 'visibility: hidden;' }}">                                
                                 @if($folist)
                                     @foreach($folist as $fo)
-                                        <option value="{{ $fo['foid'] }}">{{ $fo['lname'] }}, {{ $fo['mname'] }} {{ $fo['mname'] }}</option>           
+                                        <option value="{{ $fo['foid'] }}">{{ $fo['lname'] }}, {{ $fo['fname'] }} {{ substr($fo['mname'], 0, 1) }}.</option>           
                                     @endforeach
                                 @endif                                  
                             </select>      

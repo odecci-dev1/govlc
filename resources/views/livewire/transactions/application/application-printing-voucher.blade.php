@@ -178,10 +178,10 @@
                     </div>
 
                 </div>
-
+</div>
             <!-- </div> -->
     <!-- </main> -->
-    <script src="../../res/js/app.js" defer></script>
+ 
     <script>
         const printablesContainer = document.querySelector('[data-printables-button]')
 
@@ -382,4 +382,4 @@
 
         // passbookBack.remove()
     </script>
-</div>
+

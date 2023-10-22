@@ -25,7 +25,7 @@ trait Common {
       $start_datetime = new DateTime($datestart); 
       $diff = $start_datetime->diff(new DateTime($dateend)); 
 
-      return ['years' => $diff->y, 'months' => $diff->m, 'days' => $diff->d, 'hours' => $diff->h, 'minutes' => $diff->i];
+      return ['years' => $diff->y, 'months' => $diff->m, 'days' => $diff->d, 'hours' => $diff->h, 'minutes' => $diff->i, 'seconds' => $diff->s];
       
       // echo $diff->days.' Days total<br>'; 
       // echo $diff->y.' Years<br>'; 

@@ -61,7 +61,7 @@ class CreateApplication extends Component
         $rules = [];      
         $rules['member.fname'] = 'required';  
         $rules['member.lname'] = 'required';  
-        $rules['member.mname'] = 'required';  
+        $rules['member.mname'] = '';  
         $rules['member.suffix'] = '';  
         $rules['member.age'] = 'required';  
         $rules['member.barangay'] = 'required';  
@@ -93,7 +93,7 @@ class CreateApplication extends Component
         $rules['member.emp_Status'] = 'required';
         $rules['member.f_Fname'] = 'required';
         $rules['member.f_Lname'] = 'required';
-        $rules['member.f_Mname'] = 'required';
+        $rules['member.f_Mname'] = '';
         $rules['member.f_Suffix'] = '';
         $rules['member.f_DOB'] = 'required';
         $rules['member.f_Age'] = 'required';
@@ -113,7 +113,7 @@ class CreateApplication extends Component
 
         $rules['comaker.co_Fname'] = 'required';
         $rules['comaker.co_Lname'] = 'required';
-        $rules['comaker.co_Mname'] = 'required';
+        $rules['comaker.co_Mname'] = '';
         $rules['comaker.co_Suffix'] = '';
         $rules['comaker.co_Age'] = 'required';
         $rules['comaker.co_Barangay'] = 'required';
@@ -144,7 +144,7 @@ class CreateApplication extends Component
         $rules['imgcoprofile'] = isset($this->comaker['profile']) ? '' : 'required';  
         $rules['comaker.attachments'] = 'required';  
         $rules['imgcosign'] = isset($this->member['profile']) ? '' : 'required';  
-        // $rules['comaker.remarks'] = '';      
+        // $rules['comaker.remarks'] = '';             
         
 
         if(isset($this->member['civil_Status'])){
@@ -152,7 +152,7 @@ class CreateApplication extends Component
                 if(count($this->cntmemchild) > 1){
                     foreach($this->cntmemchild as $cntchild){
                         $rules['inpchild.fname'.$cntchild] = 'required';   
-                        $rules['inpchild.mname'.$cntchild] = 'required';      
+                        $rules['inpchild.mname'.$cntchild] = '';      
                         $rules['inpchild.lname'.$cntchild] = 'required';      
                         $rules['inpchild.age'.$cntchild] = 'required';      
                         $rules['inpchild.school'.$cntchild] = 'required';                  
@@ -162,7 +162,7 @@ class CreateApplication extends Component
                     //if(isset($this->inpchild['fname1']) || isset($this->inpchild['mname1']) || isset($this->inpchild['lname1']) || isset($this->inpchild['age1']) || isset($this->inpchild['school1'])){
                     if((isset($this->inpchild['fname1']) ? $this->inpchild['fname1'] != '' : false)  || (isset($this->inpchild['mname1']) ? $this->inpchild['mname1'] != '' : false) || (isset($this->inpchild['lname1']) ? $this->inpchild['lname1'] != '' : false) || (isset($this->inpchild['age1']) ? $this->inpchild['age1'] != '' : false) || (isset($this->inpchild['school1']) ? $this->inpchild['school1'] != '' : false)){
                         $rules['inpchild.fname1'] = 'required';      
-                        $rules['inpchild.mname1'] = 'required';      
+                        $rules['inpchild.mname1'] = '';      
                         $rules['inpchild.lname1'] = 'required';      
                         $rules['inpchild.age1'] = 'required';      
                         $rules['inpchild.school1'] = 'required';      
@@ -221,38 +221,38 @@ class CreateApplication extends Component
 
     public function messages(){
         $messages = [];
-        $messages['member.fname.required'] = 'First name is required';        
-        $messages['member.lname.required'] = 'Last name is required';             
-        $messages['member.mname.required'] = 'Middle name is required';  
-        $messages['member.age.required'] = 'Age is required';    
-        $messages['member.barangay.required'] = 'Barangay is required';  
-        $messages['member.city.required'] = 'City is required';  
-        $messages['member.civil_Status.required'] = 'Civil Status is required';  
-        $messages['member.cno.required'] = 'Contact number is required';  
-        $messages['member.country.required'] = 'Country is required';  
-        $messages['member.dob.required'] = 'Date of birth is required';  
-        $messages['member.emailAddress.required'] = 'Email address is required';  
-        $messages['member.gender.required'] = 'Gender is required';            
-        $messages['member.houseNo.required'] = 'House no. is required';            
-        $messages['member.house_Stats.required'] = 'Select one option';            
-        $messages['member.pob.required'] = 'Place of birth is required';            
-        $messages['member.province.required'] = 'Province is required';            
-        $messages['member.yearsStay.required'] = 'Enter year of stay';            
-        $messages['member.electricBill.required'] = 'Enter electric bill';  
-        $messages['member.waterBill.required'] = 'Enter water bill';  
-        $messages['member.otherBills.required'] = 'Enter other bills';  
-        $messages['member.dailyExpenses.required'] = 'Enter daily expenses';  
-        $messages['member.jobDescription.required'] = 'Enter job description';  
-        $messages['member.yos.required'] = 'Enter years of service';  
-        $messages['member.monthlySalary.required'] = 'Enter monthly salary';    
-        $messages['member.otherSOC.required'] = 'Enter other source of income';
-        $messages['member.bO_Status.required'] = 'Enter business status';
-        $messages['member.companyName.required'] = 'Enter company name';
-        $messages['member.companyAddress.required'] = 'Enter company address';
-        $messages['member.emp_Status.required'] = 'Enter employment status';
-        $messages['member.f_Fname.required'] = 'Enter first name';
-        $messages['member.f_Lname.required'] = 'Enter last name';
-        $messages['member.f_Mname.required'] = 'Enter middle name';
+        $messages['member.fname.required'] = 'Borrower first name is required';        
+        $messages['member.lname.required'] = 'Borrower last name is required';             
+        $messages['member.mname.required'] = 'Borrower middle name is required';  
+        $messages['member.age.required'] = 'Borrower age is required';    
+        $messages['member.barangay.required'] = 'Borrower barangay is required';  
+        $messages['member.city.required'] = 'Borrower city is required';  
+        $messages['member.civil_Status.required'] = 'Borrower civil status is required';  
+        $messages['member.cno.required'] = 'Borrower contact number is required';  
+        $messages['member.country.required'] = 'Borrower country is required';  
+        $messages['member.dob.required'] = 'Borrower date of birth is required';  
+        $messages['member.emailAddress.required'] = 'Borrower email is required';  
+        $messages['member.gender.required'] = 'Borrower gender is required';            
+        $messages['member.houseNo.required'] = 'Borrower house no. is required';            
+        $messages['member.house_Stats.required'] = 'Borrower house stat is required';            
+        $messages['member.pob.required'] = 'Borrower place of birth is required';            
+        $messages['member.province.required'] = 'Borrower province is required';            
+        $messages['member.yearsStay.required'] = 'Enter year of stay of borrower';            
+        $messages['member.electricBill.required'] = 'Enter electric bill of borrower';  
+        $messages['member.waterBill.required'] = 'Enter water bill of borrower';  
+        $messages['member.otherBills.required'] = 'Enter other bills of borrower';  
+        $messages['member.dailyExpenses.required'] = 'Enter daily expenses of borrower';  
+        $messages['member.jobDescription.required'] = 'Enter job description of borrower';  
+        $messages['member.yos.required'] = 'Enter years of service of borrower';  
+        $messages['member.monthlySalary.required'] = 'Enter monthly salary of borrower';    
+        $messages['member.otherSOC.required'] = 'Enter other source of income of borrower';
+        $messages['member.bO_Status.required'] = 'Enter business status of borrower';
+        $messages['member.companyName.required'] = 'Enter company name of borrower';
+        $messages['member.companyAddress.required'] = 'Enter company address of borrower';
+        $messages['member.emp_Status.required'] = 'Enter employment status of borrower';
+        $messages['member.f_Fname.required'] = 'First name is required - borrower family info';
+        $messages['member.f_Lname.required'] = 'Last name is required - borrower family info';
+        $messages['member.f_Mname.required'] = 'Middle name is required - borrower family info';
         $messages['member.f_DOB.required'] = 'Enter date of birth';
         $messages['member.f_Age.required'] = 'Enter age';
         $messages['member.f_NOD.required'] = 'Enter number of dependants';
@@ -397,6 +397,28 @@ class CreateApplication extends Component
                 $messages['inpbank.address1.required'] = 'Enter bank address';          
             }
         }
+
+        // 'membusinfo.businessName' => ['required'],
+        //                             'membusinfo.businessType' => ['required'],
+        //                             'membusinfo.businessAddress' => ['required'],                                   
+        //                             'membusinfo.b_status' => ['required'],
+        //                             'membusinfo.yob' => ['required'],
+        //                             'membusinfo.noe' => ['required'],
+        //                             'membusinfo.salary' => ['required'],
+        //                             'membusinfo.vos' => ['required'],
+        //                             'membusinfo.aos' => ['required'],
+
+        $messages['membusinfo.businessName.required'] = 'Business name is required';
+        $messages['membusinfo.businessType.required'] = 'Business type is required';
+        $messages['membusinfo.businessAddress.required'] = 'Address is required';
+        $messages['membusinfo.b_status.required'] = 'Status is required';
+        $messages['membusinfo.yob.required'] = 'Year of business is required';
+        $messages['membusinfo.noe.required'] = 'No. of employee is required';
+        $messages['membusinfo.salary.required'] = 'Salary amount is required';
+        $messages['membusinfo.vos.required'] = 'Value of stocks is required';
+        $messages['membusinfo.aos.required'] = 'Amount of sales is required';
+        $messages['membusinfo.attachments.required'] = 'Attachements are required';
+
         return $messages;        
     }
 
@@ -576,14 +598,16 @@ class CreateApplication extends Component
             if(count( $this->businfo) > 0){
                 foreach($this->businfo as $key => $value){
                     $businesses[] = [   'businessName' => $value['businessName'], 
-                                    'businessType' => $value['businessType'],
-                                    'businessAddress' => $value['businessAddress'],
-                                    'b_status' => $value['b_status'],
-                                    'yob' => $value['yob'],
-                                    'noe' => $value['noe'],
-                                    'salary' => $value['salary'],
-                                    'vos' => $value['vos'],
-                                    'aos' => $value['aos']    ];
+                                        'businessType' => $value['businessType'],
+                                        'businessAddress' => $value['businessAddress'],
+                                        'b_status' => $value['b_status'],
+                                        'yob' => $value['yob'],
+                                        'noe' => $value['noe'],
+                                        'salary' => $value['salary'],
+                                        'vos' => $value['vos'],
+                                        'aos' => $value['aos'],
+                                        'businessFiles' => $this->storeBusinessInfoAttachments( $value['attachments'] )  
+                                    ];
                 }
             }
 
@@ -775,6 +799,32 @@ class CreateApplication extends Component
         }
     }
 
+    //dito
+    public function storeBusinessInfoAttachments($businessattachments){
+        $memattachements = [];      
+        // if($this->member['attachments'] == $this->member['old_attachments']){
+        //     $memattachements = $this->member['attachments'];
+        // }
+        // else{            
+            if(isset($businessattachments)){    
+                $deletefiles = [];
+                if(isset($this->membusinfo['old_attachments'])){
+                    foreach($this->membusinfo['old_attachments'] as $oldfiles){
+                        $deletefiles[] = 'public/business_attachments/'.$oldfiles['filePath'];
+                    }
+                }
+                Storage::delete($deletefiles);       
+                foreach ($businessattachments as $attachments) {
+                    $time = time();
+                    $filename = 'business_attachments_'.$time.'_'.$attachments->getClientOriginalName();
+                    $attachments->storeAs('public/business_attachments', $filename);   
+                    $memattachements[] = [ 'filePath' => $filename , 'fileName' => $filename, 'fileType' => $filename ];
+                }
+            }
+        //}
+        return $memattachements;
+    }
+
     public function update($type = 1){             
         try {                                  
             $this->resetValidation();          
@@ -797,17 +847,21 @@ class CreateApplication extends Component
                 }
             }
            
-            if(count( $this->businfo) > 0){
+            if(count( $this->businfo) > 0){          
                 foreach($this->businfo as $key => $value){
-                    $businesses[] = [   'businessName' => $value['businessName'], 
-                                    'businessType' => $value['businessType'],
-                                    'businessAddress' => $value['businessAddress'],
-                                    'b_status' => $value['b_status'],
-                                    'yob' => $value['yob'],
-                                    'noe' => $value['noe'],
-                                    'salary' => $value['salary'],
-                                    'vos' => $value['vos'],
-                                    'aos' => $value['aos']    ];
+                    
+                    $businesses[] = [   
+                                        'businessName' => $value['businessName'], 
+                                        'businessType' => $value['businessType'],
+                                        'businessAddress' => $value['businessAddress'],
+                                        'b_status' => $value['b_status'],
+                                        'yob' => $value['yob'],
+                                        'noe' => $value['noe'],
+                                        'salary' => $value['salary'],
+                                        'vos' => $value['vos'],
+                                        'aos' => $value['aos'],   
+                                        'businessFiles' => $this->storeBusinessInfoAttachments( $value['attachments'] )
+                                    ];
                 }
             }
 
@@ -928,23 +982,26 @@ class CreateApplication extends Component
                             "co_ProfileFilePath"=>  $this->storeCoProfileImage(),
                             "requirementsFile"=> $this->storeAttachments(),    
                             "signatureUpload"=> [
-                                [
-                                  "fileName"=> "string",
-                                  "filePath"=> "string"
-                                ]
+                                    [
+                                        "fileName"=> $this->storeSignature(),
+                                        "filePath"=> $this->storeSignature()
+                                    ]
                               ],                                    
                             "co_RequirementsFile"=> $this->storeCoAttachments(),
                             "co_SignatureUpload"=> [
                                     [
-                                    "fileName"=> "string",
-                                    "filePath"=> "string"
+                                        "fileName"=> $this->storeCoSignature(),
+                                        "filePath"=> $this->storeCoSignature()
                                     ]
                                 ],
                             "userId"=> session()->get('auth_userid'),
                             "naid"=> $this->naID
+
+                            //
+                          
+                            //
                         ]
-                    ];
-                    //dd($data);                                   
+                    ];                                                   
                     // $extension = $request->file('filename')->getClientOriginalExtension();
                  
                     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                    
@@ -1115,6 +1172,16 @@ class CreateApplication extends Component
         $this->member['age'] = $age;           
     }
 
+    public function getcomakerAge(){
+        $age = $this->calculateAge($this->comaker['co_DOB']);
+        $this->comaker['co_Age'] = $age;           
+    }
+
+    public function getmemberFAge(){
+        $age = $this->calculateAge($this->member['f_DOB']);
+        $this->member['f_Age'] = $age;           
+    }
+
     public function addVehicle(){
         $lastcnt = array_key_last($this->vehicle);   
         $this->vehicle[$lastcnt + 1] = [  'vehicle' => '' ];
@@ -1161,10 +1228,17 @@ class CreateApplication extends Component
     public function subBank($cnt){
         unset($this->bank[$cnt]);       
     }
-
+    
     public function addBusinessInfo(){
-        $lastcnt = array_key_last($this->businfo);    
-         $data = $this->validate([                                    
+        $lastcnt = array_key_last($this->businfo);  
+        if(isset($this->membusinfo['cnt'])){
+            $lastcnt = $this->membusinfo['cnt'];
+        }
+        else{
+            $lastcnt = $lastcnt  + 1;
+        }
+        //dd($this->membusinfo['attachments']);  
+        $data = $this->validate([                                    
                                     'membusinfo.businessName' => ['required'],
                                     'membusinfo.businessType' => ['required'],
                                     'membusinfo.businessAddress' => ['required'],                                   
@@ -1174,9 +1248,10 @@ class CreateApplication extends Component
                                     'membusinfo.salary' => ['required'],
                                     'membusinfo.vos' => ['required'],
                                     'membusinfo.aos' => ['required'],
+                                    'membusinfo.attachments' => ['required'],
                                 ]);
-
-        $this->businfo[$lastcnt + 1] = [  'businessName' => $data['membusinfo']['businessName'],
+       
+        $this->businfo[$lastcnt] = [  'businessName' => $data['membusinfo']['businessName'],
                                           'businessType' => $data['membusinfo']['businessType'],
                                           'businessAddress' => $data['membusinfo']['businessAddress'],                                         
                                           'b_status' => $data['membusinfo']['b_status'],
@@ -1184,13 +1259,30 @@ class CreateApplication extends Component
                                           'noe' => $data['membusinfo']['noe'],
                                           'salary' => $data['membusinfo']['salary'],
                                           'vos' => $data['membusinfo']['vos'],
-                                          'aos' => $data['membusinfo']['aos']
+                                          'aos' => $data['membusinfo']['aos'],    
+                                          'attachments' => $this->membusinfo['attachments']                                      
                                         ];
-
+                                
         $this->resetmembusinfo();                        
     }
 
+    public function editBusinessInfo($cnt){
+        $businfo = $this->businfo[$cnt];
+        $this->membusinfo['cnt']  = $cnt;
+        $this->membusinfo['businessName']  = $businfo['businessName'];
+        $this->membusinfo['businessType']  = $businfo['businessType'];
+        $this->membusinfo['businessAddress']  = $businfo['businessAddress'];
+        $this->membusinfo['b_status']  = $businfo['b_status'];
+        $this->membusinfo['yob']  = $businfo['yob'];
+        $this->membusinfo['noe']  = $businfo['noe'];
+        $this->membusinfo['salary']  = $businfo['salary'];
+        $this->membusinfo['vos']  = $businfo['vos'];
+        $this->membusinfo['aos']  = $businfo['aos'];
+        $this->membusinfo['attachments']  = $businfo['attachments'];
+    }
+
     public function resetmembusinfo(){
+        $this->membusinfo['cnt']  = null;
         $this->membusinfo['businessName'] = '';
         $this->membusinfo['businessType'] = '';
         $this->membusinfo['businessAddress'] = '';
@@ -1200,6 +1292,8 @@ class CreateApplication extends Component
         $this->membusinfo['salary'] = '';
         $this->membusinfo['vos'] = '';
         $this->membusinfo['aos'] = '';
+        $this->membusinfo['attachments'] = [];
+        $this->membusinfo['old_attachments'] = [];
     }
 
     public function getLoanTermsname($topid = ''){
@@ -1221,7 +1315,9 @@ class CreateApplication extends Component
         $this->comaker['old_profile'] = '';
         $this->comaker['old_signature'] = '';
         $this->type = $type;     
-        $this->termsOfPaymentList = collect([]);    
+        $this->termsOfPaymentList = collect([]);   
+        
+        $this->membusinfo['old_attachments'] = [];
       
         $this->member['civil_Status'] = '';       
         $this->member['emp_Status'] = '';
@@ -1269,6 +1365,7 @@ class CreateApplication extends Component
                     $this->member['province'] = $data['province']; 
                     $this->member['yearsStay'] = $data['yearsStay'];
                     $this->member['zipCode'] = $data['zipCode'];
+                    $this->member['profile'] = $data['profilePath'];
 
                     // $this->member['fname'] = '1Jumar';  
                     // $this->member['lname'] = '1Cave';
@@ -1587,8 +1684,7 @@ class CreateApplication extends Component
                 $this->comaker['co_Emp_Status'] = $data['co_Emp_Status'];                
                 
                 // $this->cntmemchild
-                $child = $data['child'];
-              
+                $child = $data['child'];              
                 if(count($child) > 0){
                     $this->cntmemchild = [];
                     $cntchild = 0;
@@ -1602,7 +1698,9 @@ class CreateApplication extends Component
                         $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
                     }                   
                 }      
-                $this->member['bO_Status'] = 1;                      
+
+                //$this->member['bO_Status'] = 1;  //error here
+
                 $businessInfo = $data['business'];   
                 if(count($businessInfo)>0){
                     $cntbusinfo = 0;

@@ -649,6 +649,8 @@
                                             @if($loanDetails['ci_time']['months'] > 0) <span id="ciTimeWeek">{{ $loanDetails['ci_time']['months'] }}</span>M @endif
                                             @if($loanDetails['ci_time']['days'] > 0) <span id="ciTimeDay">{{ $loanDetails['ci_time']['days'] }}</span>D @endif
                                             @if($loanDetails['ci_time']['hours'] > 0) <span id="ciTimeHour">{{ $loanDetails['ci_time']['hours'] }}</span>H @endif
+                                            @if($loanDetails['ci_time']['minutes'] > 0) <span id="ciTimeMin">{{ $loanDetails['ci_time']['minutes'] }}</span>M @endif
+                                            @if($loanDetails['ci_time']['seconds'] > 0) <span id="ciTimeSec">{{ $loanDetails['ci_time']['seconds'] }}</span>S @endif
                                         </span>
                                     </div>
                                 </div>
@@ -896,13 +898,13 @@
                             <!-- * Upload Button -->
                             <input type="file"  wire:model="imgprofile" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                             <!-- * Attach Button -->
-                            <input type="file"  wire:model="member.attachments" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
+                            <input type="file"  wire:model="member.attachments" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-file-btn></input>
                             @endif
                         </div>
                         @error('member.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <div class="file-wrapper" data-attach-file-container>
                           
-                        @if(isset($member['attachments']))
+                            @if(isset($member['attachments']))
                                 @if($member['attachments'] == $member['old_attachments'])                            
                                     @foreach($member['attachments'] as $attachments)                                                     
                                         <div type="button" class="fileButton">
@@ -1293,14 +1295,14 @@
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.f_DOB" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
+                        <input wire:model.lazy="member.f_DOB" wire:change="getmemberFAge" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
                         @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.lazy="member.f_Age" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                        <input wire:model.lazy="member.f_Age" disabled type="number">
                         @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1448,7 +1450,7 @@
     @endif
 
     @if(isset($member['civil_Status']))
-        @if($member['civil_Status'] == 'Single')
+        @if($member['civil_Status'] == 'Single' || $member['civil_Status'] == 'Widow')
         <!-- * Container 4(b): Family Background Information (Single)-->
         <div class="nm-container-4" data-family-background-single>
 
@@ -1510,14 +1512,14 @@
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.f_DOB" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
+                        <input wire:model.lazy="member.f_DOB" wire:change="getmemberFAge" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
                         @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.lazy="member.f_Age" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                        <input wire:model.lazy="member.f_Age" disabled type="number">
                         @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1788,7 +1790,7 @@
                 <!-- * Salary / Day -->
                 <div class="input-wrapper">
                     <span>Salary / Day</span>
-                    <input wire:model.lazy="membusinfo.salary" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="membusinfo.salary" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                     @error('membusinfo.salary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -1802,7 +1804,7 @@
                 <!-- * Amount Of Sales / Day -->
                 <div class="input-wrapper">
                     <span>Amount Of Sales / Day</span>
-                    <input wire:model.lazy="membusinfo.aos" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="membusinfo.aos" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
                     @error('membusinfo.aos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
             @endif            
@@ -1815,15 +1817,52 @@
                 <div class="btn-wrapper">
 
                     <!-- * Add Business -->
-                    @if($type != 'details' && $member['statusID'] == 7)
-                    <button wire:click="addBusinessInfo" type="button" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>Add Business</button>
-
+                    @if($type != 'details' && $member['statusID'] == 7)                    
                     <!-- * Attach Files -->
-                    <button type="button" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>Attach Files</button>
+                    <!-- <button type="button" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>Attach Files</button> -->                    
+                    <input type="file"  wire:model="membusinfo.attachments" {{ $member['statusID'] == 7 ? '' : 'disabled' }}  class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" style="width: 12rem; padding:0.6rem 4rem; font-weight: 700; font-size: 1.1rem; margin-right: 2rem;"  multiple data-attach-file-btn></input>
+
+                    <button wire:click="addBusinessInfo" type="button" {{ $member['statusID'] == 7 ? '' : 'disabled' }} style="padding:0.8rem 4rem; font-weight: 700; font-size: 1.1rem; ">Add Business</button>
                     @endif
 
                 </div>
 
+            </div>
+            <div class="rowspn">
+                            @if(isset($membusinfo['attachments']))
+                                @if($membusinfo['attachments'] == $membusinfo['old_attachments'])                            
+                                    @foreach($membusinfo['attachments'] as $attachments)                                                     
+                                            @if(file_exists(public_path('storage/business_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
+                                                @php
+                                                    $getfilename = $attachments['filePath'];
+                                                    $filenamearray = explode("_", $getfilename);
+                                                    $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
+                                                @endphp                                               
+                                                <a href="{{ asset('storage/business_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
+                                                    {{ $filename }}
+                                                </a>                                               
+                                            @endif                                            
+                                    @endforeach
+                                @else
+                                    @if(isset($membusinfo['attachments']))                            
+                                        @foreach($membusinfo['attachments'] as $attachments)                                                     
+                                                <a href="{{ $attachments->path() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
+                                                    {{ $attachments->getClientOriginalName() }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </a>    
+                                            <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
+                                        @endforeach
+                                    @endif   
+                                @endif   
+                                
+                            @else
+                                @if(isset($membusinfo['attachments']))                            
+                                    @foreach($membusinfo['attachments'] as $attachments)                                                     
+                                        <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>     
+                                        <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
+                                    @endforeach
+                                @endif   
+                            @endif
+                            @error('membusinfo.attachments') <span class="text-required fw-bold">{{ $message }}</span>@enderror
             </div>
 
             <!-- * Rowspan 5: Add Business Table -->
@@ -1847,8 +1886,8 @@
                                 <!-- * Table Edit and Delete Button -->
                                 <td class="td-btns">
                                     <div class="td-btn-wrapper">
-                                        <button class="a-btn-edit">Edit</button>
-                                        <button class="a-btn-delete">Delete</button>
+                                        <button wire:click="editBusinessInfo('{{ $key }}')" type="button" class="a-btn-edit">Edit</button>
+                                        <button type="button" class="a-btn-delete">Remove</button>
                                     </div>
                                 </td>
                             </tr>     
@@ -2264,14 +2303,14 @@
                         <!-- * Date Of Birth -->
                         <div class="input-wrapper">
                             <span>Date Of Birth</span>
-                            <input wire:model.lazy="comaker.co_DOB" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
+                            <input wire:model.lazy="comaker.co_DOB" wire:change="getcomakerAge" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
                             @error('comaker.co_DOB') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Age -->
                         <div class="input-wrapper">
                             <span>Age</span>
-                            <input wire:model.lazy="comaker.co_Age" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number" id="age" name="age">
+                            <input wire:model.lazy="comaker.co_Age" disabled type="number">
                             @error('comaker.co_Age') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2448,7 +2487,7 @@
                                         @if($type != 'details')
                                         <input type="file"  wire:model="imgcoprofile" class="input-image upload-profile-image-btn" {{ $member['statusID'] == 7 ? '' : 'disabled' }} accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                                         <!-- * Attach Button -->
-                                        <input type="file" wire:model="comaker.attachments" class="input-image attach-file-btn" {{ $member['statusID'] == 7 ? '' : 'disabled' }} accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-file-btn></input>
+                                        <input type="file" wire:model="comaker.attachments" class="input-image attach-file-btn" {{ $member['statusID'] == 7 ? '' : 'disabled' }} accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-file-btn></input>
                                         @endif
                                         @error('comaker.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                                 </div>
@@ -2694,7 +2733,7 @@
                     <div class="input-wrapper">
                         <!-- <input type="file" class="input-image" id="imageUploadApplicantSign"> -->
                         @if($type != 'details')
-                        <input type="file"  wire:model="imgmemsign" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        <input type="file"  wire:model="imgmemsign" style="color: white;" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
                         @endif
                     </div>
 
@@ -2732,7 +2771,7 @@
                     <!-- * Upload Co-Maker Signature Button -->
                     <div class="input-wrapper">
                         @if($type != 'details')
-                        <input type="file"  wire:model="imgcosign" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        <input type="file"  wire:model="imgcosign" style="color: white;" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
                         @endif
                     </div>
 

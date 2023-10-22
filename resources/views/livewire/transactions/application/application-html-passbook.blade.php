@@ -9,7 +9,7 @@
     @livewireStyles
 </head>
 
-<body class="print-portrait">
+<body class="print print-portrait-passbook">
     <livewire:transactions.application.application-printing-passbook :naID="request()->route('naID')"/>
     @livewireScripts  
 </body>

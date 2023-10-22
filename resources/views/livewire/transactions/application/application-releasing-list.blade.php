@@ -156,6 +156,10 @@
                         </div>
                     </th>
 
+                    <th>
+                        <span class="th-name">Released</span>
+                    </th>
+
                     <!-- * Action -->
                     <th><span class="th-name">Action</span></th>
                 </tr>
@@ -188,7 +192,11 @@
                         <td style="text-align: end;">
                                 
                         </td>
-        
+                        <td align="center">
+                            @if($mlist['statusId'] == 15)
+                            <img src="{{ URL::to('/') }}/assets/icons/check.svg" alt="funnel">
+                            @endif
+                        </td>
                         <!-- * Table View and Trash Button -->
                         <td class="td-btns">
                             <div class="td-btn-wrapper">

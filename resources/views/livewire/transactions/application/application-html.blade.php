@@ -9,7 +9,7 @@
     @livewireStyles
 </head>
 
-<body class="print-landscape">
+<body class="print-portrait">
     <livewire:transactions.application.application-printing-voucher :naID="request()->route('naID')"/>
     @livewireScripts  
 </body>
