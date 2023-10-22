@@ -10903,7 +10903,7 @@ body.print-portrait .page {
 }
 .main-dashboard .na-form-con .na-releasing-sec .rowspan:nth-of-type(2) [data-toggle-mor-1],
 .main-dashboard .na-form-con .na-releasing-sec .rowspan:nth-of-type(2) [data-toggle-mor-2] {
-  display: none;
+  /* display: none; by jumz*/
 }
 .main-dashboard .na-form-con .na-releasing-sec .rowspan:first-of-type {
   display: flex;
@@ -11054,7 +11054,7 @@ body.print-portrait .page {
 .main-dashboard .na-form-con .na-cash-courier .small-con-2 .rowspan:nth-of-type(2) [data-employee-search-toggle],
 .main-dashboard .na-form-con .na-cash-courier .small-con-2 .rowspan:nth-of-type(2) [data-client-name-toggle],
 .main-dashboard .na-form-con .na-cash-courier .small-con-2 .rowspan:nth-of-type(2) [data-contact-number-toggle] {
-  display: none;
+  /* display: none; by jumz */
 }
 .main-dashboard .na-form-con .na-cash-courier .small-con-2 .rowspan:nth-of-type(2) .search-wrap {
   position: relative;
