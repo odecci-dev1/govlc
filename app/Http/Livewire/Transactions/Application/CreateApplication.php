@@ -833,6 +833,8 @@ class CreateApplication extends Component
             $businesses = [];
             $appliances = [];
             $banks = [];
+            $assets = [];
+            $properties = [];
          
             if(count($this->cntmemchild) > 0){
                 if((isset($this->inpchild['fname1']) ? $this->inpchild['fname1'] != '' : false)  || (isset($this->inpchild['mname1']) ? $this->inpchild['mname1'] != '' : false) || (isset($this->inpchild['lname1']) ? $this->inpchild['lname1'] != '' : false) || (isset($this->inpchild['age1']) ? $this->inpchild['age1'] != '' : false) || (isset($this->inpchild['school1']) ? $this->inpchild['school1'] != '' : false)){
@@ -883,6 +885,25 @@ class CreateApplication extends Component
                     }
                 }
             }
+
+            /////////////////////////
+            if($this->hasvehicle == 1){
+                if(count($this->vehicle) > 0){
+                    foreach($this->vehicle as $key => $value){                   
+                        $assets[] = [ 'motorVehicles' => $this->inpvehicle['vehicle'.$key] ];  
+                    }            
+                }
+            }
+    
+            if($this->hasproperties == 1){
+                if(count($this->properties) > 0){
+                    foreach($this->properties as $key => $value){                    
+                        $properties[] = [ 'property' => $this->inpproperties['property'.$key] ];                
+                    }            
+                }
+            }                      
+            /////////////////////////
+
             $bdate = date('Y-m-d', strtotime($input['member']['dob']));
           
             $data = [
@@ -942,8 +963,8 @@ class CreateApplication extends Component
                             "purpose"=> $input['member']['purpose'] ??= '',
                             "child"=> $childs,
                             "appliances"=> $appliances,                           
-                            "assets"=> [],
-                            "property"=> [],
+                            "assets"=> $assets,
+                            "property"=> $properties,
                             "bank"=> $banks,
                             "co_Fname"=> $input['comaker']['co_Fname'] ??= '',
                             "co_Lname"=> $input['comaker']['co_Lname'] ??= '',
