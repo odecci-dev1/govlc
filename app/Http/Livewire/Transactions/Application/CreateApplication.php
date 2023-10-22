@@ -764,7 +764,7 @@ class CreateApplication extends Component
                     ]];
       
                     // $extension = $request->file('filename')->getClientOriginalExtension();
-                 //dd($data);                          
+                    dd($data);                          
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
                 // dd( $crt );
@@ -1497,7 +1497,7 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                //dd($data);    
+                dd($data);    
                 //ditoviewing
                 $this->searchedmemId =  $data['memId'];
                 //dd( $this->searchedmemId );
@@ -1722,7 +1722,7 @@ class CreateApplication extends Component
                         $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
                     }                   
                 }      
-                //$this->member['bO_Status'] = 1;  //error here
+                $this->member['bO_Status'] = $data['bO_Status'] == true ? 1 : 0;   //error here
 
                 $businessInfo = $data['business'];   
                 if(count($businessInfo)>0){
