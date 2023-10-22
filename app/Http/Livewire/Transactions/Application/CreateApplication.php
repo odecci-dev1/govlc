@@ -1698,7 +1698,6 @@ class CreateApplication extends Component
                         $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
                     }                   
                 }      
-
                 //$this->member['bO_Status'] = 1;  //error here
 
                 $businessInfo = $data['business'];   
