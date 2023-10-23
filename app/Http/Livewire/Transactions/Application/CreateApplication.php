@@ -56,6 +56,9 @@ class CreateApplication extends Component
     public $imgcoprofile;
     public $imgmemsign;
     public $imgcosign;
+
+    public $paymenthistory;
+    public $loanhistory;
     
     public function rules(){                
         $rules = [];      
@@ -1329,8 +1332,23 @@ class CreateApplication extends Component
         return $termsofPayment;
     }
 
-    public function getLoanHistory(){
+    public function getLoanHistory(){         
+        $loanhistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                 
+        $loanhistory = $loanhistory->json();
+        $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['memid' => $this->searchedmemId]);                 
+        $paymenthistory = $paymenthistory->json();
+        
+        if($loanhistory){
+            $this->loanhistory = collect($loanhistory);                        
+        }
+        if($paymenthistory){
+            $this->paymenthistory = collect($paymenthistory);          
+        }
+    }    
 
+    public function resetLoanHistory(){
+        $this->loanhistory = collect([]); 
+        $this->paymenthistory = collect([]);            
     }
 
     public function mount($type = 'create', Request $request){
@@ -1342,7 +1360,9 @@ class CreateApplication extends Component
         $this->comaker['old_profile'] = '';
         $this->comaker['old_signature'] = '';
         $this->type = $type;     
-        $this->termsOfPaymentList = collect([]);   
+        $this->termsOfPaymentList = collect([]); 
+        $this->paymenthistory = collect([]);
+        $this->loanhistory = collect([]);  
         
         $this->membusinfo['old_attachments'] = [];
       

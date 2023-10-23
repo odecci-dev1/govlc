@@ -342,7 +342,11 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
 }
 
 .textPrimary {
-  color: #D6A330;
+  color: #d6a330;
+  font-size: 1.7rem;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .textBold {
@@ -5389,15 +5393,16 @@ body.print-portrait .page {
   top: 0;
   right: 0;
   transform: translate(-3.6rem, -3.6rem);
-  font-size: 2.3rem;
+  font-size: 1.9rem;
   font-weight: 700;
+  color: #a6a6a6;
 }
 .cd-modal .modal-container .box-wrap:nth-of-type(2) .input-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 3rem;
+  padding: 0.8rem 3rem;
   border-radius: 1.5rem;
   background-color: #FFFFFF;
   box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -5410,7 +5415,7 @@ body.print-portrait .page {
 }
 .cd-modal .modal-container .box-wrap:nth-of-type(2) .input-wrapper input {
   width: 8rem;
-  height: 2.5rem;
+  height: 3rem !important;
   box-shadow: unset;
   font-size: 1.6rem;
   color: #8C8686;
@@ -6824,9 +6829,20 @@ body.print-portrait .page {
   background-color: rgba(214, 163, 48, 0.8);
 }
 .can-container-wrapper .can-container-1 .wrapper .area-menu-container .area-menu .view-selected-area .box-2 {
-  background-color: #29292B;
+  background-color: #666666;
   border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
+.can-container-wrapper .can-container-1 .wrapper .area-menu-container .area-menu .paid-selected-area .box-2 {
+  background-color: #000000;
+  color: #FFFFFF !important;
+}
+.can-container-wrapper .can-container-1 .wrapper .area-menu-container .area-menu .paid-selected-area .box-2 p {
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #FFFFFF;
+}
+
 .can-container-wrapper .can-container-1 .wrapper .area-menu-container .area-menu .view-selected-area .box-2 p {
   font-size: 1.2rem;
   font-weight: 700;
@@ -6854,6 +6870,10 @@ body.print-portrait .page {
   right: 0;
   transform: translate(-1rem, -1rem);
 }
+.view-selected-area .paid-selected-area{
+  color: red;
+}
+
 .can-container-wrapper .can-container-2 {
   display: flex;
   flex-direction: column;
@@ -6966,7 +6986,7 @@ body.print-portrait .page {
 }
 .can-container-wrapper .can-container-2 .wrapper-2 .table-container {
   width: 100%;
-  height: 100%;
+  height: 90%;
 }
 .can-container-wrapper .can-container-2 .wrapper-2 .table-container table tr:not(:first-of-type) {
   visibility: hidden;
