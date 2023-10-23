@@ -2574,6 +2574,7 @@
     </div>
     @endif
 
+    @if($type != 'details')
     <!-- * Container 12: Signature Field -->
     <div class="na-container-12">
 
@@ -2677,6 +2678,7 @@
         </div>
 
     </div>
+    @endif
                                 <!-- employee searching -->
                                 <dialog class="ng-modal" data-new-group-modal wire:ignore>
                                     <div class="modal-container">

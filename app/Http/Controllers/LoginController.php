@@ -45,4 +45,10 @@ class LoginController extends Controller
             return redirect('/')->with('message', 'Username and password does not matched. Login Failed.'); 
         }
     }
+
+    public function logout(Request $request)
+    {
+        $request->session()->flush();
+        return redirect('/')->with('message', 'You have been logout');       
+    }
 }

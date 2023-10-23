@@ -1,5 +1,4 @@
-<div>
-    
+
 <main>
 
 
@@ -95,7 +94,7 @@
 
                 <!-- * Checkbox ALl-->
                 <th>
-                    <input type="checkbox" class="checkbox" data-select-all-checkbox>
+                    <!-- <input type="checkbox" class="checkbox" data-select-all-checkbox> -->
                 </th>
 
                 <!-- * Borrower -->
@@ -113,7 +112,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Current Loan</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -121,14 +120,14 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Outstanding Balance</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
                 <!-- * Due Date -->
                 <th>
                     <div class="th-wrapper">
-                        <span class="th-name">Due Date</span> <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <span class="th-name">Due Date</span> <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -145,14 +144,19 @@
 
                     <!-- * Checkbox Opt -->
                     <td>
-                        <input type="checkbox" class="checkbox" id="checkbox" data-checkbox>
+                        <!-- <input type="checkbox" class="checkbox" id="checkbox" data-checkbox> -->
                     </td>
 
                     <td>
 
                         <!-- * Borrower Data -->
                         <div class="td-wrapper">
-                            <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span>
+                            <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
+                            @if(file_exists(public_path('storage/members_profile/'.(isset($l['filePath']) ? $l['filePath'] : 'xxxx'))))                                  
+                                <img src="{{ asset('storage/members_profile/'.$mdetails['filePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                            @else
+                                <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
+                            @endif    
                             <span class="td-name">{{ $l['borrower'] }}</span>
                         </div>
 
@@ -208,4 +212,4 @@
 
     </div>
 </main>
-</div>
+

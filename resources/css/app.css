@@ -14058,10 +14058,39 @@ Date: 10-03-2023
 */
 
 .input-wrapper .profile {
-    height: 150px !important;
+  height: 150px !important;
 }
 .input-wrapper .profile input[type="image"] {
-    object-fit: contain !important;
+  object-fit: contain !important;
+}
+
+.profileLink{
+  border: 1px solid black;
+  position: fixed;
+  width: 100px;
+  background-color: white !important;
+  top: 10.5%;
+  right: 4%;
+  z-index: 999 !important;
+  border-radius: 10px;
+  padding: 5px;
+}
+.profileLink div{
+ font-size: 1.3rem;
+ padding: 0.5rem 0.8rem;
+ cursor: pointer;
+ font-weight: 700;
+ transition: 0.3s;
+ color: #000000 !important;
+}
+
+.profileLink div:hover{
+  background-color: #D6A330;
+  color: #FFFFFF !important; 
+}
+
+.hide-me{
+  display: none;
 }
 
 /*# sourceMappingURL=app.css.map */

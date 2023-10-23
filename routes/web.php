@@ -7,6 +7,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Livewire\Members\MemberList;
 
 use App\Http\Livewire\Users\UserRegister;
+use App\Http\Livewire\Users\Profile;
 use App\Http\Livewire\Users\UserList;
 use App\Http\Livewire\Transactions\Application\CreateApplication;
 use App\Http\Livewire\Transactions\Application\CreditInvestigationApplication;
@@ -45,6 +46,8 @@ Route::get('/', function () {
     return view('login');
 });
 
+Route::get('/logout', [LoginController::class, 'logout'])->name('login');
+
 Route::get('/dashboard', function(){
     return view('dashboard');
 })->name('dashboard');
@@ -63,6 +66,8 @@ Route::get('/users', UserList::class)->name('users');
 Route::get('/user/view/{userid}', UserRegister::class)->name('users');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 //user registration
+
+Route::get('/profile', Profile::class)->name('profile');
 
 //maintenance
 //field officer

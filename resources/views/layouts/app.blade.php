@@ -252,8 +252,18 @@
     <!-- * Navigation Profile -->
     <div class="profile-nav">
         <div class="profile-nav-con">
-            <img src="{{ URL::to('/') }}/assets/icons/bell.svg" alt="Bell" />
-            <img src="{{ URL::to('/') }}/assets/icons/profile.svg" alt="Profile" />
+            <img style="cursor: pointer;" src="{{ URL::to('/') }}/assets/icons/bell.svg" alt="Bell" />
+            <img style="cursor: pointer;" id="profileImg" onclick="openProfile()" src="{{ URL::to('/') }}/assets/icons/profile.svg" alt="Profile" />
+        </div>
+      
+    </div>
+
+    <div class="profileLink hide-me" id="profileLink">
+        <div onclick="location.href='{{ URL::to('/') }}/profile'">
+            Profile
+        </div>
+        <div onclick="location.href='{{ URL::to('/') }}/logout'">
+            Log Out
         </div>
     </div>
 
@@ -264,7 +274,18 @@
     <div class="main-dashboard">  
     {{ $slot }}  
     </div>
-
+    <script>         
+        window.openProfile = function($cnt){                    
+            const profileImg = document.getElementById("profileImg");
+            const profileLink = document.getElementById("profileLink");
+            if(profileLink.classList.contains("hide-me")){
+                profileLink.classList.remove("hide-me");               
+            }
+            else{
+                profileLink.classList.add("hide-me");     
+            }          
+        };   
+    </script>
     </main>
     @livewireScripts  
 </body>

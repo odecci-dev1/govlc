@@ -1334,6 +1334,7 @@ class CreateApplication extends Component
 
     public function getLoanHistory(){         
         $loanhistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                 
+      
         $loanhistory = $loanhistory->json();
         $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['memid' => $this->searchedmemId]);                 
         $paymenthistory = $paymenthistory->json();
@@ -1507,8 +1508,8 @@ class CreateApplication extends Component
                 //dd( $this->searchedmemId );
                 //get loan payment and history
               
-                $loanHistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                                    
-                $loanHistory = $loanHistory->json();
+                //$loanHistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                                    
+                //$loanHistory = $loanHistory->json();
                 //dd($loanHistory);
                 //get loan payment and history
                
@@ -1725,7 +1726,7 @@ class CreateApplication extends Component
                         $this->inpchild['age'.$cntchild] = $mchild['age'];    
                         $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
                     }                   
-                }      
+                }                   
                 $this->member['bO_Status'] = $data['bO_Status'] == true ? 1 : 0;   //error here
 
                 $businessInfo = $data['business'];   
@@ -1757,6 +1758,9 @@ class CreateApplication extends Component
                         $this->inpvehicle['vehicle'.$motorscnt] = $mmotors['motorVehicles'];                       
                     }
                 }
+                else{
+                    $this->hasvehicle = 0;
+                }
                  
                 $properties= $data['property'];
                 if(count($properties) > 0){
@@ -1767,7 +1771,10 @@ class CreateApplication extends Component
                         $this->properties[$propertiescnt] = [ 'property' => $mproperties['property'] ];  
                         $this->inpproperties['property'.$propertiescnt] = $mproperties['property'];                       
                     }
-                }                  
+                }       
+                else{
+                    $this->hasproperties = 0;
+                }           
 
                 $appliances= $data['appliances'];
                 if(count($appliances) > 0){                   
