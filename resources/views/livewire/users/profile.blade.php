@@ -1,5 +1,8 @@
 <div>
 <div class="main-dashboard">
+        @if(session('sessmessage'))
+            <x-alert :message="session('sessmessage')" :words="session('sessmword') ? session('sessmword') : ''" :header="'Success'"></x-alert>   
+        @endif
         <!-- * Add New User Container -->
         <form action="" class="na-form-con" autocomplete="off">
           <!-- * Wrapper -->
@@ -175,12 +178,12 @@
                         <div class="input-wrapper">
                           <!-- <input type="image"  style="width: 219px; height: 215px;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" /> -->
                             @if($imgprofile)
-                                <img type="image" class="profile" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
+                                <img type="image" class="profile" style="width: 70%;" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
                             @else
                                 @if(file_exists(public_path('storage/users_profile/'.(isset($profilePath) ? $profilePath : 'xxxx'))))
-                                    <img type="image" class="profile" src="{{ asset('storage/users_profile/'.$profilePath) }}" alt="upload-image" />                                                                     
+                                    <img type="image" class="profile" style="width: 70%;" src="{{ asset('storage/users_profile/'.$profilePath) }}" alt="upload-image" />                                                                     
                                 @else
-                                    <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                                    <img type="image" class="profile" style="width: 70%;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
                                 @endif 
                             @endif     
                         

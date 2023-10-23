@@ -1,5 +1,8 @@
 <div>
 <div class="main-dashboard">
+@if(session('sessmessage'))
+            <x-alert :message="session('sessmessage')" :words="session('sessmword') ? session('sessmword') : ''" :header="'Success'"></x-alert>   
+        @endif
         <!-- * Add New User Container -->
         <form action="" class="na-form-con" autocomplete="off">
           <!-- * Wrapper -->
@@ -161,21 +164,21 @@
                         <!-- * Upload Image -->
                         <div class="input-wrapper">
                           <!-- <input type="image"  style="width: 219px; height: 215px;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" /> -->
-                          @if(!isset($profile))   
-                            @if($profileExist == 1)                                                          
-                              <img type="image" style="width: 219px; height: 215px;" src="{{ url('storage/user_profile/'.$profilePath) }}" alt="upload-image" />                                               
-                            @else  
-                              <img type="image" style="width: 219px; height: 215px;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
-                            @endif
-                          @else                          
-                            <img type="image" style="width: 219px; height: 215px;" src="{{ $profile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
-                          @endif    
+                            @if($imgprofile)
+                                <img type="image" class="profile" style="width: 70%;" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
+                            @else
+                                @if(file_exists(public_path('storage/users_profile/'.(isset($profilePath) ? $profilePath : 'xxxx'))))                                                                   
+                                    <img type="image" class="profile" style="width: 70%;" src="{{ asset('storage/users_profile/'.$profilePath) }}" alt="upload-image" />                                                                     
+                                @else
+                                    <img type="image" class="profile" style="width: 70%;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                                @endif 
+                            @endif     
                         </div>
 
                         <!-- * Button Wrapper -->
                         <div class="btn-wrapper">
                           <!-- * Upload Button -->
-                          <input type="file" wire:model="profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                          <input type="file" wire:model="imgprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                           <!-- * Update Button -->
                           <button type="button" class="button" wire:click="register">Update</button>
 

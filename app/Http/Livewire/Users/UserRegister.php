@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Users;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 use File;
 use App\Traits\Common;
@@ -18,9 +19,8 @@ class UserRegister extends Component
     public $lname;
     public $mname;
     public $suffix;
-    public $profile;
     public $profilePath;
-    public $profileExist = 0;
+    public $imgprofile;
     public $username;
     public $password;
     public $cno;
@@ -78,12 +78,8 @@ class UserRegister extends Component
                 $this->suffix = $res['suffix'];        
                 $this->cno = $res['cno'];          
                 $this->address = $res['address'];   
-                $this->profilePath = $res['profilePath'];       
-                $this->usertype = $res['userTypeId'];
-              
-                if (file_exists(public_path('storage/user_profile/'.($this->profilePath == '' ? 'xxxxxxxxxxxxxxxxxxxx' : $this->profilePath)))){
-                    $this->profileExist = 1;
-                }
+                $this->profilePath = $res['profilePath'];  
+                $this->usertype = $res['userTypeId'];             
 
                 $usemodules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', [ 'userID' => $this->userid ]);     
                 $usemodules = $usemodules->json();
@@ -107,12 +103,34 @@ class UserRegister extends Component
     }
 
     public function updatePassword(){
-        $data = $this->validate(['password' => ['required', 'confirmed']]);
-        $user = [            
-            "userId"=> $this->username,
+        $this->validate(['password' => ['required', 'confirmed']]);
+        $data = [            
+            "userId"=> $this->userid,
             "password"=> $this->password      
         ];
+        $upt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/ChangePassword', $data);                   
+        session()->flash('sessmword', 'Password Updated'); 
+        session()->flash('sessmessage', 'Please logout if user was change'); 
         $this->updatePassword = 0;
+    }
+
+    public function storeProfileImage(){           
+        $profilename = '';
+        if($this->imgprofile){
+            $deletefiles = [];
+            if(isset($profilePath)){
+                $deletefiles[] = 'public/users_profile/'.$this->profilePath;
+            }
+            Storage::delete($deletefiles);       
+            
+            $time = time();          
+            $profilename = 'users_profile_'.$time.'.'.$this->imgprofile->getClientOriginalExtension();         
+            $this->imgprofile->storeAs('public/users_profile', $profilename);    
+        }
+        else{
+            $profilename = $this->profilePath;  
+        }  
+        return $profilename;
     }
 
     public function register(){      
@@ -130,13 +148,6 @@ class UserRegister extends Component
             }
         }
 
-        $profilename = '';
-        if(isset($this->profile)){
-            $time = time();
-            $profilename = 'user_profile_'.$time;
-            $this->profile->storeAs('public/user_profile', $profilename);                               
-        }  
-        
         $user = [            
                     "id"=> $this->mid == '' ? '0' : $this->mid,        
                     "fname"=> $this->fname,
@@ -148,7 +159,7 @@ class UserRegister extends Component
                     "cno"=> $this->cno,
                     "address"=> $this->address,
                     "userTypeID"=> $this->usertype,
-                    "profilePath"=> $profilename,
+                    "profilePath"=> $this->storeProfileImage(),
                     "status"=> 1,
                     "usermodule"=> $modules
                 ];
@@ -162,15 +173,9 @@ class UserRegister extends Component
         }      
         else{
             // dd($user);
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/UpdateUserInfo', $user); 
-           
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/UpdateUserInfo', $user);            
             return redirect()->to('/user/view/'.$this->userid)->with('message', 'User successfully updated'); 
-        }  
-                 
-        // $crtmodules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUserModule', $user);         
-
-      
-       
+        }     
         
     }
 

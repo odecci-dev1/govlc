@@ -54,7 +54,7 @@ class Profile extends Component
         $messages['usertype'] = 'Please select user level'; 
         return $messages;
     }
-    
+
     public function mount(){   
         $userid = session()->get('auth_userid');        
         if($userid != ''){
@@ -126,6 +126,8 @@ class Profile extends Component
             "password"=> $this->password      
         ];
         $upt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/ChangePassword', $data);            
+        session()->flash('sessmword', 'Password Updated'); 
+        session()->flash('sessmessage', 'Please logout if user was change'); 
         $this->updatePassword = 0;
     }
 
