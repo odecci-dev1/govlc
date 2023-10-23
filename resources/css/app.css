@@ -7930,10 +7930,11 @@ body.print-portrait .page {
   padding: 0.5rem;
   height: clamp(1rem, 50vh, 100%);
   overflow-y: auto;
-  display: grid;
+  display: flex;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-auto-rows: 4rem;
-  gap: 1.5rem;
+  gap: 0.8rem;
+  flex-wrap: wrap;
 }
 .main-dashboard .fa-form-con .fa-container-wrapper .fa-container-1 .verti-con .rowspan:nth-of-type(2) .input-wrapper:nth-of-type(2) .locations-container .chip-container::-webkit-scrollbar {
   width: 0.5rem;
@@ -7974,6 +7975,7 @@ body.print-portrait .page {
   background-color: #FFFFFF;
   color: #29292B;
   white-space: nowrap;
+  width: fit-content;
 }
 @media (max-width: 1366px) {
   .main-dashboard .fa-form-con .fa-container-wrapper .fa-container-1 .verti-con .rowspan:nth-of-type(2) .input-wrapper:nth-of-type(2) .locations-container .chip-container .tb-chip {

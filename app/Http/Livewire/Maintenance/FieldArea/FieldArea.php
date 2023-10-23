@@ -139,6 +139,7 @@ class FieldArea extends Component
                 if($value['stat'] == 1){
                     $this->unassignedLocations->forget($key);   
                 }
+                //dito edit mo
             }
         }
         

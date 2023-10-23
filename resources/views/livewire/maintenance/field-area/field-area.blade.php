@@ -64,7 +64,7 @@
                             <!-- * Search Bar -->                            
                             <div class="search-wrap">                               
                                 <input type="hidden" wire:model.lazy="foid" placeholder="field officer id" >
-                                <input type="search" readonly wire:model.lazy="fullname" placeholder="Search" >    
+                                <input type="search" readonly wire:model.lazy="fullname" placeholder="Select field officer" >    
                                 @error('foid') <span class="text-required fw-normal">{{ $message }}</span>@enderror                            
                             </div>
                             <div class="input-wrapper" style="padding-top: 20px;">
