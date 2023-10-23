@@ -50,13 +50,13 @@
               <!-- * Table Header -->
               <tr>
                 <!-- * Checkbox ALl-->
-                <th>
+                <!-- <th>
                   <input
                     type="checkbox"
                     class="checkbox"
                     data-select-all-checkbox
                   />
-                </th>
+                </th> -->
 
                 <!-- * User -->
                 <th>
@@ -87,16 +87,17 @@
                 @foreach($list as $l)
                 <tr>
                     <!-- * Checkbox Opt -->
-                    <td><input type="checkbox" class="checkbox" data-select-checkbox/></td>
+                    <!-- <td><input type="checkbox" class="checkbox" data-select-checkbox/></td> -->
 
                     <td>
                     <!-- * User -->
                     <div class="td-wrapper">
-                        <img
-                        src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg"
-                        alt="Dela Cruz, Juana"
-                        />
-                        <span class="td-num">1</span>
+                          @if(file_exists(public_path('storage/users_profile/'.(isset($l['profilePath']) ? ($l['profilePath'] != '' ? $l['profilePath'] : 'xxxxxx') : 'xxxx'))))                                  
+                              <img src="{{ asset('storage/users_profile/'.$l['profilePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                          @else
+                              <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
+                          @endif    
+                      
                         <span class="td-name">{{ $l['fullname'] }}</span>
                     </div>
                     </td>

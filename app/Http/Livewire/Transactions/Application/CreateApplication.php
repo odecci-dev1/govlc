@@ -1026,8 +1026,7 @@ class CreateApplication extends Component
                             //
                         ]
                     ];                                                   
-                    // $extension = $request->file('filename')->getClientOriginalExtension();
-                    //dito
+                    // $extension = $request->file('filename')->getClientOriginalExtension();                    
                     //dd( json_encode($data));
                     //dd( $data );
                     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                    
@@ -1186,6 +1185,7 @@ class CreateApplication extends Component
 
     public function openSearchEmployee(){              
         $this->emit('openSearchEmployeeModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
+        $this->searchEmployee();
     }
 
     public function selectEmployee($empname = ''){
@@ -1292,6 +1292,7 @@ class CreateApplication extends Component
         $this->resetmembusinfo();                        
     }
 
+    //dito
     public function editBusinessInfo($cnt){
         $businfo = $this->businfo[$cnt];
         $this->membusinfo['cnt']  = $cnt;
@@ -1917,11 +1918,14 @@ class CreateApplication extends Component
         }
     }
 
+    public function searchEmployee(){
+        $emplist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserListFilter', [ 'page' => 1, 'pageSize' => 50, 'fullname' => $this->searchempkeyword ]);         
+        $this->emplist = $emplist->json();          
+    }
+
     public function render()
     {       
-        //dd(session()->get('auth_userid'));
-        $emplist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserListFilter', [ 'page' => 1, 'pageSize' => 50, 'fullname' => $this->searchempkeyword ]);  
-        $this->emplist = $emplist->json();    
+        //dd(session()->get('auth_userid'));        
         $getLoanTermsname = $this->getLoanTermsname(isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : '');
         return view('livewire.transactions.application.create-application', ['getLoanTermsname' => $getLoanTermsname]);        
     }

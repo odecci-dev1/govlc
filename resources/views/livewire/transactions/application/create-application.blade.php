@@ -2680,7 +2680,7 @@
     </div>
     @endif
                                 <!-- employee searching -->
-                                <dialog class="ng-modal" data-new-group-modal wire:ignore>
+                                <dialog class="ng-modal" data-new-group-modal wire:ignore.self>
                                     <div class="modal-container">
 
                                         <!-- * Exit Button -->
@@ -2698,7 +2698,7 @@
 
                                                 <!-- * Search Bar -->
                                                 <div class="search-wrap">
-                                                    <input type="search" wire:model="searchempkeyword" placeholder="Search field officer">
+                                                    <input type="search" wire:keyup="searchEmployee" wire:model="searchempkeyword" placeholder="Search field officer">
                                                     <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                                                 </div>
 
