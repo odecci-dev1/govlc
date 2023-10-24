@@ -73,7 +73,7 @@
     <div class="nal-con-1">
         <h2>Application List</h2>
         <p class="p-1">
-        Total of <span id="numOfApplicants">50</span> active users
+        Total of <span id="numOfApplicants">50</span> applications
         </p>
 
         <!-- * Button Container -->

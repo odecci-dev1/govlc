@@ -159,15 +159,7 @@
                                 <span>Releasing</span>
                             </li>
                         </a>
-
-                        <a href="../KC/loan-calculator.html" data-nav-link>
-                            <li>
-                                <!-- * Loan Calculator  -->
-                                <img src="{{ URL::to('/') }}/assets/icons/sub-menu/loan-calc.svg" alt="loan-calc" />
-                                <span>Loan Calculator</span>
-                            </li>
-                        </a>
-
+                       
                     </ul>
                 </div>
 

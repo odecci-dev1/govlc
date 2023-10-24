@@ -10945,7 +10945,10 @@ body.print-portrait .page {
   align-items: center;
   padding-bottom: 0.25rem;
 }
-.main-dashboard .na-form-con .na-releasing-sec .rowspan:last-of-type {
+/* .main-dashboard .na-form-con .na-releasing-sec .rowspan:last-of-type {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.1fr) minmax(0, 1fr); by jumz
+} */
+.main-dashboard .na-form-con .na-releasing-sec .rowspan:nth-of-type(6) {
   grid-template-columns: minmax(0, 1fr) minmax(0, 2.1fr) minmax(0, 1fr);
 }
 .main-dashboard .na-form-con .na-releasing-sec .rowspan:last-of-type .input-wrapper:nth-of-type(2) span {

@@ -41,7 +41,7 @@
 
             <!-- * New Application Credit Investigation Level 2 -->
             <div class="line {{ $member['statusID'] >= 8 ? 'active' : '' }}" data-level-2></div>
-            <div wire:click="viewByStatus('8')" class="level {{ $member['statusID'] >= 8 ? 'active' : '' }}" data-level-2>
+            <div class="level {{ $member['statusID'] >= 8 ? 'active' : '' }}" data-level-2>
                 <span>Credit<br>Investigation</span>
             </div>
 
@@ -498,10 +498,17 @@
 
             <!-- * Notes -->
             <div class="input-wrapper">
-                <span>Notes &nbsp;<p>(if approving officer is not available)</p></span>
+                <span><p>Notes &nbsp; (if approving officer is not available)</p></span>
                 <input {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} wire:model.lazy="loanDetails.notes" type="text" >
             </div>
 
+        </div>
+
+        <div class="rowspan" style="display: flex;">       
+            <div class="input-wrapper" style="width: 100%; " >
+                <span>Remarks / Notes (From CI) :</span>
+                <input readonly value="{{ isset($loanDetails['remarks']) ? $loanDetails['remarks'] : '' }}" type="text" id="approvedBy" name="approvedBy">
+            </div>
         </div>
 
         </div>    
@@ -651,6 +658,7 @@
                                             @if($loanDetails['ci_time']['hours'] > 0) <span id="ciTimeHour">{{ $loanDetails['ci_time']['hours'] }}</span>H @endif
                                             @if($loanDetails['ci_time']['minutes'] > 0) <span id="ciTimeMin">{{ $loanDetails['ci_time']['minutes'] }}</span>M @endif
                                             @if($loanDetails['ci_time']['seconds'] > 0) <span id="ciTimeSec">{{ $loanDetails['ci_time']['seconds'] }}</span>S @endif
+                                            Ago
                                         </span>
                                     </div>
                                 </div>

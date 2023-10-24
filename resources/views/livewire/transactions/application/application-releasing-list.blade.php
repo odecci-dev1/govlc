@@ -81,7 +81,7 @@
                 <h2>For Releasing Checking</h2>
                 <p class="p-1">
                 You have a total <span id="numOfApplicantsForApproval">10</span> 
-                <span>applications for approval</span>
+                <span>applications for releasing checking</span>
                 </p>
             </div>
 
