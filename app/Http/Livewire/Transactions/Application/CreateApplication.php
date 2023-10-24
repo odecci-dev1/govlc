@@ -1295,6 +1295,7 @@ class CreateApplication extends Component
     //dito
     public function editBusinessInfo($cnt){
         $businfo = $this->businfo[$cnt];
+        //dd($businfo);
         $this->membusinfo['cnt']  = $cnt;
         $this->membusinfo['businessName']  = $businfo['businessName'];
         $this->membusinfo['businessType']  = $businfo['businessType'];
@@ -1731,8 +1732,9 @@ class CreateApplication extends Component
                 $this->member['bO_Status'] = $data['bO_Status'] == true ? 1 : 0;   //error here
 
                 $businessInfo = $data['business'];   
+                //dd($businessInfo);
                 if(count($businessInfo)>0){
-                    $cntbusinfo = 0;
+                    $cntbusinfo = 0;                  
                     foreach($businessInfo as $businfo){
                         $cntbusinfo = $cntbusinfo + 1;
                         $this->businfo[$cntbusinfo] = [ 
@@ -1745,6 +1747,8 @@ class CreateApplication extends Component
                                                         'salary' => $businfo['salary'],
                                                         'vos' => $businfo['vos'],
                                                         'aos' => $businfo['aos'],
+                                                        'attachments' => $businfo['businessFiles'],
+                                                        'old_attachments' => $businfo['businessFiles'],
                                                       ];    
                     }
                 }

@@ -109,9 +109,12 @@
 
                                 <td>
                                     <!-- * Borrower Data-->
-                                    <div class="td-wrapper">
-                                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg"
-                                            alt="Dela Cruz, Juana">
+                                    <div class="td-wrapper">                                        
+                                            @if(file_exists(public_path('storage/members_profile/'.(isset($mem['profileFilePath']) ? $mem['profileFilePath'] : 'xxxx'))))                                  
+                                                <img src="{{ asset('storage/members_profile/'.$mem['profileFilePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                                            @else
+                                                <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
+                                            @endif        
                                         <span class="td-num"></span>
                                         <span class="td-name">{{ $mem['fname'] }}</span>
                                     </div>
@@ -122,8 +125,11 @@
 
                                     <!-- * Co-Makers Data-->
                                     <div class="td-wrapper">
-                                        <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-1.svg"
-                                            alt="Alfreds Futterkiste">
+                                            @if(file_exists(public_path('storage/comakers_profile/'.(isset($mem['co_ProfileFilePath']) ? $mem['co_ProfileFilePath'] : 'xxxx'))))                                  
+                                                <img src="{{ asset('storage/comakers_profile/'.$mem['co_ProfileFilePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                                            @else
+                                                <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
+                                            @endif   
                                         <span class="td-name">{{ $mem['co_Lname'] . ' ' . $mem['co_Suffix'] }},
                                             {{ $mem['co_Fname'] }}</span>
                                     </div>

@@ -5647,7 +5647,7 @@ body.print-portrait .page {
   color: #29292B;
 }
 .main-dashboard .md-con-1 .wrapper p:last-child {
-  font-size: 1.2rem; /*by jumz 2rem*/
+  font-size: 2rem;
   color: #29292B;
   font-weight: 700;
 }
@@ -5819,7 +5819,7 @@ body.print-portrait .page {
   background-color: #29292B;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:first-of-type .div-1 h3 {
-  font-size: 1.2rem; /*by jumz 2rem*/
+  font-size: 2rem;
   color: #FFFFFF;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:first-of-type .div-1 p:nth-of-type(1) {
@@ -5875,7 +5875,7 @@ body.print-portrait .page {
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:first-of-type .div-2 .circle-div .progress-value p:nth-of-type(2) {
   margin-top: 1rem;
-  font-size: 1.2rem; /*by jumz 2rem*/
+  font-size: 2rem;
   font-weight: 700;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:first-of-type .div-2 .circle-div ~ p {
@@ -5915,7 +5915,7 @@ body.print-portrait .page {
   box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:last-of-type h3 {
-  font-size: 1.2rem; /*by jumz 2rem*/
+  font-size: 2rem;
   margin-bottom: 2rem;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:last-of-type .div-1 {
@@ -5934,7 +5934,7 @@ body.print-portrait .page {
   padding-bottom: 0.75rem;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:last-of-type .div-1 .p-wrap .wrap p {
-  font-size: 1.2rem; /*by jumz 2rem*/
+  font-size: 2rem;
   font-weight: 700;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:last-of-type .div-1 .p-wrap .wrap ~ p {
@@ -5969,7 +5969,7 @@ body.print-portrait .page {
   box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2.tlpa h3 {
-  font-size: 1.2rem; /*by jumz 2rem*/
+  font-size: 2rem;
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2.tlpa .div-1 {
   display: flex;
@@ -5988,7 +5988,7 @@ body.print-portrait .page {
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2.tlpa .div-1 .p-wrap .wrap p {
   margin-top: unset;
-  font-size: 1.2rem; /*by jumz 2rem*/
+  font-size: 2rem;
   font-weight: 700;
   color: #29292B;
 }

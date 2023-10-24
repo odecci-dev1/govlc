@@ -28,7 +28,12 @@ use App\Http\Livewire\Collection\Collection\CollectionList;
 use App\Http\Livewire\Collection\Collection\Collection;
 use App\Http\Livewire\Collection\Collection\CollectionPrint;
 use App\Http\Livewire\Collection\Collection\CollectionRemittance;
-
+use App\Http\Livewire\Reports\OutstandingReport\OutstandingReport;
+use App\Http\Livewire\Reports\ReleaseReport\ReleaseReport;
+use App\Http\Livewire\Reports\CollectionReport\CollectionReport;
+use App\Http\Livewire\Reports\PastDueReport\PastDueReport;
+use App\Http\Livewire\Reports\SavingsReport\SavingsReport;
+use App\Http\Livewire\Settings\Settings;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,8 +114,9 @@ Route::get('/tranactions/application/{type}/{naID}', CreateApplication::class)->
 Route::get('/tranactions/application/{type}', CreateApplication::class)->name('application.create');
 Route::get('/tranactions/application/credit/investigation/view/{memId}', CreditInvestigationApplication::class)->name('application.credit.investigation');
 
+// Route::get('/tranactions/group/application/view/{groupId}', CreateApplicationGroup::class)->name('application.create.group');
 Route::get('/tranactions/group/application/create', CreateApplicationGroup::class)->name('application.create.group');
-Route::get('/tranactions/group/application/view/{groupId}', CreateApplicationGroup::class)->name('application.create.group');
+
 //transactions
 
 
@@ -126,3 +132,13 @@ Route::get('/collection/print/summary', function(){
     return view('livewire.collection.collection.collection-summary-html');
 });
 //collection
+
+//reports
+Route::get('/outstanding/report', OutstandingReport::class);
+Route::get('/release/report', ReleaseReport::class);
+Route::get('/collection/report', CollectionReport::class);
+Route::get('/savings/report', SavingsReport::class);
+Route::get('/pastdue/report', PastDueReport::class);
+
+Route::get('/settings', Settings::class);
+//reports

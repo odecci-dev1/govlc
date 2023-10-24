@@ -175,43 +175,43 @@
                     <!-- * Submenu -->
                     <ul class="sub-menu">
 
-                        <a href="../KC/outstanding-report.html" data-nav-link>
-                            <li>
+                        <a href="{{ URL::to('/') }}/outstanding/report" data-nav-link>
+                            <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
                                 <!-- * Outstanding Reports -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/outstanding-report.svg" alt="" />
                                 <span>Outstanding Reports</span>
                             </li>
                         </a>
 
-                        <a href="../KC/custom-report.html" data-nav-link>
-                            <li>
+                        <a href="{{ URL::to('/') }}/release/report" data-nav-link>
+                            <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
                                 <!-- * Custom Report -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/custom-report.svg" alt="outstanding-report" />
-                                <span>Custom Report</span>
+                                <span>Release Report</span>
                             </li>
                         </a>
 
-                        <a href="../KC/custom-report.html" data-nav-link>
-                            <li>
+                        <a href="{{ URL::to('/') }}/collection/report" data-nav-link>
+                            <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
                                 <!-- * Custom Report -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/custom-report.svg" alt="custom-report" />
-                                <span>Custom Report</span>
+                                <span>Collection Report</span>
                             </li>
                         </a>
 
-                        <a href="../KC/custom-report.html" data-nav-link>
-                            <li>
+                        <a href="{{ URL::to('/') }}/savings/report" data-nav-link>
+                            <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
                                 <!-- * Custom Report -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/custom-report.svg" alt="custom-report" />
-                                <span>Custom Report</span>
+                                <span>Savings Report</span>
                             </li>
                         </a>
 
-                        <a href="../KC/custom-report.html" data-nav-link>
-                            <li>
+                        <a href="{{ URL::to('/') }}/pastdue/report" data-nav-link>
+                            <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
                                 <!-- * Custom Report -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/custom-report.svg" alt="custom-report" />
-                                <span>Custom Report</span>
+                                <span>Past Due Report</span>
                             </li>
                         </a>
 
@@ -233,7 +233,7 @@
                     <p>User</p>
                 </a>
                 <!-- * Link Wrapper -->
-                <a href="#" class="link" no-data-dropdown>
+                <a href="{{ URL::to('/') }}/settings" class="link" no-data-dropdown>
                     <img src="{{ URL::to('/') }}/assets/icons/settings.svg" alt="settings" />
                     <p>Settings</p>
                 </a>

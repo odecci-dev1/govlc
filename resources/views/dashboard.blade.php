@@ -1,33 +1,45 @@
 <x-app-layout>  
-    <!-- * Dashboard Container 1 -->
-            <div class="md-con-1">
+<!-- * Dashboard Container 1 -->
+        <div class="md-con-1">
                 <div class="wrapper">
                     <p>Active Member</p>
                     <p>300</p>
                 </div>
                 <div class="wrapper">
-                    <p>Total Loan Released</p>
+                    <p>Loan Balance</p>
                     <p>500,000</p>
                 </div>
                 <div class="wrapper">
-                    <p>Total Penalties</p>
+                    <p>Total Interest</p>
                     <p>100,000</p>
                 </div>
                 <div class="wrapper">
-                    <p>Total Savings</p>
+                    <p>Loan Colection</p>
                     <p>125,000</p>
                 </div>
                 <div class="wrapper">
-                    <p>Total Interest</p>
+                    <p>Advance Payment</p>
                     <p>75,000</p>
                 </div>
                 <div class="wrapper">
-                    <p>Total Loan Outstanding</p>
+                    <p>Other Deductions</p>
                     <p>75,000</p>
                 </div>
                 <div class="wrapper">
-                    <p>Total Interest</p>
+                    <p>Total Active Standing</p>
                     <p>180,000</p>
+                </div>
+                <div class="wrapper">
+                    <p>#FP</p>
+                    <p>300</p>
+                </div>
+                <div class="wrapper">
+                    <p>#CR</p>
+                    <p>500</p>
+                </div>
+                <div class="wrapper">
+                    <p>Total ending active member</p>
+                    <p>100,000</p>
                 </div>
             </div>
 
@@ -40,55 +52,88 @@
                     <div class="card-wrapper">
                         <div class="card">
                             <div class="p-wrap">
-                                <p>Daily Target Collection</p>
-                                <p>15,232</p>
-                            </div>
-                            <div class="tag-wrap">
-                                <p>
-                                    Covered the
-                                    <!-- * Special Span -->
-                                    <span>10%</span> of the monthly target
-                                </p>
+                                <p>Savings Outstanding</p>
+                                <p>0.00</p>
                             </div>
                         </div>
                         <div class="card">
                             <div class="p-wrap">
-                                <p>Penalties to be collected today</p>
-                                <p>8,000</p>
+                                <p>Daily Overall Collection</p>
+                                <p>0.00</p>
                             </div>
-                            <div class="tag-wrap">
-                                <p>
-                                    Most penalties are from
-                                    <!-- * Special Span -->
-                                    <span>Area 2</span>
-                                </p>
-
-                                <p></p>
+                        </div>
+                        <div class="card">
+                            <div class="p-wrap">
+                                <p>New Accounts Overall</p>
+                                <p>0</p>
                             </div>
                         </div>
                         <div class="card">
                             <div class="p-wrap">
                                 <p>Application for Approval</p>
-                                <p>50</p>
+                                <p>0</p>
                             </div>
                             <div class="tag-wrap">
-                                <button>View All</button>
+                                <button class="transparentButton">View All</button>
                             </div>
                         </div>
                     </div>
                     <!-- * Big Card -->
                     <div class="big-card">
                         <div class="div-1">
-                            <h2>Active Members</h2>
+                            <h2 style="font-size: 2.5rem;">Active Members</h2>
                             <div class="btn-wrapper">
-                                <button>Select Area</button>
-                                <button>
-                                    <span>Last 7 Days</span>
-                                    <img
-                                        src="../res/assets/icons/white-carret-down.svg"
-                                        alt="carret-down"
-                                    />
-                                </button>
+                                <button class="button" style="font-size: 1.5rem !important;">Select Area</button>
+                                <!-- * Filter Dropdown Button -->
+                                <div class="dropdown-button">
+                                    <div class="dropdown-select-box">
+    
+                                        <div class="dropdown-options-container" data-option-con0>
+    
+                                            <div class="dropdown-option" data-option-item0>
+    
+                                                <input type="radio" class="radio" name="category" value="7 Days" />
+                                                <label for="7 Days">
+                                                    <h4>7 Days</h4>
+                                                </label>
+    
+                                            </div>
+    
+                                            <div class="dropdown-option" data-option-item0>
+    
+                                                <input type="radio" class="radio" name="category" value="Option 2" />
+                                                <label for="Option 2">
+                                                    <h4>Option 2</h4>
+                                                </label>
+    
+                                            </div>
+    
+                                            <div class="dropdown-option" data-option-item0>
+    
+                                                <input type="radio" class="radio" name="category" value="Option 3" />
+                                                <label for="Option 3">
+                                                    <h4>Option 3</h4>
+                                                </label>
+    
+                                            </div>
+    
+                                            <div class="dropdown-option" data-option-item0>
+    
+                                                <input type="radio" class="radio" name="category" value="Option 4" />
+                                                <label for="Option 4">
+                                                    <h4>Option 4</h4>
+                                                </label>
+    
+                                            </div>
+    
+                                        </div>
+    
+                                        <div class="dropdown-selected" data-option-select0>
+                                            <h4>Select Filter</h4>
+                                        </div>
+    
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <!-- * Line Chart -->
@@ -104,7 +149,7 @@
                 <div class="md-con-3">
                     <div class="card-2">
                         <div class="div-1">
-                            <h3>Monthly Target Collection</h3>
+                            <h3>Total Income</h3>
                             <p>200,000</p>
                             <p>10 days left to achieve the target.</p>
                         </div>
@@ -120,34 +165,369 @@
                             <p>Last month target <span>Achieved</span></p>
                         </div>
                     </div>
-                    <div class="card-2">
-                        <h3>Top Members with Penalty</h3>
+                    <div class="card-2 ">
+                        <h3>Top Collectibles Per Area</h3>
                         <div class="div-1">
                             <div class="p-wrap">
                                 <div class="wrap">
-                                    <p>Juana Dela Cruz</p>
+                                    <p>Area 3</p>
                                     <p>900.00</p>
                                 </div>
-                                <p>Area 3</p>
                             </div>
                             <div class="p-wrap">
                                 <div class="wrap">
-                                    <p>Julius Perez</p>
+                                    <p>Area 1</p>
                                     <p>500.00</p>
                                 </div>
-                                <p>Area 1</p>
                             </div>
                             <div class="p-wrap">
                                 <div class="wrap">
-                                    <p>Macario Reyes</p>
+                                    <p>Area 4</p>
                                     <p>300.00</p>
                                 </div>
-                                <p>Area 2</p>
+                            </div>
+                            <div class="p-wrap">
+                                <div class="wrap">
+                                    <p>Area 2</p>
+                                    <p>300.00</p>
+                                </div>
                             </div>
                         </div>
                         <div class="div-2">
-                            <button>View All</button>
+                            <button class="button">View All</button>
                         </div>
                     </div>
                 </div>
-                </x-app-layout>
+
+            </div>
+
+
+            <div class="con-wrapper tlpa">
+                <div class="md-con-2 tlpa">
+                    <!-- * Big Card -->
+                    <div class="big-card">
+                        <div class="div-1">
+                            <div class="btn-wrapper">
+                                <button class="button"  style="font-size: 1.5rem !important;">View All</button>
+                                <!-- * Filter Dropdown Button -->
+                                <div class="dropdown-button">
+                                    <div class="dropdown-select-box">
+    
+                                        <div class="dropdown-options-container" data-option-con00>
+    
+                                            <div class="dropdown-option" data-option-item00>
+    
+                                                <input type="radio" class="radio" name="category" value="7 Days" />
+                                                <label for="7 Days">
+                                                    <h4>7 Days</h4>
+                                                </label>
+    
+                                            </div>
+    
+                                            <div class="dropdown-option" data-option-item00>
+    
+                                                <input type="radio" class="radio" name="category" value="Option 2" />
+                                                <label for="Option 2">
+                                                    <h4>Option 2</h4>
+                                                </label>
+    
+                                            </div>
+    
+                                            <div class="dropdown-option" data-option-item00>
+    
+                                                <input type="radio" class="radio" name="category" value="Option 3" />
+                                                <label for="Option 3">
+                                                    <h4>Option 3</h4>
+                                                </label>
+    
+                                            </div>
+    
+                                            <div class="dropdown-option" data-option-item00>
+    
+                                                <input type="radio" class="radio" name="category" value="Option 4" />
+                                                <label for="Option 4">
+                                                    <h4>Option 4</h4>
+                                                </label>
+    
+                                            </div>
+    
+                                        </div>
+    
+                                        <div class="dropdown-selected" data-option-select00>
+                                            <h4>Select Filter</h4>
+                                        </div>
+    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- * Table -->
+                        <div class="div-2">
+                            <div class="table-container">
+
+                                <!-- * All Members Table -->
+                                <table id="borrowerTable">
+            
+                                    <!-- * Table Header -->
+                                    <tr>
+            
+                                        <th></th>
+            
+                                        <!-- * Area -->
+                                        <th><span class="th-name">Area</span></th>
+            
+                                        <!-- * Acrive Collection -->
+                                        <th><span class="th-name">Acrive Collection</span></th>
+            
+                                        <!-- * New Account -->
+                                        <th>
+                                            <span class="th-name">New Account</span>
+                                        </th>
+            
+                                        <!-- * # NPS -->
+                                        <th>
+                                            <span class="th-name"># NPS</span>
+                                        </th>
+            
+                                        <!-- * Past Due Collection -->
+                                        <th>
+                                            <span class="th-name">Past Due Collection</span>
+                                        </th>
+            
+                                    </tr>
+            
+                                    <!-- * Data Table -->
+                                    <tr>
+            
+                                        <!-- * Td Num-->
+                                        <td>
+                                            <span class="td-num"></span>
+                                        </td>
+            
+                                        <!-- * Area -->
+                                        <td>
+                                            <span class="td-name">Area 5</span>
+                                        </td>
+            
+                                        <!-- * Acrive Collection -->
+                                        <td>
+                                            <span class="td-name">0.00</span>
+                                        </td>
+            
+                                        <!-- * New Account-->
+                                        <td class="td-name">1</td>
+            
+                                        <!-- * # NPS -->
+                                        <td class="td-bal">0</td>
+            
+                                        <!-- * Past Due Collection -->
+                                        <td class="td-due">1,200.00</td>
+            
+                                    </tr>
+                                    <tr>
+            
+                                        <!-- * Td Num-->
+                                        <td>
+                                            <span class="td-num"></span>
+                                        </td>
+            
+                                        <!-- * Area -->
+                                        <td>
+                                            <span class="td-name">Area 5</span>
+                                        </td>
+            
+                                        <!-- * Acrive Collection -->
+                                        <td>
+                                            <span class="td-name">0.00</span>
+                                        </td>
+            
+                                        <!-- * New Account-->
+                                        <td class="td-name">1</td>
+            
+                                        <!-- * # NPS -->
+                                        <td class="td-bal">0</td>
+            
+                                        <!-- * Past Due Collection -->
+                                        <td class="td-due">1,200.00</td>
+            
+                                    </tr>
+                                    <tr>
+            
+                                        <!-- * Td Num-->
+                                        <td>
+                                            <span class="td-num"></span>
+                                        </td>
+            
+                                        <!-- * Area -->
+                                        <td>
+                                            <span class="td-name">Area 5</span>
+                                        </td>
+            
+                                        <!-- * Acrive Collection -->
+                                        <td>
+                                            <span class="td-name">0.00</span>
+                                        </td>
+            
+                                        <!-- * New Account-->
+                                        <td class="td-name">1</td>
+            
+                                        <!-- * # NPS -->
+                                        <td class="td-bal">0</td>
+            
+                                        <!-- * Past Due Collection -->
+                                        <td class="td-due">1,200.00</td>
+            
+                                    </tr>
+                                    <tr>
+            
+                                        <!-- * Td Num-->
+                                        <td>
+                                            <span class="td-num"></span>
+                                        </td>
+            
+                                        <!-- * Area -->
+                                        <td>
+                                            <span class="td-name">Area 5</span>
+                                        </td>
+            
+                                        <!-- * Acrive Collection -->
+                                        <td>
+                                            <span class="td-name">0.00</span>
+                                        </td>
+            
+                                        <!-- * New Account-->
+                                        <td class="td-name">1</td>
+            
+                                        <!-- * # NPS -->
+                                        <td class="td-bal">0</td>
+            
+                                        <!-- * Past Due Collection -->
+                                        <td class="td-due">1,200.00</td>
+            
+                                    </tr>
+                                    <tr>
+            
+                                        <!-- * Td Num-->
+                                        <td>
+                                            <span class="td-num"></span>
+                                        </td>
+            
+                                        <!-- * Area -->
+                                        <td>
+                                            <span class="td-name">Area 5</span>
+                                        </td>
+            
+                                        <!-- * Acrive Collection -->
+                                        <td>
+                                            <span class="td-name">0.00</span>
+                                        </td>
+            
+                                        <!-- * New Account-->
+                                        <td class="td-name">1</td>
+            
+                                        <!-- * # NPS -->
+                                        <td class="td-bal">0</td>
+            
+                                        <!-- * Past Due Collection -->
+                                        <td class="td-due">1,200.00</td>
+            
+                                    </tr>
+                                    <tr>
+            
+                                        <!-- * Td Num-->
+                                        <td>
+                                            <span class="td-num"></span>
+                                        </td>
+            
+                                        <!-- * Area -->
+                                        <td>
+                                            <span class="td-name">Area 5</span>
+                                        </td>
+            
+                                        <!-- * Acrive Collection -->
+                                        <td>
+                                            <span class="td-name">0.00</span>
+                                        </td>
+            
+                                        <!-- * New Account-->
+                                        <td class="td-name">1</td>
+            
+                                        <!-- * # NPS -->
+                                        <td class="td-bal">0</td>
+            
+                                        <!-- * Past Due Collection -->
+                                        <td class="td-due">1,200.00</td>
+            
+                                    </tr>
+                                    <tr>
+            
+                                        <!-- * Td Num-->
+                                        <td>
+                                            <span class="td-num"></span>
+                                        </td>
+            
+                                        <!-- * Area -->
+                                        <td>
+                                            <span class="td-name">Area 5</span>
+                                        </td>
+            
+                                        <!-- * Acrive Collection -->
+                                        <td>
+                                            <span class="td-name">0.00</span>
+                                        </td>
+            
+                                        <!-- * New Account-->
+                                        <td class="td-name">1</td>
+            
+                                        <!-- * # NPS -->
+                                        <td class="td-bal">0</td>
+            
+                                        <!-- * Past Due Collection -->
+                                        <td class="td-due">1,200.00</td>
+            
+                                    </tr>
+                                    
+                                </table>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- * Dashboard Container 3 -->
+                <div class="md-con-3 tlpa">
+                    <div class="card-2 tlpa">
+                        <h3>Top Lapses Per Area</h3>
+                        <div class="div-1">
+                            <div class="p-wrap">
+                                <div class="wrap">
+                                    <p>Area 7</p>
+                                    <p>900.00</p>
+                                </div>
+                            </div>
+                            <div class="p-wrap">
+                                <div class="wrap">
+                                    <p>Area 8</p>
+                                    <p>500.00</p>
+                                </div>
+                            </div>
+                            <div class="p-wrap">
+                                <div class="wrap">
+                                    <p>Area 9</p>
+                                    <p>300.00</p>
+                                </div>
+                            </div>
+                            <div class="p-wrap">
+                                <div class="wrap">
+                                    <p>Area 2</p>
+                                    <p>300.00</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="div-2">
+                            <button class="button">View All</button>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+</x-app-layout>
