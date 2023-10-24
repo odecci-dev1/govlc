@@ -95,6 +95,7 @@ class UserRegister extends Component
         }           
         $getmodules = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetModuleList');     
         $getmodules = $getmodules->json();
+       
         if($getmodules){
             foreach($getmodules as $getmodules){
                 $this->modulelist[$getmodules['module_code']] = ['module_code' => $getmodules['module_code'], 'module_name' => $getmodules['module_name'], 'module_category' => $getmodules['module_category']];

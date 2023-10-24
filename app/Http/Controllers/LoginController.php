@@ -31,13 +31,16 @@ class LoginController extends Controller
                 session()->put('auth_userid', $data['userId']); 
                 session()->put('auth_id', $data['id']);                                
                 $modules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', ['userID' => $data['userId']]); 
+              
                 $modules = $modules->json();
+                //dd($modules);
                 if($modules){
                     foreach($modules as $mdl){
                         $usermodules[] = $mdl['module_code'];
                     }
                 }
                 session()->put('auth_usermodules', $usermodules);
+                //dd(session()->get('auth_usermodules'));
             }           
             return redirect('/dashboard');
         }
