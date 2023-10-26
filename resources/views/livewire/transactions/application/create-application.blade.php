@@ -12,7 +12,7 @@
         <x-asking-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-asking-dialog>   
     @endif
 
-    <!-- <div class="full-screen-div-loading">
+    <div wire:loading  wire:loading.delay class="full-screen-div-loading">
         <div class="center-loading-container">
             <div>
                 <div class="lds-dual-ring"></div>
@@ -21,7 +21,7 @@
                 <span>Please wait . . .</span>
             </div>
         </div>        
-    </div> -->
+    </div>
     <!-- * New-Application-Form-Container -->
     <form autocomplete="off" class="na-form-con" {{ $member['statusID'] == 7 ? '' : 'disabled' }} >
         @if (session()->has('message'))
@@ -80,7 +80,7 @@
                             <!-- <a href="new-application-approval.html"> -->
                                 <button type="button" wire:click="submitForApproval" class="button" data-submit-for-approval>Submit for approval</button>
                             <!-- </a> -->
-                            <button type="submit" class="declineButton" data-open-application-decline>Decline</button>
+                            <button type="button" class="declineButton" data-open-application-decline>Decline</button>
                         </div>
                     </div>
                     <textarea wire:model.lazy="loanDetails.remarks" class="wrapper-2"></textarea>
@@ -2798,7 +2798,7 @@
                                 <!-- employee searching -->
 
                                 <!-- modal for declining -->
-                                <dialog class="na-application-decline-modal" data-application-decline-modal>
+                                <dialog class="na-application-decline-modal" data-application-decline-modal wire:ignore.self>
                                     <!-- * Modal Container -->
                                     <div class="modal-container">
 
@@ -2821,13 +2821,14 @@
                                                         </div>
 
                                                         <!-- * Rowspan 2: Reason for declining Container -->
-                                                        <div class="rowspan">
-                                                            <textarea name="" rows="15" id=""placeholder="Enter the reason here..."></textarea>
+                                                        <div class="rowspan" style="display: inline;">
+                                                            <textarea wire:model.lazy="reason" rows="15" id=""placeholder="Enter the reason here..."></textarea>
+                                                            @error('reason') <span class="text-required">{{ $message }}</span>@enderror    
                                                         </div>
                                                         
                                                         <!-- * Rowspan 3: Button Wrapper -->
                                                         <div class="rowspan">
-                                                            <button type="button" class="button" data-submit-decline-reason>Submit</button>
+                                                            <button type="button" wire:click="decline" class="button" data-submit-decline-reason>Submit</button>
                                                         </div>
 
                                                 </div>
@@ -2929,9 +2930,9 @@
             
             })
 
-            submit.addEventListener("click", () => {
-                location.href = url
-            })
+            // submit.addEventListener("click", () => {
+            //     location.href = url
+            // })
         }
 
         const declineApplicationModal = document.querySelector('[data-application-decline-modal]')

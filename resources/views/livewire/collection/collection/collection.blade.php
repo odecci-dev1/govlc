@@ -2,7 +2,16 @@
  <!-- * Collection Viewing Container Wrapper -->
 
  <div class="can-container-wrapper">
-
+    <div wire:loading  wire:loading.delay class="full-screen-div-loading">
+        <div class="center-loading-container">
+            <div>
+                <div class="lds-dual-ring"></div>
+            </div>
+            <div class="loading-text">
+                <span>Please wait . . .</span>
+            </div>
+        </div>        
+    </div>
      <!-- * Collection Add New Container 1 -->
      <div class="can-container-1">
 

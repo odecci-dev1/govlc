@@ -19,7 +19,7 @@
             <!-- * Yes or No Button -->
             <div class="rowspan">
                 <button type="button" autofocus onclick="{{ $confirmaction }}('{{ $xmid }}')" class="modalButton" data-deletion-yes>Yes</button>
-                <button wire:click="closeDialog" type="button" class="modalAlertButton" data-deletion-no>No</button>
+                <button type="button" wire:click="closeDialog" type="button" class="modalAlertButton" data-deletion-no>No</button>
             </div>
 
         </div>

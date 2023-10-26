@@ -1,5 +1,8 @@
     <div class="na-form-con">
     <!-- modals -->
+    @if(session('mmessage'))
+        <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+    @endif
     <livewire:modals.new-application-modal  :type="''" :mid="isset($id) ? $id : ''"/> 
     <!-- modals -->
 

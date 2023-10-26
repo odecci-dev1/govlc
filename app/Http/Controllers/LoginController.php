@@ -20,6 +20,7 @@ class LoginController extends Controller
         if($res == 'OK'){
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [ ['column' => 'username', 'values' =>  $request['username']] ]); 
             $data = $crt->json();
+            //dd($data);
             $usermodules = [];
 
             if($data){
@@ -29,8 +30,14 @@ class LoginController extends Controller
                 session()->put('auth_username', $data['username']); 
                 session()->put('auth_name', $data['lname'] . ', ' . $data['fname'] .' '. mb_substr($data['mname'],0,1) . '.');       
                 session()->put('auth_userid', $data['userId']); 
-                session()->put('auth_id', $data['id']);                                
-                $modules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', ['userID' => $data['userId']]); 
+                session()->put('auth_id', $data['id']);     
+                            
+                if(in_array($data['userTypeId'], [1,2])){                    
+                    $modules = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleList'); 
+                }
+                else{
+                    $modules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', ['userID' => $data['userId']]); 
+                }
               
                 $modules = $modules->json();
                 //dd($modules);

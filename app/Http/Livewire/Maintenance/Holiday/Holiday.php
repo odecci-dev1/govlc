@@ -33,6 +33,12 @@ class Holiday extends Component
         return $rules;
     }
 
+    public function messages(){
+        $messages = [];
+        $messages['date.required'] = 'Select date';  
+        return $messages;
+    }
+
     public function setDate($date, $month, $dayAndWeekday, $year){
         $this->date = $date;
         $this->month = $month;
@@ -52,7 +58,9 @@ class Holiday extends Component
 
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Holiday/AddNewHoliday', $data);         
         // dd( $crt ); asd
-        return redirect()->to('/maintenance/holiday/list')->with('message', 'Holiday successfully saved');    
+        $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Holiday/GetLastHolidayList');        
+        $getlast = $getlast->json(); 
+        return redirect()->to('/maintenance/holiday/view/'.(isset($getlast['holidayID']) ? $getlast['holidayID'] : ''))->with(['mmessage'=> 'Holiday has been saved', 'mword'=> 'Success']);    
     }
 
     public function update(){   
@@ -68,7 +76,7 @@ class Holiday extends Component
 
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Holiday/UpdateHolidayDetails', $data);           
             // dd( $crt ); 
-            return redirect()->to('/maintenance/holiday/view/'.$this->holid)->with('message', 'Holiday successfully saved');    
+            return redirect()->to('/maintenance/holiday/view/'.$this->holid)->with(['mmessage'=> 'Holiday has been updated', 'mword'=> 'Success']);      
         }
         catch (\Exception $e) {           
             throw $e;            

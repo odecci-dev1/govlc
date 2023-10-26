@@ -170,14 +170,19 @@ class UserRegister extends Component
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUser', $user); 
             $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetLastUserList');       
             $getlast =  $getlast->json();
-            return redirect()->to('/user/view/'.$getlast['userId'])->with('message', 'User successfully saved'); 
+            return redirect()->to('/user/view/'.$getlast['userId'])->with(['sessmword'=> 'Success', 'sessmessage'=> 'User successfully saved']); 
         }      
         else{
             // dd($user);
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/UpdateUserInfo', $user);            
-            return redirect()->to('/user/view/'.$this->userid)->with('message', 'User successfully updated'); 
+            return redirect()->to('/user/view/'.$this->userid)->with(['sessmword'=> 'Success', 'sessmessage'=> 'User successfully saved']); 
         }     
         
+    }
+
+    public function archive($userid){       
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/DeleteUser', [ 'id' => $userid ]);              
+        return redirect()->to('/users')->with(['mmessage'=> 'User has been archived', 'mword'=> 'Success']);    
     }
 
     public function changeUpdatePassword(){

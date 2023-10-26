@@ -1,8 +1,12 @@
 <div>    
     <!-- * Holiday Maintenance -->
     <!-- * Container 1: Holiday Maintenance Header, Buttons, and Searchbar -->
-    @if(session('message'))
-    <x-alert :message="session('message')" :words="session('message')" :header="'Success'"></x-alert>   
+  
+    @if($showDialog == 1)
+        <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
+    @endif
+    @if(session('mmessage'))
+        <x-alert :message="session('mmessage')" :words="session('mmessage')" :header="'Success'"></x-alert>   
     @endif
     <div class="m-con-1">
     <h2>Holiday</h2>
@@ -138,7 +142,7 @@
                     <td class="td-btns">
                         <div class="td-btn-wrapper">
                             <a href="{{ URL::to('/') }}/maintenance/holiday/view/{{ $l['holidayID'] }}" class="a-btn-view-2" data-maintenance-view-holiday>View</a>
-                            <button class="a-btn-trash-2">Trash</button>
+                            <button onclick="showDialog('{{ $l['holidayID'] }}')" type="button" class="a-btn-trash-2">Trash</button>
                         </div>
                     </td>
 
@@ -165,3 +169,14 @@
 
     </div>
 </div>
+<script>
+    document.addEventListener('livewire:load', function () {
+        window.showDialog = function($mid){              
+            @this.call('showDialog', $mid);        
+        };
+
+        window.archive = function($mid){
+            @this.call('archive', $mid);       
+        };
+    })
+</script>

@@ -1,5 +1,11 @@
 <div>
 <div class="ul-con-1">
+          @if($showDialog == 1)
+            <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
+          @endif
+          @if(session('mmessage'))
+              <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+          @endif
           <h2>User List</h2>
           <p class="p-1">
             Total of <span id="numActiveUsers">10</span> active users
@@ -121,7 +127,7 @@
                     <td class="td-btns">
                     <div class="td-btn-wrapper">
                         <a href="{{ URL::to('/') }}/user/view/{{ $l['userId'] }}" class="a-btn-view-2" data-user-view>View</a>
-                        <button class="a-btn-trash-2">Trash</button>
+                        <button onclick="showDialog('{{ $l['userId'] }}')" type="button" class="a-btn-trash-2">Trash</button>
                     </div>
                     </td>
                 </tr>               
@@ -133,3 +139,14 @@
 
         </div>
 </div>
+<script>
+    document.addEventListener('livewire:load', function () {
+        window.showDialog = function($mid){                    
+          @this.call('showDialog', $mid);        
+        };
+
+        window.archive = function($mid){
+            @this.call('archive', $mid);       
+        };
+    })
+</script>

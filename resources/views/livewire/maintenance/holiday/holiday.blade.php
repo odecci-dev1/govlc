@@ -3,9 +3,22 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script> 
     <!-- * New Holiday Form -->
     <form action="" class="na-form-con" autocomplete="off">
-    @if(session('message'))
-    <x-alert :message="session('message')" :words="session('message')" :header="'Success'"></x-alert>   
+    @if($showDialog == 1)
+        <x-dialog :message="'Are you sure you want to trash this data '" :xmid="$mid" :confirmaction="'archive'" :header="'Trash'"></x-dialog>   
     @endif
+    @if(session('mmessage'))
+    <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+    @endif
+    <div wire:loading  wire:loading.delay.short class="full-screen-div-loading">
+        <div class="center-loading-container">
+            <div>
+                <div class="lds-dual-ring"></div>
+            </div>
+            <div class="loading-text">
+                <span>Please wait . . .</span>
+            </div>
+        </div>        
+    </div>
     <!-- * Container Wrapper: Add New Holiday -->
 
         <!-- * Container 1: Add New Holiday and Buttons -->
@@ -35,7 +48,7 @@
                             <button type="button" wire:click="store" class="button" data-save>Save</button>
                             @else
                             <button type="button" wire:click="update" class="button" data-save>Update</button>
-                            <button type="button" wire:click="archive('{{ $holid }}')" class="button" data-save>Trash</button>
+                            <button type="button" onclick="showDialog('{{ $holid }}')"  class="button" data-save>Trash</button>
                             @endif
 
                         </div>
@@ -75,10 +88,10 @@
                     </div>
 
                     <!-- * Rowspan 4: Pick a date, Month, Day, and Year -->
-                    <div class="rowspan" wire:ignore>
+                    <div class="rowspan" >
 
                         <!-- * Pick a date -->
-                        <div class="input-wrapper">
+                        <div class="input-wrapper" wire:ignore>
                             <input type="hidden" wire:model="date" id="mdate" >
                             <span>Pick a date</span>
                                 <input type="button" class="datepicker-toggle" id="datepicker">                                
@@ -105,9 +118,9 @@
                             <input autocomplete="off" disabled wire:model.lazy="year"  type="text" class="calendarSelect" id="formHolidayYear" name="formHolidayYear" >
                             @error('year') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
-
+                        @error('date') <span class="text-required" style="font-size: 1.8rem;">{{ $message }}</span>@enderror
                     </div>
-
+                    
                     <!-- * Rowspan 5: Location / Area -->
                     <div class="rowspan">
 
@@ -210,6 +223,13 @@
                 },
 
             });
+
+            window.showDialog = function($mid){              
+                @this.call('showDialog', $mid);        
+            };
+
+            window.archive = function($mid){
+                @this.call('archive', $mid);       
+            };
     })
 </script>
-

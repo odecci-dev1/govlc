@@ -1,8 +1,21 @@
 <div>
 <div class="main-dashboard">
-@if(session('sessmessage'))
+        @if(session('sessmessage'))
             <x-alert :message="session('sessmessage')" :words="session('sessmword') ? session('sessmword') : ''" :header="'Success'"></x-alert>   
         @endif
+        @if($showDialog == 1)
+            <x-dialog :message="'Are you sure you want to trash this data '" :xmid="$mid" :confirmaction="'archive'" :header="'Trash'"></x-dialog>   
+        @endif
+        <div wire:loading  wire:loading.delay class="full-screen-div-loading">
+          <div class="center-loading-container">
+              <div>
+                  <div class="lds-dual-ring"></div>
+              </div>
+              <div class="loading-text">
+                  <span>Please wait . . .</span>
+              </div>
+          </div>        
+      </div>
         <!-- * Add New User Container -->
         <form action="" class="na-form-con" autocomplete="off">
           <!-- * Wrapper -->
@@ -181,6 +194,9 @@
                           <input type="file" wire:model="imgprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                           <!-- * Update Button -->
                           <button type="button" class="button" wire:click="register">Update</button>
+                          @if($mid != '')
+                          <button type="button" type="button" onclick="showDialog('{{ $userid }}')" class="button">Trash</button>
+                          @endif
 
                           <!-- * Cancel Button -->
                           <a href="{{ URL::to('/') }}/users" type="button" class="transparentButtonUnderline" data-back-to-user-list>Cancel</a>
@@ -395,3 +411,15 @@
         </form>
       </div>
 </div>
+<script>
+        document.addEventListener('livewire:load', function () {
+            window.showDialog = function($mid){              
+                @this.call('showDialog', $mid);        
+            };
+
+            window.archive = function($mid){
+                @this.call('archive', $mid);       
+            };
+        })
+      
+</script>

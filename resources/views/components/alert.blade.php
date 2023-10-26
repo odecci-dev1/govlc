@@ -18,7 +18,7 @@
 
         <!-- * Okay Button -->
         <div class="rowspan">
-            <button autofocus class="modalButton" wire:click="closeAlert" data-close-update-modal>OK</button>
+            <button autofocus type="button" class="modalButton" wire:click="closeAlert" data-close-update-modal>OK</button>
         </div>
 
     </div>
