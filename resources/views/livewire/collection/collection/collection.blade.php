@@ -1,6 +1,8 @@
  <div>
  <!-- * Collection Viewing Container Wrapper -->
-
+ @php 
+    $modules = session()->get('auth_usermodules');
+ @endphp
  <div class="can-container-wrapper">
     <div wire:loading  wire:loading.delay class="full-screen-div-loading">
         <div class="center-loading-container">
@@ -47,7 +49,8 @@
                         @foreach($areas as $area)
                         @php 
                             $checkIfPaid = $areaDetails->where('areaID', $area['areaID'])->where('payment_Status', 'Paid')->first();       
-                            $checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();                 
+                            //$checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', '')->first();                 
+                            $checkIfPrinted = $area['area_RefNo'] != '' ? true : false;
                         @endphp
                         <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['foid'] }}')" class="{{ $areaID == $area['areaID'] ? 'view-selected-area' : '' }} {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
                             <div class="box-1">
@@ -91,7 +94,7 @@
                      <!-- * Collection Officer Search Bar -->
                      <div class="primary-search-bar">
                          <div class="row">
-                            <select wire:model="foid" class="select-option-menu" style="width: 40rem;{{ $areaID != '' ? '' : 'visibility: hidden;' }}">                                
+                            <select wire:model.lazy="foid" class="select-option-menu" style="width: 40rem;{{ $areaID != '' ? '' : 'visibility: hidden;' }}">                                
                                 @if($folist)
                                     @foreach($folist as $fo)
                                         <option value="{{ $fo['foid'] }}">{{ $fo['lname'] }}, {{ $fo['fname'] }} {{ substr($fo['mname'], 0, 1) }}.</option>           
@@ -129,7 +132,9 @@
             
                 <button type="button" wire:click="print" class="button-2" data-collection-print-button>Print</button>
                 @if($checkArea)
+                    @if(in_array('Module-07', $modules))
                     <a href="{{ URL::to('/') }}/collection/remittance/{{ $checkArea['area_RefNo'] }}" class="button-2" data-collection-remit-button>Remit</a>
+                    @endif
                     @if($checkArea['collection_RefNo'] != 'PENDING')
                         
                     @endif

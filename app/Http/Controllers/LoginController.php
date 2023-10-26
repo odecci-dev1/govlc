@@ -31,14 +31,15 @@ class LoginController extends Controller
                 session()->put('auth_name', $data['lname'] . ', ' . $data['fname'] .' '. mb_substr($data['mname'],0,1) . '.');       
                 session()->put('auth_userid', $data['userId']); 
                 session()->put('auth_id', $data['id']);     
+                session()->put('auth_profile', $data['profilePath']);     
                             
                 if(in_array($data['userTypeId'], [1,2])){                    
-                    $modules = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleList'); 
+                    $modules = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetModuleList'); 
                 }
                 else{
                     $modules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', ['userID' => $data['userId']]); 
                 }
-              
+                session()->forget('auth_usermodules');
                 $modules = $modules->json();
                 //dd($modules);
                 if($modules){

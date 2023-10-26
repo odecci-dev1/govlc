@@ -6,7 +6,7 @@
         @if($showDialog == 1)
             <x-dialog :message="'Are you sure you want to trash this data '" :xmid="$mid" :confirmaction="'archive'" :header="'Trash'"></x-dialog>   
         @endif
-        <div wire:loading  wire:loading.delay class="full-screen-div-loading">
+        <div wire:loading  wire:loading.delay wire:target="register,imgprofile" class="full-screen-div-loading">
           <div class="center-loading-container">
               <div>
                   <div class="lds-dual-ring"></div>

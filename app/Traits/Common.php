@@ -61,7 +61,7 @@ trait Common {
 
    public function closeDialog(){
       $this->showDialog = 0;
-      $this->mid = '';
+      // $this->mid = '';
    }
 
    public function showAlert($mid){    

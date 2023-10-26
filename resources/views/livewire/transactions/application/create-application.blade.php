@@ -12,7 +12,7 @@
         <x-asking-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-asking-dialog>   
     @endif
 
-    <div wire:loading  wire:loading.delay class="full-screen-div-loading">
+    <div wire:loading  wire:loading.delay wire:target="store,imgprofile,member.attachments,membusinfo.attachments,addBusinessInfo,imgcoprofile,comaker.attachments,imgmemsign,imgcosign" class="full-screen-div-loading">
         <div class="center-loading-container">
             <div>
                 <div class="lds-dual-ring"></div>
@@ -1741,7 +1741,7 @@
                                                     $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
                                                 @endphp                                               
                                                 <a href="{{ asset('storage/business_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
-                                                    {{ $filename }}
+                                                    {{ $filename }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 </a>                                               
                                             @endif                                            
                                     @endforeach

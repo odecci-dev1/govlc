@@ -116,7 +116,8 @@ class Collection extends Component
         $this->areas = collect([]);
         $this->areaDetails = collect([]);
         $this->areaDetailsFooter = collect([]);
-        $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/AreasCollectionList');  
+        // $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/AreasCollectionList');  
+        $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');  
         $areas = $areas->json();
         //dd($areas);
         if( $areas ){

@@ -17,6 +17,10 @@
 
     <!-- * Main Nav Container -->
     <div class="nav">
+        @php 
+            $modules = session()->get('auth_usermodules');
+            $usertype = session()->get('auth_usertype'); 
+        @endphp
         <!-- * Nav Container 1 inside main nav-->
         <div class="nav-con-1">
             <!-- * Logo -->
@@ -51,22 +55,19 @@
                 <!-- * Maintenance -->
                 <div class="dropdown" data-dropdown>
 
+                    @php 
+                        $cntmaintenance = array_intersect(['Module-01', 'Module-02', 'Module-03', 'Module-04'],$modules);
+                    @endphp
+                    @if( count($cntmaintenance) > 0 )
                     <li class="link dropdown" data-dropdown-button>
                         <img src="{{ URL::to('/') }}/assets/icons/maintenance.svg" alt="maintenance" data-dropdown-button />
                         <p data-dropdown-button>Maintenance</p>
                     </li>
+                    @endif
 
                     <!-- * Submenu -->
                     <ul class="sub-menu">
-
-                        <!-- <a href="../KC/co-maker.html" data-nav-link>
-                            <li> -->
-                        <!-- * Co Maker -->
-                        <!-- <img src="{{ URL::to('/') }}/assets/icons/sub-menu/co-maker.svg" alt="co-maker" />
-                                <span>Co Maker</span>
-                            </li>
-                        </a> -->
-
+                        @if(in_array('Module-01', $modules))
                         <a href="{{ URL::to('/') }}/maintenance/fieldofficer/list" data-nav-link>
                             <li>
                                 <!-- * Field Officer -->
@@ -74,7 +75,9 @@
                                 <span>Field Officer</span>
                             </li>
                         </a>
+                        @endif
 
+                        @if(in_array('Module-02', $modules))
                         <a href="{{ URL::to('/') }}/maintenance/fieldarea" data-nav-link>
                             <li>
                                 <!-- * Field Area -->
@@ -82,7 +85,9 @@
                                 <span>Field Area</span>
                             </li>
                         </a>
-
+                        @endif
+                        
+                        @if(in_array('Module-03', $modules))
                         <a href="{{ URL::to('/') }}/maintenance/loantypes/list" data-nav-link>
                             <li>
                                 <!-- * Loan Type -->
@@ -90,7 +95,9 @@
                                 <span>Loan Type</span>
                             </li>
                         </a>
+                        @endif
 
+                        @if(in_array('Module-04', $modules))
                         <a href="{{ URL::to('/') }}/maintenance/holiday/list" data-nav-link>
                             <li>
                                 <!-- * Holidays -->
@@ -98,12 +105,14 @@
                                 <span>Holidays</span>
                             </li>
                         </a>
+                        @endif
 
                     </ul>
                 </div>
 
                 <!-- * Link Wrapper w/ SubMenu -->
                 <!-- * Collection -->
+                @if(in_array('Module-06', $modules))
                 <div class="dropdown" data-dropdown>
 
                     <a href="{{ URL::to('/') }}/collection/list" class="link " data-dropdown-button>
@@ -112,19 +121,25 @@
                     </a>
 
                 </div>
-
+                @endif
                 <!-- * Link Wrapper w/ SubMenu -->
                 <!-- * Transactions -->
                 <div class="dropdown" data-dropdown>
 
+                    @php 
+                        $cnttran = array_intersect(['Module-08', 'Module-09', 'Module-010', 'Module-011'],$modules);
+                    @endphp
+                    @if( count($cnttran) > 0 )
                     <li class="link dropdown" data-dropdown-button>
                         <img src="{{ URL::to('/') }}/assets/icons/transactions.svg" alt="transactions" data-dropdown-button />
                         <p data-dropdown-button>Transactions</p>
                     </li>
+                    @endif
 
                     <!-- * Submenu -->
                     <ul class="sub-menu">
                         
+                        @if(in_array('Module-08', $modules))
                         <a href="{{ URL::to('/') }}/tranactions/application/list" data-nav-link>
 
                             <li>
@@ -134,7 +149,9 @@
                             </li>
 
                         </a>
+                        @endif
 
+                        @if(in_array('Module-09', $modules))
                         <a href="{{ URL::to('/') }}/tranactions/application/credit/investigation/list" data-nav-link>
                             <li>
                                 <!-- * Credit Investigation  -->
@@ -142,8 +159,9 @@
                                 <span>Credit Investigation</span>
                             </li>
                         </a>
+                        @endif
 
-                       
+                        @if(in_array('Module-010', $modules))
                         <a href="{{ URL::to('/') }}/tranactions/application/approval/list" data-nav-link>
                             <li>
                                 <!-- * Approval  -->
@@ -151,7 +169,9 @@
                                 <span>Approval</span>
                             </li>
                         </a>
+                        @endif
 
+                        @if(in_array('Module-011', $modules))
                         <a href="{{ URL::to('/') }}/tranactions/application/releasing/list" data-nav-link>
                             <li>
                                 <!-- * Releasing  -->
@@ -159,6 +179,7 @@
                                 <span>Releasing</span>
                             </li>
                         </a>
+                        @endif
                        
                     </ul>
                 </div>
@@ -166,15 +187,19 @@
                 <!-- * Link Wrapper w/ SubMenu -->
                 <!-- * Reports -->
                 <div class="dropdown" data-dropdown>
-
+                    @php 
+                        $cntrep = array_intersect(['Module-013', 'Module-014', 'Module-015', 'Module-016', 'Module-017'],$modules);
+                    @endphp
+                    @if( count($cntrep) > 0 )
                     <li class="link dropdown" data-dropdown-button>
                         <img src="{{ URL::to('/') }}/assets/icons/reports.svg" alt="reports" data-dropdown-button />
                         <p data-dropdown-button>Reports</p>
                     </li>
-
+                    @endif
+                   
                     <!-- * Submenu -->
                     <ul class="sub-menu">
-
+                        @if(in_array('Module-013', $modules))
                         <a href="{{ URL::to('/') }}/outstanding/report" data-nav-link>
                             <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
                                 <!-- * Outstanding Reports -->
@@ -182,7 +207,9 @@
                                 <span>Outstanding Reports</span>
                             </li>
                         </a>
+                        @endif
 
+                        @if(in_array('Module-014', $modules))
                         <a href="{{ URL::to('/') }}/release/report" data-nav-link>
                             <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
                                 <!-- * Custom Report -->
@@ -190,7 +217,9 @@
                                 <span>Release Report</span>
                             </li>
                         </a>
+                        @endif
 
+                        @if(in_array('Module-015', $modules))
                         <a href="{{ URL::to('/') }}/collection/report" data-nav-link>
                             <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
                                 <!-- * Custom Report -->
@@ -198,7 +227,9 @@
                                 <span>Collection Report</span>
                             </li>
                         </a>
+                        @endif
 
+                        @if(in_array('Module-016', $modules))
                         <a href="{{ URL::to('/') }}/savings/report" data-nav-link>
                             <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
                                 <!-- * Custom Report -->
@@ -206,7 +237,9 @@
                                 <span>Savings Report</span>
                             </li>
                         </a>
+                        @endif
 
+                        @if(in_array('Module-017', $modules))
                         <a href="{{ URL::to('/') }}/pastdue/report" data-nav-link>
                             <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
                                 <!-- * Custom Report -->
@@ -214,6 +247,7 @@
                                 <span>Past Due Report</span>
                             </li>
                         </a>
+                        @endif
 
                     </ul>
                 </div>
@@ -222,6 +256,7 @@
         </div>
 
         <!-- * Nav Container 2 inside main nav-->
+        @if(in_array($usertype, [1,2]))
         <div class="nav-con-2">
 
             <!-- * Nav Links Container -->
@@ -239,13 +274,22 @@
                 </a>
             </ul>
         </div>
+        @endif
     </div>
 
     <!-- * Navigation Profile -->
     <div class="profile-nav">
         <div class="profile-nav-con">
+            @php 
+                $profilepic = session()->get('auth_profile');
+            @endphp
             <img style="cursor: pointer;" src="{{ URL::to('/') }}/assets/icons/bell.svg" alt="Bell" />
-            <img style="cursor: pointer;" id="profileImg" onclick="openProfile()" src="{{ URL::to('/') }}/assets/icons/profile.svg" alt="Profile" />
+            @if(file_exists(public_path('storage/users_profile/'.$profilepic)))                                  
+                <img src="{{ asset('storage/users_profile/'.$profilepic) }}" alt="upload-image" style="height: 5rem; width: 5rem; cursor: pointer;  border-radius: 50%" id="profileImg" onclick="openProfile()"/>                                                                                                                 
+            @else
+                <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 5rem; width: 5rem; cursor: pointer;  border-radius: 50%" id="profileImg" onclick="openProfile()"/>                                               
+            @endif  
+            <!-- <img style="cursor: pointer;" id="profileImg" onclick="openProfile()" src="{{ URL::to('/') }}/assets/icons/profile.svg" alt="Profile" /> -->
         </div>
       
     </div>

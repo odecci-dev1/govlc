@@ -613,7 +613,7 @@ class CreateApplication extends Component
                                         'salary' => $value['salary'],
                                         'vos' => $value['vos'],
                                         'aos' => $value['aos'],
-                                        'businessFiles' => $this->storeBusinessInfoAttachments( $value['attachments'] )  
+                                        'businessFiles' => $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] )  
                                     ];
                 }
             }
@@ -771,15 +771,21 @@ class CreateApplication extends Component
                     ]];
       
                     //$extension = $request->file('filename')->getClientOriginalExtension();
-                    //dd(json_encode($data));                          
+                    //dd($data);                          
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                // dd( $crt );
+                //dd( $crt );
                 $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
                 $getlast = $getlast->json();
-                // dd($getlast);
-   
-                return redirect()->to('/tranactions/application/view/'.$getlast['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                // dd($getlast);   
+                $modules = session()->get('auth_usermodules');
+                $usertype = session()->get('auth_usertype'); 
+                if(in_array('Module-09', $modules) || in_array($usertype, [1,2])){
+                    return redirect()->to('/tranactions/application/view/'.$getlast['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                }
+                else{
+                    return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                }
             }
             else{              
                 $membersongroup = session('memdata') !==null ? session('memdata') : [];
@@ -807,16 +813,16 @@ class CreateApplication extends Component
     }
 
     //dito
-    public function storeBusinessInfoAttachments($businessattachments){
-        $memattachements = [];      
-        // if($this->member['attachments'] == $this->member['old_attachments']){
-        //     $memattachements = $this->member['attachments'];
-        // }
-        // else{            
+    public function storeBusinessInfoAttachments($oldattachments, $businessattachments){
+        $memattachements = [];            
+        if($businessattachments == $oldattachments){
+            $memattachements = $businessattachments;
+        }
+        else{            
             if(isset($businessattachments)){    
                 $deletefiles = [];
-                if(isset($this->membusinfo['old_attachments'])){
-                    foreach($this->membusinfo['old_attachments'] as $oldfiles){
+                if(isset($oldattachments)){
+                    foreach($oldattachments as $oldfiles){
                         $deletefiles[] = 'public/business_attachments/'.$oldfiles['filePath'];
                     }
                 }
@@ -828,7 +834,7 @@ class CreateApplication extends Component
                     $memattachements[] = [ 'filePath' => $filename , 'fileName' => $filename, 'fileType' => $filename ];
                 }
             }
-        //}
+        }
         return $memattachements;
     }
 
@@ -856,6 +862,7 @@ class CreateApplication extends Component
                 }
             }
            
+           
             if(count( $this->businfo) > 0){          
                 foreach($this->businfo as $key => $value){
                     
@@ -869,10 +876,10 @@ class CreateApplication extends Component
                                         'salary' => $value['salary'],
                                         'vos' => $value['vos'],
                                         'aos' => $value['aos'],   
-                                        'businessFiles' => []
+                                        'businessFiles' => $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] )
                                     ];
                 }
-            }
+            }  
 
             if(count( $this->appliances) > 0){
                 if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
@@ -1304,7 +1311,8 @@ class CreateApplication extends Component
                                           'salary' => $data['membusinfo']['salary'],
                                           'vos' => $data['membusinfo']['vos'],
                                           'aos' => $data['membusinfo']['aos'],    
-                                          'attachments' => $this->membusinfo['attachments']                                      
+                                          'attachments' => $this->membusinfo['attachments'],     
+                                          'old_attachments' => []                                           
                                         ];
                                 
         $this->resetmembusinfo();                        
@@ -1325,6 +1333,7 @@ class CreateApplication extends Component
         $this->membusinfo['vos']  = $businfo['vos'];
         $this->membusinfo['aos']  = $businfo['aos'];
         $this->membusinfo['attachments']  = $businfo['attachments'];
+        $this->membusinfo['old_attachments']  = $businfo['old_attachments'];
     }
 
     public function resetmembusinfo(){
@@ -1436,85 +1445,85 @@ class CreateApplication extends Component
                     $this->member['profile'] = $data['profilePath'];                   
                 }
                 else{
-                    // $this->member['fname'] = '1Jumar';  
-                    // $this->member['lname'] = '1Cave';
-                    // $this->member['mname'] = '1Badajos';
-                    // $this->member['suffix'] = ''; 
-                    // $this->member['age'] = '20'; 
-                    // $this->member['barangay'] = 'Rivera';  
-                    // $this->member['city'] = 'San Juan'; 
-                    // $this->member['civil_Status'] = 'Married';  
-                    // $this->member['cno'] = '02233666666'; 
-                    // $this->member['country'] = 'Philippines'; 
-                    // $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
-                    // $this->member['emailAddress'] = 'test@gmail.com'; 
-                    // $this->member['gender'] = 'Male';
-                    // $this->member['houseNo'] = 'No. 9 GB';
-                    // $this->member['house_Stats'] = '2'; 
-                    // $this->member['pob'] = 'Bani, Pangasinan';
-                    // $this->member['province'] = 'NCR'; 
-                    // $this->member['yearsStay'] = '5';
-                    // $this->member['zipCode'] = '';     
+                    $this->member['fname'] = '1Jumar';  
+                    $this->member['lname'] = '1Cave';
+                    $this->member['mname'] = '1Badajos';
+                    $this->member['suffix'] = ''; 
+                    $this->member['age'] = '20'; 
+                    $this->member['barangay'] = 'Rivera';  
+                    $this->member['city'] = 'San Juan'; 
+                    $this->member['civil_Status'] = 'Married';  
+                    $this->member['cno'] = '02233666666'; 
+                    $this->member['country'] = 'Philippines'; 
+                    $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
+                    $this->member['emailAddress'] = 'test@gmail.com'; 
+                    $this->member['gender'] = 'Male';
+                    $this->member['houseNo'] = 'No. 9 GB';
+                    $this->member['house_Stats'] = '2'; 
+                    $this->member['pob'] = 'Bani, Pangasinan';
+                    $this->member['province'] = 'NCR'; 
+                    $this->member['yearsStay'] = '5';
+                    $this->member['zipCode'] = '';     
                 }
                        
-                // $this->member['electricBill'] = '250'; 
-                // $this->member['waterBill'] = '100'; 
-                // $this->member['otherBills'] = '1000'; 
-                // $this->member['dailyExpenses'] = '10000'; 
-                // $this->member['jobDescription'] = 'Programmer'; 
-                // $this->member['yos'] = '7'; 
-                // $this->member['monthlySalary'] = '15000'; 
-                // $this->member['otherSOC'] = 'Freelancer'; 
-                // $this->member['bO_Status'] = '1'; 
-                // $this->member['companyName'] = 'SOEN'; 
-                // $this->member['companyAddress'] = 'ORTIGAS'; 
-                // $this->member['emp_Status'] = '1'; 
-                // $this->member['f_Fname'] = 'Jezz'; 
-                // $this->member['f_Lname'] = 'Eurolfan'; 
-                // $this->member['f_Mname'] = 'Javier'; 
-                // $this->member['f_Suffix'] = ''; 
-                // $this->member['f_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
-                // $this->member['f_Age'] = '30'; 
-                // $this->member['f_NOD'] = '0'; 
-                // $this->member['f_YOS'] = '5'; 
-                // $this->member['f_Emp_Status'] = '1'; 
-                // $this->member['f_Job'] = 'Cashier'; 
-                // $this->member['f_CompanyName'] = 'SOEN'; 
-                // $this->member['f_RTTB'] = '';     
-                // $this->member['loanAmount'] = '30000'; 
-                // $this->member['termsOfPayment'] = $this->loanDetails['loantermsName']; 
-                // $this->member['purpose'] = 'For Business'; 
+                $this->member['electricBill'] = '250'; 
+                $this->member['waterBill'] = '100'; 
+                $this->member['otherBills'] = '1000'; 
+                $this->member['dailyExpenses'] = '10000'; 
+                $this->member['jobDescription'] = 'Programmer'; 
+                $this->member['yos'] = '7'; 
+                $this->member['monthlySalary'] = '15000'; 
+                $this->member['otherSOC'] = 'Freelancer'; 
+                $this->member['bO_Status'] = '1'; 
+                $this->member['companyName'] = 'SOEN'; 
+                $this->member['companyAddress'] = 'ORTIGAS'; 
+                $this->member['emp_Status'] = '1'; 
+                $this->member['f_Fname'] = 'Jezz'; 
+                $this->member['f_Lname'] = 'Eurolfan'; 
+                $this->member['f_Mname'] = 'Javier'; 
+                $this->member['f_Suffix'] = ''; 
+                $this->member['f_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
+                $this->member['f_Age'] = '30'; 
+                $this->member['f_NOD'] = '0'; 
+                $this->member['f_YOS'] = '5'; 
+                $this->member['f_Emp_Status'] = '1'; 
+                $this->member['f_Job'] = 'Cashier'; 
+                $this->member['f_CompanyName'] = 'SOEN'; 
+                $this->member['f_RTTB'] = '';     
+                $this->member['loanAmount'] = '30000'; 
+                $this->member['termsOfPayment'] = $this->loanDetails['loantermsName']; 
+                $this->member['purpose'] = 'For Business'; 
         
-                // $this->comaker['co_Fname'] = 'Thea'; 
-                // $this->comaker['co_Lname'] = 'Badajos'; 
-                // $this->comaker['co_Mname'] = 'Eurolfan'; 
-                // $this->comaker['co_Suffix'] = ''; 
-                // $this->comaker['co_Age'] = '26'; 
-                // $this->comaker['co_Barangay'] = 'Rivera'; 
-                // $this->comaker['co_City'] = 'San Juan'; 
-                // $this->comaker['co_Civil_Status'] = 'Single'; 
-                // $this->comaker['co_Cno'] = '023369990'; 
-                // $this->comaker['co_Country'] = 'Philippines'; 
-                // $this->comaker['co_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
-                // $this->comaker['co_EmailAddress'] = 'test@gmail.com'; 
-                // $this->comaker['co_Gender'] = 'Female'; 
-                // $this->comaker['co_HouseNo'] = '566233';         
-                // $this->comaker['co_House_Stats'] = '2'; 
-                // $this->comaker['co_POB'] = 'Pangasinan'; 
-                // $this->comaker['co_Province'] = 'Iloilo'; 
-                // $this->comaker['co_YearsStay'] = '5'; 
-                // $this->comaker['co_ZipCode'] = ''; 
-                // $this->comaker['co_RTTB'] = ''; 
-                // $this->comaker['co_Status'] = ''; 
-                // $this->comaker['co_JobDescription'] = 'Cashier'; 
-                // $this->comaker['co_YOS'] = '0'; 
-                // $this->comaker['co_MonthlySalary'] = '15000'; 
-                // $this->comaker['co_OtherSOC'] = 'none'; 
-                // $this->comaker['co_BO_Status'] = '1'; 
-                // $this->comaker['co_CompanyName'] = 'SOEN'; 
-                // $this->comaker['co_CompanyID'] = ''; 
-                // $this->comaker['co_Emp_Status'] = '1'; 
-                // $this->comaker['remarks'] = ''; 
+                $this->comaker['co_Fname'] = 'Thea'; 
+                $this->comaker['co_Lname'] = 'Badajos'; 
+                $this->comaker['co_Mname'] = 'Eurolfan'; 
+                $this->comaker['co_Suffix'] = ''; 
+                $this->comaker['co_Age'] = '26'; 
+                $this->comaker['co_Barangay'] = 'Rivera'; 
+                $this->comaker['co_City'] = 'San Juan'; 
+                $this->comaker['co_Civil_Status'] = 'Single'; 
+                $this->comaker['co_Cno'] = '023369990'; 
+                $this->comaker['co_Country'] = 'Philippines'; 
+                $this->comaker['co_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
+                $this->comaker['co_EmailAddress'] = 'test@gmail.com'; 
+                $this->comaker['co_Gender'] = 'Female'; 
+                $this->comaker['co_HouseNo'] = '566233';         
+                $this->comaker['co_House_Stats'] = '2'; 
+                $this->comaker['co_POB'] = 'Pangasinan'; 
+                $this->comaker['co_Province'] = 'Iloilo'; 
+                $this->comaker['co_YearsStay'] = '5'; 
+                $this->comaker['co_ZipCode'] = ''; 
+                $this->comaker['co_RTTB'] = ''; 
+                $this->comaker['co_Status'] = ''; 
+                $this->comaker['co_JobDescription'] = 'Cashier'; 
+                $this->comaker['co_YOS'] = '0'; 
+                $this->comaker['co_MonthlySalary'] = '15000'; 
+                $this->comaker['co_OtherSOC'] = 'none'; 
+                $this->comaker['co_BO_Status'] = '1'; 
+                $this->comaker['co_CompanyName'] = 'SOEN'; 
+                $this->comaker['co_CompanyID'] = ''; 
+                $this->comaker['co_Emp_Status'] = '1'; 
+                $this->comaker['remarks'] = ''; 
         }
         else if($this->type == 'view' || $this->type == 'details'){
             $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
@@ -1770,7 +1779,7 @@ class CreateApplication extends Component
                                                       ];    
                     }
                 }
-
+                //dd( $this->businfo );
                 $motors= $data['assets'];
                 if(count($motors) > 0){
                     $this->hasvehicle = 1;
@@ -1853,80 +1862,80 @@ class CreateApplication extends Component
 
             }
             //else{
-                // $this->member['fname'] = '1Jumar';  
-                // $this->member['lname'] = '1Cave';
-                // $this->member['mname'] = '1Badajos';
-                // $this->member['suffix'] = ''; 
-                // $this->member['age'] = '20'; 
-                // $this->member['barangay'] = 'Rivera';  
-                // $this->member['city'] = 'San Juan'; 
-                // $this->member['civil_Status'] = 'Married';  
-                // $this->member['cno'] = '02233666666'; 
-                // $this->member['country'] = 'Philippines'; 
-                // $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
-                // $this->member['emailAddress'] = 'test@gmail.com'; 
-                // $this->member['gender'] = 'Male';
-                // $this->member['houseNo'] = 'No. 9 GB';
-                // $this->member['house_Stats'] = '2'; 
-                // $this->member['pob'] = 'Bani, Pangasinan';
-                // $this->member['province'] = 'NCR'; 
-                // $this->member['yearsStay'] = '5';
-                // $this->member['zipCode'] = '';            
-                // $this->member['electricBill'] = '250'; 
-                // $this->member['waterBill'] = '100'; 
-                // $this->member['otherBills'] = '1000'; 
-                // $this->member['dailyExpenses'] = '10000'; 
-                // $this->member['jobDescription'] = 'Programmer'; 
-                // $this->member['yos'] = '7'; 
-                // $this->member['monthlySalary'] = '15000'; 
-                // $this->member['otherSOC'] = 'Freelancer'; 
-                // $this->member['bO_Status'] = '1'; 
-                // $this->member['companyName'] = 'SOEN'; 
-                // $this->member['emp_Status'] = '1'; 
-                // $this->member['f_Fname'] = 'Jezz'; 
-                // $this->member['f_Lname'] = 'Eurolfan'; 
-                // $this->member['f_Mname'] = 'Javier'; 
-                // $this->member['f_Suffix'] = ''; 
-                // $this->member['f_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
-                // $this->member['f_Age'] = '30'; 
-                // $this->member['f_NOD'] = '0'; 
-                // $this->member['f_YOS'] = '5'; 
-                // $this->member['f_Emp_Status'] = '1'; 
-                // $this->member['f_Job'] = 'Cashier'; 
-                // $this->member['f_CompanyName'] = 'SOEN'; 
-                // $this->member['f_RTTB'] = '';     
+                $this->member['fname'] = '1Jumar';  
+                $this->member['lname'] = '1Cave';
+                $this->member['mname'] = '1Badajos';
+                $this->member['suffix'] = ''; 
+                $this->member['age'] = '20'; 
+                $this->member['barangay'] = 'Rivera';  
+                $this->member['city'] = 'San Juan'; 
+                $this->member['civil_Status'] = 'Married';  
+                $this->member['cno'] = '02233666666'; 
+                $this->member['country'] = 'Philippines'; 
+                $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
+                $this->member['emailAddress'] = 'test@gmail.com'; 
+                $this->member['gender'] = 'Male';
+                $this->member['houseNo'] = 'No. 9 GB';
+                $this->member['house_Stats'] = '2'; 
+                $this->member['pob'] = 'Bani, Pangasinan';
+                $this->member['province'] = 'NCR'; 
+                $this->member['yearsStay'] = '5';
+                $this->member['zipCode'] = '';            
+                $this->member['electricBill'] = '250'; 
+                $this->member['waterBill'] = '100'; 
+                $this->member['otherBills'] = '1000'; 
+                $this->member['dailyExpenses'] = '10000'; 
+                $this->member['jobDescription'] = 'Programmer'; 
+                $this->member['yos'] = '7'; 
+                $this->member['monthlySalary'] = '15000'; 
+                $this->member['otherSOC'] = 'Freelancer'; 
+                $this->member['bO_Status'] = '1'; 
+                $this->member['companyName'] = 'SOEN'; 
+                $this->member['emp_Status'] = '1'; 
+                $this->member['f_Fname'] = 'Jezz'; 
+                $this->member['f_Lname'] = 'Eurolfan'; 
+                $this->member['f_Mname'] = 'Javier'; 
+                $this->member['f_Suffix'] = ''; 
+                $this->member['f_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
+                $this->member['f_Age'] = '30'; 
+                $this->member['f_NOD'] = '0'; 
+                $this->member['f_YOS'] = '5'; 
+                $this->member['f_Emp_Status'] = '1'; 
+                $this->member['f_Job'] = 'Cashier'; 
+                $this->member['f_CompanyName'] = 'SOEN'; 
+                $this->member['f_RTTB'] = '';     
      
         
-                // $this->comaker['co_Fname'] = 'Thea'; 
-                // $this->comaker['co_Lname'] = 'Badajos'; 
-                // $this->comaker['co_Mname'] = 'Eurolfan'; 
-                // $this->comaker['co_Suffix'] = ''; 
-                // $this->comaker['co_Age'] = '26'; 
-                // $this->comaker['co_Barangay'] = 'Rivera'; 
-                // $this->comaker['co_City'] = 'San Juan'; 
-                // $this->comaker['co_Civil_Status'] = 'Single'; 
-                // $this->comaker['co_Cno'] = '023369990'; 
-                // $this->comaker['co_Country'] = 'Philippines'; 
-                // $this->comaker['co_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
-                // $this->comaker['co_EmailAddress'] = 'test@gmail.com'; 
-                // $this->comaker['co_Gender'] = 'Female'; 
-                // $this->comaker['co_HouseNo'] = '566233';         
-                // $this->comaker['co_House_Stats'] = '2'; 
-                // $this->comaker['co_POB'] = 'Pangasinan'; 
-                // $this->comaker['co_Province'] = 'Iloilo'; 
-                // $this->comaker['co_YearsStay'] = '5'; 
-                // $this->comaker['co_ZipCode'] = ''; 
-                // $this->comaker['co_RTTB'] = ''; 
-                // $this->comaker['co_Status'] = ''; 
-                // $this->comaker['co_JobDescription'] = 'Cashier'; 
-                // $this->comaker['co_YOS'] = '0'; 
-                // $this->comaker['co_MonthlySalary'] = '15000'; 
-                // $this->comaker['co_OtherSOC'] = 'none'; 
-                // $this->comaker['co_BO_Status'] = '1'; 
-                // $this->comaker['co_CompanyName'] = 'SOEN'; 
-                // $this->comaker['co_CompanyID'] = 'string'; 
-                // $this->comaker['co_Emp_Status'] = '1'; 
-                // $this->comaker['remarks'] = ''; 
+                $this->comaker['co_Fname'] = 'Thea'; 
+                $this->comaker['co_Lname'] = 'Badajos'; 
+                $this->comaker['co_Mname'] = 'Eurolfan'; 
+                $this->comaker['co_Suffix'] = ''; 
+                $this->comaker['co_Age'] = '26'; 
+                $this->comaker['co_Barangay'] = 'Rivera'; 
+                $this->comaker['co_City'] = 'San Juan'; 
+                $this->comaker['co_Civil_Status'] = 'Single'; 
+                $this->comaker['co_Cno'] = '023369990'; 
+                $this->comaker['co_Country'] = 'Philippines'; 
+                $this->comaker['co_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
+                $this->comaker['co_EmailAddress'] = 'test@gmail.com'; 
+                $this->comaker['co_Gender'] = 'Female'; 
+                $this->comaker['co_HouseNo'] = '566233';         
+                $this->comaker['co_House_Stats'] = '2'; 
+                $this->comaker['co_POB'] = 'Pangasinan'; 
+                $this->comaker['co_Province'] = 'Iloilo'; 
+                $this->comaker['co_YearsStay'] = '5'; 
+                $this->comaker['co_ZipCode'] = ''; 
+                $this->comaker['co_RTTB'] = ''; 
+                $this->comaker['co_Status'] = ''; 
+                $this->comaker['co_JobDescription'] = 'Cashier'; 
+                $this->comaker['co_YOS'] = '0'; 
+                $this->comaker['co_MonthlySalary'] = '15000'; 
+                $this->comaker['co_OtherSOC'] = 'none'; 
+                $this->comaker['co_BO_Status'] = '1'; 
+                $this->comaker['co_CompanyName'] = 'SOEN'; 
+                $this->comaker['co_CompanyID'] = 'string'; 
+                $this->comaker['co_Emp_Status'] = '1'; 
+                $this->comaker['remarks'] = ''; 
             //}
             $sessloandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
             //dd(  $sessloandetails);
