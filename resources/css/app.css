@@ -8227,7 +8227,7 @@ body.print-portrait .page {
   text-align: left;
 }
 .main-dashboard .fa-form-con .fa-container-wrapper .fa-container-1 .horiz-con .box-wrap .rowspan:last-of-type .table-container table td {
-  padding: 2rem 1rem;
+  padding: 0.6rem 1rem;
   font-size: 1.5rem;
   white-space: nowrap;
 }
@@ -14126,5 +14126,13 @@ Date: 10-03-2023
   cursor: default;
 }
 
+.tr-font-size-1_3rem td{
+  font-size: 1.3rem !important;
+  cursor: pointer;
+}
+
+.font-size-1_2em{
+  font-size: 1.2rem !important;
+}
 /*# sourceMappingURL=app.css.map */
 

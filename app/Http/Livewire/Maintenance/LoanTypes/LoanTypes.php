@@ -293,7 +293,7 @@ class LoanTypes extends Component
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/LoanTypeFilter', ['loanTypeID' => $this->loantypeID]);            
             $data = $data->json();
             $data = $data[0];
-            //cdd($data);
+            // dd($data);
 
             $this->loantype['loan_amount_Lessthan'] = $data['loan_amount_Lessthan'];
             $this->loantype['loan_amount_GreaterEqual'] = $data['loan_amount_GreaterEqual'];

@@ -25,7 +25,7 @@
             <div class="fa-container-1">
 
                 <!-- * Vertical Container -->
-                <div class="verti-con">
+                <div class="verti-con" style="display: flex; flex-direction: column; height: fit-content;">
 
                     <!-- * Form Header -->
 
@@ -163,11 +163,11 @@
                                     </tr>
                                     @if($list)              
                                         @foreach($list as $l)
-                                        <tr>
+                                        <tr class="tr-font-size-1_3rem">
                                             <!-- * Checkbox Opt -->                                            
 
                                             <!-- * Data Area Name-->
-                                            <td  wire:click="selectArea('{{ $l['areaID'] }}')" class="td-name" data-area-name>
+                                            <td wire:click="selectArea('{{ $l['areaID'] }}')" class="td-name" data-area-name>
                                                {{ $l['areaName'] }}
                                             </td>
 
@@ -186,7 +186,7 @@
                                                 <div class="td-btn-wrapper">
                                                     <!-- <button class="a-btn-view">View</button> -->
                                                     @if($usertype != 2)
-                                                    <button type="button" onclick="showDialog('{{ $l['areaID'] }}')" class="a-btn-trash-2" data-area-trash-btn>Trash</button>
+                                                    <button type="button" onclick="showDialog('{{ $l['areaID'] }}')" class="a-btn-trash-2 font-size-1_2rem fw-normal" data-area-trash-btn>Trash</button>
                                                     @endif
                                                 </div>
                                             </td>

@@ -55,8 +55,10 @@ class FieldArea extends Component
                     'areaName' => $this->areaName,
                     'location' => $locations,
                     'foid' => $this->foid,
-                ];               
+                ];    
+        //dd( $data );                   
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AssigningFieldArea', $data);                        
+        //dd( $crt );
         return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved');       
     }
 
@@ -75,7 +77,7 @@ class FieldArea extends Component
                     'foid' => $this->foid,
                 ];     
 
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/UpdateArea', $data);                        
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/UpdateArea', $data);                              
         return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully updated');    
     }
 
