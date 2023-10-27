@@ -31,7 +31,7 @@ class MemberList extends Component
             }
         }       
         $this->loantypeList = $loantypeList; 
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/GlobalFilter/FilterSearch', ['loanType' => 'LT-01',  'fullname' => $this->keyword, 'statusid' => [[ 'status' => 14 ], [ 'status' => 7 ], [ 'status' => 8 ], [ 'status' => 9 ], [ 'status' => 10 ], [ 'status' => 15 ]], 'page' => 1, 'pageSize' => 30,  'from' => '0', 'to' => '0']);                 
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/GlobalFilter/FilterSearch', ['loanType' => 'LT-01',  'fullname' => $this->keyword, 'statusid' => [[ 'status' => 14 ], [ 'status' => 7 ], [ 'status' => 8 ], [ 'status' => 9 ], [ 'status' => 10 ], [ 'status' => 15 ]], 'page' => 1, 'pageSize' => 10000,  'from' => '0', 'to' => '0']);                 
         $this->list = $data->json();  
         //dd( $this->list);
         return view('livewire.members.member-list');
