@@ -24,7 +24,7 @@ class LoanTypesList extends Component
 
     public function render()
     {
-        $pageattr = [ 'Loantypename' => $this->keyword, 'page' => 1, 'pageSize' => '50'];
+        $pageattr = [ 'Loantypename' => $this->keyword, 'page' => 1, 'pageSize' => '10000'];
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetailsFilterPaginate', $pageattr);             
         $list = $data->json();
 

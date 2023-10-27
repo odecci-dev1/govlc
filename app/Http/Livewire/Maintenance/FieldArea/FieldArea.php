@@ -150,7 +150,7 @@ class FieldArea extends Component
         $this->usertype = session()->get('auth_usertype'); 
         $this->unassignedLocations = collect([]);
         $this->selectedLocations = collect([]);
-        $munassigned = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/UnAssignedLocationListPaginate', ['Areaname' => '', 'page' => 1, 'pageSize' => 1000]);                
+        $munassigned = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/UnAssignedLocationListPaginate', ['Areaname' => '', 'page' => 1, 'pageSize' => 10000]);                
         // dd($munassigned);
         $unassignedLocations = $munassigned->json();    
         if(isset($unassignedLocations)){

@@ -26,7 +26,7 @@ class FieldOfficerlist extends Component
     
     public function render()
     { 
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterPaginate', ['fullname' => $this->keyword, 'page' => 1, 'pageSize' => 50]);  
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterPaginate', ['fullname' => $this->keyword, 'page' => 1, 'pageSize' => 10000]);  
         // dd($data);
         $this->list = $data->json();        
         //dd($this->list);

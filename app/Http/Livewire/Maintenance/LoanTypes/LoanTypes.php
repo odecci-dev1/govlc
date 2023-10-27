@@ -25,8 +25,8 @@ class LoanTypes extends Component
         $rules['loantype.loanTypeName'] = ['required'];    
         $rules['terms'] = ['required'];      
         $rules['loantype.savings'] = '';  
-        $rules['loantype.loanAmount_Min'] = [''];   
-        $rules['loantype.loanAmount_Max'] = [''];         
+        $rules['loantype.loanAmount_Min'] = !empty($this->loantype['loanAmount_Max']) ? ['required'] : '';   
+        $rules['loantype.loanAmount_Max'] = !empty($this->loantype['loanAmount_Min']) ? ['required', 'gte:loantype.loanAmount_Min'] : '';
         return $rules;
     }
 
@@ -38,6 +38,7 @@ class LoanTypes extends Component
         $messages['loantype.savings.required'] = 'Please enter amount';  
         $messages['loantype.loanAmount_Min.required'] = 'Please enter amount';  
         $messages['loantype.loanAmount_Max.required'] = 'Please enter amount';  
+        $messages['loantype.loanAmount_Max.gte'] = 'Max amt must be greter than min amt';  
         $messages['loantype.loanTypeName.required'] = 'Please enter loan type name';  
         $messages['loantype.loan_amount_Lessthan_Amount.required'] = 'Please enter amount';  
         $messages['loantype.lalV_Type.required'] = 'Please enter amount';  
@@ -235,7 +236,7 @@ class LoanTypes extends Component
         $inp =  $this->terms[$key];
         $this->inpterms['termsKey'] = $key;
         $this->inpterms['nameOfTerms'] = $inp['nameOfTerms'];
-        $this->inpterms['interestRate'] = $inp['interestRate'] <= 100 ? $inp['interestRate'] * 100 : $inp['interestRate'];
+        $this->inpterms['interestRate'] = $inp['interestRate'];
         $this->inpterms['interestType'] = $inp['interestType'];
         $this->inpterms['formula'] = $inp['formula'];;
         $this->inpterms['interestApplied'] = $inp['interestApplied'];

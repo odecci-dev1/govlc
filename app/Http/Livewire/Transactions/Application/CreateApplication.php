@@ -1489,7 +1489,7 @@ class CreateApplication extends Component
                     // $this->member['yearsStay'] = '5';
                     // $this->member['zipCode'] = '';     
                 }
-                       
+                $this->member['termsOfPayment'] = $this->loanDetails['loantermsName'];     
                 // $this->member['electricBill'] = '250'; 
                 // $this->member['waterBill'] = '100'; 
                 // $this->member['otherBills'] = '1000'; 
@@ -1514,8 +1514,7 @@ class CreateApplication extends Component
                 // $this->member['f_Job'] = 'Cashier'; 
                 // $this->member['f_CompanyName'] = 'SOEN'; 
                 // $this->member['f_RTTB'] = '';     
-                // $this->member['loanAmount'] = '30000'; 
-                // $this->member['termsOfPayment'] = $this->loanDetails['loantermsName']; 
+                // $this->member['loanAmount'] = '30000';                
                 // $this->member['purpose'] = 'For Business'; 
         
                 // $this->comaker['co_Fname'] = 'Thea'; 
@@ -1555,7 +1554,7 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                //dd($data);    
+                // dd($data);    
                 //ditoviewing
                 $this->searchedmemId =  $data['memId'];
                 //dd( $this->searchedmemId );

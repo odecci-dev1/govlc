@@ -205,7 +205,7 @@
                         
                     <!-- * Borrower -->
                     <td>
-                       {{ $l['borrower'] }}
+                       {{ $l['borrower'] }} - {{ $l['statusId'] }}
                     </td>
 
                     <!-- * Borrower Contact Number -->
