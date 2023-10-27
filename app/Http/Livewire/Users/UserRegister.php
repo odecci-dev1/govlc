@@ -39,6 +39,10 @@ class UserRegister extends Component
     public $modules = [];
     public $modulelist;
 
+    public $searchfokeyword = '';
+    public $folist = [];
+    public $foid = '';
+
     public function rules(){                
         $rules = []; 
         $rules['fname'] = 'required';  
@@ -51,6 +55,7 @@ class UserRegister extends Component
         $rules['cno'] = '';   
         $rules['usertype'] = 'required';      
         $rules['address'] = '';      
+        $rules['foid'] = '';      
         return $rules;
     }
 
@@ -83,7 +88,8 @@ class UserRegister extends Component
                 $this->cno = $res['cno'];          
                 $this->address = $res['address'];   
                 $this->profilePath = $res['profilePath'];  
-                $this->usertype = $res['userTypeId'];             
+                $this->usertype = $res['userTypeId'];     
+                $this->foid = $res['foid'];                   
 
                 $usemodules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', [ 'userID' => $this->userid ]);     
                 $usemodules = $usemodules->json();
@@ -173,9 +179,10 @@ class UserRegister extends Component
                     "username"=> $this->username,
                     "password"=> $this->password,
                     "cno"=> $this->cno,
-                    "address"=> $this->address,
-                    "userTypeID"=> $this->usertype,
+                    "address"=> $this->address,                    
                     "profilePath"=> $this->storeProfileImage(),
+                    "foid"=> $this->foid,     
+                    "userTypeID"=> $this->usertype,
                     "status"=> 1,
                     "usermodule"=> $modules
                 ];
@@ -195,6 +202,28 @@ class UserRegister extends Component
         
     }
 
+    public function openSearchOfficer(){                 
+        $this->emit('openSearchOfficerModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
+        $this->searchFO();
+    }
+
+    public function searchFO(){
+        $fodata = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFullname', ['fullname' => $this->searchfokeyword]);  
+        $this->folist = $fodata->json();   
+    }
+
+    public function selectFO($foid, $fname, $mname, $lname){
+        $this->foid = $foid;
+        $this->fname = $fname;
+        $this->mname = $mname;
+        $this->lname = $lname;
+        $this->emit('closeSearchFOModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
+    }
+
+    public function removeFO(){
+        $this->foid = '';
+    }
+
     public function archive($userid){       
         $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/DeleteUser', [ 'id' => $userid ]);              
         return redirect()->to('/users')->with(['mmessage'=> 'User has been archived', 'mword'=> 'Success']);    
@@ -209,8 +238,7 @@ class UserRegister extends Component
     }
 
     public function render()
-    {
-       
+    {         
         return view('livewire.users.user-register');
     }
 }

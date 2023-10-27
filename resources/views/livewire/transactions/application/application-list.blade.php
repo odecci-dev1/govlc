@@ -229,12 +229,12 @@
 
                     <!-- * Loan type -->
                     <td>
-                        Individual Loan
+                        {{ $l['loanType'] }}
                     </td>
 
                     <!-- * Date Created -->
                     <td>
-                        {{ $l['dateCreated'] }}
+                        {{ date('m/d/Y', strtotime($l['dateCreated'])) }}
                     </td>
 
                     <!-- * Table View and Trash Button -->

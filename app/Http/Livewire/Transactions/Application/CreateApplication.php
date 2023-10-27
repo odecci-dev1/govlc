@@ -1515,9 +1515,8 @@ class CreateApplication extends Component
                 // $this->member['f_CompanyName'] = 'SOEN'; 
                 // $this->member['f_RTTB'] = '';     
                 // $this->member['loanAmount'] = '30000'; 
+                // $this->member['termsOfPayment'] = $this->loanDetails['loantermsName']; 
                 // $this->member['purpose'] = 'For Business'; 
-               
-             
         
                 // $this->comaker['co_Fname'] = 'Thea'; 
                 // $this->comaker['co_Lname'] = 'Badajos'; 

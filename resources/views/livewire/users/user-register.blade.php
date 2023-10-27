@@ -47,6 +47,29 @@
                     </div>
                     @error('username') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
+                  @if($mid == '')
+                  <!-- field officer -->
+                  <div class="rowspan">
+                        <div class="btn-wrapper" style="margin-bottom: 2rem;">                        
+                          <button type="button" wire:click="openSearchOfficer" class="button">Search Field Officer</button>
+                        </div>
+
+                        <div class="input-wrapper" style="width: 15rem; position: relative">
+                          <span>FO ID</span>
+                          @if($foid != '')
+                          <span wire:click="removeFO" style="position: absolute; background-color: red; margin-left: 13.5rem; padding: 0.1rem 0.4rem; border-radius: 50%; color: #ffffff; cursor: pointer;">x</span>
+                          @endif
+                          <input
+                            autocomplete="off"
+                            type="text"
+                            wire:model.lazy="foid"
+                            disabled
+                          />
+                         
+                        </div>
+                  </div>
+                  @endif
+                  <!-- field officer -->
 
                   @if($updatePassword == 1)
                   <div class="rowspan">
@@ -406,16 +429,153 @@
           </div>
         </form>
       </div>
+
+      <!-- field officer search -->
+      <dialog class="ng-modal" data-new-group-modal wire:ignore.self>
+        <div class="modal-container">
+
+            <!-- * Exit Button -->
+            <button class="exit-button" id="data-close-new-group-modal">
+                <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="exit">
+            </button>
+
+            <!-- * Search for existing member -->
+            <div class="rowspan">
+
+                <!-- * Search for existing member -->
+                <h3>Search for field officer</h3>
+
+                <div class="wrapper">
+
+                    <!-- * Search Bar -->
+                    <div class="search-wrap">
+                        <input type="search" wire:model="searchfokeyword" wire:keyup="searchFO" placeholder="Search field officer">
+                        <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+            <!-- * Table -->
+            <div class="rowspan">
+
+                <!-- * Container: Table and Pagination -->
+                <div class="na-table-con">
+
+                    <!-- * Table Container -->
+                    <div class="table-container">
+
+                        <!-- * Members Table -->
+                        <table>
+
+                            <!-- * Table Header -->
+                            <tr>
+
+                                <!-- * Checkbox ALl
+                        <th><input type="checkbox" class="checkbox" id="allCheckbox" onchange="checkAll(this)"></th> -->
+
+                                <!-- * Header Name -->
+                                <th><span class="th-name">Name</span></th>
+
+                                <!-- * Header Action-->
+                                <th><span class="th-name">Action</span></th>
+
+                            </tr>
+
+                            @if(isset($folist) > 0)
+                                @foreach($folist as $fol)
+                                <tr>
+                                    <!-- * Officer Name -->
+                                    <td>
+
+                                        <!-- * Officers' Name-->
+                                        <div class="td-wrapper">
+                                            <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
+                                            <span class="td-name">{{ $fol['lname'] . ', ' . $fol['fname'] . ' ' . mb_substr($fol['mname'], 0, 1) . '.' }}</span>
+                                        </div>
+
+                                    </td>
+
+                                    <!-- * Action -->
+                                    <td class="td-btns">
+                                        <div class="td-btn-wrapper">                                           
+                                            <button type="button" onclick="selectFO('{{ $fol['foid'] }}', '{{ $fol['fname'] }}', '{{ $fol['mname'] }}', '{{ $fol['lname'] }}')" class="a-btn-trash-2">Select</button>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                @endforeach
+                            @endif     
+
+                          
+
+                        </table>
+
+                    </div>
+
+                    <!-- * Pagination Container -->
+                    <div class="pagination-container">
+
+                        <!-- * Pagination Links -->
+                        <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg"
+                                alt="caret-left"></a>
+                        <a href="#">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">4</a>
+                        <a href="#">5</a>
+                        <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg"
+                                alt="caret-right"></a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </dialog>
+      <!-- field officer search -->
 </div>
 <script>
         document.addEventListener('livewire:load', function () {
-            window.showDialog = function($mid){              
-                @this.call('showDialog', $mid);        
-            };
+                window.showDialog = function($mid){              
+                    @this.call('showDialog', $mid);        
+                };
 
-            window.archive = function($mid){
-                @this.call('archive', $mid);       
-            };
+                window.archive = function($mid){
+                    @this.call('archive', $mid);       
+                };
+
+                const dataNewGroupModal = document.querySelector('[data-new-group-modal]')
+                const openNewGroupModal = document.querySelector('#data-open-new-group-modal')
+                const closeNewGroupModal = document.querySelector('#data-close-new-group-modal')
+                const addNewGroupModal = document.querySelector('[data-add-new-group-modal]')
+
+                closeNewGroupModal.addEventListener('click', () => {
+                    dataNewGroupModal.setAttribute("closing", "");
+                    dataNewGroupModal.addEventListener("animationend", () => {
+                        dataNewGroupModal.removeAttribute("closing");
+                        dataNewGroupModal.close();
+                    }, {
+                        once: true
+                    });
+                })
+
+                window.livewire.on('openSearchOfficerModal', message => {
+                    dataNewGroupModal.showModal()
+                });
+
+                window.selectFO = function($foid, $fname, $mname, $lname){
+                    @this.call('selectFO', $foid, $fname, $mname, $lname);       
+                };
+
+                window.livewire.on('closeSearchFOModal', message => {
+                    dataNewGroupModal.close();
+                });
         })
       
 </script>

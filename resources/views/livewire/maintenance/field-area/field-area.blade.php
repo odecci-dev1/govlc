@@ -315,7 +315,7 @@
         </div>
         </form>
         <!-- * New Group Application Modal -->
-    <dialog class="ng-modal" data-new-group-modal wire:ignore>
+    <dialog class="ng-modal" data-new-group-modal wire:ignore.self>
         <div class="modal-container">
 
             <!-- * Exit Button -->

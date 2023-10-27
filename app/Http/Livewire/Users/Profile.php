@@ -22,6 +22,7 @@ class Profile extends Component
     public $imgprofile;
     public $username;
     public $password;
+    public $foid;
     public $cno;
     public $address;
     public $usertype = [];
@@ -74,7 +75,7 @@ class Profile extends Component
                 $this->address = $res['address'];   
                 $this->profilePath = $res['profilePath'];       
                 $this->usertype = $res['userTypeId'];                                   
-                $this->updatePassword = 0;
+                $this->updatePassword = 0;               
             }           
         }                  
     }
