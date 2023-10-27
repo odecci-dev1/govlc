@@ -13,6 +13,7 @@ class Collection extends Component
     public $areaID = '';
     public $foid = '';
     public $folist = [];
+    public $colrefNo = '';
 
     public $areaDetails = [];    
     public $areaDetailsFooter = [];
@@ -117,7 +118,12 @@ class Collection extends Component
         $this->areaDetails = collect([]);
         $this->areaDetailsFooter = collect([]);
         // $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/AreasCollectionList');  
-        $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');  
+        if($this->colrefNo != ''){
+            $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  
+        }
+        else{
+            $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');  
+        }
         $areas = $areas->json();
         //dd($areas);
         if( $areas ){

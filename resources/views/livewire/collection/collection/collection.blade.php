@@ -49,10 +49,10 @@
                         @foreach($areas as $area)
                         @php 
                             $checkIfPaid = $areaDetails->where('areaID', $area['areaID'])->where('payment_Status', 'Paid')->first();       
-                            //$checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', '')->first();                 
-                            $checkIfPrinted = $area['area_RefNo'] != '' ? true : false;
+                            //$checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();                 
+                            $checkIfPrinted = $area['area_RefNo'] != 'PENDING' ? true : false;
                         @endphp
-                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['foid'] }}')" class="{{ $areaID == $area['areaID'] ? 'view-selected-area' : '' }} {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
+                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['foid'] }}')" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
                             <div class="box-1">
                                 <h4 id="collectionAreaNum">{{ $area['areaName'] }}</h4>
                             </div>
@@ -72,6 +72,9 @@
                                          style="height: 2rem; width: 2rem; position: absolute; right: 8px; bottom: 8px;" />    
                                     @endif      
                                 </div>
+                            </div>
+                            <div class=" {{ $checkIfPrinted ? 'box-3-printed' : 'box-3' }} {{ $areaID == $area['areaID'] ? 'box-3-selected' : '' }}">
+                                &nbsp;
                             </div>
                         </li>
                         @endforeach

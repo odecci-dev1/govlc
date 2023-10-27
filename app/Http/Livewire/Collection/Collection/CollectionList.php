@@ -15,6 +15,7 @@ class CollectionList extends Component
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/Areas');  
         $data = $data->json();
         $this->list = collect($data);
+        // dd( $this->list);
         $date = date('m/d/Y').' 12:00:00 AM'; 
         $this->check = $this->list->where('dateCreated', $date)->first();       
         return view('livewire.collection.collection.collection-list');

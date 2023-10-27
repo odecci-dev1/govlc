@@ -13,6 +13,7 @@ class CreateApplicationGroup extends Component
 
     use Common;
 
+    public $groupId = ''; 
     public $members = [];
     public $memberlist = [];
     public $groupname;
@@ -63,10 +64,10 @@ class CreateApplicationGroup extends Component
         dd($crt);
     }
 
-    public function mount(Request $request, $groupId = ''){         
-        if($groupId != ''){
-            session()->put('sessgroupId', $groupId);
-            $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Group/FilterByGroupID', ['groupID' => $groupId]);       
+    public function mount(Request $request){           
+        if($this->groupId != ''){
+            session()->put('sessgroupId', $this->groupId);
+            $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Group/FilterByGroupID', ['groupID' => $this->groupId]);                  
             $data = $data->json();          
             if($data){
                 

@@ -32,6 +32,7 @@
 
                             <select  wire:model="loantype"  class="select-option">
                                 @if($loantypeList)
+                                    <option value="">All Types</option>
                                     @foreach($loantypeList as $loantypeList)
                                         <option value="{{ $loantypeList['loanTypeID'] }}">{{ $loantypeList['loanTypeName'] }}</option>
                                     @endforeach
@@ -175,7 +176,7 @@
         
                         <!-- * Borrower Contact Number -->
                         <td>
-                            {{ $mlist['borrowerCno'] }}
+                            {{ $mlist['cno'] }}
                         </td>
 
                         <!-- * Loan Amount -->
@@ -185,12 +186,12 @@
         
                         <!-- * Terms of Payment -->
                         <td>
-                           
+                            {{ $mlist['termsOfPayment'] }}
                         </td>
         
                         <!-- * Interest -->
                         <td style="text-align: end;">
-                                
+                            {{ $mlist['interest'] }}
                         </td>
                         <td align="center">
                             @if($mlist['statusId'] == 15)

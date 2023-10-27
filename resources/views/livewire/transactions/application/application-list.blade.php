@@ -32,6 +32,7 @@
 
                             <select  wire:model="loantype"  class="select-option">
                                 @if($loantypeList)
+                                    <option value="">All Types</option>
                                     @foreach($loantypeList as $loantypeList)
                                         <option value="{{ $loantypeList['loanTypeID'] }}">{{ $loantypeList['loanTypeName'] }}</option>
                                     @endforeach
@@ -132,21 +133,21 @@
         <!-- * User Table -->
         <table>
             <!-- * Table Header -->
-            <tr>
+            <tr >
                 <!-- * Checkbox All-->
-                <th>
+                <!-- <th>
                     <input
                     type="checkbox"
                     class="checkbox"
                     data-select-all-checkbox
                     />
-                </th>
+                </th> -->
 
                 <!-- * Borrower -->
-                <th>
+                <th >
                     <div class="th-wrapper">
-                        <span class="th-name">Borrower</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <span class="th-name" >Borrower</span>
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -190,7 +191,7 @@
                 </th>
 
                 <!-- * Action -->
-                <th><span class="th-name">Action</span></th>
+                <th style="text-align: center;"><span class="th-name">Action</span></th>
             </tr>
 
             <!-- * Table Data -->
@@ -200,7 +201,7 @@
                 <tr>
 
                     <!-- * Checkbox Opt -->
-                    <td><input type="checkbox" class="checkbox" data-select-checkbox/></td>
+                    <!-- <td><input type="checkbox" class="checkbox" data-select-checkbox/></td> -->
                         
                     <!-- * Borrower -->
                     <td>
@@ -209,7 +210,7 @@
 
                     <!-- * Borrower Contact Number -->
                     <td>
-                        {{ $l['co_Cno'] }}
+                        {{ $l['cno'] }}
                     </td>
                         
                     <!-- * Co-Borrower -->

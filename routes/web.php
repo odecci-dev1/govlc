@@ -147,6 +147,7 @@ Route::middleware(['access:Module-09'])->group(function () {
 
 Route::middleware(['access:Module-08'])->group(function () {
     Route::get('/tranactions/group/application/create', CreateApplicationGroup::class)->name('application.create.group');
+    Route::get('/tranactions/group/application/view/{groupId}', CreateApplicationGroup::class)->name('application.create.group');
 });
 
 //transactions
@@ -155,7 +156,7 @@ Route::middleware(['access:Module-08'])->group(function () {
 //collection
 Route::middleware(['access:Module-06'])->group(function () {
     Route::get('/collection/list',CollectionList::class);
-    Route::get('/collection/view/{areaID?}',Collection::class);    
+    Route::get('/collection/view/{colrefNo?}',Collection::class);    
     Route::get('/collection/print/area/{areaID}', function(){
         return view('livewire.collection.collection.collection-html');
     });

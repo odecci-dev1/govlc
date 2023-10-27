@@ -6761,6 +6761,26 @@ body.print-portrait .page {
 .can-container-wrapper .can-container-1 .wrapper .borrower-dropdown .dropdown-menu li .box-2:hover {
   background-color: rgba(214, 163, 48, 0.8);
 }
+
+/* box 3 */
+ .box-3 {
+  width: 3%;
+  background-color: #D6A330 !important;  
+  transition: 150ms ease-in;
+}
+
+.box-3-printed {
+  width: 3%;
+  background-color: #000000 !important;  
+  transition: 150ms ease-in;
+}
+
+.box-3-selected {
+  width: 3%;
+  background-color: #36A623 !important;  
+  transition: 150ms ease-in;
+}
+/* box 3 */
 .can-container-wrapper .can-container-1 .wrapper .borrower-dropdown > .link.dropdown > img {
   transition: transform ease-out 300ms;
 }
@@ -6810,7 +6830,7 @@ body.print-portrait .page {
   text-align: center;
 }
 .can-container-wrapper .can-container-1 .wrapper .area-menu-container .area-menu li .box-2 {
-  width: 65%;
+  width: 62%;
   background-color: #D6A330;
   padding: 0.75rem;
   transition: 150ms ease-in;
@@ -6826,7 +6846,7 @@ body.print-portrait .page {
   color: #FFFFFF;
 }
 .can-container-wrapper .can-container-1 .wrapper .area-menu-container .area-menu li .box-2:hover {
-  background-color: rgba(214, 163, 48, 0.8);
+  /* background-color: rgba(214, 163, 48, 0.8); */
 }
 .can-container-wrapper .can-container-1 .wrapper .area-menu-container .area-menu .view-selected-area .box-2 {
   background-color: #666666;

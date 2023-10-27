@@ -135,7 +135,7 @@
                             <!-- * Table View Button -->
                             <td class="td-btns">
                                 <div class="td-btn-wrapper">
-                                    <a href="{{ URL::to('/') }}/collection/view/{{ $l['areaID'] }}" class="a-btn-view-3" data-view-collection>View</a>
+                                    <a href="{{ URL::to('/') }}/collection/view/{{ $l['collection_RefNo'] }}" class="a-btn-view-3" data-view-collection>View</a>
                                 </div>
                             </td>
 
