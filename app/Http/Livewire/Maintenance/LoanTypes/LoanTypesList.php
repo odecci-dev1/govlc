@@ -27,7 +27,7 @@ class LoanTypesList extends Component
         $pageattr = [ 'Loantypename' => $this->keyword, 'page' => 1, 'pageSize' => '10000'];
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetailsFilterPaginate', $pageattr);             
         $list = $data->json();
-
+        //dd( $list );
         return view('livewire.maintenance.loan-types.loan-types-list', ['list' => $list]);
     }
 }

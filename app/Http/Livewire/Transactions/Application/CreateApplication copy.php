@@ -20,7 +20,7 @@ class CreateApplication extends Component
 
     public $naID;
     public $searchedmemId;
-    public $test = 'hello';
+    public $usertype;
     public $type;
     public $member; 
     public $comaker;
@@ -56,6 +56,11 @@ class CreateApplication extends Component
     public $imgcoprofile;
     public $imgmemsign;
     public $imgcosign;
+
+    public $paymenthistory;
+    public $loanhistory;
+
+    public $reason;
     
     public function rules(){                
         $rules = [];      
@@ -70,7 +75,7 @@ class CreateApplication extends Component
         $rules['member.cno'] = 'required'; 
         $rules['member.country'] = 'required'; 
         $rules['member.dob'] = 'required'; 
-        $rules['member.emailAddress'] = 'required'; 
+        $rules['member.emailAddress'] = ''; 
         $rules['member.gender'] = 'required';         
         $rules['member.houseNo'] = 'required'; 
         $rules['member.house_Stats'] = 'required'; 
@@ -122,7 +127,7 @@ class CreateApplication extends Component
         $rules['comaker.co_Cno'] = 'required';
         $rules['comaker.co_Country'] = 'required';
         $rules['comaker.co_DOB'] = 'required';
-        $rules['comaker.co_EmailAddress'] = 'required';
+        $rules['comaker.co_EmailAddress'] = '';
         $rules['comaker.co_Gender'] = 'required';
         $rules['comaker.co_HouseNo'] = 'required';
         $rules['comaker.co_House_Stats'] = 'required';
@@ -419,6 +424,8 @@ class CreateApplication extends Component
         $messages['membusinfo.aos.required'] = 'Amount of sales is required';
         $messages['membusinfo.attachments.required'] = 'Attachements are required';
 
+        $messages['reason.required'] = 'Enter reason for declining';
+
         return $messages;        
     }
 
@@ -606,7 +613,7 @@ class CreateApplication extends Component
                                         'salary' => $value['salary'],
                                         'vos' => $value['vos'],
                                         'aos' => $value['aos'],
-                                        'businessFiles' => $this->storeBusinessInfoAttachments( $value['attachments'] )  
+                                        'businessFiles' => $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] )  
                                     ];
                 }
             }
@@ -764,15 +771,21 @@ class CreateApplication extends Component
                     ]];
       
                     //$extension = $request->file('filename')->getClientOriginalExtension();
-                    //dd(json_encode($data));                          
+                    //dd($data);                          
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                // dd( $crt );
+                //dd( $crt );
                 $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
                 $getlast = $getlast->json();
-                // dd($getlast);
-   
-                return redirect()->to('/tranactions/application/view/'.$getlast['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                // dd($getlast);   
+                $modules = session()->get('auth_usermodules');
+                $usertype = session()->get('auth_usertype'); 
+                if(in_array('Module-09', $modules) || in_array($usertype, [1,2])){
+                    return redirect()->to('/tranactions/application/view/'.$getlast['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                }
+                else{
+                    return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                }
             }
             else{              
                 $membersongroup = session('memdata') !==null ? session('memdata') : [];
@@ -800,16 +813,16 @@ class CreateApplication extends Component
     }
 
     //dito
-    public function storeBusinessInfoAttachments($businessattachments){
-        $memattachements = [];      
-        // if($this->member['attachments'] == $this->member['old_attachments']){
-        //     $memattachements = $this->member['attachments'];
-        // }
-        // else{            
+    public function storeBusinessInfoAttachments($oldattachments, $businessattachments){
+        $memattachements = [];            
+        if($businessattachments == $oldattachments){
+            $memattachements = $businessattachments;
+        }
+        else{            
             if(isset($businessattachments)){    
                 $deletefiles = [];
-                if(isset($this->membusinfo['old_attachments'])){
-                    foreach($this->membusinfo['old_attachments'] as $oldfiles){
+                if(isset($oldattachments)){
+                    foreach($oldattachments as $oldfiles){
                         $deletefiles[] = 'public/business_attachments/'.$oldfiles['filePath'];
                     }
                 }
@@ -821,7 +834,7 @@ class CreateApplication extends Component
                     $memattachements[] = [ 'filePath' => $filename , 'fileName' => $filename, 'fileType' => $filename ];
                 }
             }
-        //}
+        }
         return $memattachements;
     }
 
@@ -849,6 +862,7 @@ class CreateApplication extends Component
                 }
             }
            
+           
             if(count( $this->businfo) > 0){          
                 foreach($this->businfo as $key => $value){
                     
@@ -862,10 +876,10 @@ class CreateApplication extends Component
                                         'salary' => $value['salary'],
                                         'vos' => $value['vos'],
                                         'aos' => $value['aos'],   
-                                        'businessFiles' => []
+                                        'businessFiles' => $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] )
                                     ];
                 }
-            }
+            }  
 
             if(count( $this->appliances) > 0){
                 if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
@@ -1023,8 +1037,7 @@ class CreateApplication extends Component
                             //
                         ]
                     ];                                                   
-                    // $extension = $request->file('filename')->getClientOriginalExtension();
-                    //dito
+                    // $extension = $request->file('filename')->getClientOriginalExtension();                    
                     //dd( json_encode($data));
                     //dd( $data );
                     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                    
@@ -1181,8 +1194,23 @@ class CreateApplication extends Component
         //return redirect()->to('tranactions/application/releasing/list')->with(['mmessage'=> 'Application is complete and ready for releasing', 'mword'=> 'Success']);
     }
 
+    public function decline(){
+        $this->validate(['reason' => 'required']);     
+        $data = [
+                    "ldid"=> $this->loanDetails['ldid'],
+                    "remarks"=> $this->reason,
+                    "declinedBy"=> session()->get('auth_userid'),
+                    "naid"=> $this->naID
+                ];
+
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').' /api/Approval/DeclineLoans', $data); 
+        //dd($crt);                   
+        return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application has been declined', 'mword'=> 'Success']);
+    }
+
     public function openSearchEmployee(){              
         $this->emit('openSearchEmployeeModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
+        $this->searchEmployee();
     }
 
     public function selectEmployee($empname = ''){
@@ -1283,14 +1311,16 @@ class CreateApplication extends Component
                                           'salary' => $data['membusinfo']['salary'],
                                           'vos' => $data['membusinfo']['vos'],
                                           'aos' => $data['membusinfo']['aos'],    
-                                          'attachments' => $this->membusinfo['attachments']                                      
+                                          'attachments' => $this->membusinfo['attachments'],     
+                                          'old_attachments' => []                                           
                                         ];
                                 
         $this->resetmembusinfo();                        
     }
 
-    public function editBusinessInfo($cnt){
-        $businfo = $this->businfo[$cnt];
+    //dito
+    public function editBusinessInfo($cnt){    
+        $businfo = $this->businfo[$cnt];      
         $this->membusinfo['cnt']  = $cnt;
         $this->membusinfo['businessName']  = $businfo['businessName'];
         $this->membusinfo['businessType']  = $businfo['businessType'];
@@ -1302,6 +1332,8 @@ class CreateApplication extends Component
         $this->membusinfo['vos']  = $businfo['vos'];
         $this->membusinfo['aos']  = $businfo['aos'];
         $this->membusinfo['attachments']  = $businfo['attachments'];
+        $this->membusinfo['old_attachments']  = $businfo['old_attachments'];
+        $this->resetValidationOnBusinessinfo();
     }
 
     public function resetmembusinfo(){
@@ -1317,6 +1349,29 @@ class CreateApplication extends Component
         $this->membusinfo['aos'] = '';
         $this->membusinfo['attachments'] = [];
         $this->membusinfo['old_attachments'] = [];
+        $this->resetValidationOnBusinessinfo();       
+    }
+
+    public function removeBusinessInfo($cnt){
+        //if (($key = array_search($cnt, $this->businfo)) !== false) {                 
+            unset($this->businfo[$cnt]); 
+        //}      
+        $this->resetValidationOnBusinessinfo();
+    }
+
+    public function resetValidationOnBusinessinfo(){
+        $this->resetValidation([
+                                'membusinfo.businessName',
+                                'membusinfo.businessType',
+                                'membusinfo.businessAddress',
+                                'membusinfo.b_status',
+                                'membusinfo.yob',
+                                'membusinfo.noe',
+                                'membusinfo.salary',
+                                'membusinfo.vos',
+                                'membusinfo.aos',
+                                'membusinfo.attachments',
+                                ]);
     }
 
     public function getLoanTermsname($topid = ''){
@@ -1329,7 +1384,28 @@ class CreateApplication extends Component
         return $termsofPayment;
     }
 
+    public function getLoanHistory(){         
+        $loanhistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                 
+      
+        $loanhistory = $loanhistory->json();
+        $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['memid' => $this->searchedmemId]);                 
+        $paymenthistory = $paymenthistory->json();
+        
+        if($loanhistory){
+            $this->loanhistory = collect($loanhistory);                        
+        }
+        if($paymenthistory){
+            $this->paymenthistory = collect($paymenthistory);          
+        }
+    }    
+
+    public function resetLoanHistory(){
+        $this->loanhistory = collect([]); 
+        $this->paymenthistory = collect([]);            
+    }
+
     public function mount($type = 'create', Request $request){
+        $this->usertype = session()->get('auth_usertype'); 
         $this->member['old_profile'] = '';
         $this->member['old_signature'] = '';
         $this->member['old_attachments'] = [];
@@ -1338,7 +1414,9 @@ class CreateApplication extends Component
         $this->comaker['old_profile'] = '';
         $this->comaker['old_signature'] = '';
         $this->type = $type;     
-        $this->termsOfPaymentList = collect([]);   
+        $this->termsOfPaymentList = collect([]); 
+        $this->paymenthistory = collect([]);
+        $this->loanhistory = collect([]);  
         
         $this->membusinfo['old_attachments'] = [];
       
@@ -1388,27 +1466,7 @@ class CreateApplication extends Component
                     $this->member['province'] = $data['province']; 
                     $this->member['yearsStay'] = $data['yearsStay'];
                     $this->member['zipCode'] = $data['zipCode'];
-                    $this->member['profile'] = $data['profilePath'];
-
-                    // $this->member['fname'] = '1Jumar';  
-                    // $this->member['lname'] = '1Cave';
-                    // $this->member['mname'] = '1Badajos';
-                    // $this->member['suffix'] = ''; 
-                    // $this->member['age'] = '20'; 
-                    // $this->member['barangay'] = 'Rivera';  
-                    // $this->member['city'] = 'San Juan'; 
-                    // $this->member['civil_Status'] = 'Married';  
-                    // $this->member['cno'] = '02233666666'; 
-                    // $this->member['country'] = 'Philippines'; 
-                    // $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
-                    // $this->member['emailAddress'] = 'test@gmail.com'; 
-                    // $this->member['gender'] = 'Male';
-                    // $this->member['houseNo'] = 'No. 9 GB';
-                    // $this->member['house_Stats'] = '2'; 
-                    // $this->member['pob'] = 'Bani, Pangasinan';
-                    // $this->member['province'] = 'NCR'; 
-                    // $this->member['yearsStay'] = '5';
-                    // $this->member['zipCode'] = '';     
+                    $this->member['profile'] = $data['profilePath'];                   
                 }
                 else{
                     $this->member['fname'] = '1Jumar';  
@@ -1431,7 +1489,8 @@ class CreateApplication extends Component
                     $this->member['yearsStay'] = '5';
                     $this->member['zipCode'] = '';     
                 }
-                       
+                $this->member['termsOfPayment'] = $this->loanDetails['loantermsName'];     
+
                 $this->member['electricBill'] = '250'; 
                 $this->member['waterBill'] = '100'; 
                 $this->member['otherBills'] = '1000'; 
@@ -1456,8 +1515,7 @@ class CreateApplication extends Component
                 $this->member['f_Job'] = 'Cashier'; 
                 $this->member['f_CompanyName'] = 'SOEN'; 
                 $this->member['f_RTTB'] = '';     
-                $this->member['loanAmount'] = '30000'; 
-                $this->member['termsOfPayment'] = $this->loanDetails['loantermsName']; 
+                $this->member['loanAmount'] = '30000';                
                 $this->member['purpose'] = 'For Business'; 
         
                 $this->comaker['co_Fname'] = 'Thea'; 
@@ -1497,21 +1555,21 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                //dd($data);    
+                // dd($data);    
                 //ditoviewing
                 $this->searchedmemId =  $data['memId'];
                 //dd( $this->searchedmemId );
                 //get loan payment and history
               
-                $loanHistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                                    
-                $loanHistory = $loanHistory->json();
+                //$loanHistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                                    
+                //$loanHistory = $loanHistory->json();
                 //dd($loanHistory);
                 //get loan payment and history
                
                 $this->loanDetails['loanTypeID'] = $data['individualLoan'][0]['loanTypeID'];
                 $this->loanDetails['loantermsID'] = $data['termsOfPayment']; 
                 $this->loanDetails['loantermsName'] = $data['individualLoan'][0]['nameOfTerms'];  
-                if($data['applicationStatus'] >= 9){
+                //if($data['applicationStatus'] >= 9){
                     $this->loanDetails['loanType'] = isset($data['individualLoan'][0]['loanType']) ? $data['individualLoan'][0]['loanType'] : '';                  
                     $this->loanDetails['loanAmount'] = $data['individualLoan'][0]['loanAmount'];
                     $this->loanDetails['purpose'] = $data['purpose'];
@@ -1571,9 +1629,10 @@ class CreateApplication extends Component
                     $this->loanDetails['totalSavings'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
                    
                                                                      
-                }
+                //}
                 $this->loanDetails['remarks'] = $data['individualLoan'][0]['remarks'];
                 $this->loanDetails['ci_time'] = $this->calculateTimeDifference($data['dateCreated'], Carbon::now());    
+                //dd( Carbon::now() );
                 
                 //images and files
                 $files = $data['files'];
@@ -1605,8 +1664,7 @@ class CreateApplication extends Component
                 $this->comaker['signature'] = '';
                 if($cofiles){
                     
-                    foreach($cofiles as $cfiles){
-                      
+                    foreach($cofiles as $cfiles){                      
                         if($cfiles['fileType'] == 'Profile'){
                             $this->comaker['profile'] = $cfiles['filePath'];
                             
@@ -1721,12 +1779,13 @@ class CreateApplication extends Component
                         $this->inpchild['age'.$cntchild] = $mchild['age'];    
                         $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
                     }                   
-                }      
+                }                   
                 $this->member['bO_Status'] = $data['bO_Status'] == true ? 1 : 0;   //error here
 
                 $businessInfo = $data['business'];   
+                //dd($businessInfo);
                 if(count($businessInfo)>0){
-                    $cntbusinfo = 0;
+                    $cntbusinfo = 0;                  
                     foreach($businessInfo as $businfo){
                         $cntbusinfo = $cntbusinfo + 1;
                         $this->businfo[$cntbusinfo] = [ 
@@ -1739,10 +1798,13 @@ class CreateApplication extends Component
                                                         'salary' => $businfo['salary'],
                                                         'vos' => $businfo['vos'],
                                                         'aos' => $businfo['aos'],
+                                                        'attachments' => $businfo['businessFiles'],
+                                                        'old_attachments' => $businfo['businessFiles'],
                                                       ];    
                     }
                 }
-
+                //dd( $this->businfo );
+                //dito
                 $motors= $data['assets'];
                 if(count($motors) > 0){
                     $this->hasvehicle = 1;
@@ -1752,6 +1814,9 @@ class CreateApplication extends Component
                         $this->vehicle[$motorscnt] = [ 'vehicle' => $mmotors['motorVehicles'] ];  
                         $this->inpvehicle['vehicle'.$motorscnt] = $mmotors['motorVehicles'];                       
                     }
+                }
+                else{
+                    $this->hasvehicle = 0;
                 }
                  
                 $properties= $data['property'];
@@ -1763,7 +1828,10 @@ class CreateApplication extends Component
                         $this->properties[$propertiescnt] = [ 'property' => $mproperties['property'] ];  
                         $this->inpproperties['property'.$propertiescnt] = $mproperties['property'];                       
                     }
-                }                  
+                }       
+                else{
+                    $this->hasproperties = 0;
+                }           
 
                 $appliances= $data['appliances'];
                 if(count($appliances) > 0){                   
@@ -1861,8 +1929,7 @@ class CreateApplication extends Component
                 $this->member['f_Job'] = 'Cashier'; 
                 $this->member['f_CompanyName'] = 'SOEN'; 
                 $this->member['f_RTTB'] = '';     
-     
-        
+             
                 $this->comaker['co_Fname'] = 'Thea'; 
                 $this->comaker['co_Lname'] = 'Badajos'; 
                 $this->comaker['co_Mname'] = 'Eurolfan'; 
@@ -1906,11 +1973,14 @@ class CreateApplication extends Component
         }
     }
 
+    public function searchEmployee(){
+        $emplist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserListFilter', [ 'page' => 1, 'pageSize' => 50, 'fullname' => $this->searchempkeyword ]);         
+        $this->emplist = $emplist->json();          
+    }
+
     public function render()
     {       
-        //dd(session()->get('auth_userid'));
-        $emplist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserListFilter', [ 'page' => 1, 'pageSize' => 50, 'fullname' => $this->searchempkeyword ]);  
-        $this->emplist = $emplist->json();    
+        //dd(session()->get('auth_userid'));        
         $getLoanTermsname = $this->getLoanTermsname(isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : '');
         return view('livewire.transactions.application.create-application', ['getLoanTermsname' => $getLoanTermsname]);        
     }

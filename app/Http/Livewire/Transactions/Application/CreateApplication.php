@@ -75,7 +75,7 @@ class CreateApplication extends Component
         $rules['member.cno'] = 'required'; 
         $rules['member.country'] = 'required'; 
         $rules['member.dob'] = 'required'; 
-        $rules['member.emailAddress'] = 'required'; 
+        $rules['member.emailAddress'] = ''; 
         $rules['member.gender'] = 'required';         
         $rules['member.houseNo'] = 'required'; 
         $rules['member.house_Stats'] = 'required'; 
@@ -127,7 +127,7 @@ class CreateApplication extends Component
         $rules['comaker.co_Cno'] = 'required';
         $rules['comaker.co_Country'] = 'required';
         $rules['comaker.co_DOB'] = 'required';
-        $rules['comaker.co_EmailAddress'] = 'required';
+        $rules['comaker.co_EmailAddress'] = '';
         $rules['comaker.co_Gender'] = 'required';
         $rules['comaker.co_HouseNo'] = 'required';
         $rules['comaker.co_House_Stats'] = 'required';
@@ -1436,11 +1436,13 @@ class CreateApplication extends Component
         $loandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
         $this->member['loanAmount'] = isset($loandetails['loamamount']) ? $loandetails['loamamount'] : '';
         $this->member['termsOfPayment'] = isset($loandetails['paymentterms']) ? $loandetails['paymentterms'] : '';
-        $this->member['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';       
+        $this->member['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';  
+
         if($this->type == 'create'){
                 $this->loanDetails['loanTypeID'] = $request->loanTypeID;   
                 $this->loanDetails['loantermsID'] = $request->loantermsID; 
                 $this->loanDetails['loantermsName'] = $request->loantermsName;  
+                $this->member['termsOfPayment'] = $this->loanDetails['loantermsName'];     
 
                 if($request->naID != ''){                        
                     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $request->naID]]);                 
@@ -1489,7 +1491,8 @@ class CreateApplication extends Component
                     // $this->member['yearsStay'] = '5';
                     // $this->member['zipCode'] = '';     
                 }
-                $this->member['termsOfPayment'] = $this->loanDetails['loantermsName'];     
+              
+
                 // $this->member['electricBill'] = '250'; 
                 // $this->member['waterBill'] = '100'; 
                 // $this->member['otherBills'] = '1000'; 
@@ -1554,7 +1557,7 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                // dd($data);    
+                //dd($data);    
                 //ditoviewing
                 $this->searchedmemId =  $data['memId'];
                 //dd( $this->searchedmemId );
@@ -1928,8 +1931,7 @@ class CreateApplication extends Component
                 // $this->member['f_Job'] = 'Cashier'; 
                 // $this->member['f_CompanyName'] = 'SOEN'; 
                 // $this->member['f_RTTB'] = '';     
-     
-        
+             
                 // $this->comaker['co_Fname'] = 'Thea'; 
                 // $this->comaker['co_Lname'] = 'Badajos'; 
                 // $this->comaker['co_Mname'] = 'Eurolfan'; 

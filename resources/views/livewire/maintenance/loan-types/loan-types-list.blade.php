@@ -63,18 +63,18 @@
                     <!-- * Notarial fee -->
                     <th>
                         <div class="th-wrapper">
-                            <span class="th-name">Notarial fee</span>
-                            <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                            <span class="th-name">No. Of Terms</span>
+                            <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                         </div>
                     </th>
 
                     <!-- * Interest rate -->
-                    <th>
+                    <!-- <th>
                         <div class="th-wrapper">
                             <span class="th-name">Interest rate</span>
                             <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
                         </div>
-                    </th>
+                    </th> -->
 
                     <!-- * Terms of payment -->
                     <th>
@@ -105,13 +105,13 @@
 
                             <!-- * Notarial fee Data-->
                             <td>
-                                {{ $list['loan_amount_Lessthan_Amount'] }} {{ $list['laL_Type'] }}
+                               {{ count($list['termsofPayment']) }}
                             </td>
 
                             <!-- * Interest rate Data-->
-                            <td class="td-curLoan">
-                                {{ $list['loan_amount_GreaterEqual_Amount'] }} {{ $list['laG_Type'] }}
-                            </td>
+                            <!-- <td class="td-curLoan">
+                               
+                            </td> -->
 
                             <!-- * Terms of payment Data-->
                             <td class="td-bal">
