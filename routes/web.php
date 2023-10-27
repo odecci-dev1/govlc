@@ -51,7 +51,6 @@ Route::get('/', function () {
     return view('login');
 });
 
-Route::get('/logout', [LoginController::class, 'logout'])->name('login');
 
 
 Route::get('/dashboard', function(){
@@ -67,11 +66,18 @@ Route::get('/members', MemberList::class);
 Route::get('/members/{type}/{naID}', CreateApplication::class)->name('application.view');
 //members
 
+Route::middleware(['access:Admin'])->group(function () {
 //user registration
-Route::get('/register', UserRegister::class)->name('user.register');
-Route::get('/users', UserList::class)->name('users');
-Route::get('/user/view/{userid}', UserRegister::class)->name('users');
+    Route::get('/register', UserRegister::class)->name('user.register');
+    Route::get('/users', UserList::class)->name('users');
+    Route::get('/user/view/{userid}', UserRegister::class)->name('users');
+
+    Route::get('/settings', Settings::class);
+});
+
 Route::post('/login', [LoginController::class, 'login'])->name('login');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
 //user registration
 
 Route::get('/profile', Profile::class)->name('profile');
@@ -172,5 +178,5 @@ Route::get('/collection/report', CollectionReport::class);
 Route::get('/savings/report', SavingsReport::class);
 Route::get('/pastdue/report', PastDueReport::class);
 
-Route::get('/settings', Settings::class);
+
 //reports

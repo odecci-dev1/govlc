@@ -49,8 +49,15 @@ class LoginController extends Controller
                 }
                 session()->put('auth_usermodules', $usermodules);
                 //dd(session()->get('auth_usermodules'));
-            }           
-            return redirect('/dashboard');
+            }   
+            if($data['userTypeId'] == 3 && $usermodules == ['Module-07']){
+                session()->put('auth_remittance_only', 1);    
+                session()->put('auth_remittance_areaRefno', '');      
+                return redirect('/dashboard');
+            } 
+            else{       
+                return redirect('/dashboard');
+            }
         }
         else{
             return redirect('/')->with('message', 'Username and password does not matched. Login Failed.'); 

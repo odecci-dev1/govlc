@@ -20,6 +20,7 @@ class Holiday extends Component
     public $repeat;
     public $date;
     public $holid;
+    public $usertype;
 
     public function rules(){
         $rules = [];
@@ -89,6 +90,7 @@ class Holiday extends Component
     }
 
     public function mount($holid = ""){
+        $this->usertype = session()->get('auth_usertype'); 
         if($holid != ''){
             $this->holid = $holid;
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Holiday/HolidayViewFilter', [ 'holidayID' => $this->holid ]);     

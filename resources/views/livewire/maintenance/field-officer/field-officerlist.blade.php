@@ -17,9 +17,11 @@
                     <div class="wrapper">
 
                         <!-- * Add New Button -->
-                        <button>
-                            <a href="{{ URL::to('/') }}/maintenance/fieldofficer/create"><span>Add New</span></a>
-                        </button>
+                        <!-- <button> -->
+                            @if($usertype != 2)
+                            <a href="{{ URL::to('/') }}/maintenance/fieldofficer/create" class="button"><span>Add New</span></a>
+                            @endif
+                        <!-- </button> -->
 
                     </div>
 
@@ -143,7 +145,9 @@
                                 <td class="td-btns">
                                     <div class="td-btn-wrapper">
                                         <a href="{{ URL::to('/') }}/maintenance/fieldofficer/view/{{ $l['foid'] }}" class="a-btn-view-2" data-maintenance-view-field-officer>View</a>
+                                        @if($usertype != 2)
                                         <button type="button" onclick="showDialog('{{ $l['foid'] }}')" class="a-btn-trash-2">Trash</button>
+                                        @endif
                                     </div>
                                 </td>
 

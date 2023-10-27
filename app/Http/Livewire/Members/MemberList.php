@@ -14,6 +14,11 @@ class MemberList extends Component
     public $status = '';
     public $loantype = '';
     public $loantypeList;
+    public $usertype;
+
+    public function mount(){
+        $this->usertype = session()->get('auth_usertype'); 
+    }
 
     public function render()
     {

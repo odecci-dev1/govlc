@@ -11,10 +11,15 @@ class HolidayList extends Component
 {
     use Common;
     public $list = [];
+    public $usertype;
     
     public function archive($holid){       
         $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Holiday/DeleteHoliday', [ 'holidayID' => $holid ]);              
         return redirect()->to('/maintenance/holiday/list')->with(['mmessage'=> 'Holiday has been archived', 'mword'=> 'Success']);    
+    }
+
+    public function mount(){
+        $this->usertype = session()->get('auth_usertype'); 
     }
 
     public function render()

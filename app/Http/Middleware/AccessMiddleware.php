@@ -17,12 +17,18 @@ class AccessMiddleware
     {        
 
         if(session()->has('auth_userid')){
-            if(in_array($module_code, session()->get('auth_usermodules'))){
+            if(session()->get('auth_usertype') == 1){
                 return $next($request);
-            }  
+            }
             else{
-                return abort(404);
-            }    
+                if(in_array($module_code, session()->get('auth_usermodules'))){
+                    return $next($request);
+                }  
+                else{
+                    return abort(404);
+                }    
+            }
+          
         }
         else{
             return redirect('/logout');

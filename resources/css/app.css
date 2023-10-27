@@ -14096,5 +14096,15 @@ Date: 10-03-2023
   display: none;
 }
 
+.cust-table td{
+  vertical-align: top;
+}
+
+.cust-table-inside td:hover{
+  color: #000000;
+  background-color: white !important;
+  cursor: default;
+}
+
 /*# sourceMappingURL=app.css.map */
 

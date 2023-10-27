@@ -5,7 +5,7 @@
     @if(session('mmessage'))
         <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif
-    <div wire:loading  wire:loading.delay class="full-screen-div-loading">
+    <div wire:loading  wire:loading.delay wire:target="store,update,openSearchOfficer" class="full-screen-div-loading">
         <div class="center-loading-container">
             <div>
                 <div class="lds-dual-ring"></div>
@@ -60,7 +60,11 @@
                                     <!-- <span class="tb-chip" data-tb-chip=""><span wire:click="removeSelUnassigned('')" class="tb-chips-w-x"></span></span>                                                     -->
                                     @if(isset($selectedLocations))
                                         @foreach($selectedLocations as $key => $value)
-                                            <span class="tb-chip" data-tb-chip="">{{ $value['location'] }}<span wire:click="removeFromSelected('{{ $value['location'] }}', {{ $value['stat'] }})" class="tb-chips-w-x"></span></span>
+                                            <span class="tb-chip" data-tb-chip="">{{ $value['location'] }}
+                                                @if($usertype != 2)
+                                                <span wire:click="removeFromSelected('{{ $value['location'] }}', {{ $value['stat'] }})" class="tb-chips-w-x"></span>
+                                                @endif
+                                            </span>
                                         @endforeach
                                     @endif
                                 </div>                                
@@ -87,7 +91,7 @@
 
                     <!-- * Rowspan 3: Save Button -->
                     <div class="rowspan">
-
+                        @if($usertype != 2)
                         @if($areaID == '')
                         <!-- * Save Button -->
                         <div class="input-wrapper">
@@ -99,7 +103,7 @@
                             <button type="button" wire:click="update" class="button">Update</button>
                         </div>                       
                         @endif
-
+                        @endif
                     </div>
 
 
@@ -181,7 +185,9 @@
                                             <td class="td-btns" data-area-button>
                                                 <div class="td-btn-wrapper">
                                                     <!-- <button class="a-btn-view">View</button> -->
+                                                    @if($usertype != 2)
                                                     <button type="button" onclick="showDialog('{{ $l['areaID'] }}')" class="a-btn-trash-2" data-area-trash-btn>Trash</button>
+                                                    @endif
                                                 </div>
                                             </td>
 
@@ -267,7 +273,9 @@
                                         <tr>
                                             <td>
                                                 <!-- <input wire:model="chkunassigned"   value="{{ $unassigned['location'] }}" type="checkbox" class="checkbox" > -->
+                                                @if($usertype != 2)
                                                 <button type="button" wire:click="addToSelected('{{ $unassigned['location'] }}', {{ $unassigned['stat'] }})" class="btn-add-icon"> + </button>
+                                                @endif
                                             </td>
 
                                             <!-- * Data Locations-->

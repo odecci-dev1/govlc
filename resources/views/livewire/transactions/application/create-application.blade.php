@@ -12,7 +12,7 @@
         <x-asking-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-asking-dialog>   
     @endif
 
-    <div wire:loading  wire:loading.delay wire:target="store,imgprofile,member.attachments,membusinfo.attachments,addBusinessInfo,imgcoprofile,comaker.attachments,imgmemsign,imgcosign" class="full-screen-div-loading">
+    <div wire:loading  wire:loading.delay wire:target="store,imgprofile,member.attachments,membusinfo.attachments,addBusinessInfo,imgcoprofile,comaker.attachments,imgmemsign,imgcosign,resetmembusinfo" class="full-screen-div-loading">
         <div class="center-loading-container">
             <div>
                 <div class="lds-dual-ring"></div>
@@ -23,7 +23,7 @@
         </div>        
     </div>
     <!-- * New-Application-Form-Container -->
-    <form autocomplete="off" class="na-form-con" {{ $member['statusID'] == 7 ? '' : 'disabled' }} >
+    <form autocomplete="off" class="na-form-con" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} >
         @if (session()->has('message'))
             <div class="alert alert-success">
                 {{ session('message') }}
@@ -77,13 +77,17 @@
                     <div class="wrapper-1">
                         <h3>Notes/Remarks</h3>
                         <div class="btn-wrapper">
+                            @if($usertype != 2)
                             <!-- <a href="new-application-approval.html"> -->
                                 <button type="button" wire:click="submitForApproval" class="button" data-submit-for-approval>Submit for approval</button>
                             <!-- </a> -->
+                            @if($usertype != 2)
                             <button type="button" class="declineButton" data-open-application-decline>Decline</button>
+                            @endif
+                            @endif
                         </div>
                     </div>
-                    <textarea wire:model.lazy="loanDetails.remarks" class="wrapper-2"></textarea>
+                    <textarea wire:model.lazy="loanDetails.remarks" {{ $usertype != 2 ? '' : 'disabled' }} class="wrapper-2"></textarea>
 
                 </div>
     @elseif(in_array($member['statusID'], [9, 10, 15]))
@@ -294,13 +298,13 @@
             <!-- * Loan Type -->
             <div class="input-wrapper">
                 <span>Loan Type</span>
-                <input wire:model.lazy="loanDetails.loanType" disabled {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                <input wire:model.lazy="loanDetails.loanType" disabled {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
             </div>
 
             <!-- * Loan Amount -->
             <div class="input-wrapper">
                 <span>Loan Amount</span>
-                <input wire:model.lazy="loanDetails.loanAmount"  disabled {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
+                <input wire:model.lazy="loanDetails.loanAmount"  disabled {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" >
                 @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror
                 <!-- dito -->
             </div>
@@ -310,7 +314,7 @@
             <div class="input-wrapper">
                 <span>Terms of Payment</span>
                 <div class="select-box">
-                    <select  wire:model="loanDetails.topId" {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} class="select-option">                                                              
+                    <select  wire:model="loanDetails.topId" {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }} select-option">                                                              
                         <option value="">- - select - -</option>     
                         @if(isset($termsOfPaymentList))
                             @foreach($termsOfPaymentList as $topList)
@@ -350,20 +354,26 @@
                             @endif          
                         @endif                          
                         @if($loanDetails['app_ApprovedBy_1'] != session()->get('auth_userid'))
+                            @if($usertype != 2)
                             <button type="button" wire:click="approveForReleasing" class="button">Approve for Releasing</button>                                   
+                            @endif
                         @endif                                                      
                     </div>                                 
             @elseif($member['statusID'] == 10)
             <!-- * Approve for Releasing Button -->
                 @if($type != 'details')
                 <div class="input-wrapper input-wrapper-release">
+                   
                     <button type="button" wire:click="signForRelease" class="releaseButton" data-sign-for-releasing-button>Sign For Releasing</button>
+                  
                 </div>
                 @endif
             @elseif($member['statusID'] == 15)
                 @if($type != 'details')
                 <div class="input-wrapper input-wrapper-release">
+                    @if($usertype != 2)
                     <button type="button" wire:click="completeApplication" class="releaseButton" data-application-complete-button>Complete</button>
+                    @endif
                 </div>
                 @endif
                 @endif
@@ -421,7 +431,9 @@
             @else
                 @if($type != 'details')
                 <div class="input-wrapper input-wrapper-decline">
+                    @if($usertype != 2)
                     <button type="button" class="declineButton" data-open-application-decline>Decline</button>
+                    @endif
                 </div>
                 @endif
             @endif
@@ -453,7 +465,9 @@
              <!-- * Decline Button -->
              @if($member['statusID'] == 9)    
             <div class="input-wrapper input-wrapper-decline">
+                @if($usertype != 2)
                 <button type="button" class="declineButton" data-open-application-decline>Decline</button>
+                @endif
             </div>
             @elseif($member['statusID'] == 10)  
             <!-- <div class="input-wrapper input-wrapper-decline">
@@ -643,8 +657,10 @@
                         @elseif($type == 'view')
                             @if($member['statusID'] == 7)
                                 @if($type != 'details')
+                                @if($usertype != 2)
                                 <button wire:click="update(1)" type="button" class="button" data-save>Update</button>
                                 <button wire:click="update(2)" onclick="showAskingDialog()" type="button" class="button" data-save>Submit And Proceed to CI</button>                      
+                                @endif
                                 @endif
                             @elseif($member['statusID'] == 8)
                                 <div class="CI-time-wrapper">
@@ -664,7 +680,9 @@
                                 </div>
                             @endif
                         @elseif($type == 'add')
+                            @if($usertype != 2)
                             <button wire:click="store" type="button" class="button" data-save>Add To Group</button>    
+                            @endif
                         @endif
 
                     </div>
@@ -677,28 +695,28 @@
                     <!-- * First Name -->
                     <div class="input-wrapper">
                         <span>First Name</span>
-                        <input wire:model.lazy="member.fname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.fname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.fname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
-                        <input wire:model.lazy="member.mname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.mname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
-                        <input wire:model.lazy="member.lname"  {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.lname"  {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.lname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
-                        <input wire:model.lazy="member.suffix" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                     </div>
 
                 </div>
@@ -710,7 +728,7 @@
                     <div class="input-wrapper">
                         <span>Gender</span>
                         <div class="select-box">
-                            <select  wire:model="member.gender" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                            <select  wire:model="member.gender" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} class="select-option">
                                 <option value="">- - select - -</option>     
                                 <option value="Male">Male</option>                                    
                                 <option value="Female">Female</option>                                    
@@ -722,21 +740,21 @@
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.dob" wire:change="getmemberAge" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date"  >
+                        <input wire:model.lazy="member.dob" wire:change="getmemberAge" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="date"  >
                         @error('member.dob') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.lazy="member.age" disabled="disabled"  {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number"  >
+                        <input wire:model.lazy="member.age" disabled="disabled"  {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number"  >
                         @error('member.age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Place Of Birth -->
                     <div class="input-wrapper">
                         <span>Place Of Birth</span>
-                        <input wire:model.lazy="member.pob" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text"  >
+                        <input wire:model.lazy="member.pob" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text"  >
                         @error('member.pob') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -744,7 +762,7 @@
                     <div class="input-wrapper">
                         <span>Civil Status</span>
                         <div class="select-box">
-                            <select  wire:model="member.civil_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                            <select  wire:model="member.civil_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} class="select-option">
                                 <option value="">- - select - -</option>     
                                 <option value="Widow">Widow</option>                                    
                                 <option value="Married">Married</option>   
@@ -763,7 +781,7 @@
                     <div class="input-wrapper">
                         <div class="input-wrapper">
                             <span>Contact Number</span>
-                            <input wire:model.lazy="member.cno" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                            <input wire:model.lazy="member.cno" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                             @error('member.cno') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -772,7 +790,7 @@
                     <div class="input-wrapper">
                         <div class="input-wrapper">
                             <span>Email Address</span>
-                            <input wire:model.lazy="member.emailAddress" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="email">
+                            <input wire:model.lazy="member.emailAddress" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="email">
                             @error('member.emailAddress') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -790,19 +808,19 @@
                             <!-- * Rented -->
                             <div class="radio-btn-wrapper">
                                 <span>Rented</span>
-                                <input  wire:model.lazy="member.house_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" value="1" name="house_Stats" id="mem_rented">
+                                <input  wire:model.lazy="member.house_Stats" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" value="1" name="house_Stats" id="mem_rented">
                             </div>
 
                             <!-- * Owned -->
                             <div class="radio-btn-wrapper">
                                 <span>Owned</span>
-                                <input  wire:model.lazy="member.house_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" value="2" name="house_Stats" id="mem_owned">
+                                <input  wire:model.lazy="member.house_Stats" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" value="2" name="house_Stats" id="mem_owned">
                             </div>
 
                             <!-- * Free Use -->
                             <div class="radio-btn-wrapper">
                                 <span>Free Use</span>
-                                <input  wire:model.lazy="member.house_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" value="3" name="house_Stats" id="mem_freeUse">
+                                <input  wire:model.lazy="member.house_Stats" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" value="3" name="house_Stats" id="mem_freeUse">
                             </div>
 
                         </div>
@@ -812,7 +830,7 @@
                     <!-- * House No./ Bldg. No./ Room No./ Subdivision/ Street -->
                     <div class="input-wrapper">
                         <span>House No./ Bldg. No./ Room No./ Subdivision/ Street</span>
-                        <input wire:model.lazy="member.houseNo" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.houseNo" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.houseNo') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -824,28 +842,28 @@
                     <!-- * Barangay -->
                     <div class="input-wrapper">
                         <span>Barangay</span>
-                        <input wire:model.lazy="member.barangay" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
+                        <input wire:model.lazy="member.barangay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" >
                         @error('member.barangay') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * City / Municipality -->
                     <div class="input-wrapper">
                         <span>City / Municipality</span>
-                        <input wire:model.lazy="member.city" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.city" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.city') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Province / Region -->
                     <div class="input-wrapper">
                         <span>Province / Region</span>
-                        <input wire:model.lazy="member.province" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.province" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.province') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Country -->
                     <div class="input-wrapper">
                         <span>Country</span>
-                        <input wire:model.lazy="member.country" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.country" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.country') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -858,13 +876,13 @@
                     <!-- * Zip Code -->
                     <div class="input-wrapper">
                         <span>Zip Code</span>
-                        <input wire:model.lazy="member.zipCode" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                        <input wire:model.lazy="member.zipCode" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                     </div>
 
                     <!-- * Years Of Stay -->
                     <div class="input-wrapper">
                         <span>Years of stay on the mentioned address</span>
-                        <input wire:model.lazy="member.yearsStay" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                        <input wire:model.lazy="member.yearsStay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                         @error('member.yearsStay') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -904,9 +922,11 @@
                         <div class="btn-wrapper">
                             @if($type != 'details')
                             <!-- * Upload Button -->
-                            <input type="file"  wire:model="imgprofile" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
-                            <!-- * Attach Button -->
-                            <input type="file"  wire:model="member.attachments" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-file-btn></input>
+                                @if($usertype != 2)
+                                <input type="file"  wire:model="imgprofile" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                                <!-- * Attach Button -->
+                                <input type="file"  wire:model="member.attachments" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-file-btn></input>
+                                @endif
                             @endif
                         </div>
                         @error('member.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
@@ -973,28 +993,28 @@
                         <!-- * Electricity Bill -->
                         <div class="input-wrapper">
                             <span>Electricity Bill</span>
-                            <input wire:model.lazy="member.electricBill" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                            <input wire:model.lazy="member.electricBill" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                             @error('member.electricBill') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Water Bill -->
                         <div class="input-wrapper">
                             <span>Water Bill</span>
-                            <input wire:model.lazy="member.waterBill" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                            <input wire:model.lazy="member.waterBill" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                             @error('member.waterBill') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Other Bills -->
                         <div class="input-wrapper">
                             <span>Other Bills</span>
-                            <input wire:model.lazy="member.otherBills" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                            <input wire:model.lazy="member.otherBills" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                             @error('member.otherBills') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Daily Expenses -->
                         <div class="input-wrapper">
                             <span>Daily Expenses</span>
-                            <input wire:model.lazy="member.dailyExpenses" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                            <input wire:model.lazy="member.dailyExpenses" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                             @error('member.dailyExpenses') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -1034,7 +1054,7 @@
                 <div class="input-wrapper">
                     <span>Employment Status</span>
                     <div class="select-box">        
-                        <select  wire:model="member.emp_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                        <select  wire:model="member.emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} class="select-option">
                             <option value="">- - select - -</option>     
                             <option value="1">Employed</option>                            
                             <option value="0">Unemployed</option>                            
@@ -1050,7 +1070,7 @@
                     @if(isset($member['emp_Status']))
                         @if($member['emp_Status'] == '1' || $member['emp_Status'] == '')
                             <span>Current Job / Position</span>
-                            <input wire:model.lazy="member.jobDescription" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                            <input wire:model.lazy="member.jobDescription" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @endif
                     @endif
 
@@ -1058,7 +1078,7 @@
                     @if(isset($member['emp_Status']))
                         @if($member['emp_Status'] == '0')
                         <span>Previous Job / Position</span>
-                        <input wire:model.lazy="member.jobDescription" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.jobDescription" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @endif
                     @endif
                     @error('member.jobDescription') <span class="text-required">{{ $message }}</span>@enderror
@@ -1067,14 +1087,14 @@
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input wire:model.lazy="member.yos" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="member.yos" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                     @error('member.yos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Company Name -->
                 <div class="input-wrapper">
                     <span>Company Name</span>
-                    <input wire:model.lazy="member.companyName" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="member.companyName" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                     @error('member.companyName') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -1086,21 +1106,21 @@
                 <!-- * Company Address -->
                 <div class="input-wrapper">
                     <span>Company Address</span>
-                    <input wire:model.lazy="member.companyAddress" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="member.companyAddress" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                     @error('member.companyAddress') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Monthly Salary -->
                 <div class="input-wrapper">
                     <span>Monthly Salary</span>
-                    <input wire:model.lazy="member.monthlySalary" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="member.monthlySalary" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                     @error('member.monthlySalary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Other Source Of Income -->
                 <div class="input-wrapper">
                     <span>Other Source Of Income</span>
-                    <input  wire:model.lazy="member.otherSOC" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                    <input  wire:model.lazy="member.otherSOC" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                     @error('member.otherSOC') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -1114,13 +1134,13 @@
 
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
-                            <input  wire:model="member.bO_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="mem_bO_Status" value="1" >
+                            <input  wire:model="member.bO_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" name="mem_bO_Status" value="1" >
                             <span>Yes</span>
                         </div>
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
-                            <input  wire:model="member.bO_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="mem_bO_Status" value="2">
+                            <input  wire:model="member.bO_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" name="mem_bO_Status" value="2">
                             <span>No</span>
                         </div>
 
@@ -1168,28 +1188,28 @@
                     <!-- * First Name -->
                     <div class="input-wrapper">
                         <span>First Name</span>
-                        <input wire:model.lazy="member.f_Fname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.f_Fname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.f_Fname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
-                        <input wire:model.lazy="member.f_Mname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
+                        <input wire:model.lazy="member.f_Mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" >
                         @error('member.f_Mname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
-                        <input wire:model.lazy="member.f_Lname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.f_Lname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.f_Lname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
-                        <input wire:model.lazy="member.f_Suffix" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.f_Suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.f_Suffix') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1197,7 +1217,7 @@
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.f_DOB" wire:change="getmemberFAge" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
+                        <input wire:model.lazy="member.f_DOB" wire:change="getmemberFAge" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="date">
                         @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1216,7 +1236,7 @@
                     <div class="input-wrapper">
                         <span>Employment Status</span>
                         <div class="select-box">
-                            <select  wire:model="member.f_Emp_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                            <select  wire:model="member.f_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} class="select-option">
                                 <option value="">- - select - -</option>     
                                 <option value="1">Employed</option>                            
                                 <option value="0">Unemployed</option>                            
@@ -1232,7 +1252,7 @@
                         @if(isset($member['f_Emp_Status']))
                             @if($member['f_Emp_Status'] == '1' || $member['f_Emp_Status'] == '')
                             <span>Current Job / Position</span>
-                            <input wire:model.lazy="member.f_Job" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                            <input wire:model.lazy="member.f_Job" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                             @endif
                         @endif
 
@@ -1240,7 +1260,7 @@
                             @if($member['f_Emp_Status'] == '0')
                             <!-- * Previous Job -->
                             <span>Previous Job / Position</span>
-                            <input wire:model.lazy="member.f_Job" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                            <input wire:model.lazy="member.f_Job" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                             @endif
                         @endif
                         @error('member.f_Job') <span class="text-required">{{ $message }}</span>@enderror
@@ -1249,14 +1269,14 @@
                     <!-- * Years Of Service -->
                     <div class="input-wrapper">
                         <span>Years Of Service</span>
-                        <input wire:model.lazy="member.f_YOS" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                        <input wire:model.lazy="member.f_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                         @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Company Name -->
                     <div class="input-wrapper">
                         <span>Company Name</span>
-                        <input wire:model.lazy="member.f_CompanyName" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.f_CompanyName" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.f_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1272,7 +1292,7 @@
                     <!-- * Current Job / Position -->
                     <div class="input-wrapper">
                         <span>Number Of Dependants</span>
-                        <input  wire:model.lazy="member.f_NOD" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                        <input  wire:model.lazy="member.f_NOD" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                         @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1301,44 +1321,44 @@
                             <!-- * First Name -->
                             <div class="input-wrapper">
                                 <span>First Name</span>
-                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
+                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" >
                                 @error('inpchild.fname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Middle Name -->
                             <div class="input-wrapper">
                                 <span>Middle Name</span>
-                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.mname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Last Name -->
                             <div class="input-wrapper">
                                 <span>Last Name</span>
-                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.lname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Age -->
                             <div class="input-wrapper">
                                 <span>Age</span>
-                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                                 @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Name Of School -->
                             <div class="input-wrapper">
                                 <span>Name Of School</span>
-                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.school'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Add and Subtract Button  -->
                             <div class="input-wrapper">
                                 @if($cntchild == 1)
-                                <button type="button" wire:click="addChild" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>+</button>
+                                <button type="button" wire:click="addChild" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}>+</button>
                                 @else
-                                <button type="button" wire:click="subChild({{ $cntchild }})" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>-</button>
+                                <button type="button" wire:click="subChild({{ $cntchild }})" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}>-</button>
                                 @endif
                             </div>                        
                     </div>
@@ -1385,28 +1405,28 @@
                     <!-- * First Name -->
                     <div class="input-wrapper">
                         <span>First Name</span>
-                        <input wire:model.lazy="member.f_Fname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.f_Fname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.f_Fname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
-                        <input wire:model.lazy="member.f_Mname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.f_Mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.f_Mname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
-                        <input wire:model.lazy="member.f_Lname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.f_Lname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.f_Lname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Suffix -->
                     <div class="input-wrapper">
                         <span>Suffix</span>
-                        <input wire:model.lazy="member.f_Suffix" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.f_Suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @error('member.f_Suffix') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1414,7 +1434,7 @@
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.f_DOB" wire:change="getmemberFAge" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
+                        <input wire:model.lazy="member.f_DOB" wire:change="getmemberFAge" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="date">
                         @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1557,35 +1577,35 @@
                             <!-- * First Name -->
                             <div class="input-wrapper">
                                 <span>First Name</span>
-                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
+                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" >
                                 @error('inpchild.fname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Middle Name -->
                             <div class="input-wrapper">
                                 <span>Middle Name</span>
-                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.mname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Last Name -->
                             <div class="input-wrapper">
                                 <span>Last Name</span>
-                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.lname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Age -->
                             <div class="input-wrapper">
                                 <span>Age</span>
-                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                                 @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
                             <!-- * Name Of School -->
                             <div class="input-wrapper">
                                 <span>Name Of School</span>
-                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                                 @error('inpchild.school'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
@@ -1632,21 +1652,21 @@
                 <!-- * Business Name -->
                 <div class="input-wrapper">
                     <span>Business Name</span>
-                    <input wire:model.lazy="membusinfo.businessName" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
+                    <input wire:model.lazy="membusinfo.businessName" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" >
                     @error('membusinfo.businessName') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Business Type -->
                 <div class="input-wrapper">
                     <span>Business Type</span>
-                    <input wire:model.lazy="membusinfo.businessType" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text"  >
+                    <input wire:model.lazy="membusinfo.businessType" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text"  >
                     @error('membusinfo.businessType') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Business Address -->
                 <div class="input-wrapper">
                     <span>Business Address</span>
-                    <input wire:model.lazy="membusinfo.businessAddress" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="membusinfo.businessAddress" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                     @error('membusinfo.businessAddress') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
             @endif            
@@ -1662,13 +1682,13 @@
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
                             <span>Rented</span>
-                            <input wire:model.lazy="membusinfo.b_status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="mem_b_status" value="5">                            
+                            <input wire:model.lazy="membusinfo.b_status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" name="mem_b_status" value="5">                            
                         </div>
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
                             <span>Owned</span>
-                            <input wire:model.lazy="membusinfo.b_status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="mem_b_status" value="6">
+                            <input wire:model.lazy="membusinfo.b_status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" name="mem_b_status" value="6">
                         </div>
 
                     </div>
@@ -1678,35 +1698,35 @@
                 <!-- * Years Of Business -->
                 <div class="input-wrapper">
                     <span>Years Of Business</span>
-                    <input  wire:model.lazy="membusinfo.yob" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                    <input  wire:model.lazy="membusinfo.yob" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                     @error('membusinfo.yob') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Number Of Employees -->
                 <div class="input-wrapper">
                     <span>Number Of Employees</span>
-                    <input wire:model.lazy="membusinfo.noe" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="membusinfo.noe" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                     @error('membusinfo.noe') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Salary / Day -->
                 <div class="input-wrapper">
                     <span>Salary / Day</span>
-                    <input wire:model.lazy="membusinfo.salary" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="membusinfo.salary" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                     @error('membusinfo.salary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Value Of Stocks -->
                 <div class="input-wrapper">
                     <span>Value Of Stocks</span>
-                    <input wire:model.lazy="membusinfo.vos" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="membusinfo.vos" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                     @error('membusinfo.vos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Amount Of Sales / Day -->
                 <div class="input-wrapper">
                     <span>Amount Of Sales / Day</span>
-                    <input wire:model.lazy="membusinfo.aos" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="membusinfo.aos" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                     @error('membusinfo.aos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
             @endif            
@@ -1720,11 +1740,15 @@
 
                     <!-- * Add Business -->
                     @if($type != 'details' && $member['statusID'] == 7)                    
-                    <!-- * Attach Files -->
-                    <!-- <button type="button" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>Attach Files</button> -->                    
-                    <input type="file"  wire:model="membusinfo.attachments" {{ $member['statusID'] == 7 ? '' : 'disabled' }}  class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" style="width: 12rem; padding:0.6rem 4rem; font-weight: 700; font-size: 1.1rem; margin-right: 2rem;"  multiple data-attach-file-btn></input>
-
-                    <button wire:click="addBusinessInfo" type="button" {{ $member['statusID'] == 7 ? '' : 'disabled' }} style="padding:0.8rem 4rem; font-weight: 700; font-size: 1.1rem; ">Add Business</button>
+                        <!-- * Attach Files -->
+                        <!-- <button type="button" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}>Attach Files</button> -->                    
+                        @if($usertype != 2)
+                        <input type="file"  wire:model="membusinfo.attachments" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}  class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" style="width: 12rem; padding:0.6rem 4rem; font-weight: 700; font-size: 1.1rem; margin-right: 2rem;"  multiple data-attach-file-btn></input>                        
+                        <button wire:click="addBusinessInfo" type="button" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} style="padding:0.8rem 4rem; font-weight: 700; font-size: 1.1rem; ">{{ isset($membusinfo['cnt']) ? 'Update business' : 'Add Business' }}</button>
+                        @endif
+                        @if(isset($membusinfo['cnt']))
+                            <button wire:click="resetmembusinfo" type="button" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} style="padding:0.8rem 4rem; font-weight: 700; font-size: 1.1rem; ">Cancel</button>
+                        @endif
                     @endif
 
                 </div>
@@ -1788,8 +1812,10 @@
                                 <!-- * Table Edit and Delete Button -->
                                 <td class="td-btns">
                                     <div class="td-btn-wrapper">
-                                        <button wire:click="editBusinessInfo('{{ $key }}')" type="button" class="a-btn-edit">Edit</button>
-                                        <button type="button" class="a-btn-delete">Remove</button>
+                                        <button wire:click="editBusinessInfo('{{ $key }}')" type="button" class="a-btn-edit">View</button>
+                                        @if($usertype != 2)
+                                        <button wire:click="removeBusinessInfo('{{ $key }}')" type="button" class="a-btn-delete">Remove</button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>     
@@ -1805,13 +1831,13 @@
                 <!-- * Pagination Container -->
                 <div class="pagination-container">
                     <!-- * Pagination Links -->
-                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
+                    <!-- <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
                     <a href="#">1</a>
                     <a href="#">2</a>
                     <a href="#">3</a>
                     <a href="#">4</a>
                     <a href="#">5</a>
-                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
+                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a> -->
                 </div>
             </div>
 
@@ -1855,13 +1881,13 @@
 
                                 <!-- * Yes -->
                                 <div class="radio-btn-wrapper">
-                                    <input wire:model="hasvehicle" name="hasvehicle" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio"  value="1">
+                                    <input wire:model="hasvehicle" name="hasvehicle" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio"  value="1">
                                     <span>Yes</span>
                                 </div>
 
                                 <!-- * No -->
                                 <div class="radio-btn-wrapper">
-                                    <input wire:model="hasvehicle" name="hasvehicle" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio"   value="0">
+                                    <input wire:model="hasvehicle" name="hasvehicle" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio"   value="0">
                                     <span>No</span>
                                 </div>
 
@@ -1880,15 +1906,15 @@
                                     <div class="rowspan-2 child" style="{{ isset($hasvehicle) ? ($hasvehicle == 1 ? '' : 'pointer-events: none; opacity: 0.4;') : 'pointer-events: none; opacity: 0.4;' }}">
                                         <!-- * Vehicle Input Field -->
                                         <div class="input-wrapper">
-                                            <input wire:model.lazy="inpvehicle.vehicle{{ $key }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                                            <input wire:model.lazy="inpvehicle.vehicle{{ $key }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                                             @error('inpvehicle.vehicle'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                         </div>                                       
                                         <!-- * Add and Subtract Button  -->
                                         <div class="input-wrapper">
                                             @if($key == 1)
-                                            <button type="button" wire:click="addVehicle" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>+</button>
+                                            <button type="button" wire:click="addVehicle" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}>+</button>
                                             @else
-                                            <button type="button" wire:click="subVehicle({{ $key }})" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>-</button>
+                                            <button type="button" wire:click="subVehicle({{ $key }})" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}>-</button>
                                             @endif
                                         </div>
 
@@ -1919,13 +1945,13 @@
 
                                 <!-- * Yes -->
                                 <div class="radio-btn-wrapper">
-                                    <input wire:model="hasproperties" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="hasproperties" value="1" >
+                                    <input wire:model="hasproperties" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" name="hasproperties" value="1" >
                                     <span>Yes</span>
                                 </div>
 
                                 <!-- * No -->
                                 <div class="radio-btn-wrapper">
-                                    <input wire:model="hasproperties" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="hasproperties" value="0">
+                                    <input wire:model="hasproperties" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" name="hasproperties" value="0">
                                     <span>No</span>
                                 </div>
 
@@ -1944,16 +1970,16 @@
                                         <div class="rowspan-2 child"  style="{{ isset($hasproperties) ? ($hasproperties == 1 ? '' : 'pointer-events: none; opacity: 0.4;') : 'pointer-events: none; opacity: 0.4;' }}">
                                             <!-- * Vehicle Input Field -->
                                             <div class="input-wrapper">
-                                                <input wire:model="inpproperties.property{{ $key }}"  {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                                                <input wire:model="inpproperties.property{{ $key }}"  {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                                                 @error('inpproperties.property'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                             </div>
 
                                             <!-- * Add and Subtract Button  -->
                                             <div class="input-wrapper">
                                             @if($key == 1)
-                                                <button type="button" wire:click="addProperty" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>+</button>
+                                                <button type="button" wire:click="addProperty" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}>+</button>
                                             @else
-                                                <button type="button" wire:click="subProperty({{ $key }})" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>-</button>
+                                                <button type="button" wire:click="subProperty({{ $key }})" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}>-</button>
                                             @endif
                                             </div>
 
@@ -1997,23 +2023,23 @@
                                 <!-- * Appliances -->
                                 <div class="input-wrapper">
                                     <span>Appliances</span>
-                                    <input wire:model="inpappliances.appliance{{ $key }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                                    <input wire:model="inpappliances.appliance{{ $key }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                                     @error('inpappliances.appliance'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                 </div>
 
                                 <!-- * Brand / Model -->
                                 <div class="input-wrapper">
                                     <span>Brand / Model</span>
-                                    <input wire:model="inpappliances.brand{{ $key }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                                    <input wire:model="inpappliances.brand{{ $key }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                                     @error('inpappliances.brand'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                 </div>
 
                                 <!-- * Add and Subtract Button  -->
                                 <div class="input-wrapper">
                                     @if($key == 1)
-                                    <button type="button" wire:click="addAppliances" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>+</button>
+                                    <button type="button" wire:click="addAppliances" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}>+</button>
                                     @else
-                                    <button type="button" wire:click="subAppliances({{ $key }})" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>-</button>
+                                    <button type="button" wire:click="subAppliances({{ $key }})" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}>-</button>
                                     @endif
                                 </div>
                             </div>
@@ -2050,23 +2076,23 @@
                                     <!-- * Bank account -->
                                     <div class="input-wrapper">
                                         <span>Bank account</span>
-                                        <input wire:model="inpbank.account{{ $key }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="bankAcc">
+                                        <input wire:model="inpbank.account{{ $key }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="bankAcc">
                                         @error('inpbank.account'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                     </div>
 
                                     <!-- * Address -->
                                     <div class="input-wrapper">
                                         <span>Address</span>
-                                        <input wire:model="inpbank.address{{ $key }}" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="bankAddr">
+                                        <input wire:model="inpbank.address{{ $key }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="bankAddr">
                                         @error('inpbank.address'.$key) <span class="text-required">{{ $message }}</span>@enderror
                                     </div>
 
                                     <!-- * Add and Subtract Button  -->
                                     <div class="input-wrapper">
                                         @if($key == 1)
-                                        <button type="button" wire:click="addBank" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>+</button>
+                                        <button type="button" wire:click="addBank" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}>+</button>
                                         @else
-                                        <button type="button" wire:click="subBank({{ $key }})" {{ $member['statusID'] == 7 ? '' : 'disabled' }}>-</button>
+                                        <button type="button" wire:click="subBank({{ $key }})" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }}>-</button>
                                         @endif
                                     </div>
 
@@ -2108,7 +2134,7 @@
                 <!-- * Applied Loan Amount -->
                 <div class="input-wrapper">
                     <span>Applied Loan Amount</span>
-                    <input wire:model.lazy="member.loanAmount" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="member.loanAmount" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                     @error('member.loanAmount') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2122,7 +2148,7 @@
                 <!-- * Purpose -->
                 <div class="input-wrapper">
                     <span>Purpose</span>
-                    <input wire:model.lazy="member.purpose" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="member.purpose" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                     @error('member.purpose') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2159,28 +2185,28 @@
                         <!-- * First Name -->
                         <div class="input-wrapper">
                             <span>First Name</span>
-                            <input wire:model.lazy="comaker.co_Fname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" id="fName" name="fName">
+                            <input wire:model.lazy="comaker.co_Fname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" id="fName" name="fName">
                             @error('comaker.co_Fname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Middle Name -->
                         <div class="input-wrapper">
                             <span>Middle Name</span>
-                            <input wire:model.lazy="comaker.co_Mname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" id="midName" name="midName">
+                            <input wire:model.lazy="comaker.co_Mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" id="midName" name="midName">
                             @error('comaker.co_Mname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Last Name -->
                         <div class="input-wrapper">
                             <span>Last Name</span>
-                            <input wire:model.lazy="comaker.co_Lname" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" id="lName" name="lName">
+                            <input wire:model.lazy="comaker.co_Lname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" id="lName" name="lName">
                             @error('comaker.co_Lname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Suffix -->
                         <div class="input-wrapper">
                             <span>Suffix</span>
-                            <input wire:model.lazy="comaker.co_Suffix" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" id="suffix" name="suffix">
+                            <input wire:model.lazy="comaker.co_Suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" id="suffix" name="suffix">
                             @error('comaker.co_Suffix') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2193,7 +2219,7 @@
                         <div class="input-wrapper">
                             <span>Gender</span>
                             <div class="select-box">
-                                <select  wire:model="comaker.co_Gender" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                                <select  wire:model="comaker.co_Gender" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} class="select-option">
                                     <option value="">- - select - -</option>
                                     <option value="Male">Male</option>                      
                                     <option value="Female">Female</option>                      
@@ -2205,7 +2231,7 @@
                         <!-- * Date Of Birth -->
                         <div class="input-wrapper">
                             <span>Date Of Birth</span>
-                            <input wire:model.lazy="comaker.co_DOB" wire:change="getcomakerAge" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="date">
+                            <input wire:model.lazy="comaker.co_DOB" wire:change="getcomakerAge" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="date">
                             @error('comaker.co_DOB') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2219,7 +2245,7 @@
                         <!-- * Place Of Birth -->
                         <div class="input-wrapper">
                             <span>Place Of Birth</span>
-                            <input wire:model.lazy="comaker.co_POB" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" id="poBirth" name="poBirth">
+                            <input wire:model.lazy="comaker.co_POB" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" id="poBirth" name="poBirth">
                             @error('comaker.co_POB') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2227,7 +2253,7 @@
                         <div class="input-wrapper">
                             <span>Civil Status</span>
                             <div class="select-box">
-                                <select  wire:model="comaker.co_Civil_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                                <select  wire:model="comaker.co_Civil_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} class="select-option">
                                     <option value="">- - select - -</option>
                                     <option value="Widow">Widow</option>                      
                                     <option value="Married">Married</option>                      
@@ -2246,7 +2272,7 @@
                         <div class="input-wrapper">
                             <div class="input-wrapper">
                                 <span>Contact Number</span>
-                                <input wire:model.lazy="comaker.co_Cno" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                                <input wire:model.lazy="comaker.co_Cno" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                                 @error('comaker.co_Cno') <span class="text-required">{{ $message }}</span>@enderror
                             </div>
                         </div>
@@ -2255,7 +2281,7 @@
                         <div class="input-wrapper">
                             <div class="input-wrapper">
                                 <span>Email Address</span>
-                                <input wire:model.lazy="comaker.co_EmailAddress" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="email">
+                                <input wire:model.lazy="comaker.co_EmailAddress" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="email">
                                 @error('comaker.co_EmailAddress') <span class="text-required">{{ $message }}</span>@enderror
                             </div>
                         </div>
@@ -2273,19 +2299,19 @@
                                 <!-- * Rented -->
                                 <div class="radio-btn-wrapper">
                                     <span>Rented</span>
-                                    <input wire:model.lazy="comaker.co_House_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="co_House_Stats" value="1">
+                                    <input wire:model.lazy="comaker.co_House_Stats" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" name="co_House_Stats" value="1">
                                 </div>
 
                                 <!-- * Owned -->
                                 <div class="radio-btn-wrapper">
                                     <span>Owned</span>
-                                    <input wire:model.lazy="comaker.co_House_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="co_House_Stats" value="2">
+                                    <input wire:model.lazy="comaker.co_House_Stats" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" name="co_House_Stats" value="2">
                                 </div>
 
                                 <!-- * Free Use -->
                                 <div class="radio-btn-wrapper">
                                     <span>Free Use</span>
-                                    <input wire:model.lazy="comaker.co_House_Stats" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="co_House_Stats" value="3">
+                                    <input wire:model.lazy="comaker.co_House_Stats" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" name="co_House_Stats" value="3">
                                 </div>
 
                             </div>
@@ -2295,7 +2321,7 @@
                         <!-- * House No./ Bldg. No./ Room No./ Subdivision/ Street -->
                         <div class="input-wrapper">
                             <span>House No./ Bldg. No./ Room No./ Subdivision/ Street</span>
-                            <input  wire:model.lazy="comaker.co_HouseNo" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                            <input  wire:model.lazy="comaker.co_HouseNo" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                             @error('comaker.co_HouseNo') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2307,28 +2333,28 @@
                         <!-- * Barangay -->
                         <div class="input-wrapper">
                             <span>Barangay</span>
-                            <input  wire:model.lazy="comaker.co_Barangay" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                            <input  wire:model.lazy="comaker.co_Barangay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                             @error('comaker.co_Barangay') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * City / Municipality -->
                         <div class="input-wrapper">
                             <span>City / Municipality</span>
-                            <input  wire:model.lazy="comaker.co_City" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                            <input  wire:model.lazy="comaker.co_City" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                             @error('comaker.co_City') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Province / Region -->
                         <div class="input-wrapper">
                             <span>Province / Region</span>
-                            <input  wire:model.lazy="comaker.co_Province" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text" >
+                            <input  wire:model.lazy="comaker.co_Province" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text" >
                             @error('comaker.co_Province') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Country -->
                         <div class="input-wrapper">
                             <span>Country</span>
-                            <input  wire:model.lazy="comaker.co_Country" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                            <input  wire:model.lazy="comaker.co_Country" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                             @error('comaker.co_Country') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2341,14 +2367,14 @@
                         <!-- * Zip Code -->
                         <div class="input-wrapper">
                             <span>Zip Code</span>
-                            <input wire:model.lazy="comaker.co_ZipCode" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                            <input wire:model.lazy="comaker.co_ZipCode" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                             @error('comaker.co_ZipCode') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Years Of Stay -->
                         <div class="input-wrapper">
                             <span>Years of stay on the mentioned address</span>
-                            <input wire:model.lazy="comaker.co_YearsStay" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                            <input wire:model.lazy="comaker.co_YearsStay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                             @error('comaker.co_YearsStay') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2387,9 +2413,11 @@
                                 <div class="btn-wrapper">
                                         <!-- * Upload Button -->
                                         @if($type != 'details')
-                                        <input type="file"  wire:model="imgcoprofile" class="input-image upload-profile-image-btn" {{ $member['statusID'] == 7 ? '' : 'disabled' }} accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                                        @if($usertype != 2)
+                                        <input type="file"  wire:model="imgcoprofile" class="input-image upload-profile-image-btn" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                                         <!-- * Attach Button -->
-                                        <input type="file" wire:model="comaker.attachments" class="input-image attach-file-btn" {{ $member['statusID'] == 7 ? '' : 'disabled' }} accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-file-btn></input>
+                                        <input type="file" wire:model="comaker.attachments" class="input-image attach-file-btn" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-file-btn></input>
+                                        @endif
                                         @endif
                                         @error('comaker.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                                 </div>
@@ -2480,7 +2508,7 @@
                 <div class="input-wrapper">
                     <span>Employment Status</span>
                     <div class="select-box">   
-                        <select  wire:model="comaker.co_Emp_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="select-option">
+                        <select  wire:model="comaker.co_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} class="select-option">
                             <option value="">- -select - -</option>     
                             <option value="1">Employed</option>                            
                             <option value="0">Unemployed</option>                            
@@ -2496,7 +2524,7 @@
                         @if($comaker['co_Emp_Status'] == '1' || $comaker['co_Emp_Status'] == '')
                         <!-- * Current Job -->
                         <span>Current Job / Position</span>
-                        <input wire:model.lazy="comaker.co_JobDescription" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="comaker.co_JobDescription" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @endif
                     @endif    
 
@@ -2504,7 +2532,7 @@
                         @if($comaker['co_Emp_Status'] == '0')
                         <!-- * Previous Job -->
                         <span>Previous Job / Position</span>
-                        <input wire:model.lazy="comaker.co_JobDescription" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="comaker.co_JobDescription" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                         @endif
                     @endif
                     @error('comaker.co_JobDescription') <span class="text-required">{{ $message }}</span>@enderror
@@ -2513,14 +2541,14 @@
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input wire:model.lazy="comaker.co_YOS" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="comaker.co_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                     @error('comaker.co_YOS') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Company Name -->
                 <div class="input-wrapper">
                     <span>Company Name</span>
-                    <input wire:model.lazy="comaker.co_CompanyName" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="comaker.co_CompanyName" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                     @error('comaker.co_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2533,21 +2561,21 @@
                 <!-- * Company Address -->
                 <div class="input-wrapper">
                     <span>Company Address</span>
-                    <input wire:model.lazy="comaker.co_CompanyID" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="comaker.co_CompanyID" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                     @error('comaker.co_CompanyID') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Monthly Salary -->
                 <div class="input-wrapper">
                     <span>Monthly Salary</span>
-                    <input wire:model.lazy="comaker.co_MonthlySalary" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="comaker.co_MonthlySalary" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="number">
                     @error('comaker.co_MonthlySalary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Other Source Of Income -->
                 <div class="input-wrapper">
                     <span>Other Source Of Income</span>
-                    <input wire:model.lazy="comaker.co_OtherSOC" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="comaker.co_OtherSOC" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="text">
                     @error('comaker.co_OtherSOC') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2561,13 +2589,13 @@
 
                         <!-- * Rented -->
                         <div class="radio-btn-wrapper">
-                            <input wire:model.lazy="comaker.co_BO_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="co_BO_Status" value="1">
+                            <input wire:model.lazy="comaker.co_BO_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" name="co_BO_Status" value="1">
                             <span>Yes</span>
                         </div>
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
-                            <input  wire:model.lazy="comaker.co_BO_Status" {{ $member['statusID'] == 7 ? '' : 'disabled' }} type="radio" name="co_BO_Status" value="0">
+                            <input  wire:model.lazy="comaker.co_BO_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} type="radio" name="co_BO_Status" value="0">
                             <span>No</span>
                         </div>
 
@@ -2636,7 +2664,9 @@
                     <div class="input-wrapper">
                         <!-- <input type="file" class="input-image" id="imageUploadApplicantSign"> -->
                         @if($type != 'details')
-                        <input type="file"  wire:model="imgmemsign" style="color: white;" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        @if($usertype != 2)
+                        <input type="file"  wire:model="imgmemsign" style="color: white;" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        @endif
                         @endif
                     </div>
 
@@ -2674,7 +2704,9 @@
                     <!-- * Upload Co-Maker Signature Button -->
                     <div class="input-wrapper">
                         @if($type != 'details')
-                        <input type="file"  wire:model="imgcosign" style="color: white;" {{ $member['statusID'] == 7 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        @if($usertype != 2)
+                        <input type="file"  wire:model="imgcosign" style="color: white;" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        @endif
                         @endif
                     </div>
 

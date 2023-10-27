@@ -260,22 +260,21 @@
                 <!-- * Container 2: User Restrictions Table List -->
                 <div class="ur-con-1">
                   <!-- * Table Container -->
-                  <div class="table-container">
-                    <table>
+                  <div class="table-container" style="visibility: {{ $usertype == 3 ? 'visible' : 'hidden' }};">
+                    <table style="font-size: 1.3rem !important;" class="cust-table">
                       <tr>
                         <td>
-                          <table>
+                          <table class="cust-table-inside">
                             <tr>
                               <td>
-                                <div class="flex-data">
+                                <div class="flex-data" style="padding: 1rem 0rem;">
                                     <input
                                     type="checkbox"
                                     class="checkbox"
-                                    wire:model="maintenanace"  
-                                    value="1"                         
-                                    onchange="checkAll(this)"
+                                    wire:model="maintenance"                                                      
+                                    wire:change="checkAll('maintenance','1')"
                                   />
-                                  <span>Maintenance</span>
+                                  <b>Maintenance</b>
                                 </div>
                               </td>
                             </tr>
@@ -298,18 +297,17 @@
                         </td>
                         <td>
                           <!-- table -->
-                          <table>
+                          <table class="cust-table-inside">
                             <tr>
-                              <td>
-                                <div class="flex-data">
+                              <td >
+                                <div class="flex-data" style="padding: 1rem 0rem;">
                                     <input
                                     type="checkbox"
                                     class="checkbox"
-                                    wire:model="collection"  
-                                    value="1"                         
-                                    onchange="checkAll(this)"
+                                    wire:model="collection"                                                      
+                                    wire:change="checkAll('collection','2')"
                                   />
-                                  <span>Collection</span>
+                                  <b>Collection</b>
                                 </div>
                               </td>
                             </tr>
@@ -333,18 +331,17 @@
                         </td>
                         <td>
                           <!-- table -->
-                          <table>
+                          <table class="cust-table-inside">
                             <tr>
                               <td>
-                                <div class="flex-data">
+                                <div class="flex-data" style="padding: 1rem 0rem;">
                                     <input
                                     type="checkbox"
                                     class="checkbox"
-                                    wire:model="transactions"  
-                                    value="1"                         
-                                    onchange="checkAll(this)"
+                                    wire:model="transactions"                                                                                
+                                    wire:change="checkAll('transactions','3')"
                                   />
-                                  <span>Transactions</span>
+                                  <b>Transactions</b>
                                 </div>
                               </td>
                             </tr>
@@ -368,18 +365,17 @@
                         </td>
                         <td>
                           <!-- table -->
-                          <table>
+                          <table class="cust-table-inside">
                             <tr>
                               <td>
-                                <div class="flex-data">
+                                <div class="flex-data" style="padding: 1rem 0rem;">
                                     <input
                                     type="checkbox"
                                     class="checkbox"
-                                    wire:model="reports"  
-                                    value="1"                         
-                                    onchange="checkAll(this)"
+                                    wire:model="reports"                                                                                
+                                    wire:change="checkAll('reports','4')"
                                   />
-                                  <span>Reports</span>
+                                  <b>Reports</b>
                                 </div>
                               </td>
                             </tr>

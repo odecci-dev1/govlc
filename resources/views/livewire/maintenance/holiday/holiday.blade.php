@@ -42,7 +42,7 @@
 
                         <!-- * Buttons -->
                         <div class="btn-wrapper">
-
+                        @if($usertype != 2)
                             <!-- * Save -->
                             @if($holid == '')
                             <button type="button" wire:click="store" class="button" data-save>Save</button>
@@ -50,7 +50,7 @@
                             <button type="button" wire:click="update" class="button" data-save>Update</button>
                             <button type="button" onclick="showDialog('{{ $holid }}')"  class="button" data-save>Trash</button>
                             @endif
-
+                        @endif
                         </div>
 
                     </div>

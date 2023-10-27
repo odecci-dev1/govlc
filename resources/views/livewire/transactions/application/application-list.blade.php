@@ -76,7 +76,7 @@
     <div class="nal-con-1">
         <h2>Application List</h2>
         <p class="p-1">
-        Total of <span id="numOfApplicants">50</span> applications
+        Total of <span id="numOfApplicants">{{ isset($list) ? count($list) : 0 }}</span> applications
         </p>
 
         <!-- * Button Container -->
@@ -86,9 +86,11 @@
             <div class="wrapper">
 
                 <!-- * Add New Button -->
+                @if($usertype != 2)
                 <button type="button"  class="button" id="data-open-new-application-modal"  data-nav-link>
                     <span>Add New</span>
                 </button>
+                @endif
 
             </div>
 
@@ -157,7 +159,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Co-Borrower</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -170,7 +172,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Applied Loan Amount</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -183,7 +185,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Date Created</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 

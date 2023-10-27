@@ -78,7 +78,7 @@
             <div class="header-container">
                 <h2>For Approval Checking</h2>
                 <p class="p-1">
-                You have a total <span id="numOfApplicantsForApproval">10</span> 
+                You have a total <span id="numOfApplicantsForApproval">{{ isset($list) ? count($list) : 0 }}</span> 
                 <span>applications for approval</span>
                 </p>
             </div>

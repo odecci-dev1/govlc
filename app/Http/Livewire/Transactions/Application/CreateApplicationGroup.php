@@ -69,7 +69,7 @@ class CreateApplicationGroup extends Component
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Group/FilterByGroupID', ['groupID' => $groupId]);       
             $data = $data->json();          
             if($data){
-
+                
             }
         }
         else{

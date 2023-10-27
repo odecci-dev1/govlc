@@ -31,6 +31,10 @@ class UserRegister extends Component
     public $userid = '';
     public $mid = '';
     public $updatePassword = 1;
+    public $maintenance;
+    public $collection;
+    public $transactions;
+    public $reports;
 
     public $modules = [];
     public $modulelist;
@@ -100,7 +104,18 @@ class UserRegister extends Component
             foreach($getmodules as $getmodules){
                 $this->modulelist[$getmodules['module_code']] = ['module_code' => $getmodules['module_code'], 'module_name' => $getmodules['module_name'], 'module_category' => $getmodules['module_category']];
             }
-        }        
+        }              
+    }
+
+    public function checkAll($catname,$cat){      
+        if($this->$catname){
+            $getmodules = $this->modulelist->whereIn('module_category', $cat);           
+            if($getmodules){
+                foreach($getmodules as $mdl){
+                    $this->modules[] = $mdl['module_code'];
+                }
+            }
+        }
     }
 
     public function updatePassword(){
@@ -175,7 +190,7 @@ class UserRegister extends Component
         else{
             // dd($user);
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/UpdateUserInfo', $user);            
-            return redirect()->to('/user/view/'.$this->userid)->with(['sessmword'=> 'Success', 'sessmessage'=> 'User successfully saved']); 
+            return redirect()->to('/user/view/'.$this->userid)->with(['sessmword'=> 'Success', 'sessmessage'=> 'Please relogin to refresh current user session.']); 
         }     
         
     }

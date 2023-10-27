@@ -185,7 +185,9 @@
                     <td class="td-btns">
                         <div class="td-btn-wrapper">
                             <a href="{{ URL::to('/') }}/members/details/{{ $l['naid'] }}" class="a-btn-view-2">View</a>
+                            @if($usertype != 2)
                             <button class="a-btn-trash-2">Trash</button>
+                            @endif
                         </div>
                     </td>
 

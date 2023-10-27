@@ -256,7 +256,7 @@
         </div>
 
         <!-- * Nav Container 2 inside main nav-->
-        @if(in_array($usertype, [1,2]))
+        @if(in_array($usertype, [1]))
         <div class="nav-con-2">
 
             <!-- * Nav Links Container -->

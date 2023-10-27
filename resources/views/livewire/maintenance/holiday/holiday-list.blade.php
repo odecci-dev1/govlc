@@ -19,7 +19,9 @@
         <div class="wrapper">
 
             <!-- * Add New Button -->
+            @if($usertype != 2)
             <a href="{{ URL::to('/') }}/maintenance/holiday/create"><button><span>Add New</span></button></a>
+            @endif
 
         </div>
 
@@ -142,7 +144,9 @@
                     <td class="td-btns">
                         <div class="td-btn-wrapper">
                             <a href="{{ URL::to('/') }}/maintenance/holiday/view/{{ $l['holidayID'] }}" class="a-btn-view-2" data-maintenance-view-holiday>View</a>
+                            @if($usertype != 2)
                             <button onclick="showDialog('{{ $l['holidayID'] }}')" type="button" class="a-btn-trash-2">Trash</button>
+                            @endif
                         </div>
                     </td>
 

@@ -14,7 +14,8 @@ class FieldArea extends Component
 
     public $areaID = '';
     public $keyword = '';
-
+    public $usertype;
+        
     public $areaName;
     public $foid;
     public $fullname;
@@ -55,7 +56,7 @@ class FieldArea extends Component
                     'location' => $locations,
                     'foid' => $this->foid,
                 ];               
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AssigningFieldArea', $data);                 
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AssigningFieldArea', $data);                        
         return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved');       
     }
 
@@ -146,9 +147,10 @@ class FieldArea extends Component
     }
 
     public function mount(){
+        $this->usertype = session()->get('auth_usertype'); 
         $this->unassignedLocations = collect([]);
         $this->selectedLocations = collect([]);
-        $munassigned = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/UnAssignedLocationListPaginate', ['Areaname' => '', 'page' => 1, 'pageSize' => 50]);                
+        $munassigned = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/UnAssignedLocationListPaginate', ['Areaname' => '', 'page' => 1, 'pageSize' => 1000]);                
         // dd($munassigned);
         $unassignedLocations = $munassigned->json();    
         if(isset($unassignedLocations)){

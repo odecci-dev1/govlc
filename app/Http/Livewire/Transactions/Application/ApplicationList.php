@@ -9,6 +9,7 @@ use App\Traits\Common;
 class ApplicationList extends Component
 {    
     use Common;
+    public $usertype;
     public $keyword = '';
     public $list = [];
     public $loantypeList;
@@ -17,7 +18,7 @@ class ApplicationList extends Component
     public $loanAmountTo = 0;
 
     public function mount(){
-      
+        $this->usertype = session()->get('auth_usertype'); 
         $getloans = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetails');  
         $getloans = $getloans->json();       
         $loantypeList = collect([]);

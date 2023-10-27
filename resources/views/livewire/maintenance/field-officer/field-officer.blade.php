@@ -21,7 +21,7 @@
 
             <!-- * Rowspan 1: Rowspan Header: Header and Buttons -->
             <div class="rowspan">
-                <h2>New Field Officer</h2>
+                <h2>Field Officer</h2>
             </div>
 
             <!-- * Rowspan 2: First Name, Middle Name , Last Name, and Suffix -->
@@ -220,10 +220,14 @@
                     <div class="btn-wrapper">
                         @error('imgprofile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <!-- * Upload Button -->
+                        @if($usertype != 2)
                         <input type="file" wire:model="imgprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        @endif
                         <div wire:loading wire:target="imgprofile">Uploading...</div>
                         <!-- * Attach Button -->
+                        @if($usertype != 2)
                         <input type="file" wire:model="officer.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-field-officer-file-btn></input>
+                        @endif
                         <div wire:loading wire:target="officer.attachments">Uploading...</div>
                         @error('officer.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                     </div>
@@ -276,11 +280,13 @@
                     </div>
 
                     <!-- * Save Button -->
+                    @if($usertype != 2)
                     @if($foid == '')
                     <button type="button" wire:click="store" class="button save-btn">Save</button>
                     @else
                     <button type="button" wire:click="update" class="button save-btn">Update</button>
                     <button type="button" onclick="showDialog('{{ $foid }}')" class="button save-btn">Trash</button>
+                    @endif
                     @endif
 
                 </div>
@@ -356,8 +362,10 @@
                             <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
                         @endif 
                     @endif   
-                    <div class="btn-wrapper">                
+                    <div class="btn-wrapper">       
+                        @if($usertype != 2)         
                         <input type="file" wire:model="imgfrontID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        @endif
                     </div>
                     @error('imgfrontID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                 </div>
@@ -375,7 +383,9 @@
                         @endif 
                     @endif   
                     <div class="btn-wrapper">
+                        @if($usertype != 2)
                         <input type="file" wire:model="imgbackID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        @endif
                     </div>
                     @error('imgbackID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                 </div>

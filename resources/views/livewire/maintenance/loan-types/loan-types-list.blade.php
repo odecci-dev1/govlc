@@ -14,10 +14,10 @@
 
             <!-- * Button Wrapper -->
             <div class="wrapper">
-
+                @if($usertype != 2)
                 <!-- * Add New Button -->
                 <a href="{{ URL::to('/') }}/maintenance/loantypes/create"><button><span>Add New</span></button></a>
-
+                @endif
             </div>
 
             <!-- * Search Wrapper -->
@@ -122,7 +122,9 @@
                             <td class="td-btns">
                                 <div class="td-btn-wrapper">
                                     <a href="{{ URL::to('/') }}/maintenance/loantypes/view/{{ $list['loanTypeID'] }}" class="a-btn-view-2">View</a>
+                                    @if($usertype != 2)
                                     <button class="a-btn-trash-2" type="button" onclick="showDialog('{{ $list['loanTypeID'] }}')">Trash</button>
+                                    @endif
                                 </div>
                             </td>
 

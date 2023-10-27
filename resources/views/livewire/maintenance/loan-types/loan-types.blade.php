@@ -37,11 +37,13 @@
                             <h2>New Loan Types</h2>
                         </div>
                         <!-- * Buttons -->
-                        <div class="btn-wrapper">                        
+                        <div class="btn-wrapper">    
+                            @if($usertype != 2)                    
                             <!-- * Save -->
                             <button type="button" wire:click="save" class="button" data-save>{{ $loantypeID =='' ? 'Save' : 'Update' }}</button>
                             @if($loantypeID !='')
                             <button type="button" {{ $loantypeID == 'LT-02' ? 'disabled' : '' }} onclick="showDialog('{{ $loantypeID }}')" class="button" data-save>Trash</button>
+                            @endif
                             @endif
                         </div>
                     </div>
@@ -476,7 +478,9 @@
                 <div class="rowspan" style="margin-bottom: 20px;">
 
                     <div class="btn-wrapper ">
+                        @if($usertype != 2)
                         <button type="button" class="button" wire:click="addTerms">{{ isset($inpterms['termsKey']) ? ($inpterms['termsKey'] > 0 ? 'Update to list' : 'Add to list') : 'Add to list'}}</button>
+                        @endif
                         @if(isset($inpterms['termsKey']))
                             @if($inpterms['termsKey'] > 0)
                                 <button type="button" class="button" wire:click="resetterms">Cancel</button>
@@ -569,7 +573,9 @@
                                         <td class="td-btns">
                                             <div class="td-btn-wrapper">
                                                 <button type="button" wire:click="editTerms('{{ $key }}')" class="a-btn-view">Edit</button>
+                                                @if($usertype != 2)
                                                 <button type="button" wire:click="removeTerms('{{ $key }}')" class="a-btn-trash-2">Remove</button>
+                                                @endif
                                             </div>
                                         </td>
 

@@ -1,5 +1,15 @@
 <div >
     <!-- * New Application Modal -->
+    <!-- <div wire:loading  wire:loading.delay wire:target="changeLoanType,loanterms" class="full-screen-div-loading">
+        <div class="center-loading-container">
+            <div>
+                <div class="lds-dual-ring"></div>
+            </div>
+            <div class="loading-text">
+                <span>Please wait . . .</span>
+            </div>
+        </div>        
+    </div> -->
     <dialog class="na-modal" data-new-application-modal wire:ignore.self>
 
     <div class="modal-container">
@@ -65,7 +75,7 @@
                 </div>
 
                 <!-- * Create New Button -->
-                <button wire:click="createIndividualLoan('', '{{ $loantype }}')" type="button" class="button">Create New</button>
+                <button wire:click="createIndividualLoan('', '{{ $loantype }}')" type="button"  wire:loading.attr="disabled" class="button">Create New</button>
 
             </div>
 

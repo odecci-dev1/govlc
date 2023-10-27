@@ -18,6 +18,7 @@ class FieldOfficer extends Component
     use WithFileUploads;
     
     public $officer;
+    public $usertype;
     public $foid = '';
     public $idtypes = [];
     public $idtypename = '';
@@ -273,6 +274,7 @@ class FieldOfficer extends Component
     }
     
     public function mount($foid = ''){
+        $this->usertype = session()->get('auth_usertype'); 
         $this->officer['old_profile'] = '';
         $this->officer['old_attachments'] = [];
         $this->officer['old_frontID'] = '';

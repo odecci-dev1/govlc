@@ -13,7 +13,8 @@ class LoanTypes extends Component
     use Common;
     public $loantypeID = '';
     public $loantype;
-
+    public $usertype;
+    
     public $terms = [];
     public $inpterms;
     public $formulaList = [];
@@ -285,6 +286,7 @@ class LoanTypes extends Component
     }
 
     public function mount($loanid = ''){
+        $this->usertype = session()->get('auth_usertype'); 
         if($loanid != ''){
             $this->loantypeID = $loanid;
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/LoanTypeFilter', ['loanTypeID' => $this->loantypeID]);            
