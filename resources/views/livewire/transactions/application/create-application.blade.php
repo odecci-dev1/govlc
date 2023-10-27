@@ -91,6 +91,7 @@
 
                 </div>
     @elseif(in_array($member['statusID'], [9, 10, 15]))
+    @if($type != 'details')
     <div class="na-releasing-sec">
 
         <!-- * Rowspan 1: Loan Details Header -->
@@ -620,6 +621,7 @@
                     </div>
 
                 </div>
+        @endif
         @endif
     @endif            
 
