@@ -21,7 +21,7 @@ class UserList extends Component
 
     public function render()
     {
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserListFilter', [ 'page' => 1, 'pageSize' => 100, 'fullname' => $this->keyword ]);          
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserListFilter', [ 'page' => 1, 'pageSize' => 10000, 'fullname' => $this->keyword ]);          
         // dd(['column' => 'lname', 'values' => $this->keyword], ['column' => 'fname', 'values' => $this->keyword], ['column' => 'username', 'values' => $this->keyword]);       
         $this->list = $data->json();            
         return view('livewire.users.user-list');

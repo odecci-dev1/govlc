@@ -70,7 +70,7 @@
                                             </div>
                                             <div class="box-inner-wrapper">
                                                 <p>DUE-DATE:</p> 
-                                                <span id="printDueDate">{{ isset($loansummary['date']) ? date('F j, Y', strtotime($loansummary['date'])) : 'not found' }}</span>
+                                                <span id="printDueDate">{{ isset($loansummary['dueDate']) ? date('F j, Y', strtotime($loansummary['dueDate'])) : 'not found' }}</span>
                                             </div>
                                         </div>
                                     </div>

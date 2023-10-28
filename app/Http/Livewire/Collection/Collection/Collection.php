@@ -131,7 +131,7 @@ class Collection extends Component
             foreach($this->areas as $mareas){
                 $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $mareas['areaID']]);  
                 $details = $details->json();
-                if($details){
+                if(isset($details[0])){
                     $details = $details[0];                                       
                     $collections = $details['collection'];
                     if($collections){

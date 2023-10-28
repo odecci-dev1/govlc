@@ -190,6 +190,7 @@ class UserRegister extends Component
 
         if( $this->mid == '' ){
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUser', $user); 
+            // dd($crt);
             $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetLastUserList');       
             $getlast =  $getlast->json();
             return redirect()->to('/user/view/'.$getlast['userId'])->with(['sessmword'=> 'Success', 'sessmessage'=> 'User successfully saved']); 
