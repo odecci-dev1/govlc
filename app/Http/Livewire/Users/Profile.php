@@ -117,7 +117,7 @@ class Profile extends Component
                 ];
 
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/UpdateUserInformation', $user); 
-        return redirect()->to('/profile')->with('message', 'Your profile has successfully updated');         
+        return redirect()->to('/profile')->with('sessmessage', 'Your profile has successfully updated');         
     }
 
     public function updatePassword(){

@@ -26,7 +26,7 @@
                 <!-- <button type="button" class="addOrSubButton" onclick="subExpenses()">-</button> -->
                 <button type="button" class="addOrSubButton" wire:click="subExpenses">-</button>
             </div>
-
+              
         </div>
 
         <!-- * Add Expenses -->
@@ -156,13 +156,19 @@
                     <span>Field Expenses</span>
                 </button>
 
+                    <!-- <select  wire:model="status" class="select-option-menu">
+                        <option value="">All Areas</option>     
+                        <option value="Active">Active</option>                                    
+                        <option value="Inactive">Inactive</option>                                    
+                    </select>    -->
+
             </div>
 
             <!-- * Filter & Search Wrapper -->
             <div class="wrapper">
 
                 <!-- * Filter Button -->
-               
+                     
 
                 <!-- * Collection Officer Search Bar -->
         
