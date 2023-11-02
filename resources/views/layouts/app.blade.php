@@ -283,7 +283,7 @@
             @php 
                 $profilepic = session()->get('auth_profile');
             @endphp
-            <img style="cursor: pointer;" src="{{ URL::to('/') }}/assets/icons/bell.svg" alt="Bell" />
+            <img onclick="location.href='{{ URL::to('/') }}/notifications'" style="cursor: pointer;" src="{{ URL::to('/') }}/assets/icons/bell.svg" alt="Bell" />
             @if(file_exists(public_path('storage/users_profile/'.$profilepic)))                                  
                 <img src="{{ asset('storage/users_profile/'.$profilepic) }}" alt="upload-image" style="height: 5rem; width: 5rem; cursor: pointer;  border-radius: 50%" id="profileImg" onclick="openProfile()"/>                                                                                                                 
             @else

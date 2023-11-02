@@ -116,12 +116,12 @@
                                                         <div class="fill-wrap">
                                                             <p class="p-fill p-bold">Date Release</p>
                                                             <!-- TODO: Remove the placeholder attribute in the input element -->
-                                                            <input class="fill-out-line" type="text" value="{{ $loansummary['releasingDate'] }}" name="" id="" disabled="true" aria-disabled="true" >
+                                                            <input class="fill-out-line" type="text" value="{{ date('m/d/Y', strtotime($loansummary['releasingDate'])) }}" name="" id="" disabled="true" aria-disabled="true" >
                                                         </div>
                                                         <div class="fill-wrap">
                                                             <p class="p-fill p-bold">Due Date:</p>
                                                             <!-- TODO: Remove the placeholder attribute in the input element -->
-                                                            <input class="fill-out-line" type="text" value="{{ $loansummary['dueDate'] }}" name="" id="" disabled="true" aria-disabled="true" >
+                                                            <input class="fill-out-line" type="text" value="{{ date('m/d/Y', strtotime($loansummary['dueDate'])) }}" name="" id="" disabled="true" aria-disabled="true" >
                                                         </div>
                                                     </div>
                                                 </div>

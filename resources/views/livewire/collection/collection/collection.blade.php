@@ -114,12 +114,12 @@
                  <!-- * Details Wrapper 1 -->
                  @php
                     $countDetails = $areaDetails->where('areaID', $areaID)->count();
-                    $checkArea = $areaDetails->where('areaID', $areaID)->first();       
+                    $checkArea = $areas->where('areaID', $areaID)->first();       
                  @endphp
                  <div class="wrapper-1">
                      <span>Total of {{ $countDetails }} Items</span>
                      <span>{{ $checkArea ? $checkArea['areaName'] : '' }}</span>
-                     <span>Ref Number: {{ $checkArea ? ($checkArea['area_RefNo'] != 'PENDING' ? $checkArea['area_RefNo'] : '________________________') : '________________________' }}</span>
+                     <span>Ref Number: {{ $checkArea ? (!in_array($checkArea['area_RefNo'], ['PENDING', '']) ? $checkArea['area_RefNo'] : '________________________') : '________________________' }}</span>
                  </div>
 
              </div>
@@ -129,7 +129,7 @@
                 @php
                     $sumDetails = $areaDetails->where('areaID', $areaID)->sum('collectedAmount');                                
                 @endphp
-               
+                @if($countDetails > 0)
                 <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
                 <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
             
@@ -142,7 +142,7 @@
                         
                     @endif
                 @endif                
-               
+                @endif
              </div>
 
          </div>

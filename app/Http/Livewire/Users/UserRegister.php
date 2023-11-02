@@ -187,7 +187,6 @@ class UserRegister extends Component
                     "usermodule"=> $modules
                 ];
 
-
         if( $this->mid == '' ){
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUser', $user); 
             // dd($crt);

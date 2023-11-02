@@ -16,7 +16,7 @@
 
     <!-- * Page 1 -->
 
-    <div class="page page-1" style="width: 297mm; min-height: 297mm;" data-printables>
+       
             @if($areaDetails)
                 @php 
                     $cnt = 0;
@@ -28,7 +28,7 @@
                     $countme = $countme + 1;
                     @endphp
                     @if($cntheader == 0)
-                  
+                    <div class="page page-1" data-printables>
                     <div class="header-wrapper">
                         <p>Field Officer: <span id="printFieldOfficerName">{{ $areaDetails[0]['fieldOfficer'] }}</span></p>
                         <p><span id="printAreaNum">{{ $areaDetails[0]['areaName'] }}</span></p>
@@ -96,9 +96,9 @@
                     @endif                      
                 @endforeach  
             @endif              
-    </div>
+      
     <!-- * Page 2 -->
-    <div class="page page-2 page-break-after" style="width: 297mm; min-height: 209mm;">        
+    <div class="page page-2">        
         <div class="body-wrapper">
             <!-- * Table Container -->
             <div class="table-container">

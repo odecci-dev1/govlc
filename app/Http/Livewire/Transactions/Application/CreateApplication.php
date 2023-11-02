@@ -1056,6 +1056,7 @@ class CreateApplication extends Component
                         'remarks' => isset($this->loanDetails['remarks']) ? $this->loanDetails['remarks'] : '',
                         'userId' => session()->get('auth_userid'),
                     ];
+                    //amount
                     // dd($data);
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Credit/CreditSubmitforApproval', $data);  
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully submited', 'mword'=> 'Success']);
@@ -1185,6 +1186,18 @@ class CreateApplication extends Component
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ComppleteTransaction', $data);                    
             //dd($crt);       
             return redirect()->to('tranactions/application/releasing/list')->with(['mmessage'=> 'Application is complete and ready for releasing', 'mword'=> 'Success']);
+        }
+        catch (\Exception $e) {           
+            throw $e;            
+        }
+
+        //$crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Releasing/ReleasingComplete', $data);          
+        //return redirect()->to('tranactions/application/releasing/list')->with(['mmessage'=> 'Application is complete and ready for releasing', 'mword'=> 'Success']);
+    }
+
+    public function reprintApplication(){
+        try{          
+            $this->emit('openUrlPrintingVoucher', ['url' => URL::to('/').'/tranactions/application/printing/'.$this->naID , 'title' => 'This is the title', 'message' => 'This is the message']);
         }
         catch (\Exception $e) {           
             throw $e;            
@@ -1386,8 +1399,9 @@ class CreateApplication extends Component
 
     public function getLoanHistory(){         
         $loanhistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                 
-      
         $loanhistory = $loanhistory->json();
+        //dd($this->searchedmemId);
+       
         $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['memid' => $this->searchedmemId]);                 
         $paymenthistory = $paymenthistory->json();
         
@@ -1559,6 +1573,7 @@ class CreateApplication extends Component
                 $data = $resdata[0];    
                 //dd($data);    
                 //ditoviewing
+                //dd(session()->get('auth_userid'));
                 $this->searchedmemId =  $data['memId'];
                 //dd( $this->searchedmemId );
                 //get loan payment and history

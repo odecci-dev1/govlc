@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Collection\Collection;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
@@ -91,9 +92,9 @@ class Collection extends Component
     }
 
     public function print(){
-        $print = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/PrintCollection', ['areaID' => $this->areaID, 'foid' => $this->foid]);    
+        $print = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/PrintCollection', ['areaID' => $this->areaID, 'remarks' => 'Printded ' . Carbon::now() , 'foid' => $this->foid]);    
         $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID]);              
-        return redirect()->to('/collection/view');       
+        return redirect()->to('/collection/create');       
     }
     
     public function getCollectionDetails($areaID, $foid){
@@ -129,7 +130,7 @@ class Collection extends Component
         if( $areas ){
             $this->areas = collect($areas);
             foreach($this->areas as $mareas){
-                $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $mareas['areaID']]);  
+                $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $mareas['areaID'], 'arearefno' => $mareas['area_RefNo'] ]);  
                 $details = $details->json();
                 if(isset($details[0])){
                     $details = $details[0];                                       

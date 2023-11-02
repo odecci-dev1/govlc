@@ -19,7 +19,7 @@
 
                     <!-- * Add New Button -->
                     @if(!$check)
-                    <a href="{{ URL::to('/') }}/collection/view" class="button" data-add-new-collection>
+                    <a href="{{ URL::to('/') }}/collection/create" class="button" data-add-new-collection>
                         <span>Make Collection</span>
                     </a>
                     @endif

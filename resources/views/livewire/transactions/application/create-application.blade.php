@@ -172,6 +172,22 @@
                                         <p class="p-red-text">FIRST PAYMENT:</p>
                                         <span id="">{{ isset($loansummary['advancePayment']) ? number_format($loansummary['advancePayment'], 2) : 'not found' }}</span>
                                     </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>HOLIDAYS:</p>
+                                        <span id=""></span>
+                                    </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>USED SAVINGS:</p>
+                                        <span id=""></span>
+                                    </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>LIFE INSURANCE:</p>
+                                        <span id=""></span>
+                                    </div>
+                                    <div class="box-inner-wrapper">
+                                        <p>DEDUCTED INTEREST:</p>
+                                        <span id=""></span>
+                                    </div>
                                 </div>
                                 <div class="box-inner">
                                     <p>{{ isset($loansummary['loanAmount']) ? number_format($loansummary['loanAmount'], 2) : 'not found' }}</p>
@@ -179,6 +195,11 @@
                                     <p>{{ isset($loansummary['notarialFee']) ? number_format($loansummary['notarialFee'], 2) : 'not found' }}</p>
                                     <p class="underline">{{ isset($loansummary['loanInsurance']) ? number_format($loansummary['loanInsurance'], 2) : 'not found' }}</p>
                                     <p class="underline-thick">{{ isset($loansummary['approvedReleasingAmount']) ? ($loansummary['approvedReleasingAmount'] == '' ? '0' : number_format($loansummary['approvedReleasingAmount'], 2)) : 'not found' }}</p>
+                                    <p>&nbsp;</p>
+                                    <p>{{ isset($loansummary['holidayAmount']) ? number_format($loansummary['holidayAmount'], 2) : '' }}</p>
+                                    <p>{{ isset($loansummary['savings']) ? number_format($loansummary['savings'], 2) : '' }}</p>
+                                    <p>{{ isset($loansummary['lifeInsurance']) ? number_format($loansummary['lifeInsurance'], 2) : '' }}</p>
+                                    <p>{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : '' }}</p>
                                 </div>
                             </div>
                             <!-- * Box-3 -->
@@ -305,7 +326,7 @@
             <!-- * Loan Amount -->
             <div class="input-wrapper">
                 <span>Loan Amount</span>
-                <input wire:model.lazy="loanDetails.loanAmount"  disabled {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
+                <input wire:model.lazy="loanDetails.loanAmount" {{ $type != 'details' ? '' : 'disabled' }} type="text" >
                 @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror
                 <!-- dito -->
             </div>
@@ -373,7 +394,8 @@
                 @if($type != 'details')
                 <div class="input-wrapper input-wrapper-release">
                     @if($usertype != 2)
-                    <button type="button" wire:click="completeApplication" class="releaseButton" data-application-complete-button>Complete</button>
+                        <button type="button" wire:click="completeApplication" class="releaseButton" data-application-complete-button>Complete</button>
+                        <button type="button" wire:click="reprintApplication" class="releaseButton" data-application-complete-button>Reprint</button>
                     @endif
                 </div>
                 @endif
@@ -2139,7 +2161,7 @@
                 <!-- * Applied Loan Amount -->
                 <div class="input-wrapper">
                     <span>Applied Loan Amount</span>
-                    <input wire:model.lazy="member.loanAmount" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="member.loanAmount" {{ in_array($member['statusID'], [7,8]) && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
                     @error('member.loanAmount') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 

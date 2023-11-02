@@ -34,6 +34,7 @@ use App\Http\Livewire\Reports\CollectionReport\CollectionReport;
 use App\Http\Livewire\Reports\PastDueReport\PastDueReport;
 use App\Http\Livewire\Reports\SavingsReport\SavingsReport;
 use App\Http\Livewire\Settings\Settings;
+use App\Http\Livewire\Notifications\Notifications;
 
 /*
 |--------------------------------------------------------------------------
@@ -156,6 +157,7 @@ Route::middleware(['access:Module-08'])->group(function () {
 //collection
 Route::middleware(['access:Module-06'])->group(function () {
     Route::get('/collection/list',CollectionList::class);
+    Route::get('/collection/create',Collection::class);    
     Route::get('/collection/view/{colrefNo?}',Collection::class);    
     Route::get('/collection/print/area/{areaID}', function(){
         return view('livewire.collection.collection.collection-html');
@@ -178,6 +180,8 @@ Route::get('/release/report', ReleaseReport::class);
 Route::get('/collection/report', CollectionReport::class);
 Route::get('/savings/report', SavingsReport::class);
 Route::get('/pastdue/report', PastDueReport::class);
+
+Route::get('/notifications', Notifications::class);
 
 
 //reports

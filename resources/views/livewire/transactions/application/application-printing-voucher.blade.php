@@ -52,8 +52,8 @@
                         <div class="receipt-voucher-container">
                             <div class="header-wrapper">
                                 <div class="box">
-                                    <img src="{{ URL::to('/') }}/assets/icons/nav-logo.svg" alt="">
-                                    <p>Gold One Victory Financing Corporation Santol Balagtas Bulacan</p>
+                                    <!-- <img src="{{ URL::to('/') }}/assets/icons/nav-logo.svg" alt=""> -->
+                                    <p style="font-size: 2rem !important; margin-top: 2rem;">Gold One Victory Financing Corporation Santol Balagtas Bulacan</p>
                                 </div>
                                 <p>Receipt Voucher</p>
                             </div>
@@ -125,10 +125,10 @@
                                             <p class="underline">{{ isset($loansummary['loanInsurance']) ? number_format($loansummary['loanInsurance'], 2) : 'not found' }}</p>
                                             <p class="p-bold underline-thick">{{ isset($loansummary['approvedReleasingAmount']) ? ($loansummary['approvedReleasingAmount'] == '' ? '0' : number_format($loansummary['approvedReleasingAmount'], 2)) : 'not found' }}</p>
                                             <p>&nbsp;</p>
-                                            <p>holidays</p>
-                                            <p>used saving</p>
-                                            <p>life insurance</p>
-                                            <p>deducted interest</p>
+                                            <p>{{ isset($loansummary['holidayAmount']) ? number_format($loansummary['holidayAmount'], 2) : '' }}</p>
+                                            <p>{{ isset($loansummary['savings']) ? number_format($loansummary['savings'], 2) : '' }}</p>
+                                            <p>{{ isset($loansummary['lifeInsurance']) ? number_format($loansummary['lifeInsurance'], 2) : '' }}</p>
+                                            <p>{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : '' }}</p>
                                         </div>
                                     </div>
                                     <!--  Box-3 -->
@@ -147,7 +147,7 @@
                                                 <span id="">{{ isset($loansummary['releasedBy']) ? $loansummary['releasedBy'] : 'not found' }}</span>
                                             </div>
                                             <div class="box-inner-wrapper">
-                                                <p>RELEASED THRU CASH</p>
+                                                <p>RELEASED THRU {{ isset($loansummary['modeOfRelease']) ? strtoupper($loansummary['modeOfRelease']) : 'NOT SET' }} {!! ($loansummary['modeOfRelease'] ??='') == 'Check' ? '<br>Check Reference : ' . ($loansummary['modeOfReleaseReference'] ??='') : '' !!}</p>
                                             </div>
                                         </div>
                                         <div class="box-inner">
@@ -165,11 +165,11 @@
                                     <div class="box">
                                         <div class="box-inner">
                                             <p class="p-bold line-sig">CO-MAKER</p>
-                                            <p>CONTACT NO.</p>
+                                            <p>CONTACT NO. : {{ $loansummary['co_Cno'] ??= '' }}</p>
                                         </div>
                                         <div class="box-inner">
                                             <p class="p-bold line-sig">CLIENT</p>
-                                            <p>CONTACT NO.</p>
+                                            <p>CONTACT NO. : {{ $loansummary['cno'] ??= '' }}</p>
                                         </div>
                                     </div>
                                 </div>

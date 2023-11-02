@@ -41,7 +41,7 @@
                             @if($loanhistory)
                                 @foreach($loanhistory as $loanhistory)
                                 <tr>
-                                    <td> </td>                                  
+                                    <td>{{ $loanhistory['loanPrincipal'] }}</td>                                  
                                     <td>{{ $loanhistory['totalSavingsAmount'] }}</td>
                                     <td>{{ $loanhistory['pastDue'] }}</td>
                                     <td>{{ $loanhistory['amountDue'] }}</td>
@@ -94,7 +94,7 @@
                                 @if($paymenthistory)
                                     @foreach($paymenthistory as $paymenthistory)
                                     <tr>
-                                        <td> </td>
+                                        <td>{{ $paymenthistory['loanPrincipal'] }}</td>        
                                         <td>{{ $paymenthistory['amountDue'] }}</td>
                                         <td>{{ $paymenthistory['collectedAmount'] }}</td>
                                         <td>{{ $paymenthistory['fieldOfficer'] }}</td>
