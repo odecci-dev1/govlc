@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\NotificationController;
 
 use App\Http\Livewire\Members\MemberList;
 
@@ -52,7 +53,11 @@ Route::get('/', function () {
     return view('login');
 });
 
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 
+Route::get('/getnoti', [NotificationController::class, 'notifications']);
+
+Route::middleware(['authenticated'])->group(function () {
 
 Route::get('/dashboard', function(){
     return view('dashboard');
@@ -76,7 +81,6 @@ Route::middleware(['access:Admin'])->group(function () {
     Route::get('/settings', Settings::class);
 });
 
-Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 //user registration
@@ -146,9 +150,9 @@ Route::middleware(['access:Module-09'])->group(function () {
     Route::get('/tranactions/application/credit/investigation/view/{memId}', CreditInvestigationApplication::class)->name('application.credit.investigation');
 });
 
-Route::middleware(['access:Module-08'])->group(function () {
-    Route::get('/tranactions/group/application/create', CreateApplicationGroup::class)->name('application.create.group');
-    Route::get('/tranactions/group/application/view/{groupId}', CreateApplicationGroup::class)->name('application.create.group');
+Route::middleware(['access:Module-08'])->group(function () {    
+    Route::get('/tranactions/group/application/{type}/{groupId?}', CreateApplicationGroup::class)->name('application.create.group');
+    // Route::get('/tranactions/group/application/{type}', CreateApplicationGroup::class)->name('application.create.group');
 });
 
 //transactions
@@ -181,7 +185,5 @@ Route::get('/collection/report', CollectionReport::class);
 Route::get('/savings/report', SavingsReport::class);
 Route::get('/pastdue/report', PastDueReport::class);
 
-Route::get('/notifications', Notifications::class);
-
-
+});
 //reports

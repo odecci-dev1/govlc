@@ -11,6 +11,7 @@ class CollectionRemittance extends Component
     use Common;
     public $areaRefNo;
     public $list;
+    public $arealist = [];
     public $foid = '';
     public $areaID = '';
 
@@ -163,13 +164,17 @@ class CollectionRemittance extends Component
 
     public function mount($areaRefNo = ''){
         $this->areaRefNo = $areaRefNo;
-        $this->expcnt = [1];
+        $this->expcnt = [1];     
+        $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo');  
+        $this->arealist = $arealist->json();
+        //dd($this->arealist);
     }
     
     public function render()
     {
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyAreaRefno', ['area_refno' => $this->areaRefNo]);  
         $data = $data->json();
+        //dd( $data );
         if($data){
             $this->list = collect($data);
             $this->foid = $this->list[0]['foid'];

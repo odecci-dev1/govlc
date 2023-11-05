@@ -227,7 +227,7 @@
                                         <span id="">GOLD ONE VICTORY LENDING CORPORATION</span>
                                     </div>
                                     <div class="box-inner-wrapper">
-                                        <p>AMOUNT RECEIVED:</p> 
+                                        <p>AMOUNT TO BE RECEIVED:</p> 
                                         <span id="">{{ isset($loansummary['approvedReleasingAmount']) ? ($loansummary['approvedReleasingAmount'] == '' ? '0' : number_format($loansummary['approvedReleasingAmount'], 2)) : 'not found' }}</span>
                                     </div>
                                 </div>

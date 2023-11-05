@@ -1016,7 +1016,7 @@
                                             <span>09-<span id=""></span></span> 
                                         </div>
                                         <div class="box-inner">
-                                            <p>Manage&apos;s Number: </p>
+                                            <p>Manager&apos;s Number: </p>
                                             <span>0936-3109-839</span>
                                         </div>
                                     </div>

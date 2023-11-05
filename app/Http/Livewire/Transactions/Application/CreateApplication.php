@@ -1922,7 +1922,8 @@ class CreateApplication extends Component
                 // $this->member['pob'] = 'Bani, Pangasinan';
                 // $this->member['province'] = 'NCR'; 
                 // $this->member['yearsStay'] = '5';
-                // $this->member['zipCode'] = '';            
+                // $this->member['zipCode'] = '';   
+
                 // $this->member['electricBill'] = '250'; 
                 // $this->member['waterBill'] = '100'; 
                 // $this->member['otherBills'] = '1000'; 

@@ -19,8 +19,7 @@ class LoginController extends Controller
       
         if($res == 'OK'){
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [ ['column' => 'username', 'values' =>  $request['username']] ]); 
-            $data = $crt->json();
-            //dd($data);
+            $data = $crt->json();           
             $usermodules = [];
 
             if($data){
@@ -40,20 +39,20 @@ class LoginController extends Controller
                     $modules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', ['userID' => $data['userId']]); 
                 }
                 session()->forget('auth_usermodules');
-                $modules = $modules->json();
-                //dd($modules);
+                $modules = $modules->json();              
                 if($modules){
                     foreach($modules as $mdl){
                         $usermodules[] = $mdl['module_code'];
                     }
                 }
-                session()->put('auth_usermodules', $usermodules);
-                //dd(session()->get('auth_usermodules'));
+                session()->put('auth_usermodules', $usermodules);               
             }   
-            if($data['userTypeId'] == 3 && $usermodules == ['Module-07']){
-                session()->put('auth_remittance_only', 1);    
-                session()->put('auth_remittance_areaRefno', '');      
-                return redirect('/dashboard');
+            $data['foid'] = 'FO-03'; //delete me api has no foid value yet
+            if(!empty($data['foid'])){
+                session()->put('auth_remittance_only', 1);                   
+                $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo');  
+                $areaRefNo = $arealist->json()[0]['areaRefNo'] ??= '';                 
+                return redirect('/collection/remittance/'.$areaRefNo);
             } 
             else{       
                 return redirect('/dashboard');

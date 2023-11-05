@@ -241,7 +241,7 @@
                     <!-- * Table View and Trash Button -->
                     <td class="td-btns">
                         <div class="td-btn-wrapper">
-                            @if($l['groupId'] == 'LT-02')
+                            @if($l['loanTypeID'] == 'LT-02')
                                 <a href="{{ URL::to('/') }}/tranactions/group/application/view/{{ $l['groupId'] }}" class="a-btn-view-3" data-view-application>View</a>
                             @else
                                 <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $l['naid'] }}" class="a-btn-view-3" data-view-application>View</a>

@@ -27,8 +27,7 @@ class AccessMiddleware
                 else{
                     return abort(404);
                 }    
-            }
-          
+            }          
         }
         else{
             return redirect('/logout');

@@ -14134,5 +14134,29 @@ Date: 10-03-2023
 .font-size-1_2em{
   font-size: 1.2rem !important;
 }
+
+.div-noti{
+  border: 1px solid black;
+  position: fixed;
+  background-color: white !important;
+  top: 10.5%;
+  right: 7%;
+  z-index: 999 !important;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.div-noti-container{
+  width: 400px;
+  background-color: white !important;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.div-noti-container table td{
+  padding: 0.9rem 0.4rem;
+  font-size: 1.3rem;
+}
+
 /*# sourceMappingURL=app.css.map */
 

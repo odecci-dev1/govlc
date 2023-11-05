@@ -135,70 +135,63 @@
     <!-- * Collection List Containers -->
     <!-- * Container 1: User list Header, Buttons, and Searchbar -->
 
-    <div class="nal-con-1">
-
+    <div class="nal-con-1">       
         <h2>Reference Number</h2>
-        <p class="p-1" id="referenceNumber">
-            {{ $areaRefNo }}
-        </p>
-        <p class="p-1b" id="collectionDate">
-            July 10, 2023
-        </p>
+        <div class="input-wrapper">
+            <div class="select-box" style="display: inline;">
+                <select  wire:model="areaRefNo" class="select-option" style="padding-left: 1rem;padding-right: 1rem; margin-top: 1rem;">
+                    @if(!empty($arealist))
+                        @foreach($arealist as $alist)
+                            <option value="{{ $alist['areaRefNo'] }}">{{ $alist['areaRefNo'] }}</option>                                   
+                        @endforeach
+                    @endif                            
+                </select>   
+            </div>
+        </div>
 
         <!-- * Button Container -->
         <div class="container">
 
             <!-- * Button Wrapper -->
             <div class="wrapper">
-
                 <!-- * Field Expenses Button -->
-                <button class="button" data-open-field-expense-modal>
-                    <span>Field Expenses</span>
-                </button>
-
-                    <!-- <select  wire:model="status" class="select-option-menu">
-                        <option value="">All Areas</option>     
-                        <option value="Active">Active</option>                                    
-                        <option value="Inactive">Inactive</option>                                    
-                    </select>    -->
-
+                <button class="button" data-open-field-expense-modal style="height: 3.5rem;">
+                    <span>FIELD EXPENSES</span>
+                </button>                                
             </div>
 
             <!-- * Filter & Search Wrapper -->
             <div class="wrapper">
-
-                <!-- * Filter Button -->
-                     
-
-                <!-- * Collection Officer Search Bar -->
-        
-
+                <!-- * Filter Button -->                     
+                <!-- * Collection Officer Search Bar -->        
             </div>
         </div>
 
     </div>
 
-    <div class="nal-con-1-mobile">
-
+    <div class="nal-con-1-mobile">    
         <h2>Reference Number</h2>
-        <p class="p-1" id="referenceNumber">
-            ABPA120230525
-        </p>
-        <p class="p-1b" id="collectionDate">
-            July 10, 2023
-        </p>
-
+        <div class="input-wrapper">
+            <div class="select-box" style="display: inline;">
+                <select  wire:model="areaRefNo" class="select-option" style="padding-left: 1rem;padding-right: 1rem; font-size: 1.2rem">
+                    @if(!empty($arealist))
+                        @foreach($arealist as $alist)
+                            <option value="{{ $alist['areaRefNo'] }}">{{ $alist['areaRefNo'] }}</option>                                   
+                        @endforeach
+                    @endif                            
+                </select>   
+            </div>
+        </div>
+      
         <!-- * Button Container -->
         <div class="container">
 
             <!-- * Button Wrapper -->
-            <div class="wrapper">
-
+            <div class="wrapper" style="padding-left: 1.5rem;"> 
                 <!-- * Field Expenses Button -->
-                <button class="button-2" data-open-field-expense-modal data-mobile-toggle-total-footer>
+                <button class="button-2" data-open-field-expense-modal data-mobile-toggle-total-footer style="height: 3.5rem; margin-top: 1rem;">
                     <span>Field Expenses</span>
-                </button>
-
+                </button>              
             </div>
 
             <!-- * Filter & Search Wrapper -->
@@ -271,7 +264,7 @@
                     <!-- * Action -->
                     <th><span class="th-name">Action</span></th>
                 </tr>
-
+                <!-- dito -->
                 <!-- * All Members Data -->
                 @if($list)
                     @foreach($list as $l)
@@ -365,101 +358,49 @@
 
     <!-- * Container 2: User List Mobile View -->
     <div class="clr-con-2-mobile">
-
+        <!-- dito mobile-->
         <div class="container">
-            <div class="inner-container">
-                <div class="inner-wrapper">
-                    <div class="box">
-                        <img src="/res/assets/icons/sample-dp/Borrower-1.svg" alt="Display Picture">
-                    </div>
-                    <div class="box">
-                        <p>Juana Dela Cruz</p>
-                        <p>Client No: <span>1</span></p>
-                        <p>Collectible: <span>350.00</span></p>
-                    </div>
-                    <div class="box">
-                        <button class="button-2" data-open-remit-modal>Remit</button>
-                    </div>
-                </div>
-                <div class="inner-wrapper" data-show-more-details-field-exp>
-                    <div class="expandable">
-                        <div class="box">
-                            <p>Amount Collected</p>
-                            <p>350.00</p>
+            @if($list)
+                @foreach($list as $l)
+                <div class="inner-container">
+                    <div class="inner-wrapper">
+                        <div class="box" style="width: 20%; padding-left: 1rem;">
+                            <!-- <img src="/res/assets/icons/sample-dp/Borrower-1.svg" alt="Display Picture"> -->
+                            @if(file_exists(public_path('storage/members_profile/'.(isset($l['filePath']) ? $l['filePath'] : 'xxxx'))))                                  
+                                <img src="{{ asset('storage/members_profile/'.$l['filePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                            @else
+                                <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
+                            @endif               
                         </div>
-                        <div class="box">
-                            <p>Savings</p>
-                            <p>350.00</p>
+                        <div class="box" style="width: 80%;">
+                            <p>{!! $l['borrower'] !!}</p>
+                            <p>Client No: <span>{!! $l['cno'] !!}</span></p>
+                            <p>Collectible: <span>{{ number_format($l['dailyCollectibles'], 2) }}</span></p>
                         </div>
-                        <div class="box">
-                            <p>Lapse/Advance</p>
-                            <p>350.00</p>
+                        <div class="box" style="padding-right: 1rem;">
+                            <!-- <button class="button-2" data-open-remit-modal>Remit</button> -->
+                            <button wire:click="setRemmittInfo('{{ $l['naid'] }}')" type="button" class="button-2" data-open-remit-modal>Remit</button>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="inner-container">
-                <div class="inner-wrapper">
-                    <div class="box">
-                        <img src="/res/assets/icons/sample-dp/Borrower-1.svg" alt="Display Picture">
-                    </div>
-                    <div class="box">
-                        <p>Juana Dela Cruz</p>
-                        <p>Client No: <span>1</span></p>
-                        <p>Collectible: <span>350.00</span></p>
-                    </div>
-                    <div class="box">
-                        <button class="button-2" data-open-remit-modal>Remit</button>
-                    </div>
-                </div>
-                <div class="inner-wrapper" data-show-more-details-field-exp>
-                    <div class="expandable">
-                        <div class="box">
-                            <p>Amount Collected</p>
-                            <p>350.00</p>
-                        </div>
-                        <div class="box">
-                            <p>Savings</p>
-                            <p>350.00</p>
-                        </div>
-                        <div class="box">
-                            <p>Lapse/Advance</p>
-                            <p>350.00</p>
+                    <div class="inner-wrapper" data-show-more-details-field-exp>
+                        <div class="expandable">
+                            <div class="box">
+                                <p>Amount Collected</p>
+                                <p>350.00</p>
+                            </div>
+                            <div class="box">
+                                <p>Savings</p>
+                                <p>350.00</p>
+                            </div>
+                            <div class="box">
+                                <p>Lapse/Advance</p>
+                                <p>350.00</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="inner-container">
-                <div class="inner-wrapper">
-                    <div class="box">
-                        <img src="/res/assets/icons/sample-dp/Borrower-1.svg" alt="Display Picture">
-                    </div>
-                    <div class="box">
-                        <p>Juana Dela Cruz</p>
-                        <p>Client No: <span>1</span></p>
-                        <p>Collectible: <span>350.00</span></p>
-                    </div>
-                    <div class="box">
-                        <button class="button-2" data-open-remit-modal>Remit</button>
-                    </div>
-                </div>
-                <div class="inner-wrapper" data-show-more-details-field-exp>
-                    <div class="expandable">
-                        <div class="box">
-                            <p>Amount Collected</p>
-                            <p>350.00</p>
-                        </div>
-                        <div class="box">
-                            <p>Savings</p>
-                            <p>350.00</p>
-                        </div>
-                        <div class="box">
-                            <p>Lapse/Advance</p>
-                            <p>350.00</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                @endforeach 
+            @endif            
         </div>
 
         <div class="mobile-total-remittance-footer" data-total-remittance-footer-mobile>
