@@ -12,4 +12,12 @@ class NotificationController extends Controller
         $noti = $noti->json();
         return view('notifications', ['noti' => $noti]);
     }
+
+    public function getnoticount(){
+        $noti = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Notification/NotificationCount');     
+        $noti = $noti->json();
+
+        session()->put('noti_count', $noti); 
+        return $noti;
+    }
 }

@@ -284,6 +284,7 @@
                 $profilepic = session()->get('auth_profile');
             @endphp
             <img onclick="showNoti()" style="cursor: pointer;" src="{{ URL::to('/') }}/assets/icons/bell.svg" alt="Bell" />
+            <span id="noti-count" style="{{ session()->get('noti_count') == '0' || session()->get('noti_count') == '' ? 'display: none' : '' }}">{{ session()->get('noti_count') }}</span>
             @if(file_exists(public_path('storage/users_profile/'.$profilepic)))                                  
                 <img src="{{ asset('storage/users_profile/'.$profilepic) }}" alt="upload-image" style="height: 5rem; width: 5rem; cursor: pointer;  border-radius: 50%" id="profileImg" onclick="openProfile()"/>                                                                                                                 
             @else
@@ -339,7 +340,25 @@
                 xmlhttp.send();
             }
         }
-        
+    
+        var intervalId = window.setInterval(function(){
+            //  
+            var notihttp = new XMLHttpRequest();
+            notihttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    if( this.responseText == 0 || this.responseText == '' ){
+                        document.getElementById("noti-count").style.visibility = 'hidden';    
+                    }
+                    else{
+                        document.getElementById("noti-count").innerHTML = this.responseText; 
+                        document.getElementById("noti-count").style.visibility = 'visible';       
+                    }                  
+                }
+            }
+            notihttp.open("GET", "{{ URL::to('/getnoticount') }}", true);
+            notihttp.send();
+        }, 5000);
+                
     </script>
     </main>
     @livewireScripts  

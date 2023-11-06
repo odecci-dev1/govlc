@@ -1216,8 +1216,7 @@ class CreateApplication extends Component
                     "naid"=> $this->naID
                 ];
 
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').' /api/Approval/DeclineLoans', $data); 
-        //dd($crt);                   
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').' /api/Approval/DeclineLoans', $data);                      
         return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application has been declined', 'mword'=> 'Success']);
     }
 
@@ -1399,17 +1398,18 @@ class CreateApplication extends Component
 
     public function getLoanHistory(){         
         $loanhistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                 
-        $loanhistory = $loanhistory->json();
-        //dd($this->searchedmemId);
-       
-        $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['memid' => $this->searchedmemId]);                 
-        $paymenthistory = $paymenthistory->json();
-        
-        if($loanhistory){
-            $this->loanhistory = collect($loanhistory);                        
-        }
-        if($paymenthistory){
-            $this->paymenthistory = collect($paymenthistory);          
+        $apiresp = $loanhistory->getStatusCode();
+        if($apiresp != 400){
+            $loanhistory = $loanhistory->json();                
+            $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['memid' => $this->searchedmemId]);                 
+            $paymenthistory = $paymenthistory->json();
+            
+            if($loanhistory){
+                $this->loanhistory = collect($loanhistory);                        
+            }
+            if($paymenthistory){
+                $this->paymenthistory = collect($paymenthistory);          
+            }
         }
     }    
 

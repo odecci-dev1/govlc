@@ -14158,5 +14158,16 @@ Date: 10-03-2023
   font-size: 1.3rem;
 }
 
+#noti-count{
+  color: red; font-size: 1rem;
+  position: fixed;
+  color: #fff;
+  background-color: red;
+  border-radius: 50%;
+  padding: 0.5rem;
+  font-weight: bolder;
+  right: 14.8rem;
+  top: 2.6rem;
+}
 /*# sourceMappingURL=app.css.map */
 

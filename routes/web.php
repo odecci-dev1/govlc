@@ -56,10 +56,11 @@ Route::get('/', function () {
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 Route::get('/getnoti', [NotificationController::class, 'notifications']);
+Route::get('/getnoticount', [NotificationController::class, 'getnoticount']);
 
 Route::middleware(['authenticated'])->group(function () {
 
-Route::get('/dashboard', function(){
+Route::get('/dashboard', function(){   
     return view('dashboard');
 })->name('dashboard');
 

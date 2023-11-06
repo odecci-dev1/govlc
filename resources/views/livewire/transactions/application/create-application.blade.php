@@ -2975,24 +2975,7 @@
 
         // * Decline Application Modal
         // ***** Modal with Submit Button redirect to another page ***** //
-        function submitModalFunction(open, close, submit, modal, url) {
-            open.addEventListener('click', () => {
-                modal.showModal()
-            })
-
-            close.addEventListener('click', () => {
-                modal.setAttribute("closing", "");
-                modal.addEventListener("animationend", () => {
-                    modal.removeAttribute("closing")
-                    modal.close()
-                }, { once: true })
-            
-            })
-
-            // submit.addEventListener("click", () => {
-            //     location.href = url
-            // })
-        }
+   
 
         const declineApplicationModal = document.querySelector('[data-application-decline-modal]')
 
@@ -3002,12 +2985,37 @@
             const submitDeclineReason = document.querySelector('[data-submit-decline-reason]')
             url = 'new-application.html'
 
-            submitModalFunction(
+           
+             
+            if(openDeclineApplicationModal){  
+                
+                submitModalFunction(
                 openDeclineApplicationModal, 
                 closeDeclineApplicationModal,
                 submitDeclineReason,
                 declineApplicationModal,
                 url)
+
+                
+                function submitModalFunction(open, close, submit, modal, url) {
+                open.addEventListener('click', () => {
+                    modal.showModal()
+                })
+
+                close.addEventListener('click', () => {
+                    modal.setAttribute("closing", "");
+                    modal.addEventListener("animationend", () => {
+                        modal.removeAttribute("closing")
+                        modal.close()
+                    }, { once: true })
+                
+                })
+            }
+
+            // submit.addEventListener("click", () => {
+            //     location.href = url
+            // })
+        }    
 
         }
         
