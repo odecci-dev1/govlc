@@ -5,7 +5,7 @@
     @endif
     <livewire:modals.new-application-modal  :type="''" :mid="isset($id) ? $id : ''"/> 
     <!-- modals -->
-
+    <!-- <x-error-dialog :message="'Operation Failed. Retry'" :xmid="''" :confirmaction="session('erroraction')" :header="'Error'"></x-error-dialog>        -->
     <!-- * Filter Modal -->
     <dialog class="am-filter-modal" data-filter-member-modal wire:ignore.self>
 

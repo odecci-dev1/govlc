@@ -5,11 +5,11 @@
     @if(session('mmessage'))
         <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif
+
+    <!-- <x-error-dialog :message="'Operation Failed. Retry'" :xmid="''" :confirmaction="session('erroraction')" :header="'Error'"></x-error-dialog>        -->
+    
     @if($showDialog == 1)
         <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
-    @endif
-    @if($showDialog == 1)
-        <x-asking-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-asking-dialog>   
     @endif
 
     <div wire:loading  wire:loading.delay wire:target="store,imgprofile,member.attachments,membusinfo.attachments,addBusinessInfo,imgcoprofile,comaker.attachments,imgmemsign,imgcosign,resetmembusinfo" class="full-screen-div-loading">
@@ -2903,6 +2903,14 @@
         document.addEventListener('livewire:load', function () {
             window.showAskingDialog = function(){              
                 @this.call('showAskingDialog');        
+            };
+
+            window.store = function(type){                  
+                @this.call('store', type);        
+            };
+
+            window.update = function(type){                                 
+                @this.call('update', type);        
             };
 
             const dataNewGroupModal = document.querySelector('[data-new-group-modal]')

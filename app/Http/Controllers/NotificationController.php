@@ -14,7 +14,7 @@ class NotificationController extends Controller
     }
 
     public function getnoticount(){
-        $noti = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Notification/NotificationCount');     
+        $noti = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Notification/NotificationCount', ['userid' => session()->get('auth_userid')]);     
         $noti = $noti->json();
 
         session()->put('noti_count', $noti); 

@@ -774,17 +774,24 @@ class CreateApplication extends Component
                     //dd($data);                          
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                //dd( $crt );
-                $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
-                $getlast = $getlast->json();
-                // dd($getlast);   
-                $modules = session()->get('auth_usermodules');
-                $usertype = session()->get('auth_usertype'); 
-                if(in_array('Module-09', $modules) || in_array($usertype, [1,2])){
-                    return redirect()->to('/tranactions/application/view/'.$getlast['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                $apiresp = $crt->getStatusCode();
+                //dito
+                if($apiresp == 200){                    
+                    $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
+                    $getlast = $getlast->json();
+                    // dd($getlast);   
+                    $modules = session()->get('auth_usermodules');
+                    $usertype = session()->get('auth_usertype'); 
+
+                    if(in_array('Module-09', $modules) || in_array($usertype, [1,2])){
+                        return redirect()->to('/tranactions/application/view/'.$getlast['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                    }
+                    else{
+                        return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                    }
                 }
                 else{
-                    return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                    session()->flash('erroraction', 'store(1)');
                 }
             }
             else{              
@@ -1042,7 +1049,14 @@ class CreateApplication extends Component
                     //dd( $data );
                     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                    
                     //dd( $crt);
-                    return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> $type == 1 ? 'Application successfully updated' : 'Application successfully submited for CI', 'mword'=> 'Success']);
+                    $apiresp = $crt->getStatusCode();
+                    //dito
+                    if($apiresp == 200){     
+                        return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> $type == 1 ? 'Application successfully updated' : 'Application successfully submited for CI', 'mword'=> 'Success']);
+                    }
+                    else{
+                        session()->flash('erroraction', 'update('. $type.')');
+                    }
         }
         catch (\Exception $e) {           
             throw $e;            
@@ -1400,7 +1414,8 @@ class CreateApplication extends Component
         $loanhistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                 
         $apiresp = $loanhistory->getStatusCode();
         if($apiresp != 400){
-            $loanhistory = $loanhistory->json();                
+            $loanhistory = $loanhistory->json();  
+            dd( $loanhistory );              
             $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['memid' => $this->searchedmemId]);                 
             $paymenthistory = $paymenthistory->json();
             
@@ -1820,8 +1835,7 @@ class CreateApplication extends Component
                                                       ];    
                     }
                 }
-                //dd( $this->businfo );
-                //dito
+              
                 $motors= $data['assets'];
                 if(count($motors) > 0){
                     $this->hasvehicle = 1;

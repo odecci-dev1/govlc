@@ -32,8 +32,10 @@ class LoginController extends Controller
                 session()->put('auth_id', $data['id']);     
                 session()->put('auth_profile', $data['profilePath']);  
                 
-                $noti = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Notification/NotificationCount');     
+                $noti = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Notification/NotificationCount', ['userid' => session()->get('auth_userid')]);     
+                // dd( $noti );
                 $noti = $noti->json();
+                
 
                 session()->put('noti_count', $noti);  
                             

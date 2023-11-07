@@ -14169,5 +14169,15 @@ Date: 10-03-2023
   right: 14.8rem;
   top: 2.6rem;
 }
+
+.alert-container{
+  width: 30%; 
+  background-color: #FFFFFF; 
+  margin:auto;
+  margin-top: 10%;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
+  padding: 10px;
+}
 /*# sourceMappingURL=app.css.map */
 
