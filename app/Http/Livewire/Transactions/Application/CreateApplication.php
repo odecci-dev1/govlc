@@ -791,7 +791,8 @@ class CreateApplication extends Component
                     }
                 }
                 else{
-                    session()->flash('erroraction', 'store(1)');
+                    session()->flash('erroraction', 'store(1)');                   
+                    $this->emit('EMIT_ERROR_ASKING_DIALOG');
                 }
             }
             else{              
@@ -1056,6 +1057,7 @@ class CreateApplication extends Component
                     }
                     else{
                         session()->flash('erroraction', 'update('. $type.')');
+                        $this->emit('EMIT_ERROR_ASKING_DIALOG');
                     }
         }
         catch (\Exception $e) {           
@@ -1097,7 +1099,7 @@ class CreateApplication extends Component
                         'note' => isset($this->loanDetails['notes']) ? $this->loanDetails['notes'] : '',
                         'approvedby' => session()->get('auth_userid'),
                         'naid' => $this->naID,
-                        'approvedReleasingAmount' => $this->loanDetails['total_LoanReceivable'],
+                        'approvedReleasingAmount' => $this->loanDetails['loanAmount'],
                         'approvedNotarialFee' => $this->loanDetails['notarialFee'],
                         'approveedInterest' => $this->loanDetails['total_InterestAmount'],
                         'approvedAdvancePayment' => $this->loanDetails['advancePayment'],
@@ -1344,7 +1346,6 @@ class CreateApplication extends Component
         $this->resetmembusinfo();                        
     }
 
-    //dito
     public function editBusinessInfo($cnt){    
         $businfo = $this->businfo[$cnt];      
         $this->membusinfo['cnt']  = $cnt;
@@ -1414,10 +1415,9 @@ class CreateApplication extends Component
         $loanhistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                 
         $apiresp = $loanhistory->getStatusCode();
         if($apiresp != 400){
-            $loanhistory = $loanhistory->json();  
-            dd( $loanhistory );              
+            $loanhistory = $loanhistory->json();                             
             $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['memid' => $this->searchedmemId]);                 
-            $paymenthistory = $paymenthistory->json();
+            $paymenthistory = $paymenthistory->json();  
             
             if($loanhistory){
                 $this->loanhistory = collect($loanhistory);                        
@@ -1431,6 +1431,36 @@ class CreateApplication extends Component
     public function resetLoanHistory(){
         $this->loanhistory = collect([]); 
         $this->paymenthistory = collect([]);            
+    }
+
+    public function computeLoanAmount(){      
+        $data = [
+            "naid"=> $this->naID,
+            "loanamount"=> $this->member['statusID'] == 8 ? $this->member['loanAmount'] : $this->loanDetails['loanAmount'],
+            "loantype"=> $this->loanDetails['loanTypeID'],          
+        ];
+        $compute = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanSummary/GetLoanSummaryComputation', $data);       
+        $computed = !empty($compute->json()[0]) ? $compute->json()[0] : [];
+        if(!empty($computed)){
+            //dd($computed);
+            $this->loanDetails['totalSavingsAmount'] = $computed['totalSavingsAmount'];
+            $this->loanDetails['notarialFee'] = $computed['notarialFee'];
+            $this->loanDetails['advancePayment'] = $computed['advancePayment'];
+            $this->loanDetails['total_InterestAmount'] = $computed['total_InterestAmount'];
+            $this->loanDetails['total_LoanReceivable'] = $computed['total_LoanReceivable'];
+            $this->loanDetails['dailyCollectibles'] = $computed['dailyCollectibles'];
+        }
+        $this->ChangeLoanAmount();
+    }
+
+    public function ChangeLoanAmount(){
+        $data = [
+                    "approvedLoanAmount"=> $this->member['statusID'] == 8 ? $this->member['loanAmount'] : $this->loanDetails['loanAmount'],
+                    "topId"=> $this->loanDetails['topId'],
+                    "ldid"=> $this->loanDetails['ldid'],
+                    "userId"=> session()->get('auth_userid')
+                ];
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Approval/ChangeLoanAmount', $data);       
     }
 
     public function mount($type = 'create', Request $request){
@@ -1603,7 +1633,7 @@ class CreateApplication extends Component
                 $this->loanDetails['loantermsName'] = $data['individualLoan'][0]['nameOfTerms'];  
                 //if($data['applicationStatus'] >= 9){
                     $this->loanDetails['loanType'] = isset($data['individualLoan'][0]['loanType']) ? $data['individualLoan'][0]['loanType'] : '';                  
-                    $this->loanDetails['loanAmount'] = $data['individualLoan'][0]['loanAmount'];
+                    $this->loanDetails['loanAmount'] = $data['individualLoan'][0]['approvedLoanAmount'];
                     $this->loanDetails['purpose'] = $data['purpose'];
                     //$this->loanDetails['terms'] = $data['termsOfPayment']; //$data['individualLoan'][0]['terms'];
                                     
@@ -1763,7 +1793,7 @@ class CreateApplication extends Component
                 $this->member['f_CompanyName'] = $data['f_CompanyName']; 
                 $this->member['f_RTTB'] = $data['f_RTTB'];    
                 $this->member['famId'] = $data['famId'];     
-                $this->member['loanAmount'] = isset($data['individualLoan'][0]['loanAmount']) ? $data['individualLoan'][0]['loanAmount'] : 0; //$data['loanAmount'];  cant find in api
+                $this->member['loanAmount'] = !empty($data['individualLoan'][0]['approvedLoanAmount']) ? $data['individualLoan'][0]['approvedLoanAmount'] : $data['individualLoan'][0]['loanAmount']; //$data['loanAmount'];  cant find in api
                 $this->member['termsOfPayment'] = $data['individualLoan'][0]['nameOfTerms'];
                 $this->member['purpose'] = $data['purpose'];                
            

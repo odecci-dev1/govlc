@@ -36,17 +36,19 @@
                                 <th>Penalty</th>
                                 <th>Outstanding Balance</th>
                                 <th>Date Released</th>
-                                <th>Due Date</th>                               
+                                <th>Due Date</th>     
+                                <th>Status</th>                               
                             </tr>
                             @if($loanhistory)
                                 @foreach($loanhistory as $loanhistory)
                                 <tr>
                                     <td>{{ $loanhistory['loanPrincipal'] }}</td>                                  
                                     <td>{{ $loanhistory['totalSavingsAmount'] }}</td>
-                                    <td>{{ $loanhistory['pastDue'] }}</td>
+                                    <td>{{ $loanhistory['penalty'] }}</td>
                                     <td>{{ $loanhistory['amountDue'] }}</td>
                                     <td>{{ $loanhistory['releasingDate'] }}</td>
-                                    <td>{{ $loanhistory['dueDate'] }}</td>                                    
+                                    <td>{{ date('m-d-Y', strtotime($loanhistory['dueDate'])) }}</td>   
+                                    <td>status</td>                                      
                                 </tr>   
                                 @endforeach
                             @endif                        
@@ -98,9 +100,9 @@
                                         <td>{{ $paymenthistory['amountDue'] }}</td>
                                         <td>{{ $paymenthistory['collectedAmount'] }}</td>
                                         <td>{{ $paymenthistory['fieldOfficer'] }}</td>
-                                        <td>{{ $paymenthistory['dateOfFullPayment'] }}</td>
+                                        <td>{{ date('m-d-Y', strtotime($paymenthistory['dateOfFullPayment'])) }}</td>
                                         <td>{{ $paymenthistory['payment_Method'] }}</td>
-                                        <td> </td>               
+                                        <td>{{ $paymenthistory['penalty'] }}</td>
                                     </tr>   
                                     @endforeach
                                 @endif                                         

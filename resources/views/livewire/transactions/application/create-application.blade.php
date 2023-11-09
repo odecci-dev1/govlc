@@ -6,13 +6,13 @@
         <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif
 
-    <!-- <x-error-dialog :message="'Operation Failed. Retry'" :xmid="''" :confirmaction="session('erroraction')" :header="'Error'"></x-error-dialog>        -->
+    <x-error-dialog :message="'Operation Failed. Retry'" :xmid="''" :confirmaction="session('erroraction') ? session('erroraction') : ''" :header="'Error'"></x-error-dialog>       
     
     @if($showDialog == 1)
         <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
     @endif
 
-    <div wire:loading  wire:loading.delay wire:target="store,imgprofile,member.attachments,membusinfo.attachments,addBusinessInfo,imgcoprofile,comaker.attachments,imgmemsign,imgcosign,resetmembusinfo" class="full-screen-div-loading">
+    <div wire:loading  wire:loading.delay wire:target="store, update,imgprofile,member.attachments,membusinfo.attachments,addBusinessInfo,imgcoprofile,comaker.attachments,imgmemsign,imgcosign,resetmembusinfo" class="full-screen-div-loading">
         <div class="center-loading-container">
             <div>
                 <div class="lds-dual-ring"></div>
@@ -326,7 +326,7 @@
             <!-- * Loan Amount -->
             <div class="input-wrapper">
                 <span>Loan Amount</span>
-                <input wire:model.lazy="loanDetails.loanAmount" {{ $type != 'details' ? '' : 'disabled' }} type="text" >
+                <input wire:model.lazy="loanDetails.loanAmount" wire:blur="computeLoanAmount" {{ in_array($member['statusID'], [9, 10]) ? '' : 'disabled' }} class="{{ in_array($member['statusID'], [9, 10]) ? 'inpt-editable' : '' }}" {{ $type != 'details' ? '' : 'disabled' }} type="text" >
                 @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror
                 <!-- dito -->
             </div>
@@ -336,7 +336,7 @@
             <div class="input-wrapper">
                 <span>Terms of Payment</span>
                 <div class="select-box">
-                    <select  wire:model="loanDetails.topId" {{ in_array($member['statusID'], [10, 15]) ? 'disabled' : '' }} class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }} select-option">                                                              
+                    <select  wire:model="loanDetails.topId" disabled class="select-option">                                                              
                         <option value="">- - select - -</option>     
                         @if(isset($termsOfPaymentList))
                             @foreach($termsOfPaymentList as $topList)
@@ -959,7 +959,7 @@
                             @if(isset($member['attachments']))
                                 @if($member['attachments'] == $member['old_attachments'])                            
                                     @foreach($member['attachments'] as $attachments)                                                     
-                                        <div type="button" class="fileButton">
+                                        <!-- <div type="button" class="fileButton">
                                             <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">                                           
                                             @if(file_exists(public_path('storage/members_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
                                                 @php
@@ -971,17 +971,42 @@
                                                     {{ strlen($filename) > 10 ? strtolower(substr($filename, 0, 10)) . '...' : $filename }}
                                                 </a>                                               
                                             @endif                                
-                                        </div>                                        
+                                        </div>                                         -->
+                                                                           
+                                            @if(file_exists(public_path('storage/members_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
+                                                @php
+                                                    $getfilename = $attachments['filePath'];
+                                                    $filenamearray = explode("_", $getfilename);
+                                                    $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
+                                                @endphp                                               
+                                                <a href="{{ asset('storage/members_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
+                                                    <div type="button" class="fileButton">
+                                                        <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">      
+                                                        {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
+                                                    </div>    
+                                                </a> 
+                                            @else    
+                                                    @php 
+                                                        $filename = 'File is deleted';
+                                                    @endphp 
+                                                    <a href="#" title="{{ $filename }}" target="_blank">                                                                                              
+                                                        <div type="button" class="fileButton">
+                                                        <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
+                                                        {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
+                                                        </div>    
+                                                    </a>                                                    
+                                            @endif                                
+                                      
                                     @endforeach
                                 @else
                                     @if(isset($member['attachments']))                            
-                                        @foreach($member['attachments'] as $attachments)                                                     
-                                            <div type="button" class="fileButton">
-                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                        @foreach($member['attachments'] as $attachments)                                                                                                
                                                 <a href="{{ $attachments->path() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
-                                                    {{ strlen($attachments->getClientOriginalName()) > 10 ? strtolower(substr($attachments->getClientOriginalName(), 0, 10)) . '...' : $attachments->getClientOriginalName() }}
-                                                </a>                                       
-                                            </div>
+                                                    <div type="button" class="fileButton">
+                                                        <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                        {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
+                                                    </div>
+                                                </a>                                                                                   
                                             <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
                                         @endforeach
                                     @endif   
@@ -989,11 +1014,13 @@
                                 
                             @else
                                 @if(isset($member['attachments']))                            
-                                    @foreach($member['attachments'] as $attachments)                                                     
-                                        <div type="button" class="fileButton">
-                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                            <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>                                       
-                                        </div>
+                                    @foreach($member['attachments'] as $attachments)                                                                                         
+                                            <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">
+                                                <div type="button" class="fileButton">
+                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                    {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
+                                                </div>
+                                            </a>                                                                             
                                         <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
                                     @endforeach
                                 @endif   
@@ -2161,7 +2188,7 @@
                 <!-- * Applied Loan Amount -->
                 <div class="input-wrapper">
                     <span>Applied Loan Amount</span>
-                    <input wire:model.lazy="member.loanAmount" {{ in_array($member['statusID'], [7,8]) && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="member.loanAmount" wire:blur="computeLoanAmount" {{ in_array($member['statusID'], [7,8]) && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
                     @error('member.loanAmount') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2453,8 +2480,7 @@
                                 @if(isset($comaker['attachments']))
                                     @if($comaker['attachments'] == $comaker['old_attachments'])                            
                                         @foreach($comaker['attachments'] as $attachments)                                                     
-                                            <div type="button" class="fileButton">
-                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">                                           
+                                                                             
                                                 @if(file_exists(public_path('storage/comakers_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
                                                     @php
                                                         $getfilename = $attachments['filePath'];
@@ -2462,20 +2488,33 @@
                                                         $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
                                                     @endphp                                               
                                                     <a href="{{ asset('storage/comakers_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
-                                                        {{ strlen($filename) > 10 ? strtolower(substr($filename, 0, 10)) . '...' : $filename }}
-                                                    </a>                                               
+                                                        <div type="button" class="fileButton">
+                                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">          
+                                                            {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
+                                                        </div>     
+                                                    </a>    
+                                                @else
+                                                    @php 
+                                                        $filename = 'File is deleted';
+                                                    @endphp 
+                                                    <a href="#" title="{{ $filename }}" target="_blank">                                                                                              
+                                                        <div type="button" class="fileButton">
+                                                        <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
+                                                        {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
+                                                        </div>    
+                                                    </a>                                            
                                                 @endif                                
-                                            </div>                                        
+                                                                               
                                         @endforeach
                                     @else
                                         @if(isset($comaker['attachments']))                            
-                                            @foreach($comaker['attachments'] as $attachments)                                                     
-                                                <div type="button" class="fileButton">
-                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                            @foreach($comaker['attachments'] as $attachments)                                                                                                    
                                                     <a href="{{ $attachments->path() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
-                                                        {{ strlen($attachments->getClientOriginalName()) > 10 ? strtolower(substr($attachments->getClientOriginalName(), 0, 10)) . '...' : $attachments->getClientOriginalName() }}
-                                                    </a>                                       
-                                                </div>
+                                                        <div type="button" class="fileButton">
+                                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                            {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
+                                                        </div>
+                                                    </a>                                                                                      
                                                 <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
                                             @endforeach
                                         @endif   
@@ -2484,10 +2523,14 @@
                                 @else
                                     @if(isset($comaker['attachments']))                            
                                         @foreach($comaker['attachments'] as $attachments)                                                     
-                                            <div type="button" class="fileButton">
-                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                                <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>                                       
-                                            </div>
+                                           
+                                                <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">
+                                                    <div type="button" class="fileButton">
+                                                        <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                        {{ $attachments->getClientOriginalName() }}
+                                                    </div>
+                                                </a>                                       
+                                            
                                             <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
                                         @endforeach
                                     @endif   
@@ -2940,7 +2983,11 @@
                 window.open(data.url, '_blank');
             });
 
+            window.livewire.on('EMIT_ERROR_ASKING_DIALOG', data =>{
+                document.getElementById('error-asking-dialog-div').style.visibility="visible";
+            });
 
+            
         })
         const openLoanDetailsButton = document.querySelector('#data-open-loan-details')
         const closeLoanDetailsButton = document.querySelector('#data-close-loan-details')

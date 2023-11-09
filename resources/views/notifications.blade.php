@@ -1,4 +1,4 @@
-<div class="div-noti-container">
+<div class="div-noti-container" id="div-noti-container">
     <table style="font-size: 1.4rem;">
         @if(!empty($noti))
             <tr>

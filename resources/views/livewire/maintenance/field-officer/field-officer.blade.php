@@ -233,13 +233,11 @@
                     </div>
 
                     <!-- * File Chips Container -->           
-                    <div class="file-wrapper" style="padding: 2rem 0rem;" data-attach-file-container>                   
+                    <div class="file-wrapper" style="padding: 2rem 0rem;" data-attach-file-container2>                   
                     
                             @if(isset($officer['attachments']))                           
                                 @if($officer['attachments'] == $officer['old_attachments'])                            
-                                    @foreach($officer['attachments'] as $attachments)                                                     
-                                        <div type="button" class="fileButton">
-                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">                                           
+                                    @foreach($officer['attachments'] as $attachments)                                                                                                                                
                                             @if(file_exists(public_path('storage/officer_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
                                                 @php
                                                     $getfilename = $attachments['filePath'];
@@ -247,20 +245,35 @@
                                                     $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
                                                 @endphp                                               
                                                 <a href="{{ asset('storage/officer_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
-                                                    {{ strlen($filename) > 10 ? strtolower(substr($filename, 0, 10)) . '...' : $filename }}
-                                                </a>                                               
+                                                    <div type="button" class="fileButton">
+                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
+                                                    {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
+                                                    </div>    
+                                                </a>   
+                                            @else
+                                                @php 
+                                                    $filename = 'File is deleted';
+                                                @endphp 
+                                                <a href="#" title="{{ $filename }}" target="_blank">                                                                                              
+                                                    <div type="button" class="fileButton">
+                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
+                                                    {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
+                                                    </div>    
+                                                </a>                                      
                                             @endif                                
-                                        </div>                                        
+                                                                           
                                     @endforeach
                                 @else                            
                                     @if(isset($officer['attachments']))                            
                                         @foreach($officer['attachments'] as $attachments)                                                     
-                                            <div type="button" class="fileButton">
-                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                           
                                                 <a href="{{ $attachments->path() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
-                                                    {{ strlen($attachments->getClientOriginalName()) > 10 ? strtolower(substr($attachments->getClientOriginalName(), 0, 10)) . '...' : $attachments->getClientOriginalName() }}
+                                                    <div type="button" class="fileButton">
+                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                    {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
+                                                    </div>
                                                 </a>                                       
-                                            </div>
+                                          
                                             <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
                                         @endforeach
                                     @endif   
@@ -269,10 +282,14 @@
                             @else                              
                                 @if(isset($officer['attachments']))                            
                                     @foreach($officer['attachments'] as $attachments)                                                     
-                                        <div type="button" class="fileButton">
-                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                            <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">{{ $attachments->getClientOriginalName() }}</a>                                       
-                                        </div>
+                                        
+                                            <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">
+                                                <div type="button" class="fileButton">
+                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                    {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
+                                                </div>
+                                            </a>                                       
+                                       
                                         <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
                                     @endforeach
                                 @endif   

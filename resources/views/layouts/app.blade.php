@@ -311,6 +311,7 @@
     <div class="main-dashboard">  
     {{ $slot }}  
     </div>
+    <div class='div-noti hide-me' id='div-noti'></div>
     <script>         
         window.openProfile = function($cnt){                    
             const profileImg = document.getElementById("profileImg");
@@ -324,21 +325,40 @@
         };   
         window.showNoti = function(){      
             
-            var elementExists = document.getElementById("div-noti");
-            if(typeof(elementExists) != 'undefined' && elementExists != null){                
-                elementExists.remove();
-            }
-            else{
-                document.body.innerHTML += "<div class='div-noti' id='div-noti'></div>";
+            var elementExists = document.getElementById("div-noti");    
+            if(elementExists.classList.contains('hide-me')){
+                elementExists.classList.remove('hide-me');
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("div-noti").innerHTML = this.responseText;                   
-                    }
+                        if (this.readyState == 4 && this.status == 200) {
+                            elementExists.innerHTML = this.responseText;                   
+                        }
                 }
                 xmlhttp.open("GET", "{{ URL::to('/getnoti') }}", true);
                 xmlhttp.send();
             }
+            else{
+                elementExists.classList.add('hide-me');
+                const notielement = document.getElementById("div-noti-container");
+                notielement.remove();
+                //elementExists.innerHTML = "";  
+            }
+           
+
+            // if(typeof(elementExists) != 'undefined' && elementExists != null){                
+            //     elementExists.remove();
+            // }
+            // else{
+            //     document.body.innerHTML += "";
+            //     var xmlhttp = new XMLHttpRequest();
+            //     xmlhttp.onreadystatechange = function() {
+            //         if (this.readyState == 4 && this.status == 200) {
+            //             document.getElementById("div-noti").innerHTML = this.responseText;                   
+            //         }
+            //     }
+            //     xmlhttp.open("GET", "{{ URL::to('/getnoti') }}", true);
+            //     xmlhttp.send();
+            // }
         }
     
         var intervalId = window.setInterval(function(){
