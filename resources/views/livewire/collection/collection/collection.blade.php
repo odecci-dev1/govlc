@@ -130,18 +130,23 @@
                     $sumDetails = $areaDetails->where('areaID', $areaID)->sum('collectedAmount');                                
                 @endphp
                 @if($countDetails > 0)
-                <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
-                <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
-            
-                <button type="button" wire:click="print" class="button-2" data-collection-print-button>Print</button>
-                @if($checkArea)
-                    @if(in_array('Module-07', $modules))
-                    <a href="{{ URL::to('/') }}/collection/remittance/{{ $checkArea['area_RefNo'] }}" class="button-2" data-collection-remit-button>Remit</a>
+                    @if($checkArea)
+                        @if(!in_array($checkArea['area_RefNo'], ['PENDING', '']))
+                        <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
+                        <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
+                        @endif                    
                     @endif
-                    @if($checkArea['collection_RefNo'] != 'PENDING')
-                        
-                    @endif
-                @endif                
+                    <!-- $checkArea ? (!in_array($checkArea['area_RefNo'], ['PENDING', '']) -->
+                
+                    <button type="button" wire:click="print" class="button-2" data-collection-print-button>Print</button>
+                
+                    @if($checkArea)
+                        @if(!in_array($checkArea['area_RefNo'], ['PENDING', '']))
+                            @if(in_array('Module-07', $modules))
+                            <a href="{{ URL::to('/') }}/collection/remittance/{{ $checkArea['area_RefNo'] }}" class="button-2" data-collection-remit-button>Remit</a>
+                            @endif  
+                        @endif                 
+                    @endif                
                 @endif
              </div>
 

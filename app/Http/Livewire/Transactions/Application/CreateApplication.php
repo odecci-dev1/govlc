@@ -1434,23 +1434,25 @@ class CreateApplication extends Component
     }
 
     public function computeLoanAmount(){      
-        $data = [
-            "naid"=> $this->naID,
-            "loanamount"=> $this->member['statusID'] == 8 ? $this->member['loanAmount'] : $this->loanDetails['loanAmount'],
-            "loantype"=> $this->loanDetails['loanTypeID'],          
-        ];
-        $compute = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanSummary/GetLoanSummaryComputation', $data);       
-        $computed = !empty($compute->json()[0]) ? $compute->json()[0] : [];
-        if(!empty($computed)){
-            //dd($computed);
-            $this->loanDetails['totalSavingsAmount'] = $computed['totalSavingsAmount'];
-            $this->loanDetails['notarialFee'] = $computed['notarialFee'];
-            $this->loanDetails['advancePayment'] = $computed['advancePayment'];
-            $this->loanDetails['total_InterestAmount'] = $computed['total_InterestAmount'];
-            $this->loanDetails['total_LoanReceivable'] = $computed['total_LoanReceivable'];
-            $this->loanDetails['dailyCollectibles'] = $computed['dailyCollectibles'];
-        }
-        $this->ChangeLoanAmount();
+        //if(!empty($this->naID)){
+            $data = [
+                "naid"=> $this->naID,
+                "loanamount"=> $this->member['statusID'] == 8 ? $this->member['loanAmount'] ??= 0 : $this->loanDetails['loanAmount'] ??= 0,
+                "loantype"=> $this->loanDetails['loanTypeID'],          
+            ];
+            $compute = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanSummary/GetLoanSummaryComputation', $data);       
+            $computed = !empty($compute->json()[0]) ? $compute->json()[0] : [];
+            if(!empty($computed)){
+                //dd($computed);
+                $this->loanDetails['totalSavingsAmount'] = $computed['totalSavingsAmount'];
+                $this->loanDetails['notarialFee'] = $computed['notarialFee'];
+                $this->loanDetails['advancePayment'] = $computed['advancePayment'];
+                $this->loanDetails['total_InterestAmount'] = $computed['total_InterestAmount'];
+                $this->loanDetails['total_LoanReceivable'] = $computed['total_LoanReceivable'];
+                $this->loanDetails['dailyCollectibles'] = $computed['dailyCollectibles'];
+            }
+        //}
+        // $this->ChangeLoanAmount();
     }
 
     public function ChangeLoanAmount(){
