@@ -143,7 +143,7 @@
                     @if($checkArea)
                         @if(!in_array($checkArea['area_RefNo'], ['PENDING', '']))
                             @if(in_array('Module-07', $modules))
-                            <a href="{{ URL::to('/') }}/collection/remittance/{{ $checkArea['area_RefNo'] }}" class="button-2" data-collection-remit-button>Remit</a>
+                                <a href="{{ URL::to('/') }}/collection/remittance/{{ $checkArea['area_RefNo'] }}" class="button-2" data-collection-remit-button>Remit</a>
                             @endif  
                         @endif                 
                     @endif                
