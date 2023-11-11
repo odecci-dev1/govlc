@@ -655,8 +655,7 @@ class CreateApplication extends Component
             //         $attachments->storeAs('public/members_attachments', $filename);   
             //         $memattachements[] = [ 'fileName' =>  $filename, 'filePath' => $filename ];
             //     }
-            // }
-           
+            // }           
 
             $data = [[          "fname"=> $input['member']['fname'] ??= '',
                                 "lname"=> $input['member']['lname'] ??= '',
@@ -771,26 +770,34 @@ class CreateApplication extends Component
                     ]];
       
                     //$extension = $request->file('filename')->getClientOriginalExtension();
-                    //dd($data);                          
+                    //dd($data);        
+                
             if($this->type == 'create'){                            
-                $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);  
-                $apiresp = $crt->getStatusCode();
-                //dito
-                if($apiresp == 200){                    
-                    $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
-                    $getlast = $getlast->json();
-                    // dd($getlast);   
-                    $modules = session()->get('auth_usermodules');
-                    $usertype = session()->get('auth_usertype'); 
+                $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);                                                                        
+                $apiresp = $crt->getStatusCode();                
+                if($apiresp == 200){     
+                    if($crt->json()['status'] == 'ERROR'){
+                        session()->flash('errmmessage', $crt->json()['result']);        
+                    }   
+                    else{         
+                        // $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
+                        // $getlast = $getlast->json();
+                        //dd($getlast);   
+                        $modules = session()->get('auth_usermodules');
+                        $usertype = session()->get('auth_usertype'); 
 
-                    if(in_array('Module-09', $modules) || in_array($usertype, [1,2])){
-                        return redirect()->to('/tranactions/application/view/'.$getlast['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
-                    }
-                    else{
-                        return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                        if(in_array('Module-09', $modules) || in_array($usertype, [1,2])){
+                            $this->resetValidation();         
+                            return redirect()->to('/tranactions/application/view/'.$crt->json()['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                        }
+                        else{
+                            $this->resetValidation();         
+                            return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                        }
                     }
                 }
                 else{
+                    $this->resetValidation();         
                     session()->flash('erroraction', 'store(1)');                   
                     $this->emit('EMIT_ERROR_ASKING_DIALOG');
                 }
@@ -819,8 +826,7 @@ class CreateApplication extends Component
             throw $e;            
         }
     }
-
-    //dito
+   
     public function storeBusinessInfoAttachments($oldattachments, $businessattachments){
         $memattachements = [];            
         if($businessattachments == $oldattachments){
@@ -1048,10 +1054,10 @@ class CreateApplication extends Component
                     // $extension = $request->file('filename')->getClientOriginalExtension();                    
                     //dd( json_encode($data));
                     //dd( $data );
+                    $this->resetValidation();  
                     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                    
                     //dd( $crt);
-                    $apiresp = $crt->getStatusCode();
-                    //dito
+                    $apiresp = $crt->getStatusCode();             
                     if($apiresp == 200){     
                         return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> $type == 1 ? 'Application successfully updated' : 'Application successfully submited for CI', 'mword'=> 'Success']);
                     }
@@ -1107,9 +1113,10 @@ class CreateApplication extends Component
                         'naid' => $this->naID,
                         'approvedReleasingAmount' => $this->loanDetails['loanAmount'],
                         'approvedNotarialFee' => $this->loanDetails['notarialFee'],
-                        'approveedInterest' => $this->loanDetails['total_InterestAmount'],
                         'approvedAdvancePayment' => $this->loanDetails['advancePayment'],
+                        'approveedInterest' => $this->loanDetails['total_InterestAmount'],                       
                         'approvedDailyAmountDue' => $this->loanDetails['dailyCollectibles'],
+                        'loanAmount' => $this->loanDetails['loanAmount'],
                         'topId' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],
                         'courier' => '',
                         'courierName' => '',
@@ -1118,7 +1125,7 @@ class CreateApplication extends Component
                         'modeOfReleaseReference' => '', 
                         'totalSavingsUsed' => $this->loanDetails['totalSavingsAmount'] != '' ? $this->loanDetails['totalSavingsAmount'] : 0,                             
                     ];
-            //dd($data);        
+
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Approval/ApproveReleasing', $data);          
             //dd($crt);
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully approve for releasing', 'mword'=> 'Success']);
@@ -1620,7 +1627,7 @@ class CreateApplication extends Component
         }
         else if($this->type == 'view' || $this->type == 'details'){
             $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
-            //dd($value);
+            //dd(session()->get('auth_userid'));
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    

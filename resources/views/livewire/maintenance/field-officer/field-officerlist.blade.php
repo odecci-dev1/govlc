@@ -1,4 +1,4 @@
-<div>
+<div class="main-dashboard">
     @if($showDialog == 1)
         <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
     @endif
@@ -45,7 +45,7 @@
             </div>
 
             <!-- * Container 2: Maintenance Field Officer Table and Pagination -->
-            <div class="m-con-2 min-height">
+            <div class="m-con-2 min-height" style="min-height:clamp(100% - 17rem, 40rem, 80vh)">
 
                 <!-- * Table Container -->
                 <div class="table-container">
@@ -56,8 +56,7 @@
                         <!-- * Table Header -->
                         <tr>
 
-                            <!-- * Number -->
-                            <th></th>
+                            <!-- * Number -->                         
 
                             <!-- * Name -->
                             <th>
@@ -94,7 +93,7 @@
                             </th>
 
                             <!-- * Action -->
-                            <th>
+                            <th style="width: 1%; text-align:center; padding: 1rem 0;">
                                 <span class="th-name">Action</span>
                             </th>
                         </tr>
@@ -106,9 +105,7 @@
                             <tr>
 
                                 <!-- * Number -->
-                                <td>
-                                    <span class="td-num-out"></span>
-                                </td>
+                               
 
                                 <!-- * Officer Name -->
                                 <td>
@@ -137,8 +134,8 @@
                                 </td>
 
                                 <!-- * Area -->
-                                <td class="td-area">
-                                    unassigned
+                                <td class="td-area" title="{{ $l['arealists'] }}">                                  
+                                    {{ strlen( $l['arealists'] ) > 23 ? substr( $l['arealists'], 0, 23) . '...' :  $l['arealists'] }}
                                 </td>
 
                                 <!-- * Action -->
@@ -160,20 +157,20 @@
 
                 <!-- * Pagination Container -->
                 @if(isset($list))
-                @if(count($list) > 25)
-                <div class="pagination-container">
+                    @if(count($list) > 25)
+                        <div class="pagination-container">
 
-                    <!-- * Pagination Links -->
-                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
-                    <a href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
+                            <!-- * Pagination Links -->
+                            <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
+                            <a href="#">1</a>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            <a href="#">5</a>
+                            <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
 
-                </div>
-                @endif
+                        </div>
+                    @endif
                 @endif
 
             </div>

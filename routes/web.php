@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NotificationController;
@@ -35,7 +34,7 @@ use App\Http\Livewire\Reports\CollectionReport\CollectionReport;
 use App\Http\Livewire\Reports\PastDueReport\PastDueReport;
 use App\Http\Livewire\Reports\SavingsReport\SavingsReport;
 use App\Http\Livewire\Settings\Settings;
-use App\Http\Livewire\Notifications\Notifications;
+use App\Http\Livewire\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,9 +46,7 @@ use App\Http\Livewire\Notifications\Notifications;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-// dd(session()->get('auth_usermodules'));
 Route::get('/', function () {
-    // return redirect()->intended(route('dashboard'));
     return view('login');
 });
 
@@ -60,13 +57,7 @@ Route::get('/getnoticount', [NotificationController::class, 'getnoticount']);
 
 Route::middleware(['authenticated'])->group(function () {
 
-Route::get('/dashboard', function(){   
-    return view('dashboard');
-})->name('dashboard');
-
-
-Route::get('/test', [DashboardController::class, 'test']);
-Route::get('/posttest', [DashboardController::class, 'posttest']);
+Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
 //members edited
 Route::get('/members', MemberList::class);
@@ -173,7 +164,7 @@ Route::middleware(['access:Module-06'])->group(function () {
 });
 
 Route::middleware(['access:Module-07'])->group(function () {
-    Route::get('/collection/remittance/{areaRefNo}',CollectionRemittance::class);
+    Route::get('/collection/remittance/{foid}/{areaRefNo}',CollectionRemittance::class);
 });
 //collection
 

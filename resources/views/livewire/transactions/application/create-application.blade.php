@@ -1,6 +1,6 @@
 <div >       
     @if(session('errmmessage'))
-        <x-alert :message="session('errmmessage')" :words="'Action not successfull'" :header="'Error'"></x-alert>   
+        <x-error :message="session('errmmessage')" :words="'Action not successfull'" :header="'Error'"></x-error>   
     @endif
     @if(session('mmessage'))
         <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
@@ -218,7 +218,7 @@
                                         <span id="">{{ isset($loansummary['releasedBy']) ? $loansummary['releasedBy'] : 'not found' }}</span>
                                     </div>
                                     <div class="box-inner-wrapper">
-                                        <p>RELEASED THRU CASH</p>
+                                        <p>RELEASED THRU {{ isset($loansummary['modeOfRelease']) ? strtoupper($loansummary['modeOfRelease']) : 'NOT SET' }} {!! ($loansummary['modeOfRelease'] ??='') == 'Check' ? '<br>Check Reference : ' . ($loansummary['modeOfReleaseReference'] ??='') : '' !!}</p>
                                     </div>
                                 </div>
                                 <div class="box-inner">
@@ -326,7 +326,7 @@
             <!-- * Loan Amount -->
             <div class="input-wrapper">
                 <span>Loan Amount</span>
-                <input wire:model.lazy="loanDetails.loanAmount" wire:blur="computeLoanAmount" {{ in_array($member['statusID'], [9, 10]) ? '' : 'disabled' }} class="{{ in_array($member['statusID'], [9, 10]) ? 'inpt-editable' : '' }}" {{ $type != 'details' ? '' : 'disabled' }} type="text" >
+                <input wire:model.lazy="loanDetails.loanAmount" wire:blur="computeLoanAmount" {{ in_array($member['statusID'], [10, 14, 15]) ? 'disabled' : '' }} class="{{ in_array($member['statusID'], [7,8,9]) ? 'inpt-editable' : '' }}" {{ $type != 'details' ? '' : 'disabled' }} type="text" >
                 @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror
                 <!-- dito -->
             </div>
@@ -394,8 +394,7 @@
                 @if($type != 'details')
                 <div class="input-wrapper input-wrapper-release">
                     @if($usertype != 2)
-                        <button type="button" wire:click="completeApplication" class="releaseButton" data-application-complete-button>Complete</button>
-                        <button type="button" wire:click="reprintApplication" class="releaseButton" data-application-complete-button>Reprint</button>
+                        <button type="button" wire:click="completeApplication" class="releaseButton" data-application-complete-button>Complete</button>                        
                     @endif
                 </div>
                 @endif
@@ -446,16 +445,11 @@
             </div>
             @endif
 
-            @if(in_array($member['statusID'], [9]))    
-            <!-- * Change Loan Payment -->
-            <!-- <div class="input-wrapper">
-                <button type="button" class="button">Change Loan Payment</button>
-            </div> -->
-            @else
+            @if($member['statusID'] == 15)
                 @if($type != 'details')
-                <div class="input-wrapper input-wrapper-decline">
+                <div class="input-wrapper input-wrapper-release">
                     @if($usertype != 2)
-                    <button type="button" class="declineButton" data-open-application-decline>Decline</button>
+                        <button type="button" wire:click="reprintApplication" class="releaseButton" data-application-complete-button>Reprint</button>
                     @endif
                 </div>
                 @endif
@@ -488,9 +482,7 @@
              <!-- * Decline Button -->
              @if($member['statusID'] == 9)    
             <div class="input-wrapper input-wrapper-decline">
-                @if($usertype != 2)
-                <button type="button" class="declineButton" data-open-application-decline>Decline</button>
-                @endif
+               
             </div>
             @elseif($member['statusID'] == 10)  
             <!-- <div class="input-wrapper input-wrapper-decline">
@@ -521,7 +513,16 @@
                 <span>Number of Loans</span>
                 <input disabled wire:model.lazy="loanDetails.noofloans" type="number">
             </div>
-             
+            @if(in_array($member['statusID'],[10,15]))
+            <div class="input-wrapper">
+                
+            </div>
+            @endif
+            <div class="input-wrapper input-wrapper-decline" style="align-items: center;">
+                @if($usertype != 2)
+                <button type="button" class="declineButton" data-open-application-decline>Decline</button>
+                @endif
+            </div>
         </div>
 
         <!-- * Rowspan 4: Approved by:, Notes and Decline Button -->

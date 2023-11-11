@@ -23,8 +23,7 @@ class LoginController extends Controller
             $usermodules = [];
 
             if($data){
-                $data = $data[0];  
-                //dd( $data );              
+                $data = $data[0];                     
                 session()->put('auth_usertype', $data['userTypeId']); 
                 session()->put('auth_username', $data['username']); 
                 session()->put('auth_name', $data['lname'] . ', ' . $data['fname'] .' '. mb_substr($data['mname'],0,1) . '.');       
@@ -54,12 +53,17 @@ class LoginController extends Controller
                 }
                 session()->put('auth_usermodules', $usermodules);               
             }   
-            $data['foid'] = 'FO-03'; //delete me api has no foid value yet
+
             if(!empty($data['foid'])){
                 session()->put('auth_remittance_only', 1);                   
-                $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo');  
-                $areaRefNo = $arealist->json()[0]['areaRefNo'] ??= '';                 
-                return redirect('/collection/remittance/'.$areaRefNo);
+                $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo'. [ 'FOID' => $data['foid'] ]);  
+                $areaRefNo = $arealist->json()[0]['areaRefNo'] ??= '';    
+                if(!empty($areaRefNo)){             
+                    return redirect('/collection/remittance/'.$data['foid'].'/'.$areaRefNo);
+                }
+                else{
+                    return redirect('/logout')->with('message', 'You dont have remittance to view.'); 
+                }
             } 
             else{       
                 return redirect('/dashboard');

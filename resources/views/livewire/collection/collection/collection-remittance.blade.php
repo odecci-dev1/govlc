@@ -139,7 +139,7 @@
         <h2>Reference Number</h2>
         <div class="input-wrapper">
             <div class="select-box" style="display: inline;">
-                <select  wire:model="areaRefNo" class="select-option" style="padding-left: 1rem;padding-right: 1rem; margin-top: 1rem;">
+                <select  wire:model="areaRefNo" class="select-option" style="padding-left: 3rem;padding-right: 3rem; margin-top: 1rem;">
                     @if(!empty($arealist))
                         @foreach($arealist as $alist)
                             <option value="{{ $alist['areaRefNo'] }}">{{ $alist['areaRefNo'] }}</option>                                   
@@ -296,7 +296,7 @@
                         <td>{{ number_format($l['dailyCollectibles'], 2) }}</td>
 
                         <!-- * Savings -->
-                        <td>{{ number_format($l['totalSavingsAmount'], 2) }}</td>
+                        <td>{{ number_format((is_numeric($l['totalSavingsAmount']) ? $l['totalSavingsAmount'] : 0), 2) }}</td>
 
                         <!-- * Lapses -->
                         <td>{{ number_format($l['lapsePayment'], 2) }}</td>
@@ -309,11 +309,9 @@
 
                         <!-- * Table View and Trash Button -->
                         <td class="td-btns">
-
                             <div class="td-btn-wrapper">
-                                <button wire:click="setRemmittInfo('{{ $l['naid'] }}')" type="button" class="a-btn-view-3" data-open-remit-modal>Remit</button>
+                                <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}')" type="button" class="a-btn-view-3" data-open-remit-modal>Remit</button>
                             </div>
-
                         </td>
 
                     </tr>
@@ -322,37 +320,7 @@
             </table>
         </div>
 
-        <!-- * Total Remittance Footer -->
-        <div class="total-remittance-footer">
-            <div class="expandable" data-total-remittance-footer>
-                <div class="container">
-                    <div class="box">
-                        <p>Total Collection</p>
-                        <p>350.00</p>
-                    </div>
-                    <div class="box">
-                        <p>Total Lapses</p>
-                        <p>350.00</p>
-                    </div>
-                    <div class="box">
-                        <p>Total Expenses</p>
-                        <p>350.00</p>
-                    </div>
-                    <div class="box">
-                        <p>Total Savings</p>
-                        <p>350.00</p>
-                    </div>
-                    <div class="box">
-                        <p>Total Advance</p>
-                        <p>350.00</p>
-                    </div>
-                    <div class="box">
-                        <p>Mode of payments</p>
-                        <p>Cash, GCash</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- * Total Remittance Footer -->       
 
     </div>
 
@@ -379,7 +347,7 @@
                         </div>
                         <div class="box" style="padding-right: 1rem;">
                             <!-- <button class="button-2" data-open-remit-modal>Remit</button> -->
-                            <button wire:click="setRemmittInfo('{{ $l['naid'] }}')" type="button" class="button-2" data-open-remit-modal>Remit</button>
+                            <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}')" type="button" class="button-2" data-open-remit-modal>Remit</button>
                         </div>
                     </div>
                     <div class="inner-wrapper" data-show-more-details-field-exp>

@@ -15,7 +15,7 @@
             </div>
             <div class="alert-footer">                
                 <button class="alert-btn alert-btn-no" onclick="closeAskingDiv()" data-restoration-no>Close</button>
-                <button class="alert-btn alert-btn-yes" wire:click="update('1')" onclick="closeAskingDiv()" data-restoration-yes>Retry</button>
+                <button class="alert-btn alert-btn-yes" wire:click="{{ $confirmaction }}" onclick="closeAskingDiv()" data-restoration-yes>Retry</button>
             </div>
         </div>
         <script>

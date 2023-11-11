@@ -143,7 +143,7 @@
                     @if($checkArea)
                         @if(!in_array($checkArea['area_RefNo'], ['PENDING', '']))
                             @if(in_array('Module-07', $modules))
-                                <a href="{{ URL::to('/') }}/collection/remittance/{{ $checkArea['area_RefNo'] }}" class="button-2" data-collection-remit-button>Remit</a>
+                                <a href="{{ URL::to('/') }}/collection/remittance/{{ $foid }}/{{ $checkArea['area_RefNo'] }}" class="button-2" data-collection-remit-button>Remit</a>
                             @endif  
                         @endif                 
                     @endif                
@@ -407,7 +407,7 @@
         window.livewire.on('openUrlPrintingStub', data =>{
             window.open(data.url, '_blank');
         });
-
+     
         window.livewire.on('RESPONSE_CLOSE_DENOMINATIONS_MODAL', data =>{
           
                 cashDenominationModal.setAttribute("closing", "")
@@ -427,7 +427,7 @@
                 }, { once: true });
                 location.href = data.url
         });
-
+       
         window.showDetails = function($cnt){              
             const trElem = document.getElementById("tr"+$cnt);
             const tdElem = document.getElementById("td"+$cnt);
@@ -467,7 +467,7 @@
 
         // * Cash Denomination (collection-collected.html)
         // * Approved Button
-
+      
         areaMenuButton.forEach(button => {
             button.addEventListener('click', () => {
 
@@ -492,29 +492,30 @@
 
             })
         })
-
+      
         if (cashDenominationModal) {
 
+            if(openCashDenominationBtn){
+                openCashDenominationBtn.addEventListener('click', () => {
+                    //alert('ads');
+                    cashDenominationModal.showModal()
 
-            openCashDenominationBtn.addEventListener('click', () => {
-                cashDenominationModal.showModal()
-
-                // approveCashDenominationBtn.addEventListener('click', () => {
-                //     areaMenuButton.forEach((button) => {
-                //         if (button.matches('.view-selected-area')) {
-                //             button.classList.add('area-is-collected')
-                //             printRemitButton.classList.remove('show-print-remit-buttons')
-                //             // collectionSummaryContainer.classList.add('show-summary')
-                //         }
-                //         button.style.pointerEvents = 'auto'
-                //         if (button.classList.contains('area-is-collected')) {
-                //             collectionSummaryContainer.classList.add('show-summary')
-                //             button.style.pointerEvents = 'none'
-                //         }    
-                //     })
-                // })
-            })
-            
+                    // approveCashDenominationBtn.addEventListener('click', () => {
+                    //     areaMenuButton.forEach((button) => {
+                    //         if (button.matches('.view-selected-area')) {
+                    //             button.classList.add('area-is-collected')
+                    //             printRemitButton.classList.remove('show-print-remit-buttons')
+                    //             // collectionSummaryContainer.classList.add('show-summary')
+                    //         }
+                    //         button.style.pointerEvents = 'auto'
+                    //         if (button.classList.contains('area-is-collected')) {
+                    //             collectionSummaryContainer.classList.add('show-summary')
+                    //             button.style.pointerEvents = 'none'
+                    //         }    
+                    //     })
+                    // })
+                })
+            }
             closeCashDenominationBtn.addEventListener('click', () => {
                 cashDenominationModal.setAttribute("closing", "")
                 cashDenominationModal.addEventListener("animationend", () => {
@@ -522,7 +523,7 @@
                     cashDenominationModal.close()
                 }, { once: true })            
             })
-            
+           
             // approveCashDenominationBtn.addEventListener('click', () => {
             //     cashDenominationModal.setAttribute("closing", "")
             //     cashDenominationModal.addEventListener("animationend", () => {
@@ -542,23 +543,23 @@
         const rejectCollectionModal = document.querySelector('[data-collection-reject-modal]')
         const openRejectCollectionBtn = document.querySelector('[data-open-collection-reject-button]')
         const closeRejectCollectionBtn = document.querySelector('[data-close-collection-reject-button]')
-        const submitRejectCollectionBtn = document.querySelector('[data-submit-collection-reject-button]')
-
+        const submitRejectCollectionBtn = document.querySelector('[data-submit-collection-reject-button]')       
         if (rejectCollectionModal) {
 
-            openRejectCollectionBtn.addEventListener('click', () => {
-                rejectCollectionModal.showModal()
-            })
-            
-            closeRejectCollectionBtn.addEventListener('click', () => {
-                rejectCollectionModal.setAttribute("closing", "");
-                rejectCollectionModal.addEventListener("animationend", () => {
-                    rejectCollectionModal.removeAttribute("closing");
-                    rejectCollectionModal.close();
-                }, { once: true });
-            
-            })
-            
+            if(openRejectCollectionBtn){
+                openRejectCollectionBtn.addEventListener('click', () => {
+                    rejectCollectionModal.showModal()
+                })
+                
+                closeRejectCollectionBtn.addEventListener('click', () => {
+                    rejectCollectionModal.setAttribute("closing", "");
+                    rejectCollectionModal.addEventListener("animationend", () => {
+                        rejectCollectionModal.removeAttribute("closing");
+                        rejectCollectionModal.close();
+                    }, { once: true });
+                
+                })
+            }
             submitRejectCollectionBtn.addEventListener('click', () => {
                 // rejectCollectionModal.setAttribute("closing", "");
                 // rejectCollectionModal.addEventListener("animationend", () => {
@@ -644,10 +645,6 @@
                 }, { once: true });
             
             })
-
-        }
-
-
-        
+        }        
     })
  </script>

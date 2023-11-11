@@ -391,7 +391,7 @@
                 <div class="input-wrapper">
                     <span>Back</span>                   
                     @if($imgbackID)
-                        <img  class="profile" src="{{ $imgbackID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                        <img  class="profile" style="object-fit: contain;" src="{{ $imgbackID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
                     @else
                         @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['backID']) ? $officer['backID'] : 'xxxx'))))    
                             <img  class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/'.$officer['backID']) }}" alt="Front Image" id="frontImage" name="frontImage">

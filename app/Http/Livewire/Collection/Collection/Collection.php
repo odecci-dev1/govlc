@@ -93,11 +93,13 @@ class Collection extends Component
 
     public function print(){       
         $print = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/PrintCollection', ['areaID' => $this->areaID, 'remarks' => 'Printded ' . Carbon::now() , 'foid' => $this->foid]);                  
+        //dd($print);
         $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID]);              
-        return redirect()->to('/collection/create');       
+        return redirect()->to('/collection/view/'.$this->colrefNo);       
     }
     
     public function getCollectionDetails($areaID, $foid){
+        $this->areaDetails = collect([]);
         if($this->areaID == ''){
             $this->areaID = $areaID;       
             $this->foid = $foid;
@@ -109,9 +111,32 @@ class Collection extends Component
             }
             else{
                 $this->areaID = $areaID;    
-                $this->foid = $foid;   
+                $this->foid = $foid;                   
             }
-        }       
+        }    
+        
+        if($this->areaID != ''){
+                $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => null ]);  
+                $details = $details->json();              
+                if(isset($details[0])){
+                    $details = $details[0];                                       
+                    $collections = $details['collection'];
+                    if($collections){
+                        $this->areaDetailsFooter[$this->areaID] = [               
+                                                        'areaID' => $this->areaID,                                                        
+                                                        'totalCollectible' => $details['totalCollectible'],
+                                                        'total_Balance' => $details['total_Balance'],
+                                                        'total_savings' => $details['total_savings'],
+                                                        'total_advance' => $details['total_advance'],
+                                                        'total_lapses' => $details['total_lapses'],
+                                                        'total_collectedAmount' => $details['total_collectedAmount'],
+                                                     ];
+                        foreach($collections as $coll){
+                            $this->areaDetails =  $this->areaDetails->push($coll);
+                        }                        
+                    }                                                 
+                }
+        }
     }
 
     public function mount(){
@@ -124,32 +149,32 @@ class Collection extends Component
         }
         else{
             $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');  
-        }
+        }     
         $areas = $areas->json();
         //dd($areas);
         if( $areas ){
             $this->areas = collect($areas);
             foreach($this->areas as $mareas){
-                $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $mareas['areaID'], 'arearefno' => $mareas['area_RefNo'] ]);  
-                $details = $details->json();
-                if(isset($details[0])){
-                    $details = $details[0];                                       
-                    $collections = $details['collection'];
-                    if($collections){
-                        $this->areaDetailsFooter[$mareas['areaID']] = [
-                                                                        'areaID' => $mareas['areaID'],
-                                                                        'totalCollectible' => $details['totalCollectible'],
-                                                                        'total_Balance' => $details['total_Balance'],
-                                                                        'total_savings' => $details['total_savings'],
-                                                                        'total_advance' => $details['total_advance'],
-                                                                        'total_lapses' => $details['total_lapses'],
-                                                                        'total_collectedAmount' => $details['total_collectedAmount'],
-                                                                      ];
-                        foreach($collections as $coll){
-                            $this->areaDetails =  $this->areaDetails->push($coll);
-                        }                        
-                    }                                                 
-                }
+                // $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => ['',''], 'arearefno' => $mareas['area_RefNo'] ]);  
+                // $details = $details->json();              
+                // if(isset($details[0])){
+                //     $details = $details[0];                                       
+                //     $collections = $details['collection'];
+                //     if($collections){
+                //         $this->areaDetailsFooter[$mareas['areaID']] = [
+                //                                                         'areaID' => $mareas['areaID'],
+                //                                                         'totalCollectible' => $details['totalCollectible'],
+                //                                                         'total_Balance' => $details['total_Balance'],
+                //                                                         'total_savings' => $details['total_savings'],
+                //                                                         'total_advance' => $details['total_advance'],
+                //                                                         'total_lapses' => $details['total_lapses'],
+                //                                                         'total_collectedAmount' => $details['total_collectedAmount'],
+                //                                                       ];
+                //         foreach($collections as $coll){
+                //             $this->areaDetails =  $this->areaDetails->push($coll);
+                //         }                        
+                //     }                                                 
+                // }
             }
             //dd( $this->areaDetails );
             //dd($this->areaDetails);

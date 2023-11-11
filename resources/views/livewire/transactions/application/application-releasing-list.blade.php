@@ -1,5 +1,7 @@
 <div>
- 
+@if(session('mmessage'))
+    <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+@endif
 @if(session('mmessage'))
         <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif
@@ -209,7 +211,7 @@
                     @endforeach
                 @else
                     <tr>
-                        <td colspan="6" class="text-required" style="text-align: center; padding: 20px;">No application found</td>
+                        <td colspan="7" class="text-required" style="text-align: center; padding: 20px;">No application found</td>
                     </tr>    
                 @endif
                 <!-- * Table Data -->                                                

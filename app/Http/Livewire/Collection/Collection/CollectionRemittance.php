@@ -28,9 +28,10 @@ class CollectionRemittance extends Component
         return $rules;
     }
 
-    public function setRemmittInfo($naid = ''){
-        $appdtl = $this->list->where('naid', $naid)->first();
-        $this->memid =  $appdtl ?  $appdtl['memId'] : '';
+    public function setRemmittInfo($naid = '', $memid = ''){
+        $appdtl = $this->list->where('naid', $naid)->first();      
+        $this->memid =  $memid;
+        $this->reminfo['savings'] = 0;
     }
 
     public function computeLapses(){
@@ -40,13 +41,14 @@ class CollectionRemittance extends Component
                 "areaRefno"=> $this->areaRefNo,
                 "amountCollected"=> $this->reminfo['amntCollected']
             ];
-            $compute = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/RemitAmountCollectedComputation', $data);  
+            $compute = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/RemitAmountCollectedComputation', $data);             
             $compute = $compute->json();
         
             if($compute){         
                 $this->reminfo['lapses'] = isset($compute['lapses']) ? $compute['lapses'] : 0;
-                $this->reminfo['advance'] = isset($compute['advance']) ? $compute['advance'] : 0;
+                $this->reminfo['advance'] = isset($compute['advance']) ? $compute['advance'] : 0;              
             }
+            
         }
     }
 
@@ -87,9 +89,8 @@ class CollectionRemittance extends Component
                     "userId"=> session()->get('auth_userid'),
                     "foid"=> $this->foid
                 ];
-        $compute = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Remit', $data);               
-      
-        return redirect()->to('/collection/remittance/'.$this->areaRefNo)->with(['mmessage'=> 'Remittance successfully saved', 'mword'=> 'Success']);    
+        $remit = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Remit', $data);                               
+        return redirect()->to('/collection/remittance/'.$this->foid.'/'.$this->areaID.'/'.$this->areaRefNo)->with(['mmessage'=> 'Remittance successfully saved', 'mword'=> 'Success']);    
     }
 
     public function saveExpenses(){
@@ -163,22 +164,19 @@ class CollectionRemittance extends Component
     }
 
     public function mount($areaRefNo = ''){
-        $this->areaRefNo = $areaRefNo;
+        $this->areaRefNo = $areaRefNo;      
         $this->expcnt = [1];     
-        $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo');  
+        $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo', ['FOID' => $this->foid]);  
         $this->arealist = $arealist->json();
-        //dd($this->arealist);
+       
     }
     
     public function render()
-    {
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyAreaRefno', ['area_refno' => $this->areaRefNo]);  
-        $data = $data->json();
-        //dd( $data );
-        if($data){
-            $this->list = collect($data);
-            $this->foid = $this->list[0]['foid'];
-            $this->areaID = $this->list[0]['areaID'];
+    {             
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyAreaRefno', ['area_refno' => $this->areaRefNo]);                
+        $data = $data->json();       
+        if($data[0]['collection']){
+            $this->list = collect($data[0]['collection']);           
         }   
         //dd($this->list);   
         return view('livewire.collection.collection.collection-remittance');

@@ -267,6 +267,7 @@ table .td-btn-wrapper {
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
+  padding: 0 1rem;
 }
 table .td-btn-wrapper .a-btn-view-3.remitted {
   pointer-events: none;
@@ -622,7 +623,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
   box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   transition: all 200ms ease-in-out;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   padding: 0.4rem 2.5rem;
 }
 .a-btn-view-2:hover {
@@ -679,7 +680,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
   box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   transition: all 200ms ease-in-out;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   padding: 0.4rem 2.5rem;
 }
 .a-btn-trash-2:hover {
@@ -6366,8 +6367,8 @@ body.print-portrait .page {
 }
 
 .clr-con-2 {
-  height: clamp(100% - 20rem, 36rem, 66vh);
-  padding: 0 4rem 2rem 4rem;
+  height: clamp(100% - 18rem, 36rem, 66vh);
+  padding: 0 3rem 2rem 3rem;
 }
 @media (max-width: 430px) {
   .clr-con-2 {
@@ -6382,7 +6383,7 @@ body.print-portrait .page {
   box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 .clr-con-2 .table-container table th {
-  padding: 2rem 3rem;
+  padding: 1rem 3rem;
   text-align: center;
 }
 .clr-con-2 .table-container table th span.th-name {
@@ -7248,7 +7249,7 @@ body.print-portrait .page {
 .main-dashboard .m-con-1 {
   display: flex;
   flex-direction: column;
-  padding: 4rem 4rem 2rem 4rem;
+  padding: 3rem;
 }
 .main-dashboard .m-con-1 h2 {
   font-size: 2rem; /*by jumz 2.5rem*/
@@ -7436,7 +7437,7 @@ body.print-portrait .page {
 }
 .main-dashboard .m-con-2 {
   height: clamp(100% - 23rem, 30rem, 66vh);
-  padding: 0 4rem 2rem 4rem;
+  padding: 0 3rem 3rem 3rem;
 }
 .main-dashboard .m-con-2 .table-container {
   display: flex;
@@ -7459,7 +7460,7 @@ body.print-portrait .page {
   text-align: center;
 }
 .main-dashboard .m-con-2 .table-container table th {
-  padding: 2rem 0;
+  padding: 0rem 0;
   text-align: center;
 }
 .main-dashboard .m-con-2 .table-container table th span.th-name {
@@ -7485,7 +7486,7 @@ body.print-portrait .page {
 }
 .main-dashboard .m-con-2 .table-container table td {
   padding: 1rem 0;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 .main-dashboard .m-con-2 .table-container table .td-due {
   font-weight: 700;
@@ -10291,7 +10292,7 @@ body.print-portrait .page {
 .main-dashboard .na-form-con .nal-con-1 {
   display: flex;
   flex-direction: column;
-  padding: 4rem 4rem 2rem 4rem;
+  padding: 3rem 3rem 2rem 3rem;
 }
 @media (max-width: 430px) {
   .main-dashboard .na-form-con .nal-con-1 {
