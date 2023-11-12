@@ -52,7 +52,7 @@
                             //$checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();                 
                             $checkIfPrinted = in_array($area['area_RefNo'], ['PENDING', '']) ? false : true;
                         @endphp
-                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ in_array($area['area_RefNo'], ['PENDING', '']) ? '' : $area['area_RefNo'] }}')" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
+                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['foid'] }}', '{{ in_array($area['area_RefNo'], ['PENDING', '']) ? '' : $area['area_RefNo'] }}')" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
                             <div class="box-1">
                                 <h4 id="collectionAreaNum">{{ $area['areaName'] }}</h4>
                             </div>

@@ -98,20 +98,20 @@ class Collection extends Component
         return redirect()->to('/collection/view/'.$this->colrefNo);       
     }
     
-    public function getCollectionDetails($areaID = '', $areaRefNo = ''){       
+    public function getCollectionDetails($areaID = '', $foid = '', $areaRefNo = ''){         
         $this->areaDetails = collect([]);
         if($this->areaID == ''){
             $this->areaID = $areaID;       
-            // $this->foid = $foid;
+            $this->foid = $foid;
         }
         else{
             if($this->areaID == $areaID){
                 $this->areaID = '';  
-                // $this->foid = '';     
+                $this->foid = '';     
             }
             else{
                 $this->areaID = $areaID;    
-                // $this->foid = $foid;                   
+                $this->foid = $foid;                   
             }
         }    
         //dd( $this->areaID );
