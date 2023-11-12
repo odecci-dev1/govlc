@@ -48,11 +48,11 @@
                     @if($areas)
                         @foreach($areas as $area)
                         @php 
-                            $checkIfPaid = $areaDetails->where('areaID', $area['areaID'])->where('payment_Status', 'Paid')->first();       
+                            $checkIfPaid = $area['total_collectedAmount'] > 0 ? true : false; //$areaDetails->where('areaID', $area['areaID'])->where('payment_Status', 'Paid')->first();       
                             //$checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();                 
                             $checkIfPrinted = in_array($area['area_RefNo'], ['PENDING', '']) ? false : true;
                         @endphp
-                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['foid'] }}')" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
+                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ in_array($area['area_RefNo'], ['PENDING', '']) ? '' : $area['area_RefNo'] }}')" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
                             <div class="box-1">
                                 <h4 id="collectionAreaNum">{{ $area['areaName'] }}</h4>
                             </div>
@@ -129,13 +129,15 @@
                 @php
                     $sumDetails = $areaDetails->where('areaID', $areaID)->sum('collectedAmount');                                
                 @endphp
+                <button type="button" style="{{ $sumDetails > 0 && $countDetails > 0 && $checkArea && $checkArea['total_collectedAmount'] <= 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
+                <button type="button" style="{{ $sumDetails > 0 && $countDetails > 0 && $checkArea && $checkArea['total_collectedAmount'] <= 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
                 @if($countDetails > 0)
                     @if($checkArea)
                         @if(!in_array($checkArea['area_RefNo'], ['PENDING', '']))
-                        <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
-                        <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
+                        <!-- <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button> -->
+                        <!-- <button type="button" style="{{ $sumDetails > 0 ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button> -->
                         @endif                    
-                    @endif
+                    @endif                                       
                     <!-- $checkArea ? (!in_array($checkArea['area_RefNo'], ['PENDING', '']) -->
                 
                     <button type="button" wire:click="print" class="button-2" data-collection-print-button>Print</button>
@@ -148,6 +150,7 @@
                         @endif                 
                     @endif                
                 @endif
+               
              </div>
 
          </div>
@@ -370,6 +373,10 @@
                      <p>Total Collectibles:</p>
                      <span>{{ $footer ? number_format($footer['totalCollectible'], 2) : '0.00' }}</span>
                  </div>
+                 <div class="box">
+                     <p>Total Collected Amount:</p>
+                     <span>{{ $footer ? number_format($footer['total_collectedAmount'], 2) : '0.00' }}</span>
+                 </div>
                  <!-- * Total Balance: -->
                  <div class="box">
                      <p>Total Balance:</p>
@@ -469,8 +476,7 @@
         // * Approved Button
       
         areaMenuButton.forEach(button => {
-            button.addEventListener('click', () => {
-
+            button.addEventListener('click', () => {               
                 // * Current Button Toggled
                 button.classList.toggle('view-selected-area')
 
@@ -497,7 +503,7 @@
 
             if(openCashDenominationBtn){
                 openCashDenominationBtn.addEventListener('click', () => {
-                    //alert('ads');
+                  
                     cashDenominationModal.showModal()
 
                     // approveCashDenominationBtn.addEventListener('click', () => {

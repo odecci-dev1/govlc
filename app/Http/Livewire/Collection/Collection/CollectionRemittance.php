@@ -40,8 +40,9 @@ class CollectionRemittance extends Component
                 "memId"=> $this->memid,
                 "areaRefno"=> $this->areaRefNo,
                 "amountCollected"=> $this->reminfo['amntCollected']
-            ];
+            ];         
             $compute = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/RemitAmountCollectedComputation', $data);             
+            //dd($compute);
             $compute = $compute->json();
         
             if($compute){         
@@ -90,7 +91,7 @@ class CollectionRemittance extends Component
                     "foid"=> $this->foid
                 ];
         $remit = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Remit', $data);                               
-        return redirect()->to('/collection/remittance/'.$this->foid.'/'.$this->areaID.'/'.$this->areaRefNo)->with(['mmessage'=> 'Remittance successfully saved', 'mword'=> 'Success']);    
+        return redirect()->to('/collection/remittance/'.$this->foid.'/'.$this->areaRefNo)->with(['mmessage'=> 'Remittance successfully saved', 'mword'=> 'Success']);    
     }
 
     public function saveExpenses(){
@@ -174,10 +175,14 @@ class CollectionRemittance extends Component
     public function render()
     {             
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyAreaRefno', ['area_refno' => $this->areaRefNo]);                
-        $data = $data->json();       
-        if($data[0]['collection']){
-            $this->list = collect($data[0]['collection']);           
-        }   
+        //dd($data->getStatusCode());
+        if($data->getStatusCode() == 200){
+            $data = $data->json();      
+            //dd($data); 
+            if(!empty($data[0]['collection'])){
+                $this->list = collect($data[0]['collection']);           
+            }   
+        }
         //dd($this->list);   
         return view('livewire.collection.collection.collection-remittance');
     }

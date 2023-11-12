@@ -73,9 +73,9 @@ class Collection extends Component
                 "areaID"=> $this->areaID,
                 "denomination"=> $denomstring              
             ];
-
-            $collect = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Collect', $data);    
-            $this->emit('RESPONSE_CLOSE_DENOMINATIONS_MODAL', ['url' => URL::to('/').'/collection/view/'.$this->areaID]);            
+            //dd($data);
+            $collect = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Collect', $data);               
+            $this->emit('RESPONSE_CLOSE_DENOMINATIONS_MODAL', ['url' => URL::to('/').'/collection/view/'.$this->colrefNo.'/'.$this->areaID]);            
             $this->resetDenominations();          
         }       
     }
@@ -98,25 +98,25 @@ class Collection extends Component
         return redirect()->to('/collection/view/'.$this->colrefNo);       
     }
     
-    public function getCollectionDetails($areaID, $foid){
+    public function getCollectionDetails($areaID = '', $areaRefNo = ''){       
         $this->areaDetails = collect([]);
         if($this->areaID == ''){
             $this->areaID = $areaID;       
-            $this->foid = $foid;
+            // $this->foid = $foid;
         }
         else{
             if($this->areaID == $areaID){
                 $this->areaID = '';  
-                $this->foid = '';     
+                // $this->foid = '';     
             }
             else{
                 $this->areaID = $areaID;    
-                $this->foid = $foid;                   
+                // $this->foid = $foid;                   
             }
         }    
-        
+        //dd( $this->areaID );
         if($this->areaID != ''){
-                $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => null ]);  
+                $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $areaRefNo ]);  
                 $details = $details->json();              
                 if(isset($details[0])){
                     $details = $details[0];                                       
@@ -136,6 +136,7 @@ class Collection extends Component
                         }                        
                     }                                                 
                 }
+                //dd($this->areaDetailsFooter);
         }
     }
 
@@ -188,6 +189,13 @@ class Collection extends Component
             $mfolist = collect($folist);
         }
         $this->folist = $mfolist->sortBy('lname');
+        if($this->areaID != ''){
+            $refno =  $this->areas->where('areaID', $this->areaID)->first();
+            if($refno){        
+                //dd($this->areaID);       
+                $this->getCollectionDetails($this->areaID, $refno['area_RefNo']);
+            }            
+        }
         //dd($this->folist);
     }
 

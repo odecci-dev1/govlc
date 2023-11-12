@@ -149,30 +149,60 @@
                     <div class="card-2">
                         <div class="div-1">
                             <h3>Total Income</h3>
-                            <p>200,000</p>
-                            <p>10 days left to achieve the target.</p>
+                            <p>{{ !empty($data['totalIncome']) ? number_format($data['totalIncome'], 2) : 0.00 }}</p>
+                            <p>{{ !empty($data['totalDaysLeft']) ? $data['totalDaysLeft'] : 0 }} days left to achieve the target.</p>
                         </div>
                         <div class="divider"></div>
                         <div class="div-2">
                             <div class="circle-div">
                                 <div class="progress-value">
-                                    <p>50%</p>
+                                    <p>{{ !empty($data['totalPercentOfLastEntry']) ? number_format($data['totalPercentOfLastEntry'], 2) : 0 }}%</p>
                                     <p>100,000</p>
                                     <p>As of last entry</p>
                                 </div>
                             </div>
-                            <p>Last month target <span>Achieved</span></p>
+                            <p>Last month target <span>{{ !empty($data['targetStatus']) ? $data['targetStatus'] : 'Not Achieved' }}</span></p>
                         </div>
                     </div>
                     <div class="card-2 ">
                         <h3>Top Collectibles Per Area</h3>
+                        @php
+                            $topcollectibles = !empty($data['topCollectiblesAreas']) ? $data['topCollectiblesAreas'] : [];
+                        @endphp
                         <div class="div-1">
+                            @if(!empty($topcollectibles))
+                            @foreach($topcollectibles as $top)
                             <div class="p-wrap">
                                 <div class="wrap">
                                     <p>Area 3</p>
                                     <p>900.00</p>
                                 </div>
                             </div>
+                            @endforeach
+                            @foreach($topcollectibles as $top)
+                            <div class="p-wrap">
+                                <div class="wrap">
+                                    <p>Area 3</p>
+                                    <p>900.00</p>
+                                </div>
+                            </div>
+                            @endforeach
+                            @foreach($topcollectibles as $top)
+                            <div class="p-wrap">
+                                <div class="wrap">
+                                    <p>Area 3</p>
+                                    <p>900.00</p>
+                                </div>
+                            </div>
+                            @endforeach
+                            @foreach($topcollectibles as $top)
+                            <div class="p-wrap">
+                                <div class="wrap">
+                                    <p>Area 3</p>
+                                    <p>900.00</p>
+                                </div>
+                            </div>
+                            @endforeach
                             <div class="p-wrap">
                                 <div class="wrap">
                                     <p>Area 1</p>
@@ -191,6 +221,7 @@
                                     <p>300.00</p>
                                 </div>
                             </div>
+                            @endif
                         </div>
                         <div class="div-2">
                             <button class="button">View All</button>
@@ -275,8 +306,8 @@
                                         <!-- * Area -->
                                         <th><span class="th-name">Area</span></th>
             
-                                        <!-- * Acrive Collection -->
-                                        <th><span class="th-name">Acrive Collection</span></th>
+                                        <!-- * Active Collection -->
+                                        <th><span class="th-name">Active Collection</span></th>
             
                                         <!-- * New Account -->
                                         <th>

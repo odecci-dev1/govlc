@@ -154,7 +154,7 @@ Route::middleware(['access:Module-08'])->group(function () {
 Route::middleware(['access:Module-06'])->group(function () {
     Route::get('/collection/list',CollectionList::class);
     Route::get('/collection/create',Collection::class);    
-    Route::get('/collection/view/{colrefNo?}',Collection::class);    
+    Route::get('/collection/view/{colrefNo?}/{areaID?}',Collection::class);    
     Route::get('/collection/print/area/{areaID}', function(){
         return view('livewire.collection.collection.collection-html');
     });
