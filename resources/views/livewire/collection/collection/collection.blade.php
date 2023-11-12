@@ -52,7 +52,7 @@
                             //$checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();                 
                             $checkIfPrinted = in_array($area['area_RefNo'], ['PENDING', '']) ? false : true;
                         @endphp
-                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['foid'] }}', '{{ in_array($area['area_RefNo'], ['PENDING', '']) ? '' : $area['area_RefNo'] }}')" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
+                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['foid'] }}', '{{ in_array($area['area_RefNo'], ['PENDING', '']) ? '' : $area['area_RefNo'] }}', 0)" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
                             <div class="box-1">
                                 <h4 id="collectionAreaNum">{{ $area['areaName'] }}</h4>
                             </div>
@@ -140,12 +140,12 @@
                     @endif                                       
                     <!-- $checkArea ? (!in_array($checkArea['area_RefNo'], ['PENDING', '']) -->
                 
-                    <button type="button" wire:click="print" class="button-2" data-collection-print-button>Print</button>
+                    <button type="button" wire:click="print('{{ (!in_array($checkArea['area_RefNo'], ['PENDING', '']) ? $checkArea['area_RefNo'] : '') }}')" class="button-2" data-collection-print-button>Print</button>
                 
                     @if($checkArea)
                         @if(!in_array($checkArea['area_RefNo'], ['PENDING', '']))
                             @if(in_array('Module-07', $modules))
-                                <a href="{{ URL::to('/') }}/collection/remittance/{{ $foid }}/{{ $checkArea['area_RefNo'] }}" class="button-2" data-collection-remit-button>Remit</a>
+                                <a href="{{ URL::to('/') }}/collection/remittance/{{ $foid }}/{{ $checkArea['area_RefNo'] }}/{{ $areaID }}" class="button-2" data-collection-remit-button>Remit</a>
                             @endif  
                         @endif                 
                     @endif                

@@ -21,7 +21,7 @@ class LoginController extends Controller
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [ ['column' => 'username', 'values' =>  $request['username']] ]); 
             $data = $crt->json();           
             $usermodules = [];
-
+           
             if($data){
                 $data = $data[0];                     
                 session()->put('auth_usertype', $data['userTypeId']); 
@@ -53,13 +53,14 @@ class LoginController extends Controller
                 }
                 session()->put('auth_usermodules', $usermodules);               
             }   
-
+            
             if(!empty($data['foid'])){
                 session()->put('auth_remittance_only', 1);                   
-                $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo'. [ 'FOID' => $data['foid'] ]);  
-                $areaRefNo = $arealist->json()[0]['areaRefNo'] ??= '';    
+                $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo', [ 'FOID' => $data['foid'] ]);  
+                $areaRefNo = $arealist->json()[0]['areaRefNo'] ??= '';  
+                $areaID = $arealist->json()[0]['areaID'] ??= '';    
                 if(!empty($areaRefNo)){             
-                    return redirect('/collection/remittance/'.$data['foid'].'/'.$areaRefNo);
+                    return redirect('/collection/remittance/'.$data['foid'].'/'.$areaRefNo.'/'.$areaID);
                 }
                 else{
                     return redirect('/logout')->with('message', 'You dont have remittance to view.'); 

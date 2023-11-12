@@ -1,4 +1,4 @@
-<div>
+<div class="main-dashboard">
     <div class="na-form-con">
 
         <!-- * Collection List Containers -->

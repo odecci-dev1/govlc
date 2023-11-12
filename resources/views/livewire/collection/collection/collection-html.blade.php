@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <livewire:collection.collection.collection-print :areaID="request()->route('areaID')"/>
+    <livewire:collection.collection.collection-print :areaID="request()->route('areaID')" :areaRefNo="request()->route('areaRefNo')"/>
     @livewireScripts  
 </body>
 

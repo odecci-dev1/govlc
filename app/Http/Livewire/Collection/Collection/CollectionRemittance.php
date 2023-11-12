@@ -116,7 +116,7 @@ class CollectionRemittance extends Component
                 $data[] = [
                             "expensesDescription"=>  $this->expenses['expense'.$cnt],
                             "fieldExpenses"=> $this->expenses['amount'.$cnt],
-                            "areaId"=> $this->areaRefNo
+                            "areaId"=> $this->areaID
                           ];
             }
         }
@@ -168,13 +168,12 @@ class CollectionRemittance extends Component
         $this->areaRefNo = $areaRefNo;      
         $this->expcnt = [1];     
         $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo', ['FOID' => $this->foid]);  
-        $this->arealist = $arealist->json();
-       
+        $this->arealist = $arealist->json();       
     }
     
     public function render()
     {             
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyAreaRefno', ['area_refno' => $this->areaRefNo]);                
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyAreaRefno', ['areaid' => $this->areaID, 'area_refno' => $this->areaRefNo]);                
         //dd($data->getStatusCode());
         if($data->getStatusCode() == 200){
             $data = $data->json();      

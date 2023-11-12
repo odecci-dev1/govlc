@@ -1,4 +1,4 @@
-<div>
+<div class="main-dashboard">
 <div class="ul-con-1">
           @if($showDialog == 1)
             <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
@@ -8,7 +8,7 @@
           @endif
           <h2>User List</h2>
           <p class="p-1">
-            Total of <span id="numActiveUsers">10</span> active users
+            Total of <strong>{{ count($list) }}</strong> active users
           </p>
 
           <!-- * Button Container -->
@@ -85,7 +85,7 @@
                 </th>
 
                 <!-- * Action -->
-                <th><span class="th-name">Action</span></th>
+                <th style="width: 1%; text-align:center; padding: 1rem 0;"><span class="th-name">Action</span></th>
               </tr>
 
               <!-- * User List Data -->

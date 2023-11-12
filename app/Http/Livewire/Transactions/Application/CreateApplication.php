@@ -1414,15 +1414,15 @@ class CreateApplication extends Component
                                 ]);
     }
 
-    public function getLoanTermsname($topid = ''){
-        $termsofPayment = '';
-        $loantypelist = $this->termsOfPaymentList->where('topId', $topid)->first();
+    // public function getLoanTermsname($topid = ''){
+    //     $termsofPayment = '';
+    //     $loantypelist = $this->termsOfPaymentList->where('topId', $topid)->first();
        
-        if($loantypelist){
-            $termsofPayment = $loantypelist['termsofPayment'];
-        }
-        return $termsofPayment;
-    }
+    //     if($loantypelist){
+    //         $termsofPayment = $loantypelist['termsofPayment'];
+    //     }
+    //     return $termsofPayment;
+    // }
 
     public function getLoanHistory(){         
         $loanhistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                 
@@ -2058,7 +2058,7 @@ class CreateApplication extends Component
     public function render()
     {       
         //dd(session()->get('auth_userid'));        
-        $getLoanTermsname = $this->getLoanTermsname(isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : '');
-        return view('livewire.transactions.application.create-application', ['getLoanTermsname' => $getLoanTermsname]);        
+        // $getLoanTermsname = $this->getLoanTermsname(isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : '');
+        return view('livewire.transactions.application.create-application');        
     }
 }

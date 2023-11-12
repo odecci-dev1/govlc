@@ -164,12 +164,12 @@
                             <p>Last month target <span>{{ !empty($data['targetStatus']) ? $data['targetStatus'] : 'Not Achieved' }}</span></p>
                         </div>
                     </div>
-                    <div class="card-2 ">
+                    <div class="card-2 " style="display: inline;">
                         <h3>Top Collectibles Per Area</h3>
                         @php
                             $topcollectibles = !empty($data['topCollectiblesAreas']) ? $data['topCollectiblesAreas'] : [];
                         @endphp
-                        <div class="div-1">
+                        <div class="div-1" style="height: 21rem; overflow-y: auto;">
                             @if(!empty($topcollectibles))
                             @foreach($topcollectibles as $top)
                             <div class="p-wrap">

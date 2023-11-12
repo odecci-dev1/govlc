@@ -6225,7 +6225,7 @@ body.print-portrait .page {
 
 .cll-con-2 {
   height: clamp(100% - 20rem, 36rem, 66vh);
-  padding: 0 4rem 2rem 4rem;
+  padding: 0 3rem 2rem 3rem;
 }
 .cll-con-2 .table-container {
   display: flex;
@@ -6235,7 +6235,7 @@ body.print-portrait .page {
   box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 .cll-con-2 .table-container table th {
-  padding: 2rem 3rem;
+  padding: 1rem 0;
   text-align: center;
 }
 .cll-con-2 .table-container table th span.th-name {
@@ -6269,8 +6269,8 @@ body.print-portrait .page {
   text-align: center;
 }
 .cll-con-2 .table-container table td {
-  padding: 1rem 3rem;
-  font-size: 1.5rem;
+  padding: 0.5rem 0;
+  font-size: 1.3rem;
   vertical-align: top;
 }
 .cll-con-2 .table-container table td .td-wrapper {
@@ -7256,8 +7256,8 @@ body.print-portrait .page {
 }
 .main-dashboard .m-con-1 .p-1 {
   margin-top: 1.5rem;
-  font-size: 1.8rem;
-  font-style: italic;
+  font-size: 1.5rem;
+  /* font-style: italic; */
 }
 .main-dashboard .m-con-1 .p-2 {
   margin-top: 1.5rem;
@@ -7464,7 +7464,7 @@ body.print-portrait .page {
   text-align: center;
 }
 .main-dashboard .m-con-2 .table-container table th span.th-name {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 .main-dashboard .m-con-2 .table-container table th .th-wrapper {
@@ -10310,7 +10310,7 @@ body.print-portrait .page {
 }
 .main-dashboard .na-form-con .nal-con-1 .p-1 {
   margin-top: 1.5rem;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
 }
 @media (max-width: 430px) {
   .main-dashboard .na-form-con .nal-con-1 .p-1 {
@@ -13217,14 +13217,14 @@ body.print-portrait .page {
 .ul-con-1 {
   display: flex;
   flex-direction: column;
-  padding: 4rem 4rem 2rem 4rem;
+  padding: 3rem 3rem 2rem 3rem;
 }
 .ul-con-1 h2 {
   font-size: 2rem; /*by jumz 2.5rem*/
 }
 .ul-con-1 .p-1 {
   margin-top: 1.5rem;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
 }
 .ul-con-1 .p-1 span {
   font-weight: 700;
@@ -13291,8 +13291,8 @@ body.print-portrait .page {
 }
 
 .ul-con-2 {
-  height: clamp(100% - 23rem, 30rem, 66vh);
-  padding: 0 4rem 2rem 4rem;
+  height: clamp(100% - 20rem, 30rem, 66vh);
+  padding: 0 3rem 2rem 3rem;
 }
 .ul-con-2 .table-container {
   display: flex;
@@ -13302,11 +13302,11 @@ body.print-portrait .page {
   box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 .ul-con-2 .table-container table th {
-  padding: 2rem 0;
+  padding: 1rem 0;
   text-align: center;
 }
 .ul-con-2 .table-container table th span.th-name {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 .ul-con-2 .table-container table th .th-wrapper {
@@ -13327,8 +13327,8 @@ body.print-portrait .page {
   padding-left: 1rem;
 }
 .ul-con-2 .table-container table td {
-  padding: 1rem 0;
-  font-size: 1.5rem;
+  padding: 0.5rem 0;
+  font-size: 1.3rem;
 }
 .ul-con-2 .table-container table td .td-wrapper {
   display: flex;

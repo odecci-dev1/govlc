@@ -91,33 +91,52 @@ class Collection extends Component
         $this->emit('RESPONSE_CLOSE_REJECTION_MODAL', ['url' => URL::to('/').'/collection/view/'.$this->areaID]);            
     }
 
-    public function print(){       
+    public function print($areaRefNo = ''){   
+        //dd(['areaID' => $this->areaID, 'remarks' => 'Printded ' . Carbon::now() , 'foid' => $this->foid]);    
         $print = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/PrintCollection', ['areaID' => $this->areaID, 'remarks' => 'Printded ' . Carbon::now() , 'foid' => $this->foid]);                  
-        //dd($print);
-        $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID]);              
-        return redirect()->to('/collection/view/'.$this->colrefNo);       
+        $print = $print->json();
+        //dd( $print );
+        if($areaRefNo == ''){               
+            $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID.'/'.$print['areaRef']]);        
+            return redirect()->to('/collection/view/'. $print['colRef'].'/'.$this->areaID);       
+        }
+        else{                         
+            $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID.'/'.$areaRefNo]);        
+            return redirect()->to('/collection/view/'.$this->colrefNo.'/'.$this->areaID);  
+        }
+        
     }
     
-    public function getCollectionDetails($areaID = '', $foid = '', $areaRefNo = ''){         
+    public function getCollectionDetails($areaID = '', $foid = '', $areaRefNo = '', $force = 0){         
+     
         $this->areaDetails = collect([]);
         if($this->areaID == ''){
             $this->areaID = $areaID;       
             $this->foid = $foid;
         }
         else{
-            if($this->areaID == $areaID){
-                $this->areaID = '';  
-                $this->foid = '';     
+            if($force == 0){
+                if($this->areaID == $areaID){
+                    $this->areaID = '';  
+                    $this->foid = '';     
+                }
+                else{
+                    $this->areaID = $areaID;    
+                    $this->foid = $foid;                   
+                }
             }
             else{
                 $this->areaID = $areaID;    
-                $this->foid = $foid;                   
+                $this->foid = $foid;         
             }
+           
         }    
-        //dd( $this->areaID );
+        //dd( $this->areaID );   
+        //dd($areaRefNo); 
         if($this->areaID != ''){
                 $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $areaRefNo ]);  
-                $details = $details->json();              
+                $details = $details->json();   
+                //dd($details[0]);    
                 if(isset($details[0])){
                     $details = $details[0];                                       
                     $collections = $details['collection'];
@@ -136,7 +155,7 @@ class Collection extends Component
                         }                        
                     }                                                 
                 }
-                //dd($this->areaDetailsFooter);
+              
         }
     }
 
@@ -155,6 +174,7 @@ class Collection extends Component
         //dd($areas);
         if( $areas ){
             $this->areas = collect($areas);
+            //$this->areas =  $this->areas->sortBy('areaName');
             foreach($this->areas as $mareas){
                 // $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => ['',''], 'arearefno' => $mareas['area_RefNo'] ]);  
                 // $details = $details->json();              
@@ -190,10 +210,10 @@ class Collection extends Component
         }
         $this->folist = $mfolist->sortBy('lname');
         if($this->areaID != ''){
+           
             $refno =  $this->areas->where('areaID', $this->areaID)->first();
-            if($refno){        
-                //dd($this->areaID);       
-                $this->getCollectionDetails($this->areaID, $refno['area_RefNo']);
+            if($refno){                                      
+                $this->getCollectionDetails($this->areaID, $refno['foid'], $refno['area_RefNo'], 1);
             }            
         }
         //dd($this->folist);

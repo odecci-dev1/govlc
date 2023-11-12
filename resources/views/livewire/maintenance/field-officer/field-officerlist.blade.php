@@ -9,7 +9,9 @@
             <!-- * Container 1: Maintenance Header, Buttons, and Searchbar -->
             <div class="m-con-1">
                 <h2>Field Officers</h2>
-
+                <p class="p-1">
+                    Total of <strong>{{ count($list) }}</strong> field officers
+                </p>
                 <!-- * Button Container -->
                 <div class="container">
 
@@ -45,7 +47,7 @@
             </div>
 
             <!-- * Container 2: Maintenance Field Officer Table and Pagination -->
-            <div class="m-con-2 min-height" style="min-height:clamp(100% - 17rem, 40rem, 80vh)">
+            <div class="m-con-2 min-height" style="height:clamp(100% - 21rem, 40rem, 80vh); overflow-y: auto;">
 
                 <!-- * Table Container -->
                 <div class="table-container">
