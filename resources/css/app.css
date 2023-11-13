@@ -344,7 +344,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
 
 .textPrimary {
   color: #d6a330;
-  font-size: 1.7rem;
+  font-size: 1.4rem;
   font-weight: 700;
   text-decoration: underline;
   cursor: pointer;
@@ -2769,7 +2769,7 @@ body.print-portrait .page {
 .summary-print-modal-container .small-con .rowspan:first-of-type {
   display: flex;
   gap: 2rem;
-  padding-bottom: 2rem;
+  /* padding-bottom: 2rem; */
 }
 .summary-print-modal-container .small-con .rowspan:last-of-type {
   padding-top: 2rem;
@@ -2785,8 +2785,15 @@ body.print-portrait .page {
 .summary-print-modal-container .small-con .rowspan:nth-of-type(2).table th, .summary-print-modal-container .small-con .rowspan:nth-of-type(2).table td {
   padding: 0;
   text-align: left;
-  font-size: 1.8rem;
-  padding: 3rem 2rem;
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
+}
+.summary-print-modal-container .small-con .rowspan:nth-of-type(2).table tfoot td {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.summary-print-modal-container .small-con .rowspan:nth-of-type(2).table tfoot tr {
+  border-top: 3px solid #666666;
 }
 .summary-print-modal-container .small-con .rowspan:nth-of-type(2).table th {
   font-weight: 700;
@@ -2803,15 +2810,7 @@ body.print-portrait .page {
   justify-content: space-between;
   position: relative;
 }
-.summary-print-modal-container .small-con .rowspan:last-of-type::after {
-  content: "";
-  width: 100%;
-  height: 4px;
-  position: absolute;
-  top: 0;
-  background-color: #29292B;
-  border-radius: 10rem;
-}
+
 .summary-print-modal-container .small-con .rowspan:last-of-type p {
   font-size: 1.8rem;
   font-weight: 700;
@@ -5489,7 +5488,7 @@ body.print-portrait .page {
   background-color: #FFFFFF;
   position: relative;
   width: 297mm;
-  height: 210mm;
+  height: 150mm;
 }
 .cl-summary-modal .modal-container .button-wrapper {
   display: flex;
@@ -5519,7 +5518,7 @@ body.print-portrait .page {
 .cl-summary-modal .modal-container .small-con .rowspan:first-of-type {
   display: flex;
   gap: 2rem;
-  padding-bottom: 2rem;
+  /* padding-bottom: 2rem; */
 }
 .cl-summary-modal .modal-container .small-con .rowspan:last-of-type {
   padding-top: 2rem;
@@ -5535,11 +5534,18 @@ body.print-portrait .page {
 .cl-summary-modal .modal-container .small-con .rowspan:nth-of-type(2).table th, .cl-summary-modal .modal-container .small-con .rowspan:nth-of-type(2).table td {
   padding: 0;
   text-align: left;
-  font-size: 1.8rem;
-  padding: 3rem 2rem;
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
 }
 .cl-summary-modal .modal-container .small-con .rowspan:nth-of-type(2).table th {
   font-weight: 700;
+}
+.cl-summary-modal .modal-container .small-con .rowspan:nth-of-type(2).table tfoot td {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.cl-summary-modal .modal-container .small-con .rowspan:nth-of-type(2).table tfoot tr {
+  border-top: 3px solid #666666;
 }
 .cl-summary-modal .modal-container .small-con .rowspan:nth-of-type(2).table th:nth-of-type(n+2) {
   text-align: right;
@@ -5553,15 +5559,7 @@ body.print-portrait .page {
   justify-content: space-between;
   position: relative;
 }
-.cl-summary-modal .modal-container .small-con .rowspan:last-of-type::after {
-  content: "";
-  width: 100%;
-  height: 4px;
-  position: absolute;
-  top: 0;
-  background-color: #29292B;
-  border-radius: 10rem;
-}
+
 .cl-summary-modal .modal-container .small-con .rowspan:last-of-type p {
   font-size: 1.8rem;
   font-weight: 700;

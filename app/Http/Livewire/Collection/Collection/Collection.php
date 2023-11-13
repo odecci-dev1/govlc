@@ -75,6 +75,7 @@ class Collection extends Component
             ];
             //dd($data);
             $collect = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Collect', $data);               
+            //dd($collect);
             $this->emit('RESPONSE_CLOSE_DENOMINATIONS_MODAL', ['url' => URL::to('/').'/collection/view/'.$this->colrefNo.'/'.$this->areaID]);            
             $this->resetDenominations();          
         }       
@@ -149,13 +150,14 @@ class Collection extends Component
                                                         'total_advance' => $details['total_advance'],
                                                         'total_lapses' => $details['total_lapses'],
                                                         'total_collectedAmount' => $details['total_collectedAmount'],
+                                                        'total_FieldExpenses' => $details['total_FieldExpenses'],
                                                      ];
                         foreach($collections as $coll){
                             $this->areaDetails =  $this->areaDetails->push($coll);
                         }                        
                     }                                                 
                 }
-              
+                //dd($this->areaDetails);
         }
     }
 

@@ -79,7 +79,7 @@
         </div>
         <div class="inner-box-wrap">
             <p>COLLECTED AMOUNT</p>            
-            <span id="collectedAmnt">{{ number_format($sumDetails, 2) }}</span>
+            <span id="collectedAmnt">{{ number_format($sumCollected, 2) }}</span>
         </div>
     </div>
 

@@ -91,7 +91,7 @@ class CollectionRemittance extends Component
                     "foid"=> $this->foid
                 ];
         $remit = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Remit', $data);                               
-        return redirect()->to('/collection/remittance/'.$this->foid.'/'.$this->areaRefNo)->with(['mmessage'=> 'Remittance successfully saved', 'mword'=> 'Success']);    
+        return redirect()->to('/collection/remittance/'.$this->foid.'/'.$this->areaRefNo.'/'.$this->areaID)->with(['mmessage'=> 'Remittance successfully saved', 'mword'=> 'Success']);    
     }
 
     public function saveExpenses(){
@@ -120,8 +120,8 @@ class CollectionRemittance extends Component
                           ];
             }
         }
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/FieldExpenses', $data);          
-        return redirect()->to('/collection/remittance/'.$this->areaRefNo)->with(['mmessage'=> 'Remittance successfully saved', 'mword'=> 'Success']);    
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/FieldExpenses', $data);                
+        return redirect()->to('/collection/remittance/'.$this->foid.'/'.$this->areaRefNo.'/'.$this->areaID)->with(['mmessage'=> 'Field expenses successfully saved', 'mword'=> 'Success']);    
     }
 
     public function cancelExpenses(){

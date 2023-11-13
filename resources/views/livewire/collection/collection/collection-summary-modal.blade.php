@@ -35,7 +35,9 @@
                         <th>Total Savings:</th>
                         <th>Total Advance:</th>
                         <th>Total Lapses:</th>
+                        <th>Field Expenses</th>
                         <th>Total Collected Amount</th>
+                     
                     </tr>
 
                     <!-- * Table Data -->
@@ -47,27 +49,31 @@
                             <td>{{ number_format($mareas['total_Balance'], 2) }}</td>
                             <td>{{ number_format($mareas['total_savings'], 2) }}</td>
                             <td>{{ number_format($mareas['total_advance'], 2) }}</td>
-                            <td>{{ number_format($mareas['total_lapses'], 2) }}</td>
+                            <td>{{ number_format($mareas['total_lapses'], 2) }}</td>                          
+                            <td>0.00</td>
                             <td>{{ number_format($mareas['total_collectedAmount'], 2) }}</td>
                         </tr>
                         @endforeach
                     @endif    
-                  
+                    <tfoot>
+                        <tr>
+                            <td>Grand Total</td>
+                            <td>{{ number_format($areas->sum('totalCollectible'), 2) }}</td>
+                            <td>{{ number_format($areas->sum('total_Balance'), 2) }}</td>
+                            <td>{{ number_format($areas->sum('total_savings'), 2) }}</td>
+                            <td>{{ number_format($areas->sum('total_advance'), 2) }}</td>
+                            <td>{{ number_format($areas->sum('total_lapses'), 2) }}</td>
+                            <td>0.00</td>
+                            <td class="textPrimary" style="font-size: 1.7rem;">{{ number_format($areas->sum('total_collectedAmount'), 2) }}</td>
+                        </tr>
+                    </tfoot>
                 </table>
 
 
             </div>
 
             <!-- * Rowspan 3: Footer -->
-            <div class="rowspan">
-                <p>Grand Total</p>
-                <p>{{ number_format($areas->sum('totalCollectible'), 2) }}</p>
-                <p>{{ number_format($areas->sum('total_Balance'), 2) }}</p>
-                <p>{{ number_format($areas->sum('total_savings'), 2) }}</p>
-                <p>{{ number_format($areas->sum('total_advance'), 2) }}</p>
-                <p>{{ number_format($areas->sum('total_lapses'), 2) }}</p>
-                <p class="textPrimary">{{ number_format($areas->sum('total_collectedAmount'), 2) }}</p>
-            </div>
+           
 
         </div>
 
