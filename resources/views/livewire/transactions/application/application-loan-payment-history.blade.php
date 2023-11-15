@@ -41,7 +41,7 @@
                             </tr>
                             @if($loanhistory)
                                 @foreach($loanhistory as $loanhistory)
-                                <tr>
+                                <tr wire:click="viewApplication('{{ $loanhistory['naid'] }}')">
                                     <td>{{ $loanhistory['loanPrincipal'] }}</td>                                  
                                     <td>{{ $loanhistory['totalSavingsAmount'] }}</td>
                                     <td>{{ $loanhistory['penalty'] }}</td>

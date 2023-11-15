@@ -213,9 +213,18 @@ class FieldOfficer extends Component
 
             $this->resetValidation();
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/SaveFieldOfficer', $data);                   
-            $get = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/GetLastOfficerList');
-            $get = $get->json();
-            return redirect()->to('/maintenance/fieldofficer/view/'.$get['foid'])->with('mmessage', 'Field officer successfully saved');    
+            $apiresp = $crt->getStatusCode();                
+            if($apiresp == 200){     
+                $get = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/GetLastOfficerList');
+                $get = $get->json();
+                return redirect()->to('/maintenance/fieldofficer/view/'.$get['foid'])->with('mmessage', 'Field officer successfully saved');    
+            }
+            else{
+                $this->resetValidation();         
+                session()->flash('erroraction', 'store');
+                session()->flash('errormessage', 'Operation Failed. Maybe Field Officer Already Exist. Retry ?');                                
+                $this->emit('EMIT_ERROR_ASKING_DIALOG');
+            }            
 
         }
         catch (\Exception $e) {           
@@ -255,9 +264,17 @@ class FieldOfficer extends Component
                         "uploadFiles"=> $this->storeAttachments(),                       
                     ];   
                       
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/UpdateFieldOfficer', $data);                        
-            //dd($crt);
-            return redirect()->to('/maintenance/fieldofficer/view/'.$this->foid)->with('mmessage', 'Field officer successfully updated');    
+            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/UpdateFieldOfficer', $data);                          
+            $apiresp = $crt->getStatusCode();                
+            if($apiresp == 200){     
+                return redirect()->to('/maintenance/fieldofficer/view/'.$this->foid)->with('mmessage', 'Field officer successfully updated');    
+            }
+            else{
+                $this->resetValidation();         
+                session()->flash('erroraction', 'update');
+                session()->flash('errormessage', 'Operation Failed. Maybe Field Officer Already Exist. Retry ?');                                
+                $this->emit('EMIT_ERROR_ASKING_DIALOG');
+            }            
         }
         catch (\Exception $e) {           
             throw $e;            

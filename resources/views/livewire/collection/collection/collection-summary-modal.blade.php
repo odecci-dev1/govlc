@@ -50,7 +50,7 @@
                             <td>{{ number_format($mareas['total_savings'], 2) }}</td>
                             <td>{{ number_format($mareas['total_advance'], 2) }}</td>
                             <td>{{ number_format($mareas['total_lapses'], 2) }}</td>                          
-                            <td>0.00</td>
+                            <td>{{ number_format($mareas['total_FieldExpenses'], 2) }}</td>
                             <td>{{ number_format($mareas['total_collectedAmount'], 2) }}</td>
                         </tr>
                         @endforeach
@@ -63,7 +63,7 @@
                             <td>{{ number_format($areas->sum('total_savings'), 2) }}</td>
                             <td>{{ number_format($areas->sum('total_advance'), 2) }}</td>
                             <td>{{ number_format($areas->sum('total_lapses'), 2) }}</td>
-                            <td>0.00</td>
+                            <td>{{ number_format($areas->sum('total_FieldExpenses'), 2) }}</td>
                             <td class="textPrimary" style="font-size: 1.7rem;">{{ number_format($areas->sum('total_collectedAmount'), 2) }}</td>
                         </tr>
                     </tfoot>

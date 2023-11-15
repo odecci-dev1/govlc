@@ -7020,7 +7020,7 @@ body.print-portrait .page {
   background-color: transparent !important;
 }
 .can-container-wrapper .can-container-2 .wrapper-2 .table-container table tr:nth-of-type(odd):hover > td {
-  background-color: rgba(214, 163, 48, 0.8);
+  /* background-color: rgba(214, 163, 48, 0.8) */
   color: #29292B !important;
   transition: 300ms ease-out !important;
 }
@@ -7084,7 +7084,7 @@ body.print-portrait .page {
 }
 .can-container-wrapper .can-container-2 .wrapper-2 .table-container table .details-wrapper {
   position: relative;
-  z-index: -9;
+  /* z-index: -9; */
   height: 0;
   transition: all 200ms ease-in-out;
 }
@@ -14219,6 +14219,11 @@ Date: 10-03-2023
 .alert-btn-no{
   background-color: red;
   color: #FFFFFF;
+}
+.cust-link{  
+  color: #d6a330;
+  font-size: 700;
+  margin-left: 1rem;
 }
 /*# sourceMappingURL=app.css.map */
 

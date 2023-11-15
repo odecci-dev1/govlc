@@ -27,12 +27,9 @@
                            $totalAreaCollected = $areas->sum('total_collectedAmount');
                     @endphp 
                      <!-- * Summary Container total_collectedAmount -->
-                     <!-- <div class="summary-container" style="visibility: {{ $totalAreaCollected > 0 ? 'visible' : 'hidden' }};" data-collection-summary-container> 
+                     <div class="summary-container" style="visibility: {{ $totalAreaCollected > 0 ? 'visible' : 'hidden' }};" data-collection-summary-container> 
                          <p class="textPrimary" data-open-collection-summary-button>View Summary</p>
-                     </div> -->
-                     <div class="summary-container"  data-collection-summary-container> 
-                         <p class="textPrimary" data-open-collection-summary-button>View Summary</p>
-                     </div>
+                     </div>                    
                 <!-- * All Areas Button -->
                 <!-- <div class="select-box">
                     <select  wire:model="status" class="select-option-menu">
@@ -138,7 +135,7 @@
                 @php 
                            $totalAreaCollected = $areas->sum('total_collectedAmount');
                     @endphp 
-                     <!-- * Summary Container total_collectedAmount -->s                     
+                     <!-- * Summary Container total_collectedAmount -->                 
                      <!-- <div class="summary-container" style="visibility: {{ $totalAreaCollected > 0 ? 'visible' : 'hidden' }};" data-collection-summary-container> 
                          <p class="textPrimary" data-open-collection-summary-button>View Summary</p>
                      </div> -->
@@ -317,6 +314,7 @@
                                             <p>Due Date:</p>
                                             <p>Collection Date:</p>
                                             <p>Savings:</p>
+                                            <p>Loan ID:</p>
                                         </div>
                                         <div class="inner-inner-box">
                                             @php
@@ -328,6 +326,7 @@
                                             <p>{{ $dueDate->format('F d, Y') }}</p>
                                             <p>{{ $mdetails['typeOfCollection'] }}</p>
                                             <p>{{ number_format($mdetails['totalSavingsAmount'], 2) }}</p>
+                                            <p>{{ $mdetails['naid'] }} <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $mdetails['naid'] }}" class="cust-link">view</a></p>
                                         </div>
                                     </div>
                                 </div>

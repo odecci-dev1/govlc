@@ -19,7 +19,7 @@ class MemberList extends Component
     public function mount(){
         $this->usertype = session()->get('auth_usertype'); 
     }
-
+  
     public function render()
     {
         $getloans = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetails');  

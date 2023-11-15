@@ -90,6 +90,7 @@ class FieldArea extends Component
         $this->resetFields();
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/GetAreaDetails', ['AreaID' => $AreaID]);          
         $data = $data->json();
+        //dd( $data );
         if(isset($data[0])){
             $inp = $data[0]; 
             //dd($inp);    

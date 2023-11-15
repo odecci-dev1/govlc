@@ -2,6 +2,7 @@
 @if($showDialog == 1)
     <x-dialog :message="'Are you sure you want to trash this data '" :xmid="$mid" :confirmaction="'archive'" :header="'Trash'"></x-dialog>   
 @endif
+<x-error-dialog :message="(session('errormessage') ? session('errormessage') : 'Operation Failed. Retry ?')" :xmid="''" :confirmaction="session('erroraction') ? session('erroraction') : ''" :header="'Error'"></x-error-dialog>       
 @if(session('mmessage'))
     <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
 @endif
@@ -455,6 +456,10 @@
             window.archive = function($mid){
                 @this.call('archive', $mid);       
             };
+
+            window.livewire.on('EMIT_ERROR_ASKING_DIALOG', data =>{
+                document.getElementById('error-asking-dialog-div').style.visibility="visible";
+            });
         })
       
 </script>

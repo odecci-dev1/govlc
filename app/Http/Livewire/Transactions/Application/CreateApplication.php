@@ -1433,7 +1433,8 @@ class CreateApplication extends Component
             $paymenthistory = $paymenthistory->json();  
             
             if($loanhistory){
-                $this->loanhistory = collect($loanhistory);                        
+                $this->loanhistory = collect($loanhistory);  
+                // dd( $this->loanhistory );                      
             }
             if($paymenthistory){
                 $this->paymenthistory = collect($paymenthistory);          
@@ -2048,6 +2049,10 @@ class CreateApplication extends Component
             $this->loanDetails['loantermsID'] = isset($sessloandetails['topId']) ? $sessloandetails['topId'] : '';
             $this->loanDetails['loantermsName'] = $this->member['termsOfPayment'];  
         }
+    }
+
+    public function viewApplication($naid = ''){       
+        return redirect()->to('/tranactions/application/view/'.$naid);
     }
 
     public function searchEmployee(){

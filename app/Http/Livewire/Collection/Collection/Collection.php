@@ -138,6 +138,7 @@ class Collection extends Component
                 $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $areaRefNo ]);  
                 $details = $details->json();   
                 //dd($details[0]);    
+
                 if(isset($details[0])){
                     $details = $details[0];                                       
                     $collections = $details['collection'];
@@ -161,7 +162,7 @@ class Collection extends Component
         }
     }
 
-    public function mount(){
+    public function mount(){       
         $this->areas = collect([]);
         $this->areaDetails = collect([]);
         $this->areaDetailsFooter = collect([]);
@@ -175,33 +176,7 @@ class Collection extends Component
         $areas = $areas->json();
         //dd($areas);
         if( $areas ){
-            $this->areas = collect($areas);
-            //$this->areas =  $this->areas->sortBy('areaName');
-            foreach($this->areas as $mareas){
-                // $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => ['',''], 'arearefno' => $mareas['area_RefNo'] ]);  
-                // $details = $details->json();              
-                // if(isset($details[0])){
-                //     $details = $details[0];                                       
-                //     $collections = $details['collection'];
-                //     if($collections){
-                //         $this->areaDetailsFooter[$mareas['areaID']] = [
-                //                                                         'areaID' => $mareas['areaID'],
-                //                                                         'totalCollectible' => $details['totalCollectible'],
-                //                                                         'total_Balance' => $details['total_Balance'],
-                //                                                         'total_savings' => $details['total_savings'],
-                //                                                         'total_advance' => $details['total_advance'],
-                //                                                         'total_lapses' => $details['total_lapses'],
-                //                                                         'total_collectedAmount' => $details['total_collectedAmount'],
-                //                                                       ];
-                //         foreach($collections as $coll){
-                //             $this->areaDetails =  $this->areaDetails->push($coll);
-                //         }                        
-                //     }                                                 
-                // }
-            }
-            //dd( $this->areaDetails );
-            //dd($this->areaDetails);
-            //dd( $this->areaDetails->where('areaID', 'AREA-021') );    
+            $this->areas = collect($areas);            
         }
 
         $mfolist = collect([]);

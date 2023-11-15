@@ -10,7 +10,7 @@
                     <img src="{{ URL::to('/') }}/assets/icons/modal-icon/circle-x.svg" alt="Asking">
                 </div>
                 <div>
-                    <p>Operation failed. Retry ?</p>
+                    <p>{{ $message }}</p>
                 </div>                
             </div>
             <div class="alert-footer">                
