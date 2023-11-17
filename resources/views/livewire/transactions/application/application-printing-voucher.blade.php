@@ -53,7 +53,7 @@
                             <div class="header-wrapper">
                                 <div class="box">
                                     <!-- <img src="{{ URL::to('/') }}/assets/icons/nav-logo.svg" alt=""> -->
-                                    <p style="font-size: 2rem !important; margin-top: 2rem;">Gold One Victory Financing Corporation Santol Balagtas Bulacan</p>
+                                    <p style="font-size: 2rem !important; margin-top: 2rem;">Gold One Victory Lending Corporation Santol Balagtas Bulacan</p>
                                 </div>
                                 <p>Receipt Voucher</p>
                             </div>
@@ -62,7 +62,7 @@
                                     <!-- * Box-1 -->
                                     <div class="box">
                                         <p>NAME: <span id="printClientName"> {{ $loansummary['fname'] }}, {{ $loansummary['lname'] }} {{ mb_substr($loansummary['mname'], 0, 1) }}</span></p>
-                                        <p class="p-bold">AREA 6</p>
+                                        <p class="p-bold">{{ isset($loansummary['areaName']) ? $loansummary['areaName'] : '' }}</p>
                                         <div class="box-inner">
                                             <div class="box-inner-wrapper">
                                                 <p>DATE:</p> 
@@ -126,9 +126,9 @@
                                             <p class="p-bold underline-thick">{{ isset($loansummary['approvedReleasingAmount']) ? ($loansummary['approvedReleasingAmount'] == '' ? '0' : number_format($loansummary['approvedReleasingAmount'], 2)) : 'not found' }}</p>
                                             <p>&nbsp;</p>
                                             <p>{{ isset($loansummary['holidayAmount']) ? number_format($loansummary['holidayAmount'], 2) : '' }}</p>
-                                            <p>{{ isset($loansummary['savings']) ? number_format($loansummary['savings'], 2) : '' }}</p>
+                                            <p>{{ $loansummary['totalSavingsAmount'] != '' ? number_format($loansummary['totalSavingsAmount'], 2) : '0.00' }}</p>
                                             <p>{{ isset($loansummary['lifeInsurance']) ? number_format($loansummary['lifeInsurance'], 2) : '' }}</p>
-                                            <p>{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : '' }}</p>
+                                            <p>{{ $loansummary['deductInterest'] == 0 ? 0.00 : ( number_format($loansummary['total_InterestAmount'] ??= 0.00, 2) ) }}</p>
                                         </div>
                                     </div>
                                     <!--  Box-3 -->
