@@ -67,7 +67,7 @@
                                         $penalty = $area['expectedCollection'] - $area['total_collectedAmount'];
                                     @endphp
                                     <span id="collectionPenalty">{{ number_format(($penalty < 0 ? 0 : $penalty), 2) }}</span>
-                                    @if( $checkIfPaid )
+                                    @if( ($area['collection_Status'] ??= '') == 'Collected' )
                                     <img src="{{ URL::to('/') }}/assets/icons/circle-check.svg" alt="upload-image" 
                                          style="height: 2rem; width: 2rem; position: absolute; right: 8px; bottom: 8px;" />    
                                     @endif      
@@ -129,7 +129,8 @@
                 @php
                     $sumCollected = $areaDetails->where('areaID', $areaID)->sum('collectedAmount');      
                     $countPaid = $areaDetails->where('areaID', $areaID)->where('payment_Status', 'Paid')->count();    
-                    $areaCollectedAmount = $areas->where('areaID', $areaID)->sum('total_collectedAmount');  
+                    //$areaCollectedAmount = $areas->where('areaID', $areaID)->sum('total_collectedAmount');  
+                    $areastatus = $areas->where('areaID', $areaID)->first();  
                 @endphp      
                 <!-- delete           -->
                 @php 
@@ -140,7 +141,7 @@
                          <p class="textPrimary" data-open-collection-summary-button>View Summary</p>
                      </div> -->
                 <!-- delete -->
-                @if($areaCollectedAmount == 0)
+                @if(($areastatus['collection_Status'] ??= '') != 'Collected')
                     <button type="button" style="{{ $countPaid >= 0 && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
                     <button type="button" style="{{ $countPaid >= 0 && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
                     @if($countDetails > 0 && $countPaid == 0)

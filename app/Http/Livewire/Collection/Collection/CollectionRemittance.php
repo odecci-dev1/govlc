@@ -84,13 +84,14 @@ class CollectionRemittance extends Component
                     "savings"=> isset($this->reminfo['savings']) ? $this->reminfo['savings'] : 0,
                     "modeOfPayment"=> $this->reminfo['modeOfPayment'],
                     "areaRefno"=> $this->areaRefNo,
+                    "areaID"=> $this->areaID,
                     "amountCollected"=> $this->reminfo['amntCollected'],
                     "advancePayment"=> isset($this->reminfo['advance']) ? $this->reminfo['advance'] : 0,
                     "lapses"=> isset($this->reminfo['lapses']) ? $this->reminfo['lapses'] : 0,
                     "userId"=> session()->get('auth_userid'),
                     "foid"=> $this->foid
                 ];
-        $remit = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Remit', $data);                               
+        $remit = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Remit', $data);                                     
         return redirect()->to('/collection/remittance/'.$this->foid.'/'.$this->areaRefNo.'/'.$this->areaID)->with(['mmessage'=> 'Remittance successfully saved', 'mword'=> 'Success']);    
     }
 

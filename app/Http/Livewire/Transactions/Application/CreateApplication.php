@@ -1108,6 +1108,7 @@ class CreateApplication extends Component
 
             $data = [
                         'ldid' => $this->loanDetails['ldid'],
+                        'memId' => $this->searchedmemId,
                         'note' => isset($this->loanDetails['notes']) ? $this->loanDetails['notes'] : '',
                         'approvedby' => session()->get('auth_userid'),
                         'naid' => $this->naID,

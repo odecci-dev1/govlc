@@ -109,7 +109,7 @@
                                                     </div>
                                                     <div class="wrapper">
                                                         <div class="fill-wrap">
-                                                            <p class="p-fill p-bold">Daily Payment:</p>
+                                                            <p class="p-fill p-bold">Collectible Due:</p>
                                                             <!-- TODO: Remove the placeholder attribute in the input element -->
                                                             <input class="fill-out-line" type="text" value="{{ number_format($loansummary['dailyCollectibles'],2) }}" name="" id="" disabled="true" aria-disabled="true" >
                                                         </div>

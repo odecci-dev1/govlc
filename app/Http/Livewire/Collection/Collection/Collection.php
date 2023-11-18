@@ -12,6 +12,7 @@ class Collection extends Component
 
     public $areas = [];
     public $areaID = '';
+    public $areaRefNo = '';
     public $foid = '';
     public $folist = [];
     public $colrefNo = '';
@@ -71,7 +72,8 @@ class Collection extends Component
             $denomstring = '1:'.$cd1.'|'.'5:'.$cd5.'|'.'10:'.$cd10.'|'.'20:'.$cd20.'|'.'50:'.$cd50.'|'.'100:'.$cd100.'|'.'200:'.$cd200.'|'.'500:'.$cd500.'|'.'1000:'.$cd1000;
             $data = [
                 "areaID"=> $this->areaID,
-                "denomination"=> $denomstring              
+                "denomination"=> $denomstring,   
+                "areaRefno" => $this->areaRefNo,      
             ];
             //dd($data);
             $collect = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Collect', $data);               
@@ -114,21 +116,25 @@ class Collection extends Component
         if($this->areaID == ''){
             $this->areaID = $areaID;       
             $this->foid = $foid;
+            $this->areaRefNo = $areaRefNo;
         }
         else{
             if($force == 0){
                 if($this->areaID == $areaID){
                     $this->areaID = '';  
                     $this->foid = '';     
+                    $this->areaRefNo = '';
                 }
                 else{
                     $this->areaID = $areaID;    
-                    $this->foid = $foid;                   
+                    $this->foid = $foid;      
+                    $this->areaRefNo = $areaRefNo;             
                 }
             }
             else{
                 $this->areaID = $areaID;    
-                $this->foid = $foid;         
+                $this->foid = $foid;  
+                $this->areaRefNo = $areaRefNo;       
             }
            
         }    
