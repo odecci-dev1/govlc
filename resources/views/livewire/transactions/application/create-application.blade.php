@@ -30,7 +30,7 @@
             </div>
         @endif
     <!-- * New Application Progress Bar Container -->
-    @if($type != 'details')
+    @if($type != 'details' && $member['statusID'] != 14)
     <div class="na-progress-bar-container">
         <div class="progress-bar-level">
 
@@ -69,9 +69,7 @@
     </div>
     @endif
     
-    @if($member['statusID'] == 8)
-                
-
+    @if($member['statusID'] == 8 || $member['statusID'] == 14)                
                 <!-- * New Application Notes and Remarks Section -->
                 <div class="na-notes-remarks-sec">
                     <div class="wrapper-1">
@@ -82,15 +80,15 @@
                                 <button type="button" wire:click="submitForApproval" class="button" data-submit-for-approval>Submit for approval</button>
                             <!-- </a> -->
                             @if($usertype != 2)
-                            <button type="button" class="declineButton" data-open-application-decline>Decline</button>
+                                <button type="button" class="declineButton" data-open-application-decline>Decline</button>
                             @endif
                             @endif
                         </div>
                     </div>
-                    <textarea wire:model.lazy="loanDetails.remarks" {{ $usertype != 2 ? '' : 'disabled' }} class="wrapper-2"></textarea>
-
+                    <textarea wire:model.lazy="loanDetails.remarks"  {{ $member['statusID'] == 8 ? '' : 'readonly' }} {{ $usertype != 2 ? '' : 'disabled' }} class="wrapper-2"></textarea>
                 </div>
-    @elseif(in_array($member['statusID'], [9, 10, 15]))
+    @endif            
+    @if(in_array($member['statusID'], [9, 10, 15]))
     @if($type != 'details')
     <div class="na-releasing-sec">
 
