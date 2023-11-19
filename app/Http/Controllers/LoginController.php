@@ -63,7 +63,9 @@ class LoginController extends Controller
                     return redirect('/collection/remittance/'.$data['foid'].'/'.$areaRefNo.'/'.$areaID);
                 }
                 else{
-                    return redirect('/logout')->with('message', 'You dont have remittance to view.'); 
+                    //return redirect('/logout')->with('message', 'You dont have remittance to view.'); 
+                    $request->session()->flush();
+                    return redirect('/')->with('message', 'You are not yet assigned to any areas or dont have remittance to view.');       
                 }
             } 
             else{       
