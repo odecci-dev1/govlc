@@ -87,16 +87,17 @@ class Collection extends Component
         $this->validate(['rejectReason' => 'required']);
         $data = [
             "areaID"=> $this->areaID,
+            "areaRefno"=> $this->areaRefNo,
             "remarks" => $this->rejectReason,  
             "foid" => $this->foid,                             
         ];
-        $collect = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Reject', $data);    
-        $this->emit('RESPONSE_CLOSE_REJECTION_MODAL', ['url' => URL::to('/').'/collection/view/'.$this->areaID]);            
+        $collect = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Reject', $data);         
+        $this->emit('RESPONSE_CLOSE_REJECTION_MODAL', ['url' => URL::to('/').'/collection/view/'.$this->colrefNo]);            
     }
 
     public function print($areaRefNo = ''){   
         //dd(['areaID' => $this->areaID, 'remarks' => 'Printded ' . Carbon::now() , 'foid' => $this->foid]);    
-        $print = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/PrintCollection', ['areaID' => $this->areaID, 'remarks' => 'Printded ' . Carbon::now() , 'foid' => $this->foid]);                  
+        $print = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/PrintCollection', ['areaID' => $this->areaID , 'remarks' => 'Printded ' . Carbon::now() , 'foid' => $this->foid]);                  
         $print = $print->json();
         //dd( $print );
         if($areaRefNo == ''){               
