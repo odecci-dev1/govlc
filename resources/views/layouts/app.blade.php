@@ -285,8 +285,10 @@
             @php 
                 $profilepic = session()->get('auth_profile');
             @endphp
+            <div style="position: relative;">
             <img onclick="showNoti()" style="cursor: pointer;" src="{{ URL::to('/') }}/assets/icons/bell.svg" alt="Bell" />
             <span id="noti-count" style="{{ session()->get('noti_count') == '0' || session()->get('noti_count') == '' ? 'display: none' : '' }}">{{ session()->get('noti_count') }}</span>
+            </div>
             @if(file_exists(public_path('storage/users_profile/'.$profilepic)))                                  
                 <img src="{{ asset('storage/users_profile/'.$profilepic) }}" alt="upload-image" style="height: 5rem; width: 5rem; cursor: pointer;  border-radius: 50%" id="profileImg" onclick="openProfile()"/>                                                                                                                 
             @else

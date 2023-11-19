@@ -14168,6 +14168,12 @@ Date: 10-03-2023
   right: 14.8rem;
   top: 2.6rem;
 }
+@media (max-width: 430px) {
+  #noti-count{
+    right: 12.3rem;
+    top: 2.0rem;
+  }
+}
 
 .alert-container{
   width: 30%; 
