@@ -471,7 +471,7 @@
             const collectionSummaryPrintBtn = document.querySelector('[data-collection-summary-print-button]')
             collectionSummaryPrintBtn.addEventListener('click', () => {
                 //url = '/KC/collection/collection-summary-print.html'
-                url = '{{ URL::to("/") }}/collection/print/summary'
+                url = '{{ URL::to("/") }}/collection/print/summary/{{ $colrefNo }}'
                 window.open(url)
             })
         }

@@ -20,6 +20,7 @@
         @php 
             $modules = session()->get('auth_usermodules');
             $usertype = session()->get('auth_usertype'); 
+            $remittanceonly = session()->get('auth_remittance_only'); 
         @endphp
         <!-- * Nav Container 1 inside main nav-->
         <div class="nav-con-1">
@@ -31,6 +32,7 @@
 
                 <!-- * Link Wrapper -->
                 <!-- * Dashboard -->
+                @if($remittanceonly == 0)
                 <div class="dropdown" data-dropdown>
 
                     <a href="{{ URL::to('/') }}/dashboard" class="link " data-dropdown-button>
@@ -50,7 +52,7 @@
                     </a>
 
                 </div>
-
+                @endif
                 <!-- * Link Wrapper w/ SubMenu -->
                 <!-- * Maintenance -->
                 <div class="dropdown" data-dropdown>

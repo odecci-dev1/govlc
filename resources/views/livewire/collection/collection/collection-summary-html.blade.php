@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <livewire:collection.collection.collection-print-summary/>
+    <livewire:collection.collection.collection-print-summary :colrefNo="request()->route('colrefNo')"/>
     @livewireScripts  
 </body>
 

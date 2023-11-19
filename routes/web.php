@@ -158,7 +158,7 @@ Route::middleware(['access:Module-06'])->group(function () {
     Route::get('/collection/print/area/{areaID}/{areaRefNo?}', function(){
         return view('livewire.collection.collection.collection-html');
     });
-    Route::get('/collection/print/summary', function(){
+    Route::get('/collection/print/summary/{colrefNo}', function(){
         return view('livewire.collection.collection.collection-summary-html');
     });
 });
