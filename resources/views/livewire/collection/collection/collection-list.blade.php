@@ -78,7 +78,7 @@
                         </th>
 
                         <!-- * Total Lapses -->
-                        <th>
+                        <th style="padding-left: 5rem;">
                             <span class="th-name">Total Lapses</span>
                         </th>
 
@@ -128,7 +128,7 @@
                             </td>
 
                             <!-- * Total Lapses -->
-                            <td>
+                            <td style="padding-left: 5rem;">
                                 {{ number_format($l['total_lapses'], 2) }}
                             </td>
 
