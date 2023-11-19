@@ -16,7 +16,6 @@
 
             <!-- * Add New Button -->
         
-
             <!-- * Member Type Dropdown Button -->
             <div class="borrower-dropdown" data-bor-dropdown>
 
@@ -36,7 +35,7 @@
             <div class="borrower-dropdown" data-bor-dropdown>
 
                 <div class="select-box" style="width: 40rem;">
-                    <select  wire:model="loantype" class="select-option-menu">
+                    <select  wire:model="loantype" class="select-option-menu" style="display: none;">
                         <option value="">All Types Of Loan</option>     
                         @if($loantypeList)
                             @if($loantypeList)

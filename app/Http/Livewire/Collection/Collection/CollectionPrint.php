@@ -21,9 +21,9 @@ class CollectionPrint extends Component
         $this->areaDetails = collect([]);
         $this->areaDetailsFooter = collect([]);
       
-        $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $this->areaRefNo]);  
-        //dd($details);
+        $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $this->areaRefNo]);         
         $details = $details->json();
+        //dd($details);
        
         if($details){
             $details = $details[0];                       

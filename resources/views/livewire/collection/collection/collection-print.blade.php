@@ -49,7 +49,7 @@
                             <p>Date Released: <span id="printDateReleased">{{ $realeseDate->format('F d, Y') }}</span></p>
                             <p>Due Date: <span id="printDueDate">{{ $dueDate->format('F d, Y') }}</span></p>
                             <p>Collectible: <span id="printCollectible">{{ number_format($mdetails['dailyCollectibles'], 2) }}</span></p>
-                            <p>Balance: <span id="printBalance"></span></p>
+                            <p>Balance: <span id="printBalance">{{ number_format($mdetails['amountDue'], 2) }}</span></p>
                             <p>Overall Savings: <span id="printOverallSavings">{{ number_format($mdetails['totalSavingsAmount'], 2) }}</span> </p>
                             <p>Balance Savings: <span id="printBalanceSavings"></span></p>
                             <p>Savings Payment: <span id="printSavingsPayment"></span></p>

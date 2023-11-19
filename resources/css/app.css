@@ -3328,11 +3328,11 @@ body.print-portrait .page {
 .profile-nav .profile-nav-con img:first-child {
   padding-right: 2rem;
 }
-@media (max-width: 430px) {
+/* @media (max-width: 430px) {
   .profile-nav .profile-nav-con img:first-child {
     display: none;
   }
-}
+} */
 
 @media (max-width: 1366px) {
   .nav {
