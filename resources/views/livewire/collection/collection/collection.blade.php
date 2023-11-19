@@ -141,9 +141,9 @@
                          <p class="textPrimary" data-open-collection-summary-button>View Summary</p>
                      </div> -->
                 <!-- delete -->
-                @if(($areastatus['collection_Status'] ??= '') != 'Collected')
-                    <button type="button" style="{{ $countPaid >= 0 && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
-                    <button type="button" style="{{ $countPaid >= 0 && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
+              
+                    <button type="button" style="{{ $countPaid >= 0 && ($areastatus['collection_Status'] ??= '') != 'Collected' && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
+                    <button type="button" style="{{ $countPaid >= 0 && ($areastatus['collection_Status'] ??= '') != 'Collected' && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
                     @if($countDetails > 0 && $countPaid == 0)
                         <button type="button" wire:click="print('{{ (!in_array($checkArea['area_RefNo'], ['PENDING', '']) ? $checkArea['area_RefNo'] : '') }}')" class="button-2" data-collection-print-button>Print</button>
                         @if(!in_array($checkArea['area_RefNo'], ['PENDING', '']))
@@ -152,7 +152,7 @@
                             @endif  
                         @endif            
                     @endif  
-                @endif              
+                     
              </div>
 
          </div>
