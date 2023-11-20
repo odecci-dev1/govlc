@@ -43,7 +43,7 @@ class CollectionPrint extends Component
                 }                
             }                         
         }
-        //dd($this->areaDetails);
+      // dd($this->areaDetails);
     }
 
     public function render()

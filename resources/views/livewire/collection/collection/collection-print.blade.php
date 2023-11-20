@@ -222,7 +222,7 @@
 
                                 <!-- * Balance -->
                                 <td class="td-bal">
-                                    <p></p>
+                                    <p>{{ number_format($mdetails['amountDue'], 2) }}</p>
                                 </td>
 
                                 <!-- * Savings -->
