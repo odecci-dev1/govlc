@@ -117,6 +117,7 @@ class CollectionRemittance extends Component
                 $data[] = [
                             "expensesDescription"=>  $this->expenses['expense'.$cnt],
                             "fieldExpenses"=> $this->expenses['amount'.$cnt],
+                            "areaRefno"=> $this->areaRefNo,
                             "areaId"=> $this->areaID
                           ];
             }

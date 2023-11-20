@@ -80,6 +80,7 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
+      
         $request->session()->flush();
         return redirect('/')->with('message', 'You have been logout');       
     }
