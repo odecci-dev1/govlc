@@ -323,7 +323,7 @@
 
             <!-- * Loan Amount -->
             <div class="input-wrapper">
-                <span>Loan Amount</span>
+                <span>Loan Principal</span>
                 <input wire:model.lazy="loanDetails.loanAmount" wire:blur="computeLoanAmount" {{ in_array($member['statusID'], [10, 14, 15]) ? 'disabled' : '' }} class="{{ in_array($member['statusID'], [7,8,9]) ? 'inpt-editable' : '' }}" {{ $type != 'details' ? '' : 'disabled' }} type="text" >
                 @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror
                 <!-- dito -->
@@ -905,7 +905,7 @@
                     <!-- * Years Of Stay -->
                     <div class="input-wrapper">
                         <span>Years of stay on the mentioned address</span>
-                        <input wire:model.lazy="member.yearsStay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                        <input wire:model.lazy="member.yearsStay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         @error('member.yearsStay') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1137,7 +1137,7 @@
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input wire:model.lazy="member.yos" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="member.yos" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                     @error('member.yos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -1319,7 +1319,7 @@
                     <!-- * Years Of Service -->
                     <div class="input-wrapper">
                         <span>Years Of Service</span>
-                        <input wire:model.lazy="member.f_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                        <input wire:model.lazy="member.f_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1342,7 +1342,7 @@
                     <!-- * Current Job / Position -->
                     <div class="input-wrapper">
                         <span>Number Of Dependants</span>
-                        <input  wire:model.lazy="member.f_NOD" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                        <input  wire:model.lazy="member.f_NOD" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1392,7 +1392,7 @@
                             <!-- * Age -->
                             <div class="input-wrapper">
                                 <span>Age</span>
-                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
@@ -1491,7 +1491,7 @@
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.lazy="member.f_Age" disabled type="number">
+                        <input wire:model.lazy="member.f_Age" disabled type="number"> 
                         @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1504,32 +1504,11 @@
                     <div class="input-wrapper">
                         <span>Employment Status</span>
                         <div class="select-box">
-
-                            <div class="options-container" data-option-con8>
-
-                                <div class="option" data-option-item8>
-
-                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Employed" value="1" />
-                                    <label for="f_mem_Employed">
-                                        <h4>Employed</h4>
-                                    </label>
-
-                                </div>
-
-                                <div class="option" data-option-item8>
-
-                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Unemployed" value="0"/>
-                                    <label for="f_mem_Unemployed">
-                                        <h4>Unemployed</h4>
-                                    </label>
-
-                                </div>
-
-                            </div>
-                            
-                            <div class="selected" style="font-weight: bold;" data-option-select8>
-                                {{ $member['f_Emp_Status'] != '' ? ($member['f_Emp_Status'] == 1 ? 'Employed' : 'Unemployed') : '' }}
-                            </div>
+                            <select  wire:model="member.f_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                                <option value="">- -select - -</option>     
+                                <option value="1">Employed</option>                            
+                                <option value="0">Unemployed</option>                            
+                            </select>                                             
                             @error('member.f_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -1561,7 +1540,7 @@
                             <input wire:model.lazy="member.f_Job" type="text"  data-fdr-current-job>
                             @endif
                         @endif    
-
+                        dito
                         @if(isset($member['f_Emp_Status']))
                             @if($member['f_Emp_Status'] == '0')
                             <!-- * Previous Job -->
@@ -1575,7 +1554,7 @@
                     <!-- * Years Of Service -->
                     <div class="input-wrapper">
                         <span>Years Of Service</span>
-                        <input wire:model.lazy="member.f_YOS" type="text" >
+                        <input wire:model.lazy="member.f_YOS" type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1598,7 +1577,7 @@
                     <!-- * Number Of Dependants -->
                     <div class="input-wrapper">
                         <span>Number Of Dependants</span>
-                        <input wire:model.lazy="member.f_NOD" type="number">
+                        <input wire:model.lazy="member.f_NOD" type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1648,7 +1627,7 @@
                             <!-- * Age -->
                             <div class="input-wrapper">
                                 <span>Age</span>
-                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
@@ -1748,14 +1727,14 @@
                 <!-- * Years Of Business -->
                 <div class="input-wrapper">
                     <span>Years Of Business</span>
-                    <input  wire:model.lazy="membusinfo.yob" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input  wire:model.lazy="membusinfo.yob" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                     @error('membusinfo.yob') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Number Of Employees -->
                 <div class="input-wrapper">
                     <span>Number Of Employees</span>
-                    <input wire:model.lazy="membusinfo.noe" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="membusinfo.noe" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                     @error('membusinfo.noe') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2427,7 +2406,7 @@
                         <!-- * Years Of Stay -->
                         <div class="input-wrapper">
                             <span>Years of stay on the mentioned address</span>
-                            <input wire:model.lazy="comaker.co_YearsStay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                            <input wire:model.lazy="comaker.co_YearsStay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                             @error('comaker.co_YearsStay') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2610,7 +2589,7 @@
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input wire:model.lazy="comaker.co_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="comaker.co_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                     @error('comaker.co_YOS') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
