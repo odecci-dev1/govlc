@@ -35,6 +35,7 @@ class UserRegister extends Component
     public $collection;
     public $transactions;
     public $reports;
+    public $others;
 
     public $modules = [];
     public $modulelist;

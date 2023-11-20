@@ -419,7 +419,41 @@
                             </tr>
                           </table>
                           <!-- table -->
-                        </td>                       
+                        </td>      
+                        <td>
+                          <!-- table -->
+                          <table class="cust-table-inside">
+                            <tr>
+                              <td>
+                                <div class="flex-data" style="padding: 1rem 0rem;">
+                                    <input
+                                    type="checkbox"
+                                    class="checkbox"
+                                    wire:model="others"                                                                                
+                                    wire:change="checkAll('others','5')"
+                                  />
+                                  <b>Others</b>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                @php
+                                  $maintenancemdl = $modulelist->where('module_category', '5')->sortBy('module_name');;
+                                @endphp
+                                @if( $maintenancemdl )
+                                  @foreach($maintenancemdl as $maintenancemdl)
+                                  <div class="flex-data" style="margin-top: 20px;">
+                                    <input type="checkbox" wire:model="modules" class="checkbox" value="{{ $maintenancemdl['module_code'] }}" id="chkmdl{{ $maintenancemdl['module_code'] }}"/>
+                                    <label for="chkmdl{{ $maintenancemdl['module_code'] }}">{{ $maintenancemdl['module_name'] }}</label>
+                                  </div>
+                                  @endforeach
+                                @endif
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- table -->
+                        </td>                      
                       </tr>
                     </table>
                   </div>

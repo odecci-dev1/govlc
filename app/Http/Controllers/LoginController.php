@@ -70,7 +70,14 @@ class LoginController extends Controller
                 }
             } 
             else{       
-                return redirect('/dashboard');
+                $modules = session()->get('auth_usermodules');
+                if(in_array('Module-018', $modules)){
+                    return redirect('/dashboard');
+                }
+                else{
+                    return redirect('/profile');
+                }
+               
             }
         }
         else{

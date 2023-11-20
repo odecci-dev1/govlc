@@ -59,11 +59,15 @@ Route::get('/getnoticount', [NotificationController::class, 'getnoticount']);
 Route::middleware(['authenticated'])->group(function () {
 
     Route::middleware(['isfo:0'])->group(function () {
-        Route::get('/dashboard', Dashboard::class)->name('dashboard');
+        Route::middleware(['access:Module-018'])->group(function () {
+            Route::get('/dashboard', Dashboard::class)->name('dashboard');
+        });
 
         //members edited
-        Route::get('/members', MemberList::class);
-        Route::get('/members/{type}/{naID}', CreateApplication::class)->name('application.view');
+        Route::middleware(['access:Module-018'])->group(function () {
+            Route::get('/members', MemberList::class);
+            Route::get('/members/{type}/{naID}', CreateApplication::class)->name('application.view');
+        });
     });
 
     Route::middleware(['access:Admin'])->group(function () {

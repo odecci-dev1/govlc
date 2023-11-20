@@ -33,6 +33,7 @@
                 <!-- * Link Wrapper -->
                 <!-- * Dashboard -->
                 @if($remittanceonly == 0)
+                @if(in_array('Module-018', $modules))
                 <div class="dropdown" data-dropdown>
 
                     <a href="{{ URL::to('/') }}/dashboard" class="link " data-dropdown-button>
@@ -41,9 +42,10 @@
                     </a>
 
                 </div>
-               
+                @endif
                 <!-- * Link Wrapper w/ SubMenu -->
                 <!-- * Members -->
+                @if(in_array('Module-019', $modules))
                 <div class="dropdown" data-dropdown>
 
                     <a href="{{ URL::to('/') }}/members" class="link " data-dropdown-button>
@@ -52,6 +54,7 @@
                     </a>
 
                 </div>
+                @endif
                 @endif
                 <!-- * Link Wrapper w/ SubMenu -->
                 <!-- * Maintenance -->
