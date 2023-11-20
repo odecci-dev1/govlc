@@ -126,7 +126,7 @@
                 <!-- * Due Date -->
                 <th>
                     <div class="th-wrapper">
-                        <!-- <span class="th-name">Due Date</span> <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
+                        <span class="th-name">Last Update</span>
                     </div>
                 </th>
 
@@ -172,12 +172,12 @@
 
                     <!-- * Outstading Balance Data-->
                     <td class="td-bal">
-                        10,000.00
+                        <!-- 10,000.00 -->
                     </td>
 
                     <!-- * Due Date Info-->
                     <td class="td-due">
-                        June 4, 2023
+                        <!-- June 4, 2023 -->
                     </td>
 
                     <!-- * Table View and Trash Button -->
