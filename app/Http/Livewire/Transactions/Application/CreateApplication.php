@@ -61,6 +61,7 @@ class CreateApplication extends Component
     public $loanhistory;
 
     public $reason;
+    public $showDecline = false;
     
     public function rules(){                
         $rules = [];      
@@ -770,10 +771,10 @@ class CreateApplication extends Component
                     ]];
       
                     //$extension = $request->file('filename')->getClientOriginalExtension();
-                    //dd($data);        
-                
+                         
+                    // dd(json_encode($data));   
             if($this->type == 'create'){                            
-                $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);                                                                        
+                $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data);                                                                                     
                 $apiresp = $crt->getStatusCode();                
                 if($apiresp == 200){     
                     if($crt->json()['status'] == 'ERROR'){
@@ -1081,10 +1082,10 @@ class CreateApplication extends Component
                         'userId' => session()->get('auth_userid'),                        
                     ];
 
-                    //dd($data);
+                 
                     //amount
                     //add loan amount here
-                    // dd($data);
+                  
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Credit/CreditSubmitforApproval', $data);  
             //dd($crt);
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully submited', 'mword'=> 'Success']);
@@ -1246,7 +1247,8 @@ class CreateApplication extends Component
                     "naid"=> $this->naID
                 ];
 
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').' /api/Approval/DeclineLoans', $data);                      
+        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Approval/DeclineLoans', $data);                      
+        //dd($data);
         return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application has been declined', 'mword'=> 'Success']);
     }
 

@@ -146,7 +146,7 @@ class LoanTypes extends Component
                     'loanAmount_Max' =>  isset($inputs['loantype']['loanAmount_Max']) ? $inputs['loantype']['loanAmount_Max'] : 0,
                     'terms' => $terms
                 ];
-                //dd($data);
+              
         $savemsg = '';
         if($this->loantypeID == ''){
             $savemsg = 'Loan type successfully saved';

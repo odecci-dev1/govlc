@@ -79,9 +79,9 @@
                             <!-- <a href="new-application-approval.html"> -->
                                 <button type="button" wire:click="submitForApproval" class="button" data-submit-for-approval>Submit for approval</button>
                             <!-- </a> -->
-                            @if($usertype != 2)
+                        
                                 <button type="button" class="declineButton" data-open-application-decline>Decline</button>
-                            @endif
+                           
                             @endif
                         </div>
                     </div>
@@ -517,9 +517,9 @@
             </div>
             @endif
             <div class="input-wrapper input-wrapper-decline" style="align-items: center;">
-                @if($usertype != 2)
+              
                 <button type="button" class="declineButton" data-open-application-decline>Decline</button>
-                @endif
+                
             </div>
         </div>
 
@@ -529,7 +529,7 @@
             <!-- * Approved by: -->
             <div class="input-wrapper">
                 <span>Approved by (From CI) :</span>
-                <input disabled wire:model.lazy="loanDetails.approvedBy" type="text" id="approvedBy" name="approvedBy">
+                <input disabled wire:model.lazy="loanDetails.approvedBy" type="text">
             </div>
 
             <!-- * Notes -->
@@ -543,7 +543,7 @@
         <div class="rowspan" style="display: flex;">       
             <div class="input-wrapper" style="width: 100%; " >
                 <span>Remarks / Notes (From CI) :</span>
-                <input readonly value="{{ isset($loanDetails['remarks']) ? $loanDetails['remarks'] : '' }}" type="text" id="approvedBy" name="approvedBy">
+                <input readonly value="{{ isset($loanDetails['remarks']) ? $loanDetails['remarks'] : '' }}" type="text" >
             </div>
         </div>
 
@@ -2224,21 +2224,21 @@
                         <!-- * Middle Name -->
                         <div class="input-wrapper">
                             <span>Middle Name</span>
-                            <input wire:model.lazy="comaker.co_Mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" id="midName" name="midName">
+                            <input wire:model.lazy="comaker.co_Mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
                             @error('comaker.co_Mname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Last Name -->
                         <div class="input-wrapper">
                             <span>Last Name</span>
-                            <input wire:model.lazy="comaker.co_Lname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" id="lName" name="lName">
+                            <input wire:model.lazy="comaker.co_Lname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
                             @error('comaker.co_Lname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Suffix -->
                         <div class="input-wrapper">
                             <span>Suffix</span>
-                            <input wire:model.lazy="comaker.co_Suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" id="suffix" name="suffix">
+                            <input wire:model.lazy="comaker.co_Suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text"  >
                             @error('comaker.co_Suffix') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2277,7 +2277,7 @@
                         <!-- * Place Of Birth -->
                         <div class="input-wrapper">
                             <span>Place Of Birth</span>
-                            <input wire:model.lazy="comaker.co_POB" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" id="poBirth" name="poBirth">
+                            <input wire:model.lazy="comaker.co_POB" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
                             @error('comaker.co_POB') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2687,7 +2687,7 @@
                             <canvas class="signature-pad"></canvas>
                         </div>
                         <div class="clear-btn">
-                            <button type="button" id="clearAppSig"><span> Clear </span></button>
+                            <button type="button"  ><span> Clear </span></button>
                         </div>
                     </div> -->
 
@@ -2699,7 +2699,7 @@
                                 <img type="image" class="profile" src="{{ $imgmemsign->temporaryUrl() }}" alt="upload-image">
                             @else
                                 @if(file_exists(public_path('storage/members_signature/'.(isset($member['signature']) ? $member['signature'] : 'xxxx'))))
-                                    <img type="image" id="applicantSig" src="{{ asset('storage/members_signature/'.$member['signature']) }}" alt="upload-image" />                                                                     
+                                    <img type="image" src="{{ asset('storage/members_signature/'.$member['signature']) }}" alt="upload-image" />                                                                     
                                 @else
                                     <img id="applicantSig">                                              
                                 @endif 
@@ -2710,7 +2710,7 @@
 
                     <!-- * Upload Applicant Signature Button -->
                     <div class="input-wrapper">
-                        <!-- <input type="file" class="input-image" id="imageUploadApplicantSign"> -->
+                        <!-- <input type="file" class="input-image" > -->
                         @if($type != 'details')
                         @if($usertype != 2)
                         <input type="file"  wire:model="imgmemsign" style="color: white;" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
@@ -2729,7 +2729,7 @@
                             <canvas class="signature-pad"></canvas>
                         </div>
                         <div class="clear-btn">
-                            <button type="button" id="clearCoSig"><span> Clear </span></button>
+                            <button type="button" ><span> Clear </span></button>
                         </div>
                     </div> -->
 
@@ -2740,7 +2740,7 @@
                                 <img type="image" class="profile" src="{{ $imgcosign->temporaryUrl() }}" alt="upload-image">
                             @else
                                 @if(file_exists(public_path('storage/comakers_signature/'.(isset($comaker['signature']) ? $comaker['signature'] : 'xxxx'))))
-                                    <img type="image" id="comSig" src="{{ asset('storage/comakers_signature/'.$comaker['signature']) }}" alt="upload-image" />                                                                     
+                                    <img type="image"  src="{{ asset('storage/comakers_signature/'.$comaker['signature']) }}" alt="upload-image" />                                                                     
                                 @else
                                     <img id="comSig">                                       
                                 @endif 
@@ -2902,7 +2902,7 @@
 
                                                         <!-- * Rowspan 2: Reason for declining Container -->
                                                         <div class="rowspan" style="display: inline;">
-                                                            <textarea wire:model.lazy="reason" rows="15" id=""placeholder="Enter the reason here..."></textarea>
+                                                            <textarea wire:model.lazy="reason" rows="15" placeholder="Enter the reason here..."></textarea>
                                                             @error('reason') <span class="text-required">{{ $message }}</span>@enderror    
                                                         </div>
                                                         
@@ -2947,10 +2947,10 @@
                     }, {
                         once: true
                     });
-            })
+            });
 
             window.livewire.on('openSearchEmployeeModal', message => {
-                dataNewGroupModal.showModal()
+                dataNewGroupModal.showModal();
             });
 
             window.livewire.on('closeSearchEmployeeModal', message => {
@@ -2966,91 +2966,70 @@
             });
 
             
-        })
-        const openLoanDetailsButton = document.querySelector('#data-open-loan-details')
-        const closeLoanDetailsButton = document.querySelector('#data-close-loan-details')
-        const loanDetailsModal = document.querySelector('[data-loan-details-modal]')
+            const openLoanDetailsButton = document.querySelector('#data-open-loan-details')
+            const closeLoanDetailsButton = document.querySelector('#data-close-loan-details')
+            const loanDetailsModal = document.querySelector('[data-loan-details-modal]')
 
+            openLoanDetailsButton.addEventListener('click', () => {
+                loanDetailsModal.showModal();
+            });
 
-        openLoanDetailsButton.addEventListener('click', () => {
-            loanDetailsModal.showModal();
-        })
+            closeLoanDetailsButton.addEventListener('click', () => {
+                loanDetailsModal.setAttribute("closing", "");
+                loanDetailsModal.addEventListener("animationend", () => {
+                    loanDetailsModal.removeAttribute("closing");
+                    loanDetailsModal.close();
+                }, { once: true });
+            });
 
-        closeLoanDetailsButton.addEventListener('click', () => {
-            loanDetailsModal.setAttribute("closing", "");
-            loanDetailsModal.addEventListener("animationend", () => {
-                loanDetailsModal.removeAttribute("closing");
-                loanDetailsModal.close();
-            }, { once: true });
-        })
+            // decline
+            const declineApplicationModal = document.querySelector('[data-application-decline-modal]')
 
-        // loanDetailsModal.addEventListener('click', e => {
-        //     loanDetailsModal.setAttribute("closing", "");
-        //     loanDetailsModal.addEventListener("animationend", () => {
+            if (declineApplicationModal) {
+                const openDeclineApplicationModal = document.querySelector('[data-open-application-decline]')
+                const closeDeclineApplicationModal = document.querySelector('[data-close-application-decline]')
+                const submitDeclineReason = document.querySelector('[data-submit-decline-reason]')
+                url = 'new-application.html'
+                            
+                if(openDeclineApplicationModal){  
 
-        //         const loanDetailsModalDimensions = loanDetailsModal.getBoundingClientRect()
+                    submitModalFunction(
+                    openDeclineApplicationModal, 
+                    closeDeclineApplicationModal,
+                    submitDeclineReason,
+                    declineApplicationModal,
+                    url);
 
-        //         if (
-        //             e.clientX < loanDetailsModalDimensions.left ||
-        //             e.clientX > loanDetailsModalDimensions.right ||
-        //             e.clientY < loanDetailsModalDimensions.top ||
-        //             e.clientY > loanDetailsModalDimensions.bottom
-        //         ) {
-        //             loanDetailsModal.removeAttribute("closing");
-        //         }
-        //         loanDetailsModal.close()
+                    
+                    function submitModalFunction(open, close, submit, modal, url) {
+                        open.addEventListener('click', () => {
+                            modal.showModal()                   
+                        })
 
-        //     }, { once: true })
+                        close.addEventListener('click', () => {
+                            modal.setAttribute("closing", "");
+                            modal.addEventListener("animationend", () => {
+                                modal.removeAttribute("closing")
+                                modal.close()
+                            }, { once: true })
+                        
+                        })
+                    };
+                }    
+                // submit.addEventListener("click", () => {
+                //     location.href = url
+                // })
+            }    
+            // decline
+            
+        });
+       
 
-        // })
-
-        // *** END --- Loan and Payement History Modal *** //   
+      
 
         // * Decline Application Modal
         // ***** Modal with Submit Button redirect to another page ***** //
    
 
-        const declineApplicationModal = document.querySelector('[data-application-decline-modal]')
-
-        if (declineApplicationModal) {
-            const openDeclineApplicationModal = document.querySelector('[data-open-application-decline]')
-            const closeDeclineApplicationModal = document.querySelector('[data-close-application-decline]')
-            const submitDeclineReason = document.querySelector('[data-submit-decline-reason]')
-            url = 'new-application.html'
-
-           
-             
-            if(openDeclineApplicationModal){  
-                
-                submitModalFunction(
-                openDeclineApplicationModal, 
-                closeDeclineApplicationModal,
-                submitDeclineReason,
-                declineApplicationModal,
-                url)
-
-                
-                function submitModalFunction(open, close, submit, modal, url) {
-                open.addEventListener('click', () => {
-                    modal.showModal()
-                })
-
-                close.addEventListener('click', () => {
-                    modal.setAttribute("closing", "");
-                    modal.addEventListener("animationend", () => {
-                        modal.removeAttribute("closing")
-                        modal.close()
-                    }, { once: true })
-                
-                })
-            }
-
-            // submit.addEventListener("click", () => {
-            //     location.href = url
-            // })
-        }    
-
-        }
-        
     </script>
 </div>
