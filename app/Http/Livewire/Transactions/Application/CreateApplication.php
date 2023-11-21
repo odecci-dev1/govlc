@@ -696,7 +696,7 @@ class CreateApplication extends Component
                                 "f_Lname"=> $input['member']['f_Lname'] ??= '',
                                 "f_Mname"=> $input['member']['f_Mname'] ??= '',
                                 "f_Suffix"=> $input['member']['f_Suffix'] ??= '',
-                                "f_DOB"=> null,
+                                "f_DOB"=> $input['member']['f_DOB'] ??= null,
                                 "f_Age"=> $input['member']['f_Age'] ??= '0',
                                 "f_NOD"=> $input['member']['f_NOD'] ??= '0',
                                 "f_YOS"=> $input['member']['f_YOS'] ??= '0',
@@ -742,7 +742,7 @@ class CreateApplication extends Component
                                 "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
                                 "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
                                 "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
-                                "co_CompanyAddress"=> "string",///check if caused error not exist latest working
+                                "co_CompanyAddress"=>  $input['comaker']['co_CompanyID'] ??= '',///check if caused error not exist latest working
                                 "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
                                 "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
                                 "remarks"=> '',
@@ -975,7 +975,7 @@ class CreateApplication extends Component
                             "f_Lname"=> $input['member']['f_Lname'] ??= '',
                             "f_Mname"=> $input['member']['f_Mname'] ??= '',
                             "f_Suffix"=> $input['member']['f_Suffix'] ??= '',
-                            "f_DOB"=> null, //mali
+                            "f_DOB"=>  $input['member']['f_DOB'] ??= null,
                             "f_Age"=> $input['member']['f_Age'] ??= '0',
                             "f_NOD"=> $input['member']['f_NOD'] ??= '0',
                             "f_YOS"=> $input['member']['f_YOS'] ??= '0',
@@ -1021,6 +1021,7 @@ class CreateApplication extends Component
                             "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
                             "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
                             "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
+                            "co_CompanyAddress" => $input['comaker']['co_CompanyID'] ??= '',
                             "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '', //mali
                             "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
                             "remarks"=> '',
@@ -1055,8 +1056,7 @@ class CreateApplication extends Component
                     //dd( json_encode($data));
                     //dd( $data );
                     $this->resetValidation();  
-                    $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                    
-                    //dd( $crt);
+                    $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                                        
                     $apiresp = $crt->getStatusCode();             
                     if($apiresp == 200){     
                         return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> $type == 1 ? 'Application successfully updated' : 'Application successfully submited for CI', 'mword'=> 'Success']);
@@ -1801,7 +1801,7 @@ class CreateApplication extends Component
                 $this->member['f_Lname'] = $data['f_Lname']; 
                 $this->member['f_Mname'] = $data['f_Mname']; 
                 $this->member['f_Suffix'] = $data['f_Suffix']; 
-                $this->member['f_DOB'] = $data['f_DOB']; 
+                $this->member['f_DOB'] = date('Y-m-d', strtotime($data['f_DOB'])); 
                 $this->member['f_Age'] = $data['f_Age']; 
                 $this->member['f_NOD'] = $data['f_NOD']; 
                 $this->member['f_YOS'] = $data['f_YOS']; 
@@ -1839,7 +1839,7 @@ class CreateApplication extends Component
                 $this->comaker['co_YOS'] = $data['co_YearsStay'];  
                 $this->comaker['co_MonthlySalary'] = $data['co_MonthlySalary']; 
                 $this->comaker['co_OtherSOC'] = $data['co_OtherSOC']; 
-                $this->comaker['co_BO_Status'] = $data['co_BO_Status'] == true ? 1 : 0; 
+                $this->comaker['co_BO_Status'] = $data['co_BO_Status'] == "True" ? 1 : 0; 
                 $this->comaker['co_CompanyName'] = $data['co_CompanyName']; 
                 $this->comaker['co_CompanyID'] = $data['co_CompanyAddress']; 
                 $this->comaker['co_Emp_Status'] = $data['co_Emp_Status'];                
