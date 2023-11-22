@@ -663,7 +663,7 @@
                     <!-- * Header Wrapper -->
                     <div class="header-wrapper">
                         <h2>Borrower Information</h2>
-                        <button type="button" class="viewLoanDetailsButton" wire:click="getLoanHistory" id="data-open-loan-details">View loan & payment history</button>
+                        <button type="button" style="visibility: {{ !empty($naID) ? 'visible' : 'hidden' }};" class="viewLoanDetailsButton" wire:click="getLoanHistory" id="data-open-loan-details">View loan & payment history</button>
                     </div>
 
                     <!-- * Buttons -->
@@ -2155,7 +2155,7 @@
                 <!-- * Loan Details -->
                 <div class="input-wrapper">
                     <h2>Loan Details</h2>
-                    <span>Individual Loan</span>
+                    <span style="color:green;">{{ $loanDetails['loanTypeName'] ??= '' }}</span>
                 </div>
 
             </div>

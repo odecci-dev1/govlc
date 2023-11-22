@@ -83,9 +83,9 @@
             </div>
         @endfor
         @if ($cnt == 0)
-</div>
-@endif
-@endif
+        <!-- </div> -->
+        @endif
+    @endif
 
 @if ($cntheader == 0)
     </div>

@@ -26,6 +26,7 @@ class CreateApplication extends Component
     public $comaker;
     public $loanDetails;
     public $loanTypeID;
+    public $loanTypeName = '';
     public $termsOfPaymentList = [];
     public $loansummary = [];
 
@@ -1517,7 +1518,8 @@ class CreateApplication extends Component
         $this->member['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';  
 
         if($this->type == 'create'){
-                $this->loanDetails['loanTypeID'] = $request->loanTypeID;   
+                $this->loanDetails['loanTypeID'] = $request->loanTypeID;  
+                $this->loanDetails['loanTypeName'] = $request->loanTypeName;    
                 $this->loanDetails['loantermsID'] = $request->loantermsID; 
                 $this->loanDetails['loantermsName'] = $request->loantermsName;  
                 $this->member['termsOfPayment'] = $this->loanDetails['loantermsName'];     
@@ -1646,8 +1648,9 @@ class CreateApplication extends Component
                 //$loanHistory = $loanHistory->json();
                 //dd($loanHistory);
                 //get loan payment and history
-               
+                //dd($data['individualLoan']);
                 $this->loanDetails['loanTypeID'] = $data['individualLoan'][0]['loanTypeID'];
+                $this->loanDetails['loanTypeName'] = $data['individualLoan'][0]['loanType'];
                 $this->loanDetails['loantermsID'] = $data['termsOfPayment']; 
                 $this->loanDetails['loantermsName'] = $data['individualLoan'][0]['nameOfTerms'];  
                 //if($data['applicationStatus'] >= 9){

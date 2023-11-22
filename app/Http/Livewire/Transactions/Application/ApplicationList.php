@@ -20,6 +20,7 @@ class ApplicationList extends Component
     public function mount(){
         $this->usertype = session()->get('auth_usertype'); 
         $getloans = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetails');  
+       
         $getloans = $getloans->json();       
         $loantypeList = collect([]);
         if(count($getloans) > 0){
@@ -36,8 +37,7 @@ class ApplicationList extends Component
     {
         $filter = ['loanType' => $this->loantype, 'fullname' => $this->keyword, 'statusid' => [[ 'status' => 7 ]], 'page' => 1, 'pageSize' => 10000,  'from' => ($this->loanAmountFrom == '' ? '0' : strval($this->loanAmountFrom)), 'to' => ($this->loanAmountTo == '' ? '0' : strval($this->loanAmountTo))];
         $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/GlobalFilter/FilterSearch', $filter);                    
-        $this->list = $data->json();   
-        //dd( $this->list );       
+        $this->list = $data->json();          
         return view('livewire.transactions.application.application-list');
     }
 }
