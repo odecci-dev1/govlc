@@ -1528,7 +1528,8 @@ class CreateApplication extends Component
                     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $request->naID]]);                 
                     $resdata = $value->json();                          
                     $data =  $resdata[0];  
-                    //dd( $data);
+                   
+                    $this->searchedmemId =  $request->naID;
                     $this->member['fname'] = $data['fname'];  
                     $this->member['lname'] = $data['lname'];
                     $this->member['mname'] = $data['mname'];
