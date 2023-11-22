@@ -4,9 +4,11 @@ namespace App\Http\Livewire\Transactions\Application;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use App\Traits\Common;
 
 class CreditInvestigationApplicationList extends Component
 {
+    use Common;
     public $keyword = '';
     public $loantypeList;
     public $loantype;

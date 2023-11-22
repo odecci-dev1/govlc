@@ -21,6 +21,7 @@ class CreateApplication extends Component
     public $naID;
     public $searchedmemId;
     public $usertype;
+    public $modules = [];
     public $type;
     public $member; 
     public $comaker;
@@ -785,17 +786,20 @@ class CreateApplication extends Component
                         // $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
                         // $getlast = $getlast->json();
                         //dd($getlast);   
-                        $modules = session()->get('auth_usermodules');
-                        $usertype = session()->get('auth_usertype'); 
+                        // $modules = session()->get('auth_usermodules');
+                        // $usertype = session()->get('auth_usertype'); 
 
-                        if(in_array('Module-09', $modules) || in_array($usertype, [1,2])){
-                            $this->resetValidation();         
-                            return redirect()->to('/tranactions/application/view/'.$crt->json()['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
-                        }
-                        else{
-                            $this->resetValidation();         
-                            return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
-                        }
+                        // if(in_array('Module-09', $modules) || in_array($usertype, [1,2])){
+                        //     $this->resetValidation();         
+                        //     return redirect()->to('/tranactions/application/view/'.$crt->json()['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                        // }
+                        // else{
+                        //     $this->resetValidation();         
+                        //     return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+                        // }
+
+                        $this->resetValidation();         
+                        return redirect()->to('/tranactions/application/view/'.$crt->json()['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
                     }
                 }
                 else{
@@ -1485,6 +1489,7 @@ class CreateApplication extends Component
 
     public function mount($type = 'create', Request $request){
         $this->usertype = session()->get('auth_usertype'); 
+        $this->modules = session()->get('auth_usermodules'); 
         $this->member['old_profile'] = '';
         $this->member['old_signature'] = '';
         $this->member['old_attachments'] = [];
@@ -1642,6 +1647,29 @@ class CreateApplication extends Component
                 //ditoviewing
                 //dd(session()->get('auth_userid'));
                 $this->searchedmemId =  $data['memId'];
+                $this->member['statusID'] = $data['applicationStatus'];
+                if($this->type == 'view'){
+                    if( $this->member['statusID'] == 8 ){
+                        if(!in_array('Module-09',$this->modules)){
+                            return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);
+                        }
+                    }
+                    if( $this->member['statusID'] == 9 ){
+                        if(!in_array('Module-010',$this->modules)){
+                            return redirect()->to('/tranactions/application/credit/investigation/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);
+                        }
+                    }
+                    if( $this->member['statusID'] == 10 ){
+                        if(!in_array('Module-011',$this->modules)){
+                            return redirect()->to('/tranactions/application/approval/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);
+                        }
+                    }
+                    if( $this->member['statusID'] == 14 ){
+                        if(!in_array('Module-011',$this->modules)){
+                            return redirect()->to('/tranactions/application/approval/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);
+                        }
+                    }
+                }
                 //dd( $this->searchedmemId );
                 //get loan payment and history
               
@@ -1789,8 +1817,7 @@ class CreateApplication extends Component
                 $this->member['province'] = $data['province']; 
                 $this->member['yearsStay'] = $data['yearsStay'];
                 $this->member['zipCode'] = $data['zipCode'];
-                $this->member['status'] = $data['status'];
-                $this->member['statusID'] = $data['applicationStatus'];
+                $this->member['status'] = $data['status'];              
                 $this->member['electricBill'] = $data['electricBill']; 
                 $this->member['waterBill'] = $data['waterBill']; 
                 $this->member['otherBills'] = $data['otherBills']; 
