@@ -698,23 +698,56 @@
 
                     <!-- * Barangay -->
                     <div class="input-wrapper">
-                        <span>Barangay</span>
-                        <input wire:model.lazy="member.barangay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
-                        @error('member.barangay') <span class="text-required">{{ $message }}</span>@enderror
+                        <span>Province / Region</span>                        
+                        <div class="select-box">
+                            <select  wire:model="member.province" wire:change="renderCity" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                                <option value="">- - select - -</option>     
+                                @if($provinces->isNotEmpty())                              
+                                    @php 
+                                        $mprovinces = $provinces->sortBy('provDesc');
+                                    @endphp
+                                    @foreach($mprovinces as $mprovinces)
+                                    <option value="{{ $mprovinces['provDesc'] }}">{{ $mprovinces['provDesc'] }}</option>          
+                                    @endforeach
+                                @endif                                                         
+                            </select>                       
+                        </div>
+                        @error('member.province') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * City / Municipality -->
                     <div class="input-wrapper">
-                        <span>City / Municipality</span>
-                        <input wire:model.lazy="member.city" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        <span>City / Municipality</span>                        
+                            <select  wire:model="member.city" wire:change="renderBarangay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                                <option value="">- - select - -</option>     
+                                @if($cities->isNotEmpty())
+                                    @php 
+                                        $getprovince = $provinces->where('provDesc', $member['province'])->first();
+                                        $mcities = $cities->sortBy('citymunDesc');
+                                    @endphp
+                                    @foreach($mcities as $mcities)
+                                    <option value="{{ $mcities['citymunDesc'] }}">{{ $mcities['citymunDesc'] }}</option>          
+                                    @endforeach
+                                @endif                                                         
+                            </select>   
                         @error('member.city') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Province / Region -->
-                    <div class="input-wrapper">
-                        <span>Province / Region</span>
-                        <input wire:model.lazy="member.province" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                        @error('member.province') <span class="text-required">{{ $message }}</span>@enderror
+                    <div class="input-wrapper">        
+                        <span>Barangay</span>                        
+                            <select  wire:model="member.barangay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                                <option value="">- - select - -</option>     
+                                @if($barangays->isNotEmpty())
+                                    @php 
+                                        $mbarangays = $barangays->sortBy('citymunDesc');
+                                    @endphp
+                                    @foreach($mbarangays as $mbarangays)
+                                    <option value="{{ $mbarangays['brgyDesc'] }}">{{ $mbarangays['brgyDesc'] }}</option>          
+                                    @endforeach
+                                @endif                                                         
+                            </select>   
+                        @error('member.barangay') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Country -->
@@ -1347,23 +1380,7 @@
                         </div>
                     </div>
 
-                    <script>
-                        const selectedOpt8 = document.querySelector('[data-option-select8]');
-                        const optionsContainer8 = document.querySelector('[data-option-con8]');
-                        const optionsList8 = document.querySelectorAll('[data-option-item8]');
-
-                        selectedOpt8.addEventListener("click", () => {
-                            optionsContainer8.classList.toggle("active");
-                        });
-
-                        optionsList8.forEach(option => {
-                            option.addEventListener("click", () => {
-                                selectedOpt8.innerHTML = option.querySelector("label").innerHTML;
-                                optionsContainer8.classList.remove("active");
-                            });
-                        });
-                    </script>
-
+                    
                     <!-- * Current Job / Position -->
                     <div class="input-wrapper">
 
@@ -2200,23 +2217,55 @@
 
                         <!-- * Barangay -->
                         <div class="input-wrapper">
-                            <span>Barangay</span>
-                            <input  wire:model.lazy="comaker.co_Barangay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                            @error('comaker.co_Barangay') <span class="text-required">{{ $message }}</span>@enderror
+                            <span>Province / Region</span>                            
+                            <div class="select-box">
+                                <select  wire:model="comaker.co_Province" wire:change="renderCoCity" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                                    <option value="">- - select - -</option>     
+                                    @if($provinces->isNotEmpty())                              
+                                        @php 
+                                            $mprovinces = $provinces->sortBy('provDesc');
+                                        @endphp
+                                        @foreach($mprovinces as $mprovinces)
+                                        <option value="{{ $mprovinces['provDesc'] }}">{{ $mprovinces['provDesc'] }}</option>          
+                                        @endforeach
+                                    @endif                                                         
+                                </select>                       
+                            </div>
+                            @error('comaker.co_Province') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * City / Municipality -->
                         <div class="input-wrapper">
-                            <span>City / Municipality</span>
-                            <input  wire:model.lazy="comaker.co_City" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                            <span>City / Municipality</span>                            
+                            <select  wire:model="comaker.co_City" wire:change="renderCoBarangay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                                <option value="">- - select - -</option>     
+                                @if($cocities->isNotEmpty())
+                                    @php                                       
+                                        $mcities = $cocities->sortBy('citymunDesc');
+                                    @endphp
+                                    @foreach($mcities as $mcities)
+                                    <option value="{{ $mcities['citymunDesc'] }}">{{ $mcities['citymunDesc'] }}</option>          
+                                    @endforeach
+                                @endif                                                         
+                            </select>   
                             @error('comaker.co_City') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Province / Region -->
-                        <div class="input-wrapper">
-                            <span>Province / Region</span>
-                            <input  wire:model.lazy="comaker.co_Province" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
-                            @error('comaker.co_Province') <span class="text-required">{{ $message }}</span>@enderror
+                        <div class="input-wrapper">                     
+                            <span>Barangay</span>                            
+                            <select  wire:model="comaker.co_Barangay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                                <option value="">- - select - -</option>     
+                                @if($cobarangays->isNotEmpty())
+                                    @php 
+                                        $mbarangays = $cobarangays->sortBy('citymunDesc');
+                                    @endphp
+                                    @foreach($mbarangays as $mbarangays)
+                                    <option value="{{ $mbarangays['brgyDesc'] }}">{{ $mbarangays['brgyDesc'] }}</option>          
+                                    @endforeach
+                                @endif                                                         
+                            </select>   
+                            @error('comaker.co_Barangay') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Country -->

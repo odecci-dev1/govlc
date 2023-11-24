@@ -73,15 +73,21 @@
                 <!-- * New Application Notes and Remarks Section -->
                 <div class="na-notes-remarks-sec">
                     <div class="wrapper-1">
-                        <h3>Notes/Remarks</h3>
+                        <h3>{{ $member['statusID'] == 8 ? 'Notes/Remarks' : 'CI Notes'}}</h3>
                         <div class="btn-wrapper">
                             @if($usertype != 2)
-                            <!-- <a href="new-application-approval.html"> -->
-                                <button type="button" wire:click="submitForApproval" class="button" data-submit-for-approval>Submit for approval</button>
-                            <!-- </a> -->
-                            @if($usertype != 2)
-                                <button type="button" class="declineButton" data-open-application-decline>Decline</button>
+                                @if($member['statusID'] == 8)
+                                <!-- <a href="new-application-approval.html"> -->
+                                    <button type="button" wire:click="submitForApproval" class="button" data-submit-for-approval>Submit for approval</button>
+                                <!-- </a> -->
+                            
+                                    <button type="button" class="declineButton" data-open-application-decline>Decline</button>
+
+                                @endif
                             @endif
+                            @if($member['statusID'] == 14)
+                                <button type="button" style="font-size: 1.8rem;" class="viewLoanDetailsButton" data-open-receipt-voucher>View Loan Summary</button>
+                                @include('livewire.transactions.application.application-loan-summary');
                             @endif
                         </div>
                     </div>
@@ -102,178 +108,7 @@
             </div>
         </div>
             <!-- * Receipt Voucher Modal -->
-            <dialog class="na-receipt-voucher-modal" data-receipt-voucher-modal>
-
-            <!-- * Modal Container -->
-            <div class="modal-container">
-
-                <!-- * Receipt Voucher Container -->
-                <div class="receipt-voucher-container">
-
-                    <!-- * Button Wrapper -->
-                    <div class="button-wrapper">
-                        <button type="button" data-close-receipt-voucher>
-                            <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="close">
-                        </button>
-                    </div>
-
-                    <!-- * Header Wrapper -->
-                    <div class="header-wrapper">
-                        <p>LOAN SUMMARY</p>
-                        <!-- <p>GOLD ONE VICTORY FINANCIAL CONSULTANCY</p>
-                        <p>BALAGTAS, BULACAN</p>
-                        <p>RECEIPT VOUCHER</p> -->
-                    </div>
-
-                    <!-- * Body Wrapper -->
-                    <div class="body-wrapper">
-                        <div class="box-wrapper">
-                            <!-- * Box-1 -->
-                            <div class="box">
-                                <p>NAME: <span id="printClientName"> {{ $member['fname'] }}, {{ $member['lname'] }} {{ mb_substr($member['mname'], 0, 1) }}.</span></p>
-                                <p class="p-bold">{{ isset($loansummary['areaName']) ? $loansummary['areaName'] : '' }}</p>
-                                <div class="box-inner">
-                                    <div class="box-inner-wrapper">
-                                        <p>DATE:</p> 
-                                        <span id="printDate">{{ isset($loansummary['date']) ? date('F j, Y', strtotime($loansummary['date'])) : 'not found' }}</span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>DUE-DATE:</p> 
-                                        <span id="printDueDate">{{ isset($loansummary['dueDate']) ? date('F j, Y', strtotime($loansummary['dueDate'])) : 'not found' }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- * Box-2 -->
-                            <div class="box">
-                                <div class="box-inner">
-                                    <div class="box-inner-wrapper">
-                                        <p>LOAN AMOUNT:</p>
-                                        <span id="">{{ isset($loansummary['principalLoan']) ? number_format($loansummary['principalLoan'], 2) : 'not found' }}</span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>INTEREST RATE:</p>
-                                        <span id="">{{ isset($loansummary['interestRate']) ? $loansummary['interestRate'] * 100 : 'not found' }}%</span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>NOTARIAL FEE:</p>
-                                        <span id=""></span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>LOAN INSURANCE:</p>
-                                        <span id=""></span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>LOAN RECEIVABLE:</p>
-                                        <span id=""></span>
-                                    </div>
-                                    <div class="box-inner-wrapper p-red-text">
-                                        <p class="p-red-text">FIRST PAYMENT:</p>
-                                        <span id="">{{ isset($loansummary['advancePayment']) ? number_format($loansummary['advancePayment'], 2) : 'not found' }}</span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>HOLIDAYS:</p>
-                                        <span id=""></span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>USED SAVINGS:</p>
-                                        <span id=""></span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>LIFE INSURANCE:</p>
-                                        <span id=""></span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>DEDUCTED INTEREST:</p>
-                                        <span id=""></span>
-                                    </div>
-                                </div>
-                                <div class="box-inner">
-                                    <p>{{ isset($loansummary['loanAmount']) ? number_format($loansummary['loanAmount'], 2) : 'not found' }}</p>
-                                    <p>{{ isset($loansummary['total_InterestAmount']) ? number_format($loansummary['total_InterestAmount'], 2) : 'not found' }}</p>
-                                    <p>{{ isset($loansummary['notarialFee']) ? number_format($loansummary['notarialFee'], 2) : 'not found' }}</p>
-                                    <p class="underline">{{ isset($loansummary['loanInsurance']) ? number_format($loansummary['loanInsurance'], 2) : 'not found' }}</p>
-                                    <p class="underline-thick">{{ isset($loansummary['approvedReleasingAmount']) ? ($loansummary['approvedReleasingAmount'] == '' ? '0' : number_format($loansummary['approvedReleasingAmount'], 2)) : 'not found' }}</p>
-                                    <p>&nbsp;</p>
-                                    <p>{{ isset($loansummary['holidayAmount']) ? number_format($loansummary['holidayAmount'], 2) : '' }}</p>
-                                    <p>{{ $loansummary['totalSavingsAmount'] != '' ? number_format($loansummary['totalSavingsAmount'], 2) : '0.00' }}</p>
-                                    <p>{{ isset($loansummary['lifeInsurance']) ? number_format($loansummary['lifeInsurance'], 2) : '' }}</p>                                
-                                    <p>{{ $loansummary['deductInterest'] == 0 ? 0.00 : ( number_format($loansummary['total_InterestAmount'] ??= 0.00, 2) ) }}</p>
-                                </div>
-                            </div>
-                            <!-- * Box-3 -->
-                            <!-- <div class="box">
-                                <p class="p-red-text">FIRST PAYMENT: <span id="">138</span></p>
-                            </div> -->
-                            <!-- * Box-4 -->
-                            <div class="box">
-                                <div class="box-inner">
-                                    <div class="box-inner-wrapper">
-                                        <p>PREPARED BY:</p>
-                                        <span id="">{{ isset($loansummary['createdBy']) ? $loansummary['createdBy'] : 'not found' }}</span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>APPROVED BY:</p>
-                                        <span id="">{{ isset($loansummary['releasedBy']) ? $loansummary['releasedBy'] : 'not found' }}</span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>RELEASED THRU {{ isset($loansummary['modeOfRelease']) ? strtoupper($loansummary['modeOfRelease']) : 'NOT SET' }} {!! ($loansummary['modeOfRelease'] ??='') == 'Check' ? '<br>Check Reference : ' . ($loansummary['modeOfReleaseReference'] ??='') : '' !!}</p>
-                                    </div>
-                                </div>
-                                <div class="box-inner">
-                                    <div class="box-inner-wrapper">
-                                        <p>RECEIVED FROM:</p>
-                                        <span id="">GOLD ONE VICTORY LENDING CORPORATION</span>
-                                    </div>
-                                    <div class="box-inner-wrapper">
-                                        <p>AMOUNT TO BE RECEIVED:</p> 
-                                        <span id="">{{ isset($loansummary['approvedReleasingAmount']) ? ($loansummary['approvedReleasingAmount'] == '' ? '0' : number_format($loansummary['approvedReleasingAmount'], 2)) : 'not found' }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- * Box-5 -->
-                            <!-- <div class="box">
-                                <div class="box-inner">
-                                    <p class="p-bold line-sig">CO-MAKER</p>
-                                    <p>CONTACT NO.</p>
-                                </div>
-                                <div class="box-inner">
-                                    <p class="p-bold line-sig">CLIENT</p>
-                                    <p>CONTACT NO.</p>
-                                </div>
-                            </div> -->
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            </dialog>
-            <script>
-                //loan summary
-                const receiptVoucherModal = document.querySelector('[data-receipt-voucher-modal]')
-                const openReceiptVoucherModal = document.querySelector('[data-open-receipt-voucher]')
-
-                // * If this element is in the DOM, run else do nothing
-                if (receiptVoucherModal && openReceiptVoucherModal) {
-                    const closeReceiptVoucherModal = document.querySelector('[data-close-receipt-voucher]')
-
-
-                    openReceiptVoucherModal.addEventListener('click', () => {
-                        receiptVoucherModal.showModal();
-                    })
-
-                    closeReceiptVoucherModal.addEventListener('click', () => {
-                        receiptVoucherModal.setAttribute("closing", "");
-                        receiptVoucherModal.addEventListener("animationend", () => {
-                            receiptVoucherModal.removeAttribute("closing");
-                            receiptVoucherModal.close();
-                        }, { once: true });
-                    })
-                    
-                }
-                
-            </script>
+            @include('livewire.transactions.application.application-loan-summary')
         @if(in_array($member['statusID'], [10, 15]))
         <!-- * Rowspan 2: Mode of Release and Denomination and Check Number Toggle -->
         <div class="rowspan">
@@ -323,10 +158,9 @@
 
             <!-- * Loan Amount -->
             <div class="input-wrapper">
-                <span>Loan Amount</span>
+                <span>Loan Principal</span>
                 <input wire:model.lazy="loanDetails.loanAmount" wire:blur="computeLoanAmount" {{ in_array($member['statusID'], [10, 14, 15]) ? 'disabled' : '' }} class="{{ in_array($member['statusID'], [7,8,9]) ? 'inpt-editable' : '' }}" {{ $type != 'details' ? '' : 'disabled' }} type="text" >
-                @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror
-                <!-- dito -->
+                @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror              
             </div>
 
             <!-- * Purpose --> 
@@ -517,9 +351,9 @@
             </div>
             @endif
             <div class="input-wrapper input-wrapper-decline" style="align-items: center;">
-                @if($usertype != 2)
+              
                 <button type="button" class="declineButton" data-open-application-decline>Decline</button>
-                @endif
+                
             </div>
         </div>
 
@@ -529,7 +363,7 @@
             <!-- * Approved by: -->
             <div class="input-wrapper">
                 <span>Approved by (From CI) :</span>
-                <input disabled wire:model.lazy="loanDetails.approvedBy" type="text" id="approvedBy" name="approvedBy">
+                <input disabled wire:model.lazy="loanDetails.approvedBy" type="text">
             </div>
 
             <!-- * Notes -->
@@ -543,7 +377,7 @@
         <div class="rowspan" style="display: flex;">       
             <div class="input-wrapper" style="width: 100%; " >
                 <span>Remarks / Notes (From CI) :</span>
-                <input readonly value="{{ isset($loanDetails['remarks']) ? $loanDetails['remarks'] : '' }}" type="text" id="approvedBy" name="approvedBy">
+                <input readonly value="{{ isset($loanDetails['remarks']) ? $loanDetails['remarks'] : '' }}" type="text" >
             </div>
         </div>
 
@@ -663,7 +497,7 @@
                     <!-- * Header Wrapper -->
                     <div class="header-wrapper">
                         <h2>Borrower Information</h2>
-                        <button type="button" class="viewLoanDetailsButton" wire:click="getLoanHistory" id="data-open-loan-details">View loan & payment history</button>
+                        <button type="button" style="visibility: {{ !empty($searchedmemId) ? 'visible' : 'hidden' }};" class="viewLoanDetailsButton" wire:click="getLoanHistory" id="data-open-loan-details">View loan & payment history</button>
                     </div>
 
                     <!-- * Buttons -->
@@ -905,7 +739,7 @@
                     <!-- * Years Of Stay -->
                     <div class="input-wrapper">
                         <span>Years of stay on the mentioned address</span>
-                        <input wire:model.lazy="member.yearsStay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                        <input wire:model.lazy="member.yearsStay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         @error('member.yearsStay') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -946,9 +780,9 @@
                             @if($type != 'details')
                             <!-- * Upload Button -->
                                 @if($usertype != 2)
-                                <input type="file"  wire:model="imgprofile" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                                <input type="file"  wire:model="imgprofile" {!! $member['statusID'] == 7 && $usertype != 2 ? '' : 'style="display: none;"' !!} {!! $type != 'details' ? '' : 'style="display: none;"' !!} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                                 <!-- * Attach Button -->
-                                <input type="file"  wire:model="member.attachments" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-file-btn></input>
+                                <input type="file"  wire:model="member.attachments" {!! $member['statusID'] == 7 && $usertype != 2 ? '' : 'style="display: none;"' !!} {!! $type != 'details' ? '' : 'style="display: none;"' !!} class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-file-btn></input>
                                 @endif
                             @endif
                         </div>
@@ -1137,7 +971,7 @@
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input wire:model.lazy="member.yos" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="member.yos" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                     @error('member.yos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -1319,7 +1153,7 @@
                     <!-- * Years Of Service -->
                     <div class="input-wrapper">
                         <span>Years Of Service</span>
-                        <input wire:model.lazy="member.f_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                        <input wire:model.lazy="member.f_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1342,7 +1176,7 @@
                     <!-- * Current Job / Position -->
                     <div class="input-wrapper">
                         <span>Number Of Dependants</span>
-                        <input  wire:model.lazy="member.f_NOD" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                        <input  wire:model.lazy="member.f_NOD" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1392,7 +1226,7 @@
                             <!-- * Age -->
                             <div class="input-wrapper">
                                 <span>Age</span>
-                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
@@ -1491,7 +1325,7 @@
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.lazy="member.f_Age" disabled type="number">
+                        <input wire:model.lazy="member.f_Age" disabled type="number"> 
                         @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1504,32 +1338,11 @@
                     <div class="input-wrapper">
                         <span>Employment Status</span>
                         <div class="select-box">
-
-                            <div class="options-container" data-option-con8>
-
-                                <div class="option" data-option-item8>
-
-                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Employed" value="1" />
-                                    <label for="f_mem_Employed">
-                                        <h4>Employed</h4>
-                                    </label>
-
-                                </div>
-
-                                <div class="option" data-option-item8>
-
-                                    <input wire:model.lazy="member.f_Emp_Status" type="radio" class="radio" id="f_mem_Unemployed" value="0"/>
-                                    <label for="f_mem_Unemployed">
-                                        <h4>Unemployed</h4>
-                                    </label>
-
-                                </div>
-
-                            </div>
-                            
-                            <div class="selected" style="font-weight: bold;" data-option-select8>
-                                {{ $member['f_Emp_Status'] != '' ? ($member['f_Emp_Status'] == 1 ? 'Employed' : 'Unemployed') : '' }}
-                            </div>
+                            <select  wire:model="member.f_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                                <option value="">- -select - -</option>     
+                                <option value="1">Employed</option>                            
+                                <option value="0">Unemployed</option>                            
+                            </select>                                             
                             @error('member.f_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -1561,7 +1374,7 @@
                             <input wire:model.lazy="member.f_Job" type="text"  data-fdr-current-job>
                             @endif
                         @endif    
-
+                        
                         @if(isset($member['f_Emp_Status']))
                             @if($member['f_Emp_Status'] == '0')
                             <!-- * Previous Job -->
@@ -1575,7 +1388,7 @@
                     <!-- * Years Of Service -->
                     <div class="input-wrapper">
                         <span>Years Of Service</span>
-                        <input wire:model.lazy="member.f_YOS" type="text" >
+                        <input wire:model.lazy="member.f_YOS" type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1598,7 +1411,7 @@
                     <!-- * Number Of Dependants -->
                     <div class="input-wrapper">
                         <span>Number Of Dependants</span>
-                        <input wire:model.lazy="member.f_NOD" type="number">
+                        <input wire:model.lazy="member.f_NOD" type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                         @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -1648,7 +1461,7 @@
                             <!-- * Age -->
                             <div class="input-wrapper">
                                 <span>Age</span>
-                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
                             </div>
 
@@ -1748,14 +1561,14 @@
                 <!-- * Years Of Business -->
                 <div class="input-wrapper">
                     <span>Years Of Business</span>
-                    <input  wire:model.lazy="membusinfo.yob" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input  wire:model.lazy="membusinfo.yob" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                     @error('membusinfo.yob') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Number Of Employees -->
                 <div class="input-wrapper">
                     <span>Number Of Employees</span>
-                    <input wire:model.lazy="membusinfo.noe" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="membusinfo.noe" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                     @error('membusinfo.noe') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -1861,13 +1674,15 @@
                                 <td>{{ $value['yob'] }}</td>
                                 <!-- * Table Edit and Delete Button -->
                                 <td class="td-btns">
-                                    <div class="td-btn-wrapper">
-                                        <button wire:click="editBusinessInfo('{{ $key }}')" type="button" class="a-btn-edit">View</button>
-                                        @if($type != 'details')
-                                        @if($usertype != 2)
-                                        <button wire:click="removeBusinessInfo('{{ $key }}')" type="button" class="a-btn-delete">Remove</button>
-                                        @endif
-                                        @endif
+                                    <div class="td-btn-wrapper">                                       
+                                            <button wire:click="editBusinessInfo('{{ $key }}')" type="button" class="a-btn-edit">View</button>
+                                            @if($member['statusID'] == 7)
+                                            @if($type != 'details')
+                                                @if($usertype != 2)
+                                                <button wire:click="removeBusinessInfo('{{ $key }}')" type="button" class="a-btn-delete">Remove</button>
+                                                @endif
+                                            @endif
+                                            @endif
                                     </div>
                                 </td>
                             </tr>     
@@ -2176,7 +1991,7 @@
                 <!-- * Loan Details -->
                 <div class="input-wrapper">
                     <h2>Loan Details</h2>
-                    <span>Individual Loan</span>
+                    <span style="color:green;">{{ $loanDetails['loanTypeName'] ??= '' }}</span>
                 </div>
 
             </div>
@@ -2245,21 +2060,21 @@
                         <!-- * Middle Name -->
                         <div class="input-wrapper">
                             <span>Middle Name</span>
-                            <input wire:model.lazy="comaker.co_Mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" id="midName" name="midName">
+                            <input wire:model.lazy="comaker.co_Mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
                             @error('comaker.co_Mname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Last Name -->
                         <div class="input-wrapper">
                             <span>Last Name</span>
-                            <input wire:model.lazy="comaker.co_Lname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" id="lName" name="lName">
+                            <input wire:model.lazy="comaker.co_Lname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
                             @error('comaker.co_Lname') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Suffix -->
                         <div class="input-wrapper">
                             <span>Suffix</span>
-                            <input wire:model.lazy="comaker.co_Suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" id="suffix" name="suffix">
+                            <input wire:model.lazy="comaker.co_Suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text"  >
                             @error('comaker.co_Suffix') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2298,7 +2113,7 @@
                         <!-- * Place Of Birth -->
                         <div class="input-wrapper">
                             <span>Place Of Birth</span>
-                            <input wire:model.lazy="comaker.co_POB" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" id="poBirth" name="poBirth">
+                            <input wire:model.lazy="comaker.co_POB" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
                             @error('comaker.co_POB') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2427,7 +2242,7 @@
                         <!-- * Years Of Stay -->
                         <div class="input-wrapper">
                             <span>Years of stay on the mentioned address</span>
-                            <input wire:model.lazy="comaker.co_YearsStay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                            <input wire:model.lazy="comaker.co_YearsStay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                             @error('comaker.co_YearsStay') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
@@ -2467,9 +2282,9 @@
                                         <!-- * Upload Button -->
                                         @if($type != 'details')
                                         @if($usertype != 2)
-                                        <input type="file"  wire:model="imgcoprofile" class="input-image upload-profile-image-btn" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                                        <input type="file"  wire:model="imgcoprofile" class="input-image upload-profile-image-btn" {!! $member['statusID'] == 7 && $usertype != 2 ? '' : 'style="display: none;"' !!} {!! $type != 'details' ? '' : 'style="display: none;"' !!} accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                                         <!-- * Attach Button -->
-                                        <input type="file" wire:model="comaker.attachments" class="input-image attach-file-btn" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-file-btn></input>
+                                        <input type="file" wire:model="comaker.attachments" class="input-image attach-file-btn" {!! $member['statusID'] == 7 && $usertype != 2 ? '' : 'style="display: none;"' !!} {!! $type != 'details' ? '' : 'style="display: none;"' !!} accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-file-btn></input>
                                         @endif
                                         @endif
                                         @error('comaker.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
@@ -2610,7 +2425,7 @@
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input wire:model.lazy="comaker.co_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="comaker.co_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                     @error('comaker.co_YOS') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2708,7 +2523,7 @@
                             <canvas class="signature-pad"></canvas>
                         </div>
                         <div class="clear-btn">
-                            <button type="button" id="clearAppSig"><span> Clear </span></button>
+                            <button type="button"  ><span> Clear </span></button>
                         </div>
                     </div> -->
 
@@ -2720,7 +2535,7 @@
                                 <img type="image" class="profile" src="{{ $imgmemsign->temporaryUrl() }}" alt="upload-image">
                             @else
                                 @if(file_exists(public_path('storage/members_signature/'.(isset($member['signature']) ? $member['signature'] : 'xxxx'))))
-                                    <img type="image" id="applicantSig" src="{{ asset('storage/members_signature/'.$member['signature']) }}" alt="upload-image" />                                                                     
+                                    <img type="image" src="{{ asset('storage/members_signature/'.$member['signature']) }}" alt="upload-image" />                                                                     
                                 @else
                                     <img id="applicantSig">                                              
                                 @endif 
@@ -2731,10 +2546,10 @@
 
                     <!-- * Upload Applicant Signature Button -->
                     <div class="input-wrapper">
-                        <!-- <input type="file" class="input-image" id="imageUploadApplicantSign"> -->
+                        <!-- <input type="file" class="input-image" > -->
                         @if($type != 'details')
                         @if($usertype != 2)
-                        <input type="file"  wire:model="imgmemsign" style="color: white;" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        <input type="file"  wire:model="imgmemsign" {!! $member['statusID'] == 7 && $usertype != 2 ? 'style="color: white;"' : 'style="display: none;color: white;"' !!} {!! $type != 'details' ? 'style="color: white;"' : 'style="display: none;color: white;"' !!} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
                         @endif
                         @endif
                     </div>
@@ -2750,7 +2565,7 @@
                             <canvas class="signature-pad"></canvas>
                         </div>
                         <div class="clear-btn">
-                            <button type="button" id="clearCoSig"><span> Clear </span></button>
+                            <button type="button" ><span> Clear </span></button>
                         </div>
                     </div> -->
 
@@ -2761,7 +2576,7 @@
                                 <img type="image" class="profile" src="{{ $imgcosign->temporaryUrl() }}" alt="upload-image">
                             @else
                                 @if(file_exists(public_path('storage/comakers_signature/'.(isset($comaker['signature']) ? $comaker['signature'] : 'xxxx'))))
-                                    <img type="image" id="comSig" src="{{ asset('storage/comakers_signature/'.$comaker['signature']) }}" alt="upload-image" />                                                                     
+                                    <img type="image"  src="{{ asset('storage/comakers_signature/'.$comaker['signature']) }}" alt="upload-image" />                                                                     
                                 @else
                                     <img id="comSig">                                       
                                 @endif 
@@ -2774,7 +2589,7 @@
                     <div class="input-wrapper">
                         @if($type != 'details')
                         @if($usertype != 2)
-                        <input type="file"  wire:model="imgcosign" style="color: white;" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
+                        <input type="file"  wire:model="imgcosign"   {!! $member['statusID'] == 7 && $usertype != 2 ? 'style="color: white;"' : 'style="display: none;color: white;"' !!} {!! $type != 'details' ? 'style="color: white;"' : 'style="display: none;color: white;"' !!} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg"></input>
                         @endif
                         @endif
                     </div>
@@ -2923,7 +2738,7 @@
 
                                                         <!-- * Rowspan 2: Reason for declining Container -->
                                                         <div class="rowspan" style="display: inline;">
-                                                            <textarea wire:model.lazy="reason" rows="15" id=""placeholder="Enter the reason here..."></textarea>
+                                                            <textarea wire:model.lazy="reason" rows="15" placeholder="Enter the reason here..."></textarea>
                                                             @error('reason') <span class="text-required">{{ $message }}</span>@enderror    
                                                         </div>
                                                         
@@ -2968,10 +2783,10 @@
                     }, {
                         once: true
                     });
-            })
+            });
 
             window.livewire.on('openSearchEmployeeModal', message => {
-                dataNewGroupModal.showModal()
+                dataNewGroupModal.showModal();
             });
 
             window.livewire.on('closeSearchEmployeeModal', message => {
@@ -2987,91 +2802,70 @@
             });
 
             
-        })
-        const openLoanDetailsButton = document.querySelector('#data-open-loan-details')
-        const closeLoanDetailsButton = document.querySelector('#data-close-loan-details')
-        const loanDetailsModal = document.querySelector('[data-loan-details-modal]')
+            const openLoanDetailsButton = document.querySelector('#data-open-loan-details')
+            const closeLoanDetailsButton = document.querySelector('#data-close-loan-details')
+            const loanDetailsModal = document.querySelector('[data-loan-details-modal]')
 
+            openLoanDetailsButton.addEventListener('click', () => {
+                loanDetailsModal.showModal();
+            });
 
-        openLoanDetailsButton.addEventListener('click', () => {
-            loanDetailsModal.showModal();
-        })
+            closeLoanDetailsButton.addEventListener('click', () => {
+                loanDetailsModal.setAttribute("closing", "");
+                loanDetailsModal.addEventListener("animationend", () => {
+                    loanDetailsModal.removeAttribute("closing");
+                    loanDetailsModal.close();
+                }, { once: true });
+            });
 
-        closeLoanDetailsButton.addEventListener('click', () => {
-            loanDetailsModal.setAttribute("closing", "");
-            loanDetailsModal.addEventListener("animationend", () => {
-                loanDetailsModal.removeAttribute("closing");
-                loanDetailsModal.close();
-            }, { once: true });
-        })
+            // decline
+            const declineApplicationModal = document.querySelector('[data-application-decline-modal]')
 
-        // loanDetailsModal.addEventListener('click', e => {
-        //     loanDetailsModal.setAttribute("closing", "");
-        //     loanDetailsModal.addEventListener("animationend", () => {
+            if (declineApplicationModal) {
+                const openDeclineApplicationModal = document.querySelector('[data-open-application-decline]')
+                const closeDeclineApplicationModal = document.querySelector('[data-close-application-decline]')
+                const submitDeclineReason = document.querySelector('[data-submit-decline-reason]')
+                url = 'new-application.html'
+                            
+                if(openDeclineApplicationModal){  
 
-        //         const loanDetailsModalDimensions = loanDetailsModal.getBoundingClientRect()
+                    submitModalFunction(
+                    openDeclineApplicationModal, 
+                    closeDeclineApplicationModal,
+                    submitDeclineReason,
+                    declineApplicationModal,
+                    url);
 
-        //         if (
-        //             e.clientX < loanDetailsModalDimensions.left ||
-        //             e.clientX > loanDetailsModalDimensions.right ||
-        //             e.clientY < loanDetailsModalDimensions.top ||
-        //             e.clientY > loanDetailsModalDimensions.bottom
-        //         ) {
-        //             loanDetailsModal.removeAttribute("closing");
-        //         }
-        //         loanDetailsModal.close()
+                    
+                    function submitModalFunction(open, close, submit, modal, url) {
+                        open.addEventListener('click', () => {
+                            modal.showModal()                   
+                        })
 
-        //     }, { once: true })
+                        close.addEventListener('click', () => {
+                            modal.setAttribute("closing", "");
+                            modal.addEventListener("animationend", () => {
+                                modal.removeAttribute("closing")
+                                modal.close()
+                            }, { once: true })
+                        
+                        })
+                    };
+                }    
+                // submit.addEventListener("click", () => {
+                //     location.href = url
+                // })
+            }    
+            // decline
+            
+        });
+       
 
-        // })
-
-        // *** END --- Loan and Payement History Modal *** //   
+      
 
         // * Decline Application Modal
         // ***** Modal with Submit Button redirect to another page ***** //
    
 
-        const declineApplicationModal = document.querySelector('[data-application-decline-modal]')
-
-        if (declineApplicationModal) {
-            const openDeclineApplicationModal = document.querySelector('[data-open-application-decline]')
-            const closeDeclineApplicationModal = document.querySelector('[data-close-application-decline]')
-            const submitDeclineReason = document.querySelector('[data-submit-decline-reason]')
-            url = 'new-application.html'
-
-           
-             
-            if(openDeclineApplicationModal){  
-                
-                submitModalFunction(
-                openDeclineApplicationModal, 
-                closeDeclineApplicationModal,
-                submitDeclineReason,
-                declineApplicationModal,
-                url)
-
-                
-                function submitModalFunction(open, close, submit, modal, url) {
-                open.addEventListener('click', () => {
-                    modal.showModal()
-                })
-
-                close.addEventListener('click', () => {
-                    modal.setAttribute("closing", "");
-                    modal.addEventListener("animationend", () => {
-                        modal.removeAttribute("closing")
-                        modal.close()
-                    }, { once: true })
-                
-                })
-            }
-
-            // submit.addEventListener("click", () => {
-            //     location.href = url
-            // })
-        }    
-
-        }
-        
     </script>
 </div>
