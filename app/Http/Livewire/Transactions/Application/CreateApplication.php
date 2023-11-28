@@ -103,13 +103,13 @@ class CreateApplication extends Component
         $rules['member.waterBill'] = 'required';
         $rules['member.otherBills'] = 'required';
         $rules['member.dailyExpenses'] = 'required';
-        $rules['member.jobDescription'] = 'required';
-        $rules['member.yos'] = 'required';
-        $rules['member.monthlySalary'] = 'required';
-        $rules['member.otherSOC'] = 'required';
+        $rules['member.jobDescription'] = isset($this->member['emp_Status']) ? ($this->member['emp_Status'] == 0 ? '' : 'required') : 'required';
+        $rules['member.yos'] = isset($this->member['emp_Status']) ? ($this->member['emp_Status'] == 0 ? '' : 'required') : 'required';
+        $rules['member.monthlySalary'] =  isset($this->member['emp_Status']) ? ($this->member['emp_Status'] == 0 ? '' : 'required') : 'required';
+        $rules['member.otherSOC'] =  isset($this->member['emp_Status']) ? ($this->member['emp_Status'] == 0 ? '' : 'required') : 'required';
         $rules['member.bO_Status'] = 'required';
-        $rules['member.companyName'] = 'required';
-        $rules['member.companyAddress'] = 'required';
+        $rules['member.companyName'] = isset($this->member['emp_Status']) ? ($this->member['emp_Status'] == 0 ? '' : 'required') : 'required';
+        $rules['member.companyAddress'] =  isset($this->member['emp_Status']) ? ($this->member['emp_Status'] == 0 ? '' : 'required') : 'required';
         $rules['member.emp_Status'] = 'required';
         $rules['member.f_Fname'] = 'required';
         $rules['member.f_Lname'] = 'required';
@@ -118,10 +118,10 @@ class CreateApplication extends Component
         $rules['member.f_DOB'] = 'required';
         $rules['member.f_Age'] = 'required';
         $rules['member.f_NOD'] = 'required';
-        $rules['member.f_YOS'] = 'required';
+        $rules['member.f_YOS'] = isset($this->member['f_Emp_Status']) ? ($this->member['f_Emp_Status'] == 0 ? '' : 'required') : 'required';
         $rules['member.f_Emp_Status'] = 'required';
-        $rules['member.f_Job'] = 'required';
-        $rules['member.f_CompanyName'] = 'required';
+        $rules['member.f_Job'] = isset($this->member['f_Emp_Status']) ? ($this->member['f_Emp_Status'] == 0 ? '' : 'required') : 'required';
+        $rules['member.f_CompanyName'] = isset($this->member['f_Emp_Status']) ? ($this->member['f_Emp_Status'] == 0 ? '' : 'required') : 'required';
         $rules['member.f_RTTB'] = '';      
         $rules['member.loanAmount'] = 'required';
         $rules['member.termsOfPayment'] = 'required';
@@ -150,20 +150,20 @@ class CreateApplication extends Component
         $rules['comaker.co_Province'] = 'required';
         $rules['comaker.co_YearsStay'] = 'required';
         $rules['comaker.co_ZipCode'] = '';
-        $rules['comaker.co_RTTB'] = '';
+        $rules['comaker.co_RTTB'] = 'required';
         $rules['comaker.co_Status'] = '';
-        $rules['comaker.co_JobDescription'] = 'required';
-        $rules['comaker.co_YOS'] = 'required';
-        $rules['comaker.co_MonthlySalary'] = 'required';
-        $rules['comaker.co_OtherSOC'] = 'required';
+        $rules['comaker.co_JobDescription'] = isset($this->comaker['co_Emp_Status']) ? ($this->comaker['co_Emp_Status'] == 0 ? '' : 'required') : 'required';
+        $rules['comaker.co_YOS'] = isset($this->comaker['co_Emp_Status']) ? ($this->comaker['co_Emp_Status'] == 0 ? '' : 'required') : 'required';
+        $rules['comaker.co_MonthlySalary'] = isset($this->comaker['co_Emp_Status']) ? ($this->comaker['co_Emp_Status'] == 0 ? '' : 'required') : 'required';
+        $rules['comaker.co_OtherSOC'] = isset($this->comaker['co_Emp_Status']) ? ($this->comaker['co_Emp_Status'] == 0 ? '' : 'required') : 'required';
         $rules['comaker.co_BO_Status'] = 'required';
-        $rules['comaker.co_CompanyName'] = 'required';
-        $rules['comaker.co_CompanyID'] = '';
+        $rules['comaker.co_CompanyName'] = isset($this->comaker['co_Emp_Status']) ? ($this->comaker['co_Emp_Status'] == 0 ? '' : 'required') : 'required';
+        $rules['comaker.co_CompanyID'] = isset($this->comaker['co_Emp_Status']) ? ($this->comaker['co_Emp_Status'] == 0 ? '' : 'required') : 'required';
         $rules['comaker.co_Emp_Status'] = 'required';
         $rules['comaker.profile'] = '';  
         $rules['imgcoprofile'] = isset($this->comaker['profile']) ? '' : 'required';  
         $rules['comaker.attachments'] = 'required';  
-        $rules['imgcosign'] = isset($this->member['profile']) ? '' : 'required';  
+        $rules['imgcosign'] = isset($this->comaker['profile']) ? '' : 'required';  
         // $rules['comaker.remarks'] = '';             
         
 
@@ -313,6 +313,7 @@ class CreateApplication extends Component
         $messages['comaker.co_CompanyName.required'] = 'Enter company name';    
         $messages['comaker.co_CompanyID.required'] = 'Enter company address';    
         $messages['comaker.co_Emp_Status.required'] = 'Enter employement status';   
+        $messages['comaker.co_RTTB.required'] = 'Enter relationship to client';   
         $messages['imgcoprofile'] = 'Please insert picture of comaker';
         $messages['comaker.attachments.required'] = 'Please include at least one documents referring to comaker';
         $messages['imgcosign'] = 'Please insert signature image for co maker';
@@ -444,8 +445,17 @@ class CreateApplication extends Component
         return $messages;        
     }
 
-    public function viewByStatus($status = '7'){
-        $this->member['statusID'] = $status;
+    public function clearJobInfo(){
+        if(isset($this->member['emp_Status'])){
+            if($this->member['emp_Status'] == 0){
+                $this->member['jobDescription'] = '';
+                $this->member['yos'] = '';
+                $this->member['companyName'] = '';
+                $this->member['companyAddress'] = '';
+                $this->member['monthlySalary'] = '';
+                $this->member['otherSOC'] = '';
+            }
+        }
     }
 
     public function storeProfileImage(){           
@@ -700,8 +710,8 @@ class CreateApplication extends Component
                                 "otherBills"=> $input['member']['otherBills'] ??= '0',
                                 "dailyExpenses"=> $input['member']['dailyExpenses'] ??= '0',
                                 "jobDescription"=> $input['member']['jobDescription'] ??= '',
-                                "yos"=> $input['member']['yos'] ??= '0',
-                                "monthlySalary"=> $input['member']['monthlySalary'] ??= '0',
+                                "yos"=> !empty($input['member']['yos']) ? $input['member']['yos'] : '0',
+                                "monthlySalary"=> !empty($input['member']['monthlySalary']) ? $input['member']['monthlySalary'] : '0',
                                 "otherSOC"=> $input['member']['otherSOC'] ??= '',
                                 "bO_Status"=> $input['member']['bO_Status'] ??= '0',
                                 "companyName"=> $input['member']['companyName'] ??= '',
@@ -714,8 +724,8 @@ class CreateApplication extends Component
                                 "f_DOB"=> $input['member']['f_DOB'] ??= null,
                                 "f_Age"=> $input['member']['f_Age'] ??= '0',
                                 "f_NOD"=> $input['member']['f_NOD'] ??= '0',
-                                "f_YOS"=> $input['member']['f_YOS'] ??= '0',
-                                "f_Emp_Status"=> '1', 
+                                "f_YOS"=> !empty($input['member']['f_YOS']) ? $input['member']['f_YOS'] : '0',
+                                "f_Emp_Status"=>  $input['member']['f_Emp_Status'] ??= '0',
                                 "f_Job"=> $input['member']['f_Job'] ??= '',
                                 "f_CompanyName"=> $input['member']['f_CompanyName'] ??= '',
                                 "f_RTTB"=> '', 
@@ -749,17 +759,17 @@ class CreateApplication extends Component
                                 "co_Province"=> $input['comaker']['co_Province'] ??= '',
                                 "co_YearsStay"=> $input['comaker']['co_YearsStay'] ??= '0',
                                 "co_ZipCode"=> $input['comaker']['co_ZipCode'] ??= '',
-                                "co_RTTB"=> '',
+                                "co_RTTB"=> $input['comaker']['co_RTTB'] ??= '',
                                 "co_Status"=> '1',
                                 "co_JobDescription"=> $input['comaker']['co_JobDescription'] ??= '',
-                                "co_YOS"=> $input['comaker']['co_YOS'] ??= '0',
-                                "co_MonthlySalary"=> $input['comaker']['co_MonthlySalary'] ??= '0',
+                                "co_YOS"=> !empty($input['comaker']['co_YOS'] ??= '0') ? $input['comaker']['co_YOS'] ??= '0' : '0',
+                                "co_MonthlySalary"=> !empty($input['comaker']['co_MonthlySalary']) ? $input['comaker']['co_MonthlySalary'] : '0',
                                 "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
                                 "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
                                 "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
                                 "co_CompanyAddress"=>  $input['comaker']['co_CompanyID'] ??= '',///check if caused error not exist latest working
                                 "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
-                                "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
+                                "co_Emp_Status"=> $input['comaker']['co_Emp_Status'] ??= '0', //'1', //$input['comaker']['co_Emp_Status'],
                                 "remarks"=> '',
                                 "applicationStatus" => $type == 1 ? 7 : 8,
                                 "profileName"=> $this->storeProfileImage(),
@@ -950,8 +960,7 @@ class CreateApplication extends Component
             }                      
             /////////////////////////
 
-            $bdate = date('Y-m-d', strtotime($input['member']['dob']));
-          
+            $bdate = date('Y-m-d', strtotime($input['member']['dob']));            
             $data = [
                         [
                             "fname"=> $input['member']['fname'] ??= '',
@@ -982,10 +991,10 @@ class CreateApplication extends Component
                             "otherBills"=> $input['member']['otherBills'] ??= '0',
                             "dailyExpenses"=> $input['member']['dailyExpenses'] ??= '0',
                             "jobDescription"=> $input['member']['jobDescription'] ??= '',
-                            "yos"=> $input['member']['yos'] ??= '0',
-                            "monthlySalary"=> $input['member']['monthlySalary'] ??= '0',
+                            "yos"=> !empty($input['member']['yos']) ? $input['member']['yos'] : '0',
+                            "monthlySalary"=> !empty($input['member']['monthlySalary']) ? $input['member']['monthlySalary'] : '0',
                             "otherSOC"=> $input['member']['otherSOC'] ??= '',
-                            "bO_Status"=> '1',//$input['member']['bO_Status'] ??= '0',
+                            "bO_Status"=> $input['member']['bO_Status'] ??= '0', //mali
                             "companyName"=> $input['member']['companyName'] ??= '',
                             "companyAddress"=> $input['member']['companyAddress'] ??= '',
                             "emp_Status"=> $input['member']['emp_Status'] ??= '0',
@@ -996,8 +1005,8 @@ class CreateApplication extends Component
                             "f_DOB"=>  $input['member']['f_DOB'] ??= null,
                             "f_Age"=> $input['member']['f_Age'] ??= '0',
                             "f_NOD"=> $input['member']['f_NOD'] ??= '0',
-                            "f_YOS"=> $input['member']['f_YOS'] ??= '0',
-                            "f_Emp_Status"=> '1', 
+                            "f_YOS"=> !empty($input['member']['f_YOS']) ? $input['member']['f_YOS'] : '0',
+                            "f_Emp_Status"=> $input['member']['f_Emp_Status'] ??= '0',
                             "f_Job"=> $input['member']['f_Job'] ??= '',
                             "f_CompanyName"=> $input['member']['f_CompanyName'] ??= '',
                             "f_RTTB"=> '',
@@ -1026,22 +1035,22 @@ class CreateApplication extends Component
                             "co_EmailAddress"=> $input['comaker']['co_EmailAddress'] ??= '',
                             "co_Gender"=> $input['comaker']['co_Gender'] ??= '',
                             "co_HouseNo"=> $input['comaker']['co_HouseNo'] ??= '',
-                            "co_House_Stats"=> 2, //mali $input['comaker']['co_House_Stats'] ??= '0',
+                            "co_House_Stats"=> $input['comaker']['co_House_Stats'] ??= '0',
                             "co_POB"=> $input['comaker']['co_POB'] ??= '',
                             "co_Province"=> $input['comaker']['co_Province'] ??= '',
                             "co_YearsStay"=> $input['comaker']['co_YearsStay'] ??= '0',
                             "co_ZipCode"=> $input['comaker']['co_ZipCode'] ??= '',
-                            "co_RTTB"=> '',
+                            "co_RTTB"=> $input['comaker']['co_RTTB'] ??= '',
                             "co_Status"=> '1',
                             "co_JobDescription"=> $input['comaker']['co_JobDescription'] ??= '',
-                            "co_YOS"=> $input['comaker']['co_YOS'] ??= '0',
-                            "co_MonthlySalary"=> $input['comaker']['co_MonthlySalary'] ??= '0',
+                            "co_YOS"=> !empty($input['comaker']['co_YOS']) ? $input['comaker']['co_YOS'] : '0',
+                            "co_MonthlySalary"=> !empty($input['comaker']['co_MonthlySalary']) ? $input['comaker']['co_MonthlySalary'] : '0',
                             "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
                             "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
                             "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
                             "co_CompanyAddress" => $input['comaker']['co_CompanyID'] ??= '',
                             "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '', //mali
-                            "co_Emp_Status"=> '1', //$input['comaker']['co_Emp_Status'],
+                            "co_Emp_Status"=> $input['comaker']['co_Emp_Status'] ??= '0',
                             "remarks"=> '',
                             "applicationStatus" => $type == 1 ? 7 : 8,
                             "profileName"=> $this->storeProfileImage(),
@@ -1598,8 +1607,7 @@ class CreateApplication extends Component
         $this->coprovinces = collect([]);
         $this->cocities = collect([]);
         $this->cobarangays = collect([]);
-    
-        $this->renderProvince();       
+           
         $this->usertype = session()->get('auth_usertype'); 
         $this->modules = session()->get('auth_usermodules'); 
         $this->member['old_profile'] = '';
@@ -1633,8 +1641,9 @@ class CreateApplication extends Component
         $this->member['loanAmount'] = isset($loandetails['loamamount']) ? $loandetails['loamamount'] : '';
         $this->member['termsOfPayment'] = isset($loandetails['paymentterms']) ? $loandetails['paymentterms'] : '';
         $this->member['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';  
-
-        if($this->type == 'create'){                    
+        $this->renderProvince();    
+        if($this->type == 'create'){       
+                               
                 $this->loanDetails['loanTypeID'] = $request->loanTypeID;  
                 $this->loanDetails['loanTypeName'] = $request->loanTypeName;    
                 $this->loanDetails['loantermsID'] = $request->loantermsID; 
@@ -1915,7 +1924,13 @@ class CreateApplication extends Component
                 $this->member['suffix'] = $data['suffix']; 
                 $this->member['age'] = $data['age'];         
                 $this->member['barangay'] = $data['barangay'];  
-                $this->member['city'] = $data['city'];               
+                if($this->member['statusID'] != 7){                 
+                    $this->barangays->put(1, ['brgyDesc' => $data['barangay']]);        
+                }
+                $this->member['city'] = $data['city'];   
+                if($this->member['statusID'] != 7){                
+                    $this->cities->put(1, ['citymunDesc' => $data['city']]);          
+                }                           
                 $this->member['civil_Status'] = $data['civil_Status'];  
                 $this->member['cno'] = $data['cno']; 
                 $this->member['country'] = $data['country']; 
@@ -1926,6 +1941,11 @@ class CreateApplication extends Component
                 $this->member['house_Stats'] = $data['houseStatusId'];          
                 $this->member['pob'] = $data['pob'];
                 $this->member['province'] = $data['province']; 
+                if($this->member['statusID'] != 7){
+                    //$this->provinces = collect(['provDesc' => $data['province']]);
+                    $this->provinces->put(1, ['provDesc' => $data['province']]);                  
+                } 
+                //dd($this->provinces);
                 $this->member['yearsStay'] = $data['yearsStay'];
                 $this->member['zipCode'] = $data['zipCode'];
                 $this->member['status'] = $data['status'];              
@@ -1975,6 +1995,16 @@ class CreateApplication extends Component
                 $this->comaker['co_House_Stats'] = $data['co_HouseStatusId']; 
                 $this->comaker['co_POB'] = $data['co_POB']; 
                 $this->comaker['co_Province'] = $data['co_Province']; 
+                if($this->member['statusID'] != 7){                  
+                    $this->cobarangays->put(1, ['brgyDesc' => $data['co_Barangay']]);        
+                }
+                $this->member['city'] = $data['city'];   
+                if($this->member['statusID'] != 7){                 
+                    $this->cocities->put(1, ['citymunDesc' => $data['co_City']]);    
+                }            
+                if($this->member['statusID'] != 7){                   
+                    $this->coprovinces->put(1, ['provDesc' => $data['co_Province']]);    
+                } 
                 $this->comaker['co_YearsStay'] = $data['co_YearsStay']; 
                 $this->comaker['co_ZipCode'] = $data['co_ZipCode']; 
                 $this->comaker['co_RTTB'] = $data['co_RTTB']; 
@@ -2076,10 +2106,12 @@ class CreateApplication extends Component
                         $this->inpbank['address'.$bankcnt] = $mbank['address'];                        
                     }
                 }   
-                $this->renderCity();
-                $this->renderBarangay();
-                $this->renderCoCity();
-                $this->renderCoBarangay();
+                if($this->member['statusID'] == 7){
+                    $this->renderCity();
+                    $this->renderBarangay();
+                    $this->renderCoCity();
+                    $this->renderCoBarangay();
+                }
                 
             }
         }
@@ -2167,7 +2199,7 @@ class CreateApplication extends Component
                 $this->comaker['co_Cno'] = '023369990'; 
                 $this->comaker['co_Country'] = 'Philippines'; 
                 $this->comaker['co_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
-                $this->comaker['co_EmailAddress'] = 'test@gmail.com'; 
+                $this->comaker['co_EmailAddress'] = ''; 
                 $this->comaker['co_Gender'] = 'Female'; 
                 $this->comaker['co_HouseNo'] = '566233';         
                 $this->comaker['co_House_Stats'] = '2'; 

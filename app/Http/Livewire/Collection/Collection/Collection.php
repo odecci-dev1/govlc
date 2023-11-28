@@ -114,6 +114,7 @@ class Collection extends Component
     public function getCollectionDetails($areaID = '', $foid = '', $areaRefNo = '', $force = 0){         
      
         $this->areaDetails = collect([]);
+        $this->areaDetailsFooter = collect([]);
         if($this->areaID == ''){
             $this->areaID = $areaID;       
             $this->foid = $foid;
@@ -141,14 +142,17 @@ class Collection extends Component
         }    
         //dd( $this->areaID );   
         //dd($areaRefNo); 
+        $this->areaRefNo = $this->areaRefNo == 'PENDING' ? '' : $this->areaRefNo;
         if($this->areaID != ''){
-                $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $areaRefNo ]);  
+                $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $this->areaRefNo ]);  
                 $details = $details->json();   
                 //dd($details[0]);    
 
                 if(isset($details[0])){
+                    $collections = null;
                     $details = $details[0];                                       
                     $collections = $details['collection'];
+                   
                     if($collections){
                         $this->areaDetailsFooter[$this->areaID] = [               
                                                         'areaID' => $this->areaID,                                                        

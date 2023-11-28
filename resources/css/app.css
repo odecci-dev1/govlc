@@ -10763,7 +10763,7 @@ body.print-portrait .page {
   color: #29292B;
   background-color: #E0DFDF;
   box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
+  /* cursor: pointer; */
   display: flex;
   justify-content: center;
   align-items: center;

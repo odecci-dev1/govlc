@@ -971,10 +971,13 @@
                 <div class="input-wrapper">
                     <span>Employment Status</span>
                     <div class="select-box">        
-                        <select  wire:model="member.emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                        <select  wire:model="member.emp_Status" wire:change="clearJobInfo" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
                             <option value="">- - select - -</option>     
+                            <!-- <option value="1">Employed</option>                            
+                            <option value="0">Unemployed</option>  -->
                             <option value="1">Employed</option>                            
-                            <option value="0">Unemployed</option>                            
+                            <option value="0">Unemployed</option>                             
+                            <option value="2">Self Employed</option>                             
                         </select>                                             
                     </div>
                     @error('member.emp_Status') <span class="text-required">{{ $message }}</span>@enderror
@@ -986,32 +989,37 @@
                     <!-- * Current Job -->
                     @if(isset($member['emp_Status']))
                         @if($member['emp_Status'] == '1' || $member['emp_Status'] == '')
-                            <span>Current Job / Position</span>
-                            <input wire:model.lazy="member.jobDescription" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                            <span>Current Job / Position</span>                            
                         @endif
                     @endif
 
                     <!-- * Previous Job -->
                     @if(isset($member['emp_Status']))
                         @if($member['emp_Status'] == '0')
-                        <span>Previous Job / Position</span>
-                        <input wire:model.lazy="member.jobDescription" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        <span>Previous Job / Position</span>                        
                         @endif
                     @endif
+
+                    @if(isset($member['emp_Status']))
+                        @if($member['emp_Status'] == '2')
+                        <span>Industry</span>                        
+                        @endif
+                    @endif
+                    <input wire:model.lazy="member.jobDescription" {{ isset($member['emp_Status']) ? ($member['emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
                     @error('member.jobDescription') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input wire:model.lazy="member.yos" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    <input wire:model.lazy="member.yos" {{ isset($member['emp_Status']) ? ($member['emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                     @error('member.yos') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Company Name -->
                 <div class="input-wrapper">
                     <span>Company Name</span>
-                    <input wire:model.lazy="member.companyName" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="member.companyName" {{ isset($member['emp_Status']) ? ($member['emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
                     @error('member.companyName') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -1023,21 +1031,21 @@
                 <!-- * Company Address -->
                 <div class="input-wrapper">
                     <span>Company Address</span>
-                    <input wire:model.lazy="member.companyAddress" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="member.companyAddress" {{ isset($member['emp_Status']) ? ($member['emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
                     @error('member.companyAddress') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Monthly Salary -->
                 <div class="input-wrapper">
                     <span>Monthly Salary</span>
-                    <input wire:model.lazy="member.monthlySalary" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="member.monthlySalary" {{ isset($member['emp_Status']) ? ($member['emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
                     @error('member.monthlySalary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Other Source Of Income -->
                 <div class="input-wrapper">
                     <span>Other Source Of Income</span>
-                    <input  wire:model.lazy="member.otherSOC" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                    <input  wire:model.lazy="member.otherSOC" {{ isset($member['emp_Status']) ? ($member['emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
                     @error('member.otherSOC') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -1071,442 +1079,6 @@
 
     </div>
 
-    <!-- * Imported from New Member Application -->
-    <!-- * Container 4(a): Family Background Information (Married)-->
-    @if(isset($member['civil_Status']))
-        @if($member['civil_Status'] == 'Married')
-        <div class="nm-container-4" data-family-background-married>            
-            <!-- * Small Container -->
-            <div class="small-con-3" data-child-container>
-
-                <!-- * Rowspan 1: Header -->
-                <div class="rowspan">
-
-                    <!-- * Family Background Information -->
-                    <div class="input-wrapper">
-                        <h2>Family Background Information</h2>
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 2: Subheader - Spouse Information -->
-                <div class="rowspan">
-
-                    <!-- * Family Background Information -->
-                    <div class="input-wrapper">
-                        <h3>Spouse Information</h3>
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 3: First Name, Middle Name, Last Name, Suffix, Date Of Birth and Age -->
-                <div class="rowspan">
-
-                    <!-- * First Name -->
-                    <div class="input-wrapper">
-                        <span>First Name</span>
-                        <input wire:model.lazy="member.f_Fname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                        @error('member.f_Fname') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Middle Name -->
-                    <div class="input-wrapper">
-                        <span>Middle Name</span>
-                        <input wire:model.lazy="member.f_Mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
-                        @error('member.f_Mname') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Last Name -->
-                    <div class="input-wrapper">
-                        <span>Last Name</span>
-                        <input wire:model.lazy="member.f_Lname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                        @error('member.f_Lname') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Suffix -->
-                    <div class="input-wrapper">
-                        <span>Suffix</span>
-                        <input wire:model.lazy="member.f_Suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                        @error('member.f_Suffix') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-
-                    <!-- * Date Of Birth -->
-                    <div class="input-wrapper">
-                        <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.f_DOB" wire:change="getmemberFAge" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="date">
-                        @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Age -->
-                    <div class="input-wrapper">
-                        <span>Age</span>
-                        <input wire:model.lazy="member.f_Age" disabled type="number">
-                        @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 4: Employment Status, Current Job / Position, Years Of Service and Company Name -->
-                <div class="rowspan">                 
-                    <!-- * Employment Status -->
-                    <div class="input-wrapper">
-                        <span>Employment Status</span>
-                        <div class="select-box">
-                            <select  wire:model="member.f_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
-                                <option value="">- - select - -</option>     
-                                <option value="1">Employed</option>                            
-                                <option value="0">Unemployed</option>                            
-                            </select>                                                             
-                        </div>
-                        @error('member.f_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Current Job / Position -->
-                    <div class="input-wrapper">
-
-                        <!-- * Current Job -->
-                        @if(isset($member['f_Emp_Status']))
-                            @if($member['f_Emp_Status'] == '1' || $member['f_Emp_Status'] == '')
-                            <span>Current Job / Position</span>
-                            <input wire:model.lazy="member.f_Job" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                            @endif
-                        @endif
-
-                        @if(isset($member['f_Emp_Status']))
-                            @if($member['f_Emp_Status'] == '0')
-                            <!-- * Previous Job -->
-                            <span>Previous Job / Position</span>
-                            <input wire:model.lazy="member.f_Job" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                            @endif
-                        @endif
-                        @error('member.f_Job') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Years Of Service -->
-                    <div class="input-wrapper">
-                        <span>Years Of Service</span>
-                        <input wire:model.lazy="member.f_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                        @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Company Name -->
-                    <div class="input-wrapper">
-                        <span>Company Name</span>
-                        <input wire:model.lazy="member.f_CompanyName" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                        @error('member.f_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Empty Input Wrapper -->
-                    <div class="input-wrapper">
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 5: Number Of Dependants -->
-                <div class="rowspan">
-
-                    <!-- * Current Job / Position -->
-                    <div class="input-wrapper">
-                        <span>Number Of Dependants</span>
-                        <input  wire:model.lazy="member.f_NOD" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                        @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 6: Empty Rowspan -->
-                <div class="rowspan">
-
-                </div>
-
-                <!-- * Rowspan 7: Subheader - Children(s) Information -->
-                <div class="rowspan" data-child-sibling>
-
-                    <!-- * Family Background Information -->
-                    <div class="input-wrapper">
-                        <h3>Children(s) Information married</h3>
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 8: First Name, Middle Name , Last Name, Age, Name Of School and Add/Subtract Button -->
-               
-                @if(count($cntmemchild) > 0)    
-                    @foreach($cntmemchild as $cntchild)
-                    <div class="rowspan child" data-child>                    
-                            <!-- * First Name -->
-                            <div class="input-wrapper">
-                                <span>First Name</span>
-                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
-                                @error('inpchild.fname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
-                            </div>
-
-                            <!-- * Middle Name -->
-                            <div class="input-wrapper">
-                                <span>Middle Name</span>
-                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                                @error('inpchild.mname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
-                            </div>
-
-                            <!-- * Last Name -->
-                            <div class="input-wrapper">
-                                <span>Last Name</span>
-                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                                @error('inpchild.lname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
-                            </div>
-
-                            <!-- * Age -->
-                            <div class="input-wrapper">
-                                <span>Age</span>
-                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
-                            </div>
-
-                            <!-- * Name Of School -->
-                            <div class="input-wrapper">
-                                <span>Name Of School</span>
-                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                                @error('inpchild.school'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
-                            </div>
-
-                            <!-- * Add and Subtract Button  -->
-                            <div class="input-wrapper">
-                                @if($cntchild == 1)
-                                <button type="button" wire:click="addChild" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }}>+</button>
-                                @else
-                                <button type="button" wire:click="subChild({{ $cntchild }})" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }}>-</button>
-                                @endif
-                            </div>                        
-                    </div>
-                    @endforeach
-                @endif
-
-            </div>
-
-        </div>
-        @endif
-    @endif
-
-    @if(isset($member['civil_Status']))
-        @if($member['civil_Status'] == 'Single' || $member['civil_Status'] == 'Widow')
-        <!-- * Container 4(b): Family Background Information (Single)-->
-        <div class="nm-container-4" data-family-background-single>
-
-            <!-- * Small Container -->
-            <div class="small-con-3" data-child-container-2>
-
-                <!-- * Rowspan 1: Header -->
-                <div class="rowspan">
-
-                    <!-- * Family Background Information -->
-                    <div class="input-wrapper">
-                        <h2>Family Background Information</h2>
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 2: Subheader - First degree relative information -->
-                <div class="rowspan">
-
-                    <!-- * Family Background Information -->
-                    <div class="input-wrapper">
-                        <h3>First degree relative information</h3>
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 3: First Name, Middle Name, Last Name, Suffix, Date Of Birth and Age -->
-                <div class="rowspan">
-
-                    <!-- * First Name -->
-                    <div class="input-wrapper">
-                        <span>First Name</span>
-                        <input wire:model.lazy="member.f_Fname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                        @error('member.f_Fname') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Middle Name -->
-                    <div class="input-wrapper">
-                        <span>Middle Name</span>
-                        <input wire:model.lazy="member.f_Mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                        @error('member.f_Mname') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Last Name -->
-                    <div class="input-wrapper">
-                        <span>Last Name</span>
-                        <input wire:model.lazy="member.f_Lname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                        @error('member.f_Lname') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Suffix -->
-                    <div class="input-wrapper">
-                        <span>Suffix</span>
-                        <input wire:model.lazy="member.f_Suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                        @error('member.f_Suffix') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-
-                    <!-- * Date Of Birth -->
-                    <div class="input-wrapper">
-                        <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.f_DOB" wire:change="getmemberFAge" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="date">
-                        @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Age -->
-                    <div class="input-wrapper">
-                        <span>Age</span>
-                        <input wire:model.lazy="member.f_Age" disabled type="number"> 
-                        @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 4: Employment Status, Current Job / Position, Years Of Service and Company Name -->
-                <div class="rowspan">
-
-                    <!-- * Employment Status -->
-                    <div class="input-wrapper">
-                        <span>Employment Status</span>
-                        <div class="select-box">
-                            <select  wire:model="member.f_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
-                                <option value="">- -select - -</option>     
-                                <option value="1">Employed</option>                            
-                                <option value="0">Unemployed</option>                            
-                            </select>                                             
-                            @error('member.f_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
-                        </div>
-                    </div>
-
-                    
-                    <!-- * Current Job / Position -->
-                    <div class="input-wrapper">
-
-                        @if(isset($member['f_Emp_Status']))
-                            @if($member['f_Emp_Status'] == '1' || $member['f_Emp_Status'] == '')
-                            <!-- * Current Job -->
-                            <span data-fdr-current-job>Current Job / Position</span>
-                            <input wire:model.lazy="member.f_Job" type="text"  data-fdr-current-job>
-                            @endif
-                        @endif    
-                        
-                        @if(isset($member['f_Emp_Status']))
-                            @if($member['f_Emp_Status'] == '0')
-                            <!-- * Previous Job -->
-                            <span data-fdr-previous-job>Previous Job / Position</span>
-                            <input wire:model.lazy="member.f_Job" type="text" data-fdr-previous-job>
-                            @endif
-                        @endif
-                        @error('member.f_Job') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Years Of Service -->
-                    <div class="input-wrapper">
-                        <span>Years Of Service</span>
-                        <input wire:model.lazy="member.f_YOS" type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                        @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Company Name -->
-                    <div class="input-wrapper">
-                        <span>Company Name</span>
-                        <input wire:model.lazy="member.f_CompanyName" type="text">
-                        @error('member.f_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                    <!-- * Empty Input Wrapper -->
-                    <div class="input-wrapper">
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 5: Number Of Dependants -->
-                <div class="rowspan">
-
-                    <!-- * Number Of Dependants -->
-                    <div class="input-wrapper">
-                        <span>Number Of Dependants</span>
-                        <input wire:model.lazy="member.f_NOD" type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                        @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 6: Empty Rowspan -->
-                <div class="rowspan">
-
-                </div>
-
-                <!-- * Rowspan 7: Subheader - Children(s) Information -->
-                <div class="rowspan">
-
-                    <!-- * Family Background Information -->
-                    <div class="input-wrapper">
-                        <h3>Children(s) Information</h3>
-                    </div>
-
-                </div>
-
-                <!-- * Rowspan 8: First Name, Middle Name , Last Name, Age, Name Of School and Add/Subtract Button -->
-                @if(count($cntmemchild) > 0)    
-                    @foreach($cntmemchild as $cntchild)
-                    <div class="rowspan child" data-child-2>
-                       
-                            <!-- * First Name -->
-                            <div class="input-wrapper">
-                                <span>First Name</span>
-                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
-                                @error('inpchild.fname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
-                            </div>
-
-                            <!-- * Middle Name -->
-                            <div class="input-wrapper">
-                                <span>Middle Name</span>
-                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                                @error('inpchild.mname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
-                            </div>
-
-                            <!-- * Last Name -->
-                            <div class="input-wrapper">
-                                <span>Last Name</span>
-                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                                @error('inpchild.lname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
-                            </div>
-
-                            <!-- * Age -->
-                            <div class="input-wrapper">
-                                <span>Age</span>
-                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                                @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
-                            </div>
-
-                            <!-- * Name Of School -->
-                            <div class="input-wrapper">
-                                <span>Name Of School</span>
-                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
-                                @error('inpchild.school'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
-                            </div>
-
-                            <!-- * Add and Subtract Button  -->
-                            <div class="input-wrapper">
-                                @if($cntchild == 1)
-                                <button type="button" wire:click="addChild">+</button>
-                                @else
-                                <button type="button" wire:click="subChild({{ $cntchild }})">-</button>
-                                @endif
-                            </div>                             
-                    </div>
-                    @endforeach
-                @endif
-
-            </div>
-
-        </div>
-    @endif
-@endif
-    <!-- * Imported from New Member Application -->
     <!-- * Container 5: Business Information -->
     @if(isset($member['bO_Status']))
     @if($member['bO_Status'] == 1)
@@ -1729,7 +1301,458 @@
 
     </div>
     @endif
-    @endif                    
+    @endif    
+
+    <!-- * Imported from New Member Application -->
+    <!-- * Container 4(a): Family Background Information (Married)-->
+    @if(isset($member['civil_Status']))
+        @if($member['civil_Status'] == 'Married')
+        <div class="nm-container-4" data-family-background-married>            
+            <!-- * Small Container -->
+            <div class="small-con-3" data-child-container>
+
+                <!-- * Rowspan 1: Header -->
+                <div class="rowspan">
+
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h2>Family Background Information</h2>
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 2: Subheader - Spouse Information -->
+                <div class="rowspan">
+
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h3>Spouse Information</h3>
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 3: First Name, Middle Name, Last Name, Suffix, Date Of Birth and Age -->
+                <div class="rowspan">
+
+                    <!-- * First Name -->
+                    <div class="input-wrapper">
+                        <span>First Name</span>
+                        <input wire:model.lazy="member.f_Fname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        @error('member.f_Fname') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Middle Name -->
+                    <div class="input-wrapper">
+                        <span>Middle Name</span>
+                        <input wire:model.lazy="member.f_Mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
+                        @error('member.f_Mname') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Last Name -->
+                    <div class="input-wrapper">
+                        <span>Last Name</span>
+                        <input wire:model.lazy="member.f_Lname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        @error('member.f_Lname') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Suffix -->
+                    <div class="input-wrapper">
+                        <span>Suffix</span>
+                        <input wire:model.lazy="member.f_Suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        @error('member.f_Suffix') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+
+                    <!-- * Date Of Birth -->
+                    <div class="input-wrapper">
+                        <span>Date Of Birth</span>
+                        <input wire:model.lazy="member.f_DOB" wire:change="getmemberFAge" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="date">
+                        @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Age -->
+                    <div class="input-wrapper">
+                        <span>Age</span>
+                        <input wire:model.lazy="member.f_Age" disabled type="number">
+                        @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 4: Employment Status, Current Job / Position, Years Of Service and Company Name -->
+                <div class="rowspan">                 
+                    <!-- * Employment Status -->
+                    <div class="input-wrapper">
+                        <span>Employment Status</span>
+                        <div class="select-box">
+                            <select  wire:model="member.f_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                                <option value="">- - select - -</option>     
+                                <option value="1">Employed</option>                            
+                                <option value="0">Unemployed</option>     
+                                <option value="2">Self Employed</option>                                             
+                            </select>                                                             
+                        </div>
+                        @error('member.f_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Current Job / Position -->
+                    <div class="input-wrapper">
+
+                        <!-- * Current Job -->
+                        @if(isset($member['f_Emp_Status']))
+                            @if($member['f_Emp_Status'] == '1' || $member['f_Emp_Status'] == '')
+                            <span>Current Job / Position</span>                            
+                            @endif
+                        @endif
+
+                        @if(isset($member['f_Emp_Status']))
+                            @if($member['f_Emp_Status'] == '0')
+                            <!-- * Previous Job -->
+                            <span>Previous Job / Position</span>                            
+                            @endif
+                        @endif
+                        @if(isset($member['f_Emp_Status']))
+                            @if($member['f_Emp_Status'] == '2')
+                            <!-- * Previous Job -->
+                            <span>Industry</span>                            
+                            @endif
+                        @endif
+                        <input wire:model.lazy="member.f_Job" {{ isset($member['f_Emp_Status']) ? ($member['f_Emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        @error('member.f_Job') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Years Of Service -->
+                    <div class="input-wrapper">
+                        <span>Years Of Service</span>
+                        <input wire:model.lazy="member.f_YOS" {{ isset($member['f_Emp_Status']) ? ($member['f_Emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Company Name -->
+                    <div class="input-wrapper">
+                        <span>Company Name</span>
+                        <input wire:model.lazy="member.f_CompanyName" {{ isset($member['f_Emp_Status']) ? ($member['f_Emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        @error('member.f_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Empty Input Wrapper -->
+                    <div class="input-wrapper">
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 5: Number Of Dependants -->
+                <div class="rowspan">
+
+                    <!-- * Current Job / Position -->
+                    <div class="input-wrapper">
+                        <span>Number Of Dependants</span>
+                        <input  wire:model.lazy="member.f_NOD" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 6: Empty Rowspan -->
+                <div class="rowspan">
+
+                </div>
+
+                <!-- * Rowspan 7: Subheader - Children(s) Information -->
+                <div class="rowspan" data-child-sibling>
+
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h3>Children(s) Information married</h3>
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 8: First Name, Middle Name , Last Name, Age, Name Of School and Add/Subtract Button -->
+               
+                @if(count($cntmemchild) > 0)    
+                    @foreach($cntmemchild as $cntchild)
+                    <div class="rowspan child" data-child>                    
+                            <!-- * First Name -->
+                            <div class="input-wrapper">
+                                <span>First Name</span>
+                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
+                                @error('inpchild.fname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
+
+                            <!-- * Middle Name -->
+                            <div class="input-wrapper">
+                                <span>Middle Name</span>
+                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                                @error('inpchild.mname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
+
+                            <!-- * Last Name -->
+                            <div class="input-wrapper">
+                                <span>Last Name</span>
+                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                                @error('inpchild.lname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
+
+                            <!-- * Age -->
+                            <div class="input-wrapper">
+                                <span>Age</span>
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
+
+                            <!-- * Name Of School -->
+                            <div class="input-wrapper">
+                                <span>Name Of School</span>
+                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                                @error('inpchild.school'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
+
+                            <!-- * Add and Subtract Button  -->
+                            <div class="input-wrapper">
+                                @if($cntchild == 1)
+                                <button type="button" wire:click="addChild" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }}>+</button>
+                                @else
+                                <button type="button" wire:click="subChild({{ $cntchild }})" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }}>-</button>
+                                @endif
+                            </div>                        
+                    </div>
+                    @endforeach
+                @endif
+
+            </div>
+
+        </div>
+        @endif
+    @endif
+
+    @if(isset($member['civil_Status']))
+        @if($member['civil_Status'] == 'Single' || $member['civil_Status'] == 'Widow')
+        <!-- * Container 4(b): Family Background Information (Single)-->
+        <div class="nm-container-4" data-family-background-single>
+
+            <!-- * Small Container -->
+            <div class="small-con-3" data-child-container-2>
+
+                <!-- * Rowspan 1: Header -->
+                <div class="rowspan">
+
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h2>Family Background Information</h2>
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 2: Subheader - First degree relative information -->
+                <div class="rowspan">
+
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h3>First degree relative information</h3>
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 3: First Name, Middle Name, Last Name, Suffix, Date Of Birth and Age -->
+                <div class="rowspan">
+
+                    <!-- * First Name -->
+                    <div class="input-wrapper">
+                        <span>First Name</span>
+                        <input wire:model.lazy="member.f_Fname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        @error('member.f_Fname') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Middle Name -->
+                    <div class="input-wrapper">
+                        <span>Middle Name</span>
+                        <input wire:model.lazy="member.f_Mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        @error('member.f_Mname') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Last Name -->
+                    <div class="input-wrapper">
+                        <span>Last Name</span>
+                        <input wire:model.lazy="member.f_Lname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        @error('member.f_Lname') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Suffix -->
+                    <div class="input-wrapper">
+                        <span>Suffix</span>
+                        <input wire:model.lazy="member.f_Suffix" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        @error('member.f_Suffix') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+
+                    <!-- * Date Of Birth -->
+                    <div class="input-wrapper">
+                        <span>Date Of Birth</span>
+                        <input wire:model.lazy="member.f_DOB" wire:change="getmemberFAge" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="date">
+                        @error('member.f_DOB') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Age -->
+                    <div class="input-wrapper">
+                        <span>Age</span>
+                        <input wire:model.lazy="member.f_Age" disabled type="number"> 
+                        @error('member.f_Age') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 4: Employment Status, Current Job / Position, Years Of Service and Company Name -->
+                <div class="rowspan">
+
+                    <!-- * Employment Status -->
+                    <div class="input-wrapper">
+                        <span>Employment Status</span>
+                        <div class="select-box">
+                            <select  wire:model="member.f_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                                <option value="">- -select - -</option>     
+                                <option value="1">Employed</option>                            
+                                <option value="0">Unemployed</option>   
+                                <option value="2">Self Employed</option>                                    
+                            </select>                                             
+                            @error('member.f_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+
+                    
+                    <!-- * Current Job / Position -->
+                    <div class="input-wrapper">
+
+                        @if(isset($member['f_Emp_Status']))
+                            @if($member['f_Emp_Status'] == '1' || $member['f_Emp_Status'] == '')
+                            <!-- * Current Job -->
+                            <span>Current Job / Position</span>                           
+                            @endif
+                        @endif    
+                        
+                        @if(isset($member['f_Emp_Status']))
+                            @if($member['f_Emp_Status'] == '0')
+                            <!-- * Previous Job -->
+                            <span>Previous Job / Position</span>                          
+                            @endif
+                        @endif
+
+                        @if(isset($member['f_Emp_Status']))
+                            @if($member['f_Emp_Status'] == '2')
+                            <!-- * Previous Job -->
+                            <span>Industry</span>                          
+                            @endif
+                        @endif
+                        <input wire:model.lazy="member.f_Job" {{ isset($member['f_Emp_Status']) ? ($member['f_Emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        @error('member.f_Job') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Years Of Service -->
+                    <div class="input-wrapper">
+                        <span>Years Of Service</span>
+                        <input wire:model.lazy="member.f_YOS" {{ isset($member['f_Emp_Status']) ? ($member['f_Emp_Status'] == '0' ? 'disabled' : '') : '' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        @error('member.f_YOS') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Company Name -->
+                    <div class="input-wrapper">
+                        <span>Company Name</span>
+                        <input wire:model.lazy="member.f_CompanyName" {{ isset($member['f_Emp_Status']) ? ($member['f_Emp_Status'] == '0' ? 'disabled' : '') : '' }} type="text">
+                        @error('member.f_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                    <!-- * Empty Input Wrapper -->
+                    <div class="input-wrapper">
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 5: Number Of Dependants -->
+                <div class="rowspan">
+
+                    <!-- * Number Of Dependants -->
+                    <div class="input-wrapper">
+                        <span>Number Of Dependants</span>
+                        <input wire:model.lazy="member.f_NOD" type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        @error('member.f_NOD') <span class="text-required">{{ $message }}</span>@enderror
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 6: Empty Rowspan -->
+                <div class="rowspan">
+
+                </div>
+
+                <!-- * Rowspan 7: Subheader - Children(s) Information -->
+                <div class="rowspan">
+
+                    <!-- * Family Background Information -->
+                    <div class="input-wrapper">
+                        <h3>Children(s) Information</h3>
+                    </div>
+
+                </div>
+
+                <!-- * Rowspan 8: First Name, Middle Name , Last Name, Age, Name Of School and Add/Subtract Button -->
+                @if(count($cntmemchild) > 0)    
+                    @foreach($cntmemchild as $cntchild)
+                    <div class="rowspan child" data-child-2>
+                       
+                            <!-- * First Name -->
+                            <div class="input-wrapper">
+                                <span>First Name</span>
+                                <input  wire:model.lazy="inpchild.fname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text" >
+                                @error('inpchild.fname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
+
+                            <!-- * Middle Name -->
+                            <div class="input-wrapper">
+                                <span>Middle Name</span>
+                                <input wire:model.lazy="inpchild.mname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                                @error('inpchild.mname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
+
+                            <!-- * Last Name -->
+                            <div class="input-wrapper">
+                                <span>Last Name</span>
+                                <input wire:model.lazy="inpchild.lname{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                                @error('inpchild.lname'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
+
+                            <!-- * Age -->
+                            <div class="input-wrapper">
+                                <span>Age</span>
+                                <input wire:model.lazy="inpchild.age{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                @error('inpchild.age'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
+
+                            <!-- * Name Of School -->
+                            <div class="input-wrapper">
+                                <span>Name Of School</span>
+                                <input wire:model.lazy="inpchild.school{{ $cntchild }}" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                                @error('inpchild.school'.$cntchild) <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
+
+                            <!-- * Add and Subtract Button  -->
+                            <div class="input-wrapper">
+                                @if($cntchild == 1)
+                                <button type="button" wire:click="addChild">+</button>
+                                @else
+                                <button type="button" wire:click="subChild({{ $cntchild }})">-</button>
+                                @endif
+                            </div>                             
+                    </div>
+                    @endforeach
+                @endif
+
+            </div>
+
+        </div>
+    @endif
+@endif
+    <!-- * Imported from New Member Application -->
+                    
     <!-- * Container 6: (Wrapper): Assets and Properties, Appliances and Bank Accounts -->
     <div class="na-container-wrapper-3">
 
@@ -2165,6 +2188,14 @@
                         <!-- * Email Address -->
                         <div class="input-wrapper">
                             <div class="input-wrapper">
+                                <span>Relationship to Client</span>
+                                <input wire:model.lazy="comaker.co_RTTB" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                                @error('comaker.co_RTTB') <span class="text-required">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
+                        <div class="input-wrapper" style="display: none;">
+                            <div class="input-wrapper">
                                 <span>Email Address</span>
                                 <input wire:model.lazy="comaker.co_EmailAddress" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="email">
                                 @error('comaker.co_EmailAddress') <span class="text-required">{{ $message }}</span>@enderror
@@ -2444,7 +2475,8 @@
                         <select  wire:model="comaker.co_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
                             <option value="">- -select - -</option>     
                             <option value="1">Employed</option>                            
-                            <option value="0">Unemployed</option>                            
+                            <option value="0">Unemployed</option>      
+                            <option value="2">Self Employed</option>                           
                         </select>                                                     
                     </div>
                     @error('comaker.co_Emp_Status') <span class="text-required">{{ $message }}</span>@enderror
@@ -2456,32 +2488,38 @@
                     @if(isset($comaker['co_Emp_Status']))
                         @if($comaker['co_Emp_Status'] == '1' || $comaker['co_Emp_Status'] == '')
                         <!-- * Current Job -->
-                        <span>Current Job / Position</span>
-                        <input wire:model.lazy="comaker.co_JobDescription" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        <span>Current Job / Position</span>                        
                         @endif
                     @endif    
 
                     @if(isset($comaker['co_Emp_Status']))
                         @if($comaker['co_Emp_Status'] == '0')
                         <!-- * Previous Job -->
-                        <span>Previous Job / Position</span>
-                        <input wire:model.lazy="comaker.co_JobDescription" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        <span>Previous Job / Position</span>                        
                         @endif
                     @endif
+
+                    @if(isset($comaker['co_Emp_Status']))
+                        @if($comaker['co_Emp_Status'] == '2')
+                        <!-- * Previous Job -->
+                        <span>Industry</span>                        
+                        @endif
+                    @endif
+                    <input wire:model.lazy="comaker.co_JobDescription" {{ isset($comaker['co_Emp_Status']) ? ($comaker['co_Emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
                     @error('comaker.co_JobDescription') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Years Of Service -->
                 <div class="input-wrapper">
                     <span>Years Of Service</span>
-                    <input wire:model.lazy="comaker.co_YOS" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    <input wire:model.lazy="comaker.co_YOS" {{ isset($comaker['co_Emp_Status']) ? ($comaker['co_Emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number" min="0" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                     @error('comaker.co_YOS') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Company Name -->
                 <div class="input-wrapper">
                     <span>Company Name</span>
-                    <input wire:model.lazy="comaker.co_CompanyName" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="comaker.co_CompanyName" {{ isset($comaker['co_Emp_Status']) ? ($comaker['co_Emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
                     @error('comaker.co_CompanyName') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
@@ -2494,21 +2532,21 @@
                 <!-- * Company Address -->
                 <div class="input-wrapper">
                     <span>Company Address</span>
-                    <input wire:model.lazy="comaker.co_CompanyID" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="comaker.co_CompanyID" {{ isset($comaker['co_Emp_Status']) ? ($comaker['co_Emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
                     @error('comaker.co_CompanyID') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Monthly Salary -->
                 <div class="input-wrapper">
                     <span>Monthly Salary</span>
-                    <input wire:model.lazy="comaker.co_MonthlySalary" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                    <input wire:model.lazy="comaker.co_MonthlySalary" {{ isset($comaker['co_Emp_Status']) ? ($comaker['co_Emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
                     @error('comaker.co_MonthlySalary') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Other Source Of Income -->
                 <div class="input-wrapper">
                     <span>Other Source Of Income</span>
-                    <input wire:model.lazy="comaker.co_OtherSOC" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                    <input wire:model.lazy="comaker.co_OtherSOC" {{ isset($comaker['co_Emp_Status']) ? ($comaker['co_Emp_Status'] == '0' ? 'disabled' : '') : '' }} {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
                     @error('comaker.co_OtherSOC') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
