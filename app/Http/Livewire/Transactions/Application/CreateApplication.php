@@ -458,6 +458,30 @@ class CreateApplication extends Component
         }
     }
 
+    
+    public function clearComakerJobInfo(){
+        if(isset($this->comaker['co_Emp_Status'])){
+            if($this->comaker['co_Emp_Status'] == 0){
+                $this->comaker['co_JobDescription'] = '';
+                $this->comaker['co_YOS'] = '';
+                $this->comaker['co_CompanyName'] = '';
+                $this->comaker['co_CompanyID'] = '';
+                $this->comaker['co_MonthlySalary'] = '';
+                $this->comaker['co_OtherSOC'] = '';
+            }
+        }
+    }
+
+    public function clearFJobInfo(){
+        if(isset($this->member['f_Emp_Status'])){
+            if($this->member['f_Emp_Status'] == 0){
+                $this->member['f_Job'] = '';
+                $this->member['f_YOS'] = '';
+                $this->member['f_CompanyName'] = '';              
+            }
+        }
+    }
+
     public function storeProfileImage(){           
         $profilename = '';
         if($this->imgprofile){

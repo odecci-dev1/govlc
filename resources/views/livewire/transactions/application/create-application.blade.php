@@ -1385,7 +1385,7 @@
                     <div class="input-wrapper">
                         <span>Employment Status</span>
                         <div class="select-box">
-                            <select  wire:model="member.f_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                            <select  wire:model="member.f_Emp_Status" wire:change="clearFJobInfo" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
                                 <option value="">- - select - -</option>     
                                 <option value="1">Employed</option>                            
                                 <option value="0">Unemployed</option>     
@@ -1609,7 +1609,7 @@
                     <div class="input-wrapper">
                         <span>Employment Status</span>
                         <div class="select-box">
-                            <select  wire:model="member.f_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                            <select  wire:model="member.f_Emp_Status" wire:change="clearFJobInfo" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
                                 <option value="">- -select - -</option>     
                                 <option value="1">Employed</option>                            
                                 <option value="0">Unemployed</option>   
@@ -2472,7 +2472,7 @@
                 <div class="input-wrapper">
                     <span>Employment Status</span>
                     <div class="select-box">   
-                        <select  wire:model="comaker.co_Emp_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                        <select  wire:model="comaker.co_Emp_Status" wire:change="clearComakerJobInfo" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
                             <option value="">- -select - -</option>     
                             <option value="1">Employed</option>                            
                             <option value="0">Unemployed</option>      
