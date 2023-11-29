@@ -20,14 +20,14 @@
             @php 
                 $count = 0;
                 $pagenum = 0;
-                $pagecount = count($areaDetails) / 8;
+                $pagecount = count($areaDetails) / 12;
                 for($x = 0; $x <= $pagecount; $x++){
                     $arrpage[$x] = []; 
                 }
 
                 foreach($areaDetails as $mdetails){
                     $count = $count + 1;
-                    if($count > 8){
+                    if($count > 12){
                         $pagenum = $pagenum + 1;
                         $count = 0;
                     }
@@ -48,7 +48,7 @@
                             <div class="body-wrapper">                                                                                
                                     @php 
                                         $details = $arrpage[$y];   
-                                        $shortbox = 8 - count($details); 
+                                        $shortbox = 12 - count($details); 
                                         for($a = 0; $a < $shortbox; $a++){                
                                             array_push($details, []);
                                         }         
@@ -181,17 +181,22 @@
                     </thead>
                     <tbody>
                         @if ($areaDetails)
+                            @php 
+                                $clcnt = 0;
+                            @endphp 
                             @foreach ($areaDetails as $mdetails)
                                 @php
                                     $realeseDate = new DateTime($mdetails['releasingDate']);
                                     $dueDate = new DateTime($mdetails['dueDate']);
+
+                                    $clcnt = $clcnt + 1;
                                 @endphp
                                 <tr>
 
                                     <td>
                                         <!-- * Client No. -->
                                         <div class="td-wrapper">
-                                            <span class="td-num"></span>
+                                            <span class="td-num">{{ $clcnt }}.)</span>
                                         </div>
 
                                     </td>
