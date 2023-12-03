@@ -1620,6 +1620,25 @@ class CreateApplication extends Component
         }       
     }
 
+    public function checkExistingMember(){      
+        if(!empty($this->member['fname']) && !empty($this->member['fname']) && !empty($this->member['lname']) && !empty($this->member['pob']) && !empty($this->member['barangay']) && !empty($this->member['dob']) && !empty($this->member['age'])){  
+            $data = [
+                        'fname'=> $this->member['fname'],
+                        'mname'=> $this->member['mname'],
+                        'lname'=> $this->member['lname'],
+                        'pob'=> $this->member['pob'],
+                        'barangay'=> $this->member['barangay'],
+                        'dob'=> $this->member['dob'],
+                        'age'=> $this->member['age'],
+                    ];
+            $checkmem = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/Member_ValidationOnChange', $data);                         
+            $checkmem = $checkmem->json();    
+            if(isset( $checkmem[0] )){
+                
+            }       
+        }
+    }
+
     public function mount($type = 'create', Request $request){
         $this->regions = collect([]);
         $this->provinces = collect([]);

@@ -91,7 +91,7 @@
                             @endif
                         </div>
                     </div>
-                    <textarea wire:model.lazy="loanDetails.remarks"  {{ $member['statusID'] == 8 ? '' : 'readonly' }} {{ $usertype != 2 ? '' : 'disabled' }} class="wrapper-2"></textarea>
+                    <textarea wire:model.lazy="loanDetails.remarks" style="font-size: 1.4rem;"  {{ $member['statusID'] == 8 ? '' : 'readonly' }} {{ $usertype != 2 ? '' : 'disabled' }} class="wrapper-2"></textarea>
                 </div>
     @endif            
     @if(in_array($member['statusID'], [9, 10, 15]))
@@ -552,21 +552,21 @@
                     <!-- * First Name -->
                     <div class="input-wrapper">
                         <span>First Name</span>
-                        <input wire:model.lazy="member.fname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.fname" wire:blur="checkExistingMember" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
                         @error('member.fname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Middle Name -->
                     <div class="input-wrapper">
                         <span>Middle Name</span>
-                        <input wire:model.lazy="member.mname" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.mname" wire:blur="checkExistingMember" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
                         @error('member.mname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Last Name -->
                     <div class="input-wrapper">
                         <span>Last Name</span>
-                        <input wire:model.lazy="member.lname"  {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
+                        <input wire:model.lazy="member.lname" wire:blur="checkExistingMember"  {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text">
                         @error('member.lname') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -597,21 +597,21 @@
                     <!-- * Date Of Birth -->
                     <div class="input-wrapper">
                         <span>Date Of Birth</span>
-                        <input wire:model.lazy="member.dob" wire:change="getmemberAge" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="date"  >
+                        <input wire:model.lazy="member.dob" wire:change="getmemberAge"  wire:blur="checkExistingMember" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="date"  >
                         @error('member.dob') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Age -->
                     <div class="input-wrapper">
                         <span>Age</span>
-                        <input wire:model.lazy="member.age" disabled="disabled"  {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number"  >
+                        <input wire:model.lazy="member.age" disabled="disabled" wire:blur="checkExistingMember" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number"  >
                         @error('member.age') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
                     <!-- * Place Of Birth -->
                     <div class="input-wrapper">
                         <span>Place Of Birth</span>
-                        <input wire:model.lazy="member.pob" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text"  >
+                        <input wire:model.lazy="member.pob"  wire:blur="checkExistingMember" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="text"  >
                         @error('member.pob') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
 
@@ -736,7 +736,7 @@
                     <!-- * Province / Region -->
                     <div class="input-wrapper">        
                         <span>Barangay</span>                        
-                            <select  wire:model="member.barangay" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
+                            <select  wire:model="member.barangay"  wire:change="checkExistingMember" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} class="select-option">
                                 <option value="">- - select - -</option>     
                                 @if($barangays->isNotEmpty())
                                     @php 
