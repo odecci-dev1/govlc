@@ -28,10 +28,12 @@ class CollectionRemittance extends Component
         return $rules;
     }
 
-    public function setRemmittInfo($naid = '', $memid = ''){
+    public function setRemmittInfo($naid = '', $memid = '', $amount = 0){
         $appdtl = $this->list->where('naid', $naid)->first();      
         $this->memid =  $memid;
         $this->reminfo['savings'] = 0;
+        $this->reminfo['amntCollected'] = $amount;
+        $this->computeLapses();
     }
 
     public function computeLapses(){

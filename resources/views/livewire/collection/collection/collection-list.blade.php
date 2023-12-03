@@ -19,14 +19,19 @@
 
                     <!-- * Add New Button -->
                     @if(!$check)
-                    <a href="{{ URL::to('/') }}/collection/create" class="button" data-add-new-collection>
-                        <span>Make Collection</span>
-                    </a>
+                        <a href="{{ URL::to('/') }}/collection/create" class="button" data-add-new-collection>
+                            <span>Make Collection</span>
+                        </a>
                     @endif
 
                 </div>
 
                 <!-- * Primary Search Bar -->
+                <div class="primary-search-bar" style="display: inline; font-size: 1.2rem;">
+                    <input wire:model="displayrecent" type="checkbox" id="displayrecent" name="displayrecent" value="1" style="margin-right: 4px !important;">
+                    <label for="displayrecent"> Display only collections for the last seven (7) days</label><br>
+                </div>
+
                 <div class="primary-search-bar">
                     <div class="row">
                         <input type="search" id="searchInput" name="search" placeholder="Search" autocomplete="off">
@@ -98,8 +103,7 @@
                             @endphp
                             <!-- * Date -->
                             <td>
-                                <div class="td-wrapper">
-                                    <span class="td-num"></span>
+                                <div class="td-wrapper">                                  
                                     <div class="td-inner-wrapper">
                                         <span class="td-name">{{ $dateCreated->format('F d, Y') }}</span>
                                         <span>{{ $l['collection_RefNo'] }}</span>

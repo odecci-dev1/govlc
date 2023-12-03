@@ -1486,8 +1486,7 @@ class CreateApplication extends Component
             $paymenthistory = $paymenthistory->json();  
             
             if($loanhistory){
-                $this->loanhistory = collect($loanhistory);  
-                // dd( $this->loanhistory );                      
+                $this->loanhistory = collect($loanhistory);                  
             }
             if($paymenthistory){
                 $this->paymenthistory = collect($paymenthistory);          
@@ -1675,31 +1674,34 @@ class CreateApplication extends Component
                 $this->member['termsOfPayment'] = $this->loanDetails['loantermsName'];     
 
                 if($request->naID != ''){                        
-                    $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $request->naID]]);                 
-                    $resdata = $value->json();                          
-                    $data =  $resdata[0];  
-                   
-                    $this->searchedmemId =  $request->naID;
-                    $this->member['fname'] = $data['fname'];  
-                    $this->member['lname'] = $data['lname'];
-                    $this->member['mname'] = $data['mname'];
-                    $this->member['suffix'] = $data['suffix']; 
-                    $this->member['age'] = $data['age']; 
-                    $this->member['barangay'] = $data['barangay'];  
-                    $this->member['city'] = $data['city']; 
-                    $this->member['civil_Status'] = $data['civil_Status'];  
-                    $this->member['cno'] = $data['cno']; 
-                    $this->member['country'] = $data['country']; 
-                    $this->member['dob'] = date('Y-m-d', strtotime($data['dob']));
-                    $this->member['emailAddress'] = $data['emailAddress']; 
-                    $this->member['gender'] = $data['gender'];
-                    $this->member['houseNo'] = $data['houseNo'];
-                    $this->member['house_Stats'] = $data['houseStatus_Id']; 
-                    $this->member['pob'] = $data['pob'];
-                    $this->member['province'] = $data['province']; 
-                    $this->member['yearsStay'] = $data['yearsStay'];
-                    $this->member['zipCode'] = $data['zipCode'];
-                    $this->member['profile'] = $data['profilePath'];                   
+                    $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $request->naID]]);                         
+                    $resdata = $value->json();                                                                                           
+                    if(!empty($resdata[0])){
+                        $data = $resdata[0];                        
+                        $this->searchedmemId =  $request->naID;
+                        $this->member['fname'] = $data['fname'];  
+                        $this->member['lname'] = $data['lname'];
+                        $this->member['mname'] = $data['mname'];
+                        $this->member['suffix'] = $data['suffix']; 
+                        $this->member['age'] = $data['age']; 
+                        $this->member['barangay'] = $data['barangay'];  
+                        $this->member['city'] = $data['city']; 
+                        $this->member['civil_Status'] = $data['civil_Status'];  
+                        $this->member['cno'] = $data['cno']; 
+                        $this->member['country'] = $data['country']; 
+                        $this->member['dob'] = date('Y-m-d', strtotime($data['dob']));
+                        $this->member['emailAddress'] = $data['emailAddress']; 
+                        $this->member['gender'] = $data['gender'];
+                        $this->member['houseNo'] = $data['houseNo'];
+                        $this->member['house_Stats'] = $data['houseStatus_Id']; 
+                        $this->member['pob'] = $data['pob'];
+                        $this->member['province'] = $data['province']; 
+                        $this->member['yearsStay'] = $data['yearsStay'];
+                        $this->member['zipCode'] = $data['zipCode'];
+                        $this->member['profile'] = $data['profilePath'];   
+                        $this->renderCity();
+                        $this->renderBarangay();                       
+                    }            
                 }
                 else{
                     $this->member['fname'] = '1Jumar';  
@@ -1783,13 +1785,11 @@ class CreateApplication extends Component
         }
         else if($this->type == 'view' || $this->type == 'details'){
             $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
-            //dd(session()->get('auth_userid'));
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
                 //dd($data);    
-                //ditoviewing
-                //dd(session()->get('auth_userid'));
+                //ditoviewing     
                 $this->searchedmemId =  $data['memId'];
                 $this->member['statusID'] = $data['applicationStatus'];
                 if($this->type == 'view'){
@@ -1867,15 +1867,7 @@ class CreateApplication extends Component
                     //loan summary
                     $getloansummary = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanSummary/GetLoanSummary', [ 'naid' => $this->naID ]);                  
                     $this->loansummary = isset($getloansummary[0]) ? $getloansummary[0] : [];   
-                    //dd($this->loansummary);
-                              
-                    // $this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : ''; 
-                    // $this->loanDetails['notarialFee'] = isset($getloansummary[0]) ? $this->loansummary['notarialFee'] : ''; 
-                    // $this->loanDetails['advancePayment'] = isset($getloansummary[0]) ? $this->loansummary['advancePayment'] : ''; 
-                    // $this->loanDetails['total_InterestAmount'] = isset($getloansummary[0]) ? $this->loansummary['total_InterestAmount'] : '';
-                    // $this->loanDetails['total_LoanReceivable'] = isset($getloansummary[0]) ? $this->loansummary['total_LoanReceivable'] : '';
-                    // $this->loanDetails['dailyCollectibles'] = isset($getloansummary[0]) ? $this->loansummary['dailyCollectibles'] : '';
-                    // $this->loanDetails['totalSavings'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
+                    //dd($this->loansummary);                              
 
                     $this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
                     $this->loanDetails['notarialFee'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['notarialFee'] :  $this->loansummary['approvedNotarialFee']) : ''; 
@@ -1965,11 +1957,9 @@ class CreateApplication extends Component
                 $this->member['house_Stats'] = $data['houseStatusId'];          
                 $this->member['pob'] = $data['pob'];
                 $this->member['province'] = $data['province']; 
-                if($this->member['statusID'] != 7){
-                    //$this->provinces = collect(['provDesc' => $data['province']]);
+                if($this->member['statusID'] != 7){                   
                     $this->provinces->put(1, ['provDesc' => $data['province']]);                  
                 } 
-                //dd($this->provinces);
                 $this->member['yearsStay'] = $data['yearsStay'];
                 $this->member['zipCode'] = $data['zipCode'];
                 $this->member['status'] = $data['status'];              
@@ -1984,7 +1974,7 @@ class CreateApplication extends Component
                 $this->member['bO_Status'] = $data['bO_Status'];        
                 $this->member['companyName'] = $data['companyName'];
                 $this->member['companyAddress'] = $data['companyAddress'];  
-                $this->member['emp_Status'] = $data['emp_Status']; 
+                $this->member['emp_Status'] = $data['emp_Status'];              
                 $this->member['f_Fname'] = $data['f_Fname']; 
                 $this->member['f_Lname'] = $data['f_Lname']; 
                 $this->member['f_Mname'] = $data['f_Mname']; 

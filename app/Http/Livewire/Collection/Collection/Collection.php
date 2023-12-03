@@ -182,10 +182,9 @@ class Collection extends Component
             $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  
         }
         else{
-            $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');  
+            $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');             
         }     
-        $areas = $areas->json();
-        //dd($areas);
+        $areas = $areas->json();        
         if( $areas ){
             $this->areas = collect($areas);            
         }

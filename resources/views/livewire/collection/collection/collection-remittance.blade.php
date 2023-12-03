@@ -2,7 +2,7 @@
 @if(session('mmessage'))
     <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
 @endif
-<div wire:loading  wire:loading.delay class="full-screen-div-loading">
+<div wire:loading  wire:loading.delay.longer wire:target="remit,saveExpenses,areaRefNo" class="full-screen-div-loading">
         <div class="center-loading-container">
             <div>
                 <div class="lds-dual-ring"></div>
@@ -310,7 +310,7 @@
                         <!-- * Table View and Trash Button -->
                         <td class="td-btns">
                             <div class="td-btn-wrapper">
-                                <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}')" type="button" class="a-btn-view-3" data-open-remit-modal>Remit</button>
+                                <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}', {{ $l['dailyCollectibles'] }})" type="button" class="a-btn-view-3" data-open-remit-modal>Remit</button>
                             </div>
                         </td>
 
@@ -347,7 +347,7 @@
                         </div>
                         <div class="box" style="padding-right: 1rem;">
                             <!-- <button class="button-2" data-open-remit-modal>Remit</button> -->
-                            <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}')" type="button" class="button-2" data-open-remit-modal>Remit</button>
+                            <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}', {{ $l['dailyCollectibles'] }})" type="button" class="button-2" data-open-remit-modal>Remit</button>
                         </div>
                     </div>
                     <div class="inner-wrapper" data-show-more-details-field-exp>

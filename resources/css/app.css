@@ -6290,7 +6290,7 @@ body.print-portrait .page {
   text-align: right;
 }
 .cll-con-2 .table-container table td:first-of-type {
-  padding-left: 0.8rem;
+  /* padding-left: 0.8rem; */
 }
 .cll-con-2 .table-container table td:nth-of-type(2) {
   padding-left: 0.5rem;
