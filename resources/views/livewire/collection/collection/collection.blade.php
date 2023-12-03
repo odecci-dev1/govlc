@@ -327,7 +327,7 @@
                                             <p>{{ $dueDate->format('F d, Y') }}</p>
                                             <p>{{ $mdetails['typeOfCollection'] }}</p>
                                             <p>{{ number_format($mdetails['totalSavingsAmount'], 2) }}</p>
-                                            <p>{{ $mdetails['naid'] }} <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $mdetails['naid'] }}" class="cust-link">view</a></p>
+                                            <p>{{ $mdetails['naid'] }} <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $mdetails['naid'] }}" class="cust-link" target="_blank">view</a></p>
                                         </div>
                                     </div>
                                 </div>
