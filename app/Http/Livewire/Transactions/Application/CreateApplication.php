@@ -1631,10 +1631,49 @@ class CreateApplication extends Component
                         'dob'=> $this->member['dob'],
                         'age'=> $this->member['age'],
                     ];
-            $checkmem = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/Member_ValidationOnChange', $data);                         
+            $checkmem = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/Member_ValidationOnChange', $data);                                   
             $checkmem = $checkmem->json();    
-            if(isset( $checkmem[0] )){
-                
+            if(isset( $checkmem[0] )){                         
+                if(empty($this->member['gender'])){                 
+                    $this->member['gender'] = $checkmem[0]['gender'];                   
+                }
+                if(empty($this->member['civil_Status'])){                 
+                    $this->member['civil_Status'] = $checkmem[0]['civil_Status'];                   
+                }
+                if(empty($this->member['cno'])){                 
+                    $this->member['cno'] = $checkmem[0]['cno'];                   
+                }
+                if(empty($this->member['emailAddress'])){                 
+                    $this->member['emailAddress'] = $checkmem[0]['emailAddress'];                   
+                }                
+                if(empty($this->member['house_Stats'])){                                   
+                    $this->member['house_Stats'] = $checkmem[0]['houseStatusId'];                   
+                }
+                if(empty($this->member['houseNo'])){                                   
+                    $this->member['houseNo'] = $checkmem[0]['houseNo'];                   
+                }
+                if(empty($this->member['country'])){                                   
+                    $this->member['country'] = $checkmem[0]['country'];                   
+                }
+                if(empty($this->member['zipCode'])){                                   
+                    $this->member['zipCode'] = $checkmem[0]['zipCode'];                   
+                }
+                if(empty($this->member['yearsStay'])){                                   
+                    $this->member['yearsStay'] = $checkmem[0]['yearsStay'];                   
+                }
+                if(empty($this->member['electricBill'])){                                   
+                    $this->member['electricBill'] = $checkmem[0]['electricBill'];                   
+                }
+                if(empty($this->member['waterBill'])){                                   
+                    $this->member['waterBill'] = $checkmem[0]['waterBill'];                   
+                }
+                if(empty($this->member['otherBills'])){                                   
+                    $this->member['otherBills'] = $checkmem[0]['otherBills'];                   
+                }
+                if(empty($this->member['dailyExpenses'])){                                   
+                    $this->member['dailyExpenses'] = $checkmem[0]['dailyExpenses'];                   
+                }
+                //dd($checkmem[0]);
             }       
         }
     }
@@ -1672,8 +1711,8 @@ class CreateApplication extends Component
         $this->member['bO_Status'] = '';
         $this->cntmemchild = [1];        
         $this->vehicle[1] = [  'vehicle' => '' ];
-        $this->properties[1] = [  'property' => '' ];
-        $this->appliances[1] = [  'appliance' => '', 'brand' => '' ];
+        $this->properties[1] = [ 'property' => '' ];
+        $this->appliances[1] = [ 'appliance' => '', 'brand' => '' ];
         $this->bank[1] = [  'account' => '', 'address' => '' ];
 
         $this->comaker['co_Emp_Status'] = '';
@@ -1727,7 +1766,7 @@ class CreateApplication extends Component
                     // $this->member['lname'] = '1Cave';
                     // $this->member['mname'] = '1Badajos';
                     // $this->member['suffix'] = ''; 
-                    // $this->member['age'] = '20'; 
+                    // $this->member['age'] = '22'; 
                     // // $this->member['barangay'] = 'Rivera';  
                     // // $this->member['city'] = 'San Juan'; 
                     // $this->member['civil_Status'] = 'Married';  
@@ -2181,13 +2220,13 @@ class CreateApplication extends Component
                 // $this->member['lname'] = '1Cave';
                 // $this->member['mname'] = '1Badajos';
                 // $this->member['suffix'] = ''; 
-                // $this->member['age'] = '20'; 
+                // $this->member['age'] = '22'; 
                 // // $this->member['barangay'] = 'Rivera';  
                 // // $this->member['city'] = 'San Juan'; 
                 // $this->member['civil_Status'] = 'Married';  
                 // $this->member['cno'] = '02233666666'; 
                 // $this->member['country'] = 'Philippines'; 
-                // $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
+                // $this->member['dob'] = date('Y-m-d', strtotime('12/27/2000'));
                 // $this->member['emailAddress'] = 'test@gmail.com'; 
                 // $this->member['gender'] = 'Male';
                 // $this->member['houseNo'] = 'No. 9 GB';
@@ -2212,7 +2251,7 @@ class CreateApplication extends Component
                 // $this->member['f_Lname'] = 'Eurolfan'; 
                 // $this->member['f_Mname'] = 'Javier'; 
                 // $this->member['f_Suffix'] = ''; 
-                // $this->member['f_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
+                // $this->member['f_DOB'] = date('Y-m-d', strtotime('12/27/2000'));
                 // $this->member['f_Age'] = '30'; 
                 // $this->member['f_NOD'] = '0'; 
                 // $this->member['f_YOS'] = '5'; 
@@ -2231,7 +2270,7 @@ class CreateApplication extends Component
                 // $this->comaker['co_Civil_Status'] = 'Single'; 
                 // $this->comaker['co_Cno'] = '023369990'; 
                 // $this->comaker['co_Country'] = 'Philippines'; 
-                // $this->comaker['co_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
+                // $this->comaker['co_DOB'] = date('Y-m-d', strtotime('12/27/2000'));
                 // $this->comaker['co_EmailAddress'] = ''; 
                 // $this->comaker['co_Gender'] = 'Female'; 
                 // $this->comaker['co_HouseNo'] = '566233';         

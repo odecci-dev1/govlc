@@ -26,8 +26,8 @@ class CollectionList extends Component
         }
         else{
             $this->list = $mlist;
-        }
-        $this->check = $this->list->where('dateCreated', $date)->first();       
+        }     
+        $this->check = $this->list->where('dateCreated', $date)->first();                   
         return view('livewire.collection.collection.collection-list');
     }
 }

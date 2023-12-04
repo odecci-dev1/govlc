@@ -33,7 +33,7 @@ class CollectionRemittance extends Component
         $this->memid =  $memid;
         $this->reminfo['savings'] = 0;
         $this->reminfo['amntCollected'] = $amount;
-        $this->computeLapses();
+        $this->computeLapses();       
     }
 
     public function computeLapses(){
