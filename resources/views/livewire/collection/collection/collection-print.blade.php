@@ -39,7 +39,7 @@
                         @endphp 
                         <div class="page page-1" style="width: 297mm; min-height: 297mm;" data-printables>
                             <div class="header-wrapper">
-                                <p>Field Officer: <span id="printFieldOfficerName">{{ $areaDetails[0]['fieldOfficer'] }}</span>
+                                <p>Field Officer: <span id="printFieldOfficerName">{{ !empty($areaDetails[0]['fieldOfficer']) ? $areaDetails[0]['fieldOfficer'] : 'No data' }}</span>
                                 </p>
                                 <p><span id="printAreaNum">{{ $areaDetails[0]['areaName'] }}</span></p>
                                 <p>Collection List Number <span
@@ -118,10 +118,10 @@
                             <th colspan="8">
                                 <div class="header-wrapper">
                                     <p>Field Officer: <span
-                                            id="printFieldOfficerName">{{ $areaDetails[0]['fieldOfficer'] }}</span></p>
-                                    <p><span id="printAreaNum">{{ $areaDetails[0]['areaName'] }}</span></p>
-                                    <p>Collection List Number <span
-                                            id="printCollectionListNumber">{{ $areaDetails[0]['area_RefNo'] }}</span></p>
+                                            id="printFieldOfficerName">{{ !empty($areaDetails[0]['fieldOfficer']) ? $areaDetails[0]['fieldOfficer'] : 'No data' }}</span></p>
+                                    <p><span id="printAreaNum">{{ !empty($areaDetails[0]['areaName']) ? $areaDetails[0]['areaName'] : 'No data' }}</span></p>
+                                    <p>Collection List Number: <span
+                                            id="printCollectionListNumber">{{ !empty($areaDetails[0]['area_RefNo']) ? $areaDetails[0]['area_RefNo'] : 'No data' }}</span></p>
                                 </div>
                             </th>
                         </tr>

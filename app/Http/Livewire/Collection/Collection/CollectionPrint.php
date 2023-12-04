@@ -38,9 +38,12 @@ class CollectionPrint extends Component
                                         'total_lapses' => $details['total_lapses'],
                                         'total_collectedAmount' => $details['total_collectedAmount'],
                                       ];
+                //dd($collections);                      
                 foreach($collections as $coll){
-                    $this->areaDetails =  $this->areaDetails->push($coll);
-                }                
+                    if($coll['payment_Status'] != 'Paid'){
+                        $this->areaDetails =  $this->areaDetails->push($coll);
+                    }                   
+                }                    
             }                         
         }
       // dd($this->areaDetails);

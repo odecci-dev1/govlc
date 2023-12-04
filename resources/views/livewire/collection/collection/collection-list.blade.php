@@ -8,7 +8,7 @@
 
             <h2>Collection List</h2>
             <p class="p-1">
-                You have <span id="numOfCollectionList">10</span> Collection list
+                You have <span id="numOfCollectionList">{{ count($list) }}</span> Collection list
             </p>
 
             <!-- * Button Container -->
