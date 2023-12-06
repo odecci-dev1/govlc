@@ -72,7 +72,7 @@ trait Common {
       $this->showAlert = 0;
    }
    
-   public function closeErrorMessage(){
+   public function closeErrorMessage(){   
       session()->forget('errmmessage');
    }
   

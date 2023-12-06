@@ -1,4 +1,4 @@
-<div id="error-asking-dialog-div">
+<div >
     <div class="full-screen-div">       
         <div class="alert-container">
             <div class="alert-header">
@@ -13,8 +13,8 @@
                 </div>                
             </div>
             <div class="alert-footer">                
-                <button class="alert-btn alert-btn-no" wire:click="closeErrorMessage" data-restoration-no>Got It</button>                
+                <button type="button" class="alert-btn alert-btn-no" wire:click="closeErrorMessage" data-restoration-no>Got It</button>                
             </div>
         </div>       
-    </div>  
+    </div>       
 </div>

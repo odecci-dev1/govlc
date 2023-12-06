@@ -5,14 +5,17 @@
     @if(session('mmessage'))
         <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif
+    @if(session('EXISTINGMEMBER'))
+        <x-dialog :message="session('EXISTINGMEMBER') . '. Continue Saving'" :xmid="session('EXISTINGMEMBERTYPE')" :confirmaction="'store'" :header="'Saving'"></x-dialog>   
+    @endif
 
     <x-error-dialog :message="'Operation Failed. Retry ?'" :xmid="''" :confirmaction="session('erroraction') ? session('erroraction') : ''" :header="'Error'"></x-error-dialog>       
     
     @if($showDialog == 1)
-        <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
+        <x-dialog :message="'Are you sure you want to trash the selected data'" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
     @endif
 
-    <div wire:loading  wire:loading.delay wire:target="store, update,imgprofile,member.attachments,membusinfo.attachments,addBusinessInfo,imgcoprofile,comaker.attachments,imgmemsign,imgcosign,resetmembusinfo" class="full-screen-div-loading">
+    <div wire:loading  wire:loading.delay wire:target="store, saving, update,imgprofile,member.attachments,membusinfo.attachments,addBusinessInfo,imgcoprofile,comaker.attachments,imgmemsign,imgcosign,resetmembusinfo" class="full-screen-div-loading">
         <div class="center-loading-container">
             <div>
                 <div class="lds-dual-ring"></div>
@@ -502,22 +505,25 @@
 
                     <!-- * Buttons -->
                     <div class="btn-wrapper">
-
+                        @if($type == 'details')
+                            <button wire:click="update({{ isset($member['statusID']) ? $member['statusID'] : 7 }})" type="button" class="button" data-save>Update Info</button>                                 
+                        @endif
                         <!-- * Save -->
                         @if($type == 'create')
-                        <button wire:click="store(1)" type="button" wire:loading.attr="disabled" class="button" data-save>Save</button>
+                        <button wire:click="saving(1)" type="button" wire:loading.attr="disabled" class="button" data-save>Save</button>
 
                         <!-- * Save & Apply for loan -->
                         <a href="#">
-                            <button type="button" wire:click="store(2)"  wire:loading.attr="disabled" class="button" onclick="activeProgressButton()" data-proceed-to-ci>Save & Proceed to CI</button>
-                        </a>
-                        @elseif($type == 'view')
+                            <button type="button" wire:click="saving(2)"  wire:loading.attr="disabled" class="button" onclick="activeProgressButton()" data-proceed-to-ci>Save & Proceed to CI</button>
+                        </a>                       
+                        @elseif($type == 'view')                  
                             @if($member['statusID'] == 7)
                                 @if($type != 'details')
-                                @if($usertype != 2)
-                                <button wire:click="update(1)" type="button" class="button" data-save>Update</button>
-                                <button wire:click="update(2)" onclick="showAskingDialog()" type="button" class="button" data-save>Submit And Proceed to CI</button>                      
-                                @endif
+                                    @if($usertype != 2)
+                                    <button wire:click="update(7)" type="button" class="button" data-save>Update</button>
+                                    <button wire:click="update(8)" onclick="showAskingDialog()" type="button" class="button" data-save>Submit And Proceed to CI</button>                      
+                                    <button onclick="showDialog('{{ $naID }}')" type="button" class="button" data-save>Trash</button>
+                                    @endif                              
                                 @endif
                             @elseif($member['statusID'] == 8)
                                 <div class="CI-time-wrapper">
@@ -638,7 +644,7 @@
                     <div class="input-wrapper">
                         <div class="input-wrapper">
                             <span>Contact Number</span>
-                            <input wire:model.lazy="member.cno" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="number">
+                            <input wire:model.lazy="member.cno" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : ($type == 'details' ? '' : 'disabled') }} class="{{ $type == 'details' ? 'inpt-editable' : '' }}" type="number">
                             @error('member.cno') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -647,7 +653,7 @@
                     <div class="input-wrapper">
                         <div class="input-wrapper">
                             <span>Email Address</span>
-                            <input wire:model.lazy="member.emailAddress" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="email">
+                            <input wire:model.lazy="member.emailAddress" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : ($type == 'details' ? '' : 'disabled') }} class="{{ $type == 'details' ? 'inpt-editable' : '' }}" type="email">
                             @error('member.emailAddress') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -2849,12 +2855,25 @@
                 @this.call('showAskingDialog');        
             };
 
+            window.saving = function(type){                  
+                @this.call('saving', type);        
+            };
+
             window.store = function(type){                  
                 @this.call('store', type);        
             };
 
+
             window.update = function(type){                                 
                 @this.call('update', type);        
+            };
+
+            window.showDialog = function($mid){              
+                @this.call('showDialog', $mid);        
+            };
+
+            window.archive = function($mid){
+                @this.call('archive', $mid);       
             };
 
             const dataNewGroupModal = document.querySelector('[data-new-group-modal]')

@@ -3,6 +3,9 @@
     @if(session('mmessage'))
         <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif
+    @if($showDialog == 1)
+        <x-dialog :message="'Are you sure you want to trash the selected data'" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
+    @endif
     <livewire:modals.new-application-modal  :type="''" :mid="isset($id) ? $id : ''"/> 
     <!-- modals -->
     <!-- <x-error-dialog :message="'Operation Failed. Retry'" :xmid="''" :confirmaction="session('erroraction')" :header="'Error'"></x-error-dialog>        -->
@@ -246,7 +249,7 @@
                             @else
                                 <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $l['naid'] }}" class="a-btn-view-3" data-view-application>View</a>
                             @endif
-                            <button class="a-btn-trash-5">Trash</button>
+                            <button  onclick="showDialog('{{ $l['naid'] }}')"  type="button" class="a-btn-trash-5">Trash</button>
                         </div>
                     </td>
                 
@@ -264,7 +267,16 @@
     </div>
 
     <script>
-        
+        document.addEventListener('livewire:load', function () {
+            window.showDialog = function($mid){              
+                @this.call('showDialog', $mid);        
+            };
+
+            window.archive = function($mid){
+                @this.call('archive', $mid);       
+            };
+        });
+
         const filterMemberModal = document.querySelector('[data-filter-member-modal]')
 
         if (filterMemberModal) {
@@ -293,31 +305,7 @@
                     filterMemberModal.close();
                 }, { once: true });
             
-            })
-
-
-            // If the dropdown filter is in the DOM
-            const selected = document.querySelector('[data-filter-type-loan-select]');
-
-            if (selected) {
-                
-                const optionsContainer = document.querySelector('[data-filter-type-opt-con');
-                const optionsList = document.querySelectorAll('[data-filter-type-loan-opt]');
-            
-                selected.addEventListener("click", () => {
-                    optionsContainer.classList.toggle("active");
-                });
-            
-                optionsList.forEach(option => {
-                    option.addEventListener("click", () => {
-                        selected.innerHTML = option.querySelector("label").innerHTML;
-                        optionsContainer.classList.remove("active");
-                    });
-                });
-
-            }
-
-
+            })           
         }
 
         
@@ -353,65 +341,7 @@
 
             // ** Loan Type Dropdown
                 
-            const selected = document.querySelector('[data-type-loan-select]')
-            const optionsContainer = document.querySelector('[data-type-opt-con')
-            const optionsList = document.querySelectorAll('[data-type-loan-opt]')
-
-            selected.addEventListener("click", () => {
-                optionsContainer.classList.toggle("active");
-            });
-
-            optionsList.forEach(option => {
-                option.addEventListener("click", () => {
-                    selected.innerHTML = option.querySelector("label").innerHTML;
-                    optionsContainer.classList.remove("active");
-                });
-            });   
-            
-            // ** Loan Type terms
-                
-            const selected2 = document.querySelector('[data-type-loan-select2]')
-            const optionsContainer2 = document.querySelector('[data-type-opt-con2')
-            const optionsList2 = document.querySelectorAll('[data-type-loan-opt2]')
-
-            selected2.addEventListener("click", () => {
-                optionsContainer2.classList.toggle("active");
-            });
-
-            optionsList2.forEach(option => {
-                option.addEventListener("click", () => {
-                    selected2.innerHTML = option.querySelector("label").innerHTML;
-                    optionsContainer2.classList.remove("active");
-                });
-            });    
-
-            // * Linked to Individual Loan
-            const individualLoanOpt = document.querySelector('[data-individual-loan-link]')
-            
-            individualLoanOpt.addEventListener('click', () => {
-                btnToNewApp.style.visibility = 'visible'
-            })
-
-            // * Linked to New Application
-            const btnToNewApp = document.querySelector('[data-link-to-newapp]')
-
-            btnToNewApp.addEventListener('click', () => {
-
-                const url = '/KC/transactions/new-application.html'
-                window.location = url
-
-            })  
-                
-            const newAppModalTable = document.getElementById('newApplicationModalTable')
-            const existingMembers = newAppModalTable.querySelectorAll('td')
-
-            existingMembers.forEach((member) => {
-                const url = '/KC/transactions/new-application-view.html'
-
-                member.closest('tr').addEventListener('click', () => {
-                    window.location = url
-                })
-            })
+           
             
 
         }

@@ -287,10 +287,17 @@ class FieldOfficer extends Component
     }
 
     public function archive($foid){       
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/DeleteFO', [ 'foid' => $foid ]);              
-        return redirect()->to('/maintenance/fieldofficer/list')->with('message', 'Filed officer has been archived');    
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/DeleteFO', [ 'foid' => $foid ]);                    
+        if($data->body() == 'Successfully Deleted'){
+            return redirect()->to('/maintenance/fieldofficer/list')->with('message', 'Filed officer has been archived');    
+        }
+        else{           
+            $this->closeDialog();
+            session()->flash('errmmessage', 'Deletion Failed. '.$data->body().'.');                                            
+        }
+       
     }
-    
+ 
     public function mount($foid = ''){
         $this->usertype = session()->get('auth_usertype'); 
         $this->officer['old_profile'] = '';

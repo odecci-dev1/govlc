@@ -32,6 +32,11 @@ class ApplicationList extends Component
         $this->loantypeList = $loantypeList; 
         $this->loantype = '';
     }
+
+    public function archive($naID){        
+        $delete = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Application/DeleteApplication', ['naid' => $naID]);                                               
+        return redirect()->to('/tranactions/application/list')->with('mmessage', 'Application has been deleted');  
+    }
     
     public function render()
     {
