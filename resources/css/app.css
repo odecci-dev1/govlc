@@ -13098,7 +13098,7 @@ body.print-portrait .page {
 .main-dashboard .reports-container .report-inner-container-2 .body-wrapper .reports-table-container {
   display: flex;
   flex-direction: column;
-  height: 50rem;
+  height: 58rem;
   border-radius: 1.5rem;
   box-shadow: 1px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }

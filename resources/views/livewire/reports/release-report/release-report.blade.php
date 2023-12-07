@@ -50,15 +50,27 @@
         <div class="report-inner-container-2">
             <div class="header-wrapper">
                 <div class="inner-wrapper date-picker">
-                    <h2>Release Reports</h2>
-                    <input type="button" class="ui-datepicker-trigger" id="startDate" value="Start Date"></input>
-                    <input type="button" class="ui-datepicker-trigger" id="endDate" value="End Date"></input>
+                    <h2>Release Reports</h2>                                      
                 </div>
                 <!-- * Print and Export Buttons -->
                 <div class="inner-wrapper">
                     <button class="button-2" data-print-button>Print</button>
                     <button class="button-2" data-export-button>Export</button>
                 </div>
+            </div>
+            <div class="header-wrapper" style="padding-top: 3rem;">
+                <div class="inner-wrapper date-picker">                                 
+                    <div class="input-wrapper">
+                        <span style="color: #d6a330; font-size: 1.4rem; font-weight: bold;">Date Start</span>
+                        <input type="date" wire:model.lazy="datestart" class="">
+                        @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror              
+                    </div>
+                    <div class="input-wrapper">
+                        <span style="color: #d6a330; font-size: 1.4rem; font-weight: bold;">Date End</span>
+                        <input type="date" wire:model.lazy="dateend" class="">
+                        @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror              
+                    </div>                                     
+                </div>              
             </div>
             <div class="body-wrapper">
                 <!-- * Container: Reports Table -->
@@ -125,790 +137,59 @@
                             </tr>
 
                             <!-- * Release Data -->
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
-                            <tr>
-
-                                <!-- * Application Reference -->
-                                <td><span class="td-name">00000001</span></td>
-
-                                <!-- * Member Name -->
-                                <td><span class="td-name">Mario Magsakay</span></td>
-
-                                <!-- * Co Borrower -->
-                                <td>
-                                    <span class="td-name">John Doe</span>
-                                </td>
-
-                                <!-- * Area -->
-                                <td>
-                                    <span class="td-name">Area 1</span>
-                                </td>
-
-                                <!-- * Loan Type -->
-                                <td>
-                                    <span class="td-name">Group Loan</span> 
-                                </td>
-
-                                <!-- * Loan Amount -->
-                                <td>
-                                    <span class="td-name">800.00</span> 
-                                </td>
-
-                                <!-- * Advance Payment -->
-                                <td>
-                                    <span class="td-name">500.00</span> 
-                                </td>
-
-                                <!-- * Terms -->
-                                <td>
-                                    <span class="td-name">Terms...</span> 
-                                </td>
-
-                                <!-- * Due Date -->
-                                <td>
-                                    <span class="td-name">08/10/23</span> 
-                                </td>
-
-                                <!-- * Date Date Released -->
-                                <td>
-                                    <span class="td-name">07/10/23</span> 
-                                </td>
-
-                            </tr>
+                            @if($data)
+                                @for($x = 0; $x <= 100; $x++)
+                                <tr>
+
+                                    <!-- * Application Reference -->
+                                    <td><span class="td-name">00000001</span></td>
+
+                                    <!-- * Member Name -->
+                                    <td><span class="td-name">Mario Magsakay</span></td>
+
+                                    <!-- * Co Borrower -->
+                                    <td>
+                                        <span class="td-name">John Doe</span>
+                                    </td>
+
+                                    <!-- * Area -->
+                                    <td>
+                                        <span class="td-name">Area 1</span>
+                                    </td>
+
+                                    <!-- * Loan Type -->
+                                    <td>
+                                        <span class="td-name">Group Loan</span> 
+                                    </td>
+
+                                    <!-- * Loan Amount -->
+                                    <td>
+                                        <span class="td-name">800.00</span> 
+                                    </td>
+
+                                    <!-- * Advance Payment -->
+                                    <td>
+                                        <span class="td-name">500.00</span> 
+                                    </td>
+
+                                    <!-- * Terms -->
+                                    <td>
+                                        <span class="td-name">Terms...</span> 
+                                    </td>
+
+                                    <!-- * Due Date -->
+                                    <td>
+                                        <span class="td-name">08/10/23</span> 
+                                    </td>
+
+                                    <!-- * Date Date Released -->
+                                    <td>
+                                        <span class="td-name">07/10/23</span> 
+                                    </td>
+
+                                </tr>
+                                @endfor
+                            @endif
                             
 
                         </table>
