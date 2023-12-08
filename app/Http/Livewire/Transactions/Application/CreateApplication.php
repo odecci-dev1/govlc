@@ -615,15 +615,15 @@ class CreateApplication extends Component
         return redirect()->to('/tranactions/application/list')->with('mmessage', 'Application has been deleted');  
     }
 
-    public function saving($type = 1){
+    public function saving($type = 1){        
         $data = [
-            'fname'=> $this->member['fname'],
-            'mname'=> $this->member['mname'],
-            'lname'=> $this->member['lname'],
-            'pob'=> $this->member['pob'],
-            'barangay'=> $this->member['barangay'],
-            'dob'=> $this->member['dob'],
-            'age'=> $this->member['age'],
+            'fname'=> $this->member['fname'] ??= '',
+            'mname'=> $this->member['mname'] ??= '',
+            'lname'=> $this->member['lname'] ??= '',
+            'pob'=> $this->member['pob'] ??= '',
+            'barangay'=> $this->member['barangay'] ??= '',
+            'dob'=> $this->member['dob'] ??= '',
+            'age'=> $this->member['age'] ??= '',
         ];
         $checkmem = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/Member_PromptExistingLoan', $data);                                               
         $checkmem = $checkmem->body();        
@@ -641,7 +641,7 @@ class CreateApplication extends Component
     public function store($type = 1){               
         try {                        
             $this->resetValidation();          
-            $input = $this->validate();          
+            $input = $this->validate();     
             $childs = [];
             $businesses = [];
             $appliances = [];
