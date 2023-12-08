@@ -10,7 +10,7 @@
     @endif
     <div class="m-con-1">
     <h2>Holiday</h2>
-    <p class="p-2">Total of <span id="numOfHolidays">20</span> Holidays</p>
+    <p class="p-2">Total of <span id="numOfHolidays">{{ count($list) }}</span> Holidays</p>
 
     <!-- * Button Container -->
     <div class="container">
