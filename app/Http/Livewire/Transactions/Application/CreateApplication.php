@@ -2248,7 +2248,6 @@ class CreateApplication extends Component
                 $this->member['province'] = $data['province']; 
                 $this->member['yearsStay'] = $data['yearsStay'];
                 $this->member['zipCode'] = $data['zipCode'];
-
             }
             //else{
                 // $this->member['fname'] = '1Jumar';  

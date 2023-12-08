@@ -1,26 +1,30 @@
 <div>    
     <div class="reports-container">
     <div class="report-inner-container-2">
-        <div class="header-wrapper">
-            <div class="inner-wrapper">
-                <h2>Savings Reports</h2>
-                <!-- * Primary Search Bar -->
-                <div class="primary-search-bar">
-                    <div class="row">
-                        <input type="search" id="searchInput" name="search" placeholder="Search" autocomplete="off">
-                        <button>
-                        </button>
-                    </div>
-                    <div class="result-box" data-search-results>
-                    </div>
+            <div class="header-wrapper">
+                <div class="inner-wrapper date-picker">
+                    <h2>Savings Report</h2>                                      
+                </div>
+                <!-- * Print and Export Buttons -->
+                <div class="inner-wrapper">
+                    <button class="button-2" data-print-button>Print</button>
+                    <button class="button-2" data-export-button>Export</button>
                 </div>
             </div>
-            <!-- * Print and Export Buttons -->
-            <div class="inner-wrapper">
-                <button class="button-2" data-print-button>Print</button>
-                <button class="button-2" data-export-button>Export</button>
+            <div class="header-wrapper" style="padding-top: 3rem;">
+                <div class="inner-wrapper date-picker">                                 
+                    <div class="input-wrapper">
+                        <span style="color: #d6a330; font-size: 1.4rem; font-weight: bold;">Date Start</span>
+                        <input type="date" wire:model.lazy="datestart" class="">
+                        @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror              
+                    </div>
+                    <div class="input-wrapper">
+                        <span style="color: #d6a330; font-size: 1.4rem; font-weight: bold;">Date End</span>
+                        <input type="date" wire:model.lazy="dateend" class="">
+                        @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror              
+                    </div>                                     
+                </div>              
             </div>
-        </div>
         <div class="body-wrapper">
             <!-- * Container: Reports Table -->
             <div class="reports-table-container">

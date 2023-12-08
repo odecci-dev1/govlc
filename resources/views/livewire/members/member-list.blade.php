@@ -6,7 +6,7 @@
     <!-- * Container 1: All Members Header, Buttons, and Searchbar -->
     <div class="am-con-1">
     <h2>Members</h2>
-    <p class="p-1">(Please select member status or loan type)</p>
+    <p class="p-1">(Please select member status)</p>
 
     <!-- * Button Container -->
     <div class="container">
@@ -74,9 +74,7 @@
     </div>
 
     <!-- * View Trash Button -->
-    <div class="btn-container">
-        <button>View Trash</button>
-    </div>
+
     </div>
 
     <!-- * Container 2: All Members - Table and Pagination -->
@@ -126,7 +124,7 @@
                 <!-- * Due Date -->
                 <th>
                     <div class="th-wrapper">
-                        <span class="th-name">Last Update</span>
+                        <span class="th-name">Recent application date</span>
                     </div>
                 </th>
 

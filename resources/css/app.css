@@ -13142,7 +13142,7 @@ body.print-portrait .page {
   text-align: left;
 }
 .main-dashboard .reports-container .report-inner-container-2 .body-wrapper .reports-table-container .table-container table th span.th-name {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 .main-dashboard .reports-container .report-inner-container-2 .body-wrapper .reports-table-container .table-container table th .th-wrapper {
@@ -13153,7 +13153,7 @@ body.print-portrait .page {
   cursor: pointer;
   padding-left: 0.5rem;
 }
-.main-dashboard .reports-container .report-inner-container-2 .body-wrapper .reports-table-container .table-container table th:nth-of-type(1n+3):not(:nth-of-type(7)) {
+.main-dashboard .reports-container .report-inner-container-2 .body-wrapper .reports-table-container .table-container table th:nth-of-type(6) {
   text-align: right;
 }
 .main-dashboard .reports-container .report-inner-container-2 .body-wrapper .reports-table-container .table-container table th:first-of-type {
@@ -13168,7 +13168,7 @@ body.print-portrait .page {
 }
 .main-dashboard .reports-container .report-inner-container-2 .body-wrapper .reports-table-container .table-container table td {
   padding: 1rem 3rem;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   text-align: left;
 }
 .main-dashboard .reports-container .report-inner-container-2 .body-wrapper .reports-table-container .table-container table td .td-wrapper {
@@ -13180,7 +13180,7 @@ body.print-portrait .page {
   align-items: center;
   justify-content: center;
 }
-.main-dashboard .reports-container .report-inner-container-2 .body-wrapper .reports-table-container .table-container table td:nth-of-type(1n+3):not(:nth-of-type(7)) {
+.main-dashboard .reports-container .report-inner-container-2 .body-wrapper .reports-table-container .table-container table td:nth-of-type(6) {
   text-align: right;
 }
 .main-dashboard .reports-container .report-inner-container-2 .body-wrapper .reports-table-container .table-container table .td-num {
