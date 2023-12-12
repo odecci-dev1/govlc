@@ -104,7 +104,7 @@
                                                         <div class="fill-wrap">
                                                             <p class="p-fill p-bold">Loan amount:</p>
                                                             <!-- TODO: Remove the placeholder attribute in the input element -->
-                                                            <input class="fill-out-line" type="text" value="{{ number_format($member['individualLoan'][0]['approvedLoanAmount'],2) }}" name="" id="" disabled="true" aria-disabled="true" >
+                                                            <input class="fill-out-line" type="text" value="{{ number_format($loansummary['loanAmount'],2) }}" name="" id="" disabled="true" aria-disabled="true" >
                                                         </div>
                                                     </div>
                                                     <div class="wrapper">

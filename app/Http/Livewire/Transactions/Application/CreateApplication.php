@@ -697,8 +697,8 @@ class CreateApplication extends Component
             if(count( $this->appliances) > 0){
                 if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
                     foreach($this->appliances as $key => $value){
-                        $appliances[] = [   'brand' => $this->inpappliances['appliance'.$key], 
-                                            'appliances' => $this->inpappliances['brand'.$key],
+                        $appliances[] = [   'brand' => $this->inpappliances['brand'.$key], 
+                                            'appliances' => $this->inpappliances['appliance'.$key],
                                             'naid' => ''   ];
                     }
                 }               
@@ -846,8 +846,7 @@ class CreateApplication extends Component
                     ]];
       
                     //$extension = $request->file('filename')->getClientOriginalExtension();
-                         
-                    // dd(json_encode($data));   
+                                   
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data); 
                 //dd($crt);                                                                                    
@@ -978,8 +977,8 @@ class CreateApplication extends Component
             if(count( $this->appliances) > 0){
                 if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
                     foreach($this->appliances as $key => $value){
-                        $appliances[] = [   'brand' => $this->inpappliances['appliance'.$key], 
-                                            'appliances' => $this->inpappliances['brand'.$key],
+                        $appliances[] = [   'brand' => $this->inpappliances['brand'.$key], 
+                                            'appliances' => $this->inpappliances['appliance'.$key],
                                             'naid' => ''   ];
                     }
                 }               
@@ -2194,6 +2193,7 @@ class CreateApplication extends Component
                 }           
 
                 $appliances= $data['appliances'];
+                //dd($appliances);
                 if(count($appliances) > 0){                   
                     $appliancescnt = 0;
                     foreach($appliances as $mappliances){
