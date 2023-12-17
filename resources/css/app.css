@@ -2863,7 +2863,7 @@ body.print-portrait .page {
   font-weight: 700 !important;
 }
 .receipt-voucher-container .body-wrapper .box-wrapper .box .p-red-text {
-  color: #FF0404;
+  /* color: #FF0404; */
 }
 .receipt-voucher-container .body-wrapper .box-wrapper .box .underline {
   border-bottom: 1px solid #29292B;
@@ -2875,11 +2875,11 @@ body.print-portrait .page {
   border-top: 2px solid #29292B;
 }
 .receipt-voucher-container .body-wrapper .box-wrapper .box p {
-  font-size: 1.2rem !important;
+  font-size: 1.5rem !important;
   font-weight: 400 !important;
 }
 .receipt-voucher-container .body-wrapper .box-wrapper .box span {
-  font-size: 1.2rem !important;
+  font-size: 1.5rem !important;
   font-weight: 700 !important;
   margin-left: 2rem;
 }
@@ -4368,7 +4368,7 @@ body.print-portrait .page {
   font-weight: 700 !important;
 }
 .na-receipt-voucher-modal .modal-container .receipt-voucher-container .body-wrapper .box-wrapper .box .p-red-text {
-  color: #FF0404;
+  /* color: #FF0404; */
 }
 .na-receipt-voucher-modal .modal-container .receipt-voucher-container .body-wrapper .box-wrapper .box .underline {
   border-bottom: 1px solid #29292B;
@@ -4380,7 +4380,7 @@ body.print-portrait .page {
   border-top: 2px solid #29292B;
 }
 .na-receipt-voucher-modal .modal-container .receipt-voucher-container .body-wrapper .box-wrapper .box p {
-  font-size: 1.2rem !important;
+  font-size: 1.5rem !important;
   font-weight: 400 !important;
 }
 .na-receipt-voucher-modal .modal-container .receipt-voucher-container .body-wrapper .box-wrapper .box span {

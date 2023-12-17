@@ -53,7 +53,7 @@
                             <div class="header-wrapper">
                                 <div class="box">
                                     <!-- <img src="{{ URL::to('/') }}/assets/icons/nav-logo.svg" alt=""> -->
-                                    <p style="font-size: 2rem !important; margin-top: 2rem;">Gold One Victory Lending Corporation Santol Balagtas Bulacan</p>
+                                    <p style="font-size: 2.3rem !important; margin-top: 2rem;">Gold One Victory Lending Corporation Santol Balagtas Bulacan</p>
                                 </div>
                                 <p>Receipt Voucher</p>
                             </div>
