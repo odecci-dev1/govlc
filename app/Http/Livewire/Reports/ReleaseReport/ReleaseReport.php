@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Reports\ReleaseReport;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ReleaseExport;
 
 class ReleaseReport extends Component
 {
@@ -28,5 +30,9 @@ class ReleaseReport extends Component
         $this->data = $data->json();     
         //dd($this->data); 
         return view('livewire.reports.release-report.release-report');
+    }
+
+    public function exportReleaseReport(){
+        return Excel::download(new ReleaseExport( $this->data ), 'Release_Report.xlsx');
     }
 }

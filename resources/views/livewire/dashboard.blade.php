@@ -171,60 +171,18 @@
                         @endphp
                         <div class="div-1" style="height: 21rem; overflow-y: auto;">
                             @if(!empty($topcollectibles))
-                            @foreach($topcollectibles as $top)
-                            <div class="p-wrap">
-                                <div class="wrap">
-                                    <p>Area 3</p>
-                                    <p>900.00</p>
+                                @foreach($topcollectibles as $top)
+                                <div class="p-wrap">
+                                    <div class="wrap">
+                                        <p>{{  $top['areaName'] }}</p>
+                                        <p style="padding-right: 5px;">{{  !empty($top['amount']) ? number_format($top['amount'], 2) : '0.00' }}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            @endforeach
-                            @foreach($topcollectibles as $top)
-                            <div class="p-wrap">
-                                <div class="wrap">
-                                    <p>Area 3</p>
-                                    <p>900.00</p>
-                                </div>
-                            </div>
-                            @endforeach
-                            @foreach($topcollectibles as $top)
-                            <div class="p-wrap">
-                                <div class="wrap">
-                                    <p>Area 3</p>
-                                    <p>900.00</p>
-                                </div>
-                            </div>
-                            @endforeach
-                            @foreach($topcollectibles as $top)
-                            <div class="p-wrap">
-                                <div class="wrap">
-                                    <p>Area 3</p>
-                                    <p>900.00</p>
-                                </div>
-                            </div>
-                            @endforeach
-                            <div class="p-wrap">
-                                <div class="wrap">
-                                    <p>Area 1</p>
-                                    <p>500.00</p>
-                                </div>
-                            </div>
-                            <div class="p-wrap">
-                                <div class="wrap">
-                                    <p>Area 4</p>
-                                    <p>300.00</p>
-                                </div>
-                            </div>
-                            <div class="p-wrap">
-                                <div class="wrap">
-                                    <p>Area 2</p>
-                                    <p>300.00</p>
-                                </div>
-                            </div>
+                                @endforeach                           
                             @endif
                         </div>
                         <div class="div-2">
-                            <button class="button">View All</button>
+                            <a href="#" class="button">View All</a>
                         </div>
                     </div>
                 </div>
@@ -296,8 +254,7 @@
                             <div class="table-container">
 
                                 <!-- * All Members Table -->
-                                <table id="borrowerTable">
-            
+                                <table id="borrowerTable">                                 
                                     <!-- * Table Header -->
                                     <tr>
             
@@ -325,200 +282,42 @@
                                         </th>
             
                                     </tr>
-            
+                                    <!-- dito -->
+                                    @php
+                                        $activecollections = !empty($data['areaActiveCollection']) ? $data['areaActiveCollection'] : [];
+                                    @endphp   
                                     <!-- * Data Table -->
-                                    <tr>
-            
-                                        <!-- * Td Num-->
-                                        <td>
-                                            <span class="td-num"></span>
-                                        </td>
-            
-                                        <!-- * Area -->
-                                        <td>
-                                            <span class="td-name">Area 5</span>
-                                        </td>
-            
-                                        <!-- * Acrive Collection -->
-                                        <td>
-                                            <span class="td-name">0.00</span>
-                                        </td>
-            
-                                        <!-- * New Account-->
-                                        <td class="td-name">1</td>
-            
-                                        <!-- * # NPS -->
-                                        <td class="td-bal">0</td>
-            
-                                        <!-- * Past Due Collection -->
-                                        <td class="td-due">1,200.00</td>
-            
-                                    </tr>
-                                    <tr>
-            
-                                        <!-- * Td Num-->
-                                        <td>
-                                            <span class="td-num"></span>
-                                        </td>
-            
-                                        <!-- * Area -->
-                                        <td>
-                                            <span class="td-name">Area 5</span>
-                                        </td>
-            
-                                        <!-- * Acrive Collection -->
-                                        <td>
-                                            <span class="td-name">0.00</span>
-                                        </td>
-            
-                                        <!-- * New Account-->
-                                        <td class="td-name">1</td>
-            
-                                        <!-- * # NPS -->
-                                        <td class="td-bal">0</td>
-            
-                                        <!-- * Past Due Collection -->
-                                        <td class="td-due">1,200.00</td>
-            
-                                    </tr>
-                                    <tr>
-            
-                                        <!-- * Td Num-->
-                                        <td>
-                                            <span class="td-num"></span>
-                                        </td>
-            
-                                        <!-- * Area -->
-                                        <td>
-                                            <span class="td-name">Area 5</span>
-                                        </td>
-            
-                                        <!-- * Acrive Collection -->
-                                        <td>
-                                            <span class="td-name">0.00</span>
-                                        </td>
-            
-                                        <!-- * New Account-->
-                                        <td class="td-name">1</td>
-            
-                                        <!-- * # NPS -->
-                                        <td class="td-bal">0</td>
-            
-                                        <!-- * Past Due Collection -->
-                                        <td class="td-due">1,200.00</td>
-            
-                                    </tr>
-                                    <tr>
-            
-                                        <!-- * Td Num-->
-                                        <td>
-                                            <span class="td-num"></span>
-                                        </td>
-            
-                                        <!-- * Area -->
-                                        <td>
-                                            <span class="td-name">Area 5</span>
-                                        </td>
-            
-                                        <!-- * Acrive Collection -->
-                                        <td>
-                                            <span class="td-name">0.00</span>
-                                        </td>
-            
-                                        <!-- * New Account-->
-                                        <td class="td-name">1</td>
-            
-                                        <!-- * # NPS -->
-                                        <td class="td-bal">0</td>
-            
-                                        <!-- * Past Due Collection -->
-                                        <td class="td-due">1,200.00</td>
-            
-                                    </tr>
-                                    <tr>
-            
-                                        <!-- * Td Num-->
-                                        <td>
-                                            <span class="td-num"></span>
-                                        </td>
-            
-                                        <!-- * Area -->
-                                        <td>
-                                            <span class="td-name">Area 5</span>
-                                        </td>
-            
-                                        <!-- * Acrive Collection -->
-                                        <td>
-                                            <span class="td-name">0.00</span>
-                                        </td>
-            
-                                        <!-- * New Account-->
-                                        <td class="td-name">1</td>
-            
-                                        <!-- * # NPS -->
-                                        <td class="td-bal">0</td>
-            
-                                        <!-- * Past Due Collection -->
-                                        <td class="td-due">1,200.00</td>
-            
-                                    </tr>
-                                    <tr>
-            
-                                        <!-- * Td Num-->
-                                        <td>
-                                            <span class="td-num"></span>
-                                        </td>
-            
-                                        <!-- * Area -->
-                                        <td>
-                                            <span class="td-name">Area 5</span>
-                                        </td>
-            
-                                        <!-- * Acrive Collection -->
-                                        <td>
-                                            <span class="td-name">0.00</span>
-                                        </td>
-            
-                                        <!-- * New Account-->
-                                        <td class="td-name">1</td>
-            
-                                        <!-- * # NPS -->
-                                        <td class="td-bal">0</td>
-            
-                                        <!-- * Past Due Collection -->
-                                        <td class="td-due">1,200.00</td>
-            
-                                    </tr>
-                                    <tr>
-            
-                                        <!-- * Td Num-->
-                                        <td>
-                                            <span class="td-num"></span>
-                                        </td>
-            
-                                        <!-- * Area -->
-                                        <td>
-                                            <span class="td-name">Area 5</span>
-                                        </td>
-            
-                                        <!-- * Acrive Collection -->
-                                        <td>
-                                            <span class="td-name">0.00</span>
-                                        </td>
-            
-                                        <!-- * New Account-->
-                                        <td class="td-name">1</td>
-            
-                                        <!-- * # NPS -->
-                                        <td class="td-bal">0</td>
-            
-                                        <!-- * Past Due Collection -->
-                                        <td class="td-due">1,200.00</td>
-            
-                                    </tr>
-                                    
-                                </table>
-                                
+                                    @if($activecollections)
+                                        @foreach($activecollections as $activecoll)
+                                        <tr>            
+                                            <!-- * Td Num-->
+                                            <td>
+                                                <span class="td-num"></span>
+                                            </td>
+                
+                                            <!-- * Area -->
+                                            <td>
+                                                <span class="td-name">{{ $activecoll['area'] }}</span>
+                                            </td>
+                
+                                            <!-- * Acrive Collection -->
+                                            <td>
+                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
+                                            </td>
+                
+                                            <!-- * New Account-->
+                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
+                
+                                            <!-- * # NPS -->
+                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
+                
+                                            <!-- * Past Due Collection -->
+                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
+                
+                                        </tr>
+                                        @endforeach
+                                    @endif                                                                        
+                                </table>                                
                             </div>
                         </div>
                     </div>
@@ -528,31 +327,20 @@
                 <div class="md-con-3 tlpa">
                     <div class="card-2 tlpa">
                         <h3>Top Lapses Per Area</h3>
+                        @php
+                            $toplapses = !empty($data['totalLapsesArea']) ? $data['totalLapsesArea'] : [];
+                        @endphp                       
                         <div class="div-1">
-                            <div class="p-wrap">
-                                <div class="wrap">
-                                    <p>Area 7</p>
-                                    <p>900.00</p>
-                                </div>
-                            </div>
-                            <div class="p-wrap">
-                                <div class="wrap">
-                                    <p>Area 8</p>
-                                    <p>500.00</p>
-                                </div>
-                            </div>
-                            <div class="p-wrap">
-                                <div class="wrap">
-                                    <p>Area 9</p>
-                                    <p>300.00</p>
-                                </div>
-                            </div>
-                            <div class="p-wrap">
-                                <div class="wrap">
-                                    <p>Area 2</p>
-                                    <p>300.00</p>
-                                </div>
-                            </div>
+                            @if(!empty($toplapses))
+                                @foreach($toplapses as $lapses)
+                                    <div class="p-wrap">
+                                        <div class="wrap">
+                                            <p>{{ $lapses['areaName'] }}</p>
+                                            <p  style="padding-right: 5px;">{{ !empty($lapses['amount']) ? number_format($lapses['amount'], 2) : '0.00' }}</p>
+                                        </div>
+                                    </div>
+                                @endforeach                           
+                            @endif                            
                         </div>
                         <div class="div-2">
                             <button class="button">View All</button>

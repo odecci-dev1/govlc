@@ -35,6 +35,7 @@ use App\Http\Livewire\Reports\PastDueReport\PastDueReport;
 use App\Http\Livewire\Reports\SavingsReport\SavingsReport;
 use App\Http\Livewire\Settings\Settings;
 use App\Http\Livewire\Dashboard;
+use App\Http\Controllers\ExportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -177,6 +178,8 @@ Route::middleware(['authenticated'])->group(function () {
         Route::get('/outstanding/report', OutstandingReport::class);
     });
     Route::get('/release/report', ReleaseReport::class);
+    //Route::get('/export/release/report', [ExportsController::class, 'exportReleaseReport'])->name('export.release.report');
+
     Route::get('/collection/report', CollectionReport::class);
     Route::get('/savings/report', SavingsReport::class);
     Route::get('/pastdue/report', PastDueReport::class);

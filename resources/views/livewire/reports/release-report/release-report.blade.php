@@ -54,8 +54,8 @@
                 </div>
                 <!-- * Print and Export Buttons -->
                 <div class="inner-wrapper">
-                    <button class="button-2" data-print-button>Print</button>
-                    <button class="button-2" data-export-button>Export</button>
+                    <button class="button-2" data-print-button>Print</button>                
+                    <button wire:click="exportReleaseReport" type="button" class="button-2" data-print-button>Export</button>
                 </div>
             </div>
             <div class="header-wrapper" style="padding-top: 3rem;">
@@ -129,9 +129,9 @@
                                     <span class="th-name">Due Date</span> 
                                 </th>
 
-                                <!-- * Date Date Released -->
+                                <!-- * Date Released -->
                                 <th>
-                                    <span class="th-name">Date Date Released</span> 
+                                    <span class="th-name">Date Released</span> 
                                 </th>
 
                             </tr>
@@ -174,15 +174,15 @@
 
                                     <!-- * Terms -->
                                     <td>
-                                        <span class="td-name">{{ !empty($data['terms']) ? $data['terms'] : 'No terms' }}</span> 
+                                        <span class="td-name">{{ !empty($data['termofPayment']) ? $data['termofPayment'] : 'No terms' }}</span> 
                                     </td>
 
                                     <!-- * Due Date -->
                                     <td>
-                                        <span class="td-name">{{ !empty($data['dueDate']) ? $data['dueDate'] : 'Empty date' }}</span> 
+                                        <span class="td-name">{{ !empty($data['dueDate']) ? date('Y-m-d', strtotime($data['dueDate'])) : 'Empty date' }}</span> 
                                     </td>
 
-                                    <!-- * Date Date Released -->
+                                    <!-- * Date Released -->
                                     <td>
                                         <span class="td-name">{{ $data['releasingDate'] }}</span> 
                                     </td>
