@@ -28,11 +28,15 @@ class ReleaseReport extends Component
                  ];
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Reports/Reports_ReleasingList', $input);  
         $this->data = $data->json();     
-        //dd($this->data); 
         return view('livewire.reports.release-report.release-report');
     }
 
     public function exportReleaseReport(){
         return Excel::download(new ReleaseExport( $this->data ), 'Release_Report.xlsx');
+    }
+
+    public function print(){
+        $printhtml = view('livewire.reports.release-report.release-report-print', [ 'data' => $this->data, 'datestart' => $this->datestart, 'dateend' => $this->dateend ])->render();    
+        $this->emit('printReport', ['data' => $printhtml]);
     }
 }
