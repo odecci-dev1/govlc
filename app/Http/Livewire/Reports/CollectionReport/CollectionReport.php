@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Reports\CollectionReport;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CollectedExport;
 
 class CollectionReport extends Component
 {
@@ -15,7 +17,17 @@ class CollectionReport extends Component
         $this->dateend = date('Y-m-d');      
         $this->datestart = date('Y-m-d', strtotime("-6 days"));
     }
+
     
+    public function exportCollectionReport(){
+        return Excel::download(new CollectedExport( $this->res ), 'Collection_Report_'. $this->datestart . '_' . $this->dateend .'.xlsx');
+    }
+    
+    public function print(){
+        $printhtml = view('livewire.reports.collection-report.collection-report-print', [ 'data' => $this->res, 'datestart' => $this->datestart, 'dateend' => $this->dateend ])->render();    
+        $this->emit('printReport', ['data' => $printhtml]);
+    }
+
     public function render()
     {
         $input = [

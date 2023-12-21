@@ -11,7 +11,8 @@
             font-family: "Inter", sans-serif;    
         }
         table{
-            border-collapse: collapse;           
+            border-collapse: collapse; 
+            width: 100%;               
         }
         table tbody tr{
             border-bottom: 1px dotted #737373;

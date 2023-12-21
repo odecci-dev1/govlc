@@ -32,7 +32,7 @@ class ReleaseReport extends Component
     }
 
     public function exportReleaseReport(){
-        return Excel::download(new ReleaseExport( $this->data ), 'Release_Report.xlsx');
+        return Excel::download(new ReleaseExport( $this->data ), 'Release_Report_'. $this->datestart . '_' . $this->dateend .'.xlsx');
     }
 
     public function print(){

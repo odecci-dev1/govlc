@@ -1,7 +1,7 @@
 <div>
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script> 
-    
+    <script src="{{ asset('jquery-master/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('jquery-master/jquery-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('jquery.print/jQuery.print.js') }}"></script>  
     <div class="reports-container">
     <div class="report-inner-container-2">
             <div class="header-wrapper">
@@ -10,8 +10,8 @@
                 </div>
                 <!-- * Print and Export Buttons -->
                 <div class="inner-wrapper">
-                    <button class="button-2" data-print-button>Print</button>
-                    <button class="button-2" data-export-button>Export</button>
+                    <button class="button-2" wire:click="print" type="button" data-print-button>Print</button>
+                    <button wire:click="exportCollectionReport" type="button" class="button-2" data-export-button>Export</button>
                 </div>
             </div>
             <div class="header-wrapper" style="padding-top: 3rem;">
@@ -67,12 +67,12 @@
 
                             <!-- * Total Advance -->
                             <th style="text-align: right;">
-                                <span class="th-name">Total Advance</span> 
+                                <span class="th-name">Total Advances</span> 
                             </th>
 
                             <!-- * Cash Remit -->
                             <th style="text-align: right;">
-                                <span class="th-name">Cash Remit</span> 
+                                <span class="th-name">Cash Remitted</span> 
                             </th>
 
                             <!-- * Total NP -->
@@ -80,6 +80,9 @@
                                 <span class="th-name">Total NP</span> 
                             </th>
 
+                            <th>
+                                <span class="th-name">Collection Date</span> 
+                            </th>
                         </tr>
 
                         <!-- * All Members Data -->
@@ -116,6 +119,10 @@
                                         <span class="td-name">{{ !empty($data['totalNP']) ? $data['totalNP'] : 0 }}</span>
                                     </td>
 
+                                    <td>
+                                        <span class="td-name">{{ !empty($data['dateCollected']) ? date('Y-m-d', strtotime($data['dateCollected'])) : 0 }}</span>
+                                    </td>
+
                                 </tr>
                                 @endforeach
                             @endif
@@ -139,79 +146,21 @@
     </div>
 </div>
 <script>
-    $( () => {	
-        $( "#datepicker" ).datepicker({	
-            showButtonPanel: true,
-            // format: "MM, d DD, yy",
-            // formatSubmit: "MM, d DD, yy",
-            buttonImage: "/res/assets/icons/calendar.svg",
-            buttonText: "Select Date",
-            showOn: "both",
-            currentText: "Clear",
-
-            // * Displaying the selected date to the corresponding input field
-            onSelect: function(date) { 
-
-                const currentDate = new Date(date);
-        
-                const options = { 
-                    weekday:"long", day:"numeric", year:"numeric", month:"long"
-                } // "Monday, July 24, 2023"
-                
-                const newDateFormat = currentDate.toLocaleDateString('en-us', options)
-                const removeStringCommas = newDateFormat.replace(/,/g, '');
-                const array = removeStringCommas.split(" ")
-                let weekday = array[0]
-                let month = array[1]
-                let day = array[2]
-                let year = array[3]
-                
-                let dayAndWeekday = day + " " + "(" + weekday + ")"
-                // console.log(newDateFormat);
-                // console.log(dayAndWeekday);
-
-                const monthInputField = document.getElementById('formHolidayMonth')
-                monthInputField.value = month
-
-                const dayInputField = document.getElementById('formHolidayDay')
-                dayInputField.value = dayAndWeekday
-
-                const yearInputField = document.getElementById('formHolidayYear')
-                yearInputField.value = year
-
-            },
-
-        });
-        
-        $( "#startDate" ).datepicker({
-            showButtonPanel: true,
-            // format: "MM, d DD, yy",
-            // formatSubmit: "MM, d DD, yy",
-            // buttonImage: "/res/assets/icons/calendar.svg",
-            // buttonText: "Start Date",
-            // showOn: "both",
-            currentText: "Clear",
-            onSelect: function( selectedDate ) {
-                $( "#endDate" ).datepicker({
-                    minDate: selectedDate
-                });
-            }
-        });
-        
-        $( "#endDate" ).datepicker({
-            showButtonPanel: true,
-            // format: "MM, d DD, yy",
-            // formatSubmit: "MM, d DD, yy",
-            // buttonImage: "/res/assets/icons/calendar.svg",
-            // buttonText: "End Date",
-            // showOn: "both",
-            currentText: "Clear",
-            onSelect: function( selectedDate ) {
-                $( "#startDate" ).datepicker({
-                    maxDate: selectedDate
-                });
-            }
-        });
-        
-    } );
+     document.addEventListener('livewire:load', function () {         
+        window.livewire.on('printReport', message => {
+                $.print(message.data, {
+                    globalStyles: false,
+                    mediaPrint: true,
+                    stylesheet: null,
+                    noPrintSelector: ".no-print",
+                    iframe: true,
+                    append: null,
+                    prepend: null,
+                    manuallyCopyFormValues: true,
+                    deferred: $.Deferred(),
+                    timeout: 750,
+                    title: null,
+                });                             
+        });            
+    });           
 </script>
