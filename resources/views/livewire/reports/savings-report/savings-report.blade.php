@@ -1,4 +1,7 @@
 <div>    
+    <script src="{{ asset('jquery-master/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ asset('jquery-master/jquery-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('jquery.print/jQuery.print.js') }}"></script>    
     <div class="reports-container">
     <div class="report-inner-container-2">
             <div class="header-wrapper">
@@ -7,8 +10,8 @@
                 </div>
                 <!-- * Print and Export Buttons -->
                 <div class="inner-wrapper">
-                    <button class="button-2" data-print-button>Print</button>
-                    <button class="button-2" data-export-button>Export</button>
+                    <button class="button-2" wire:click="print" type="button"  data-print-button>Print</button>                
+                    <button wire:click="exportReleaseReport" type="button" class="button-2" data-print-button>Export</button>
                 </div>
             </div>
             <div class="header-wrapper" style="padding-top: 3rem;">
@@ -54,7 +57,7 @@
                             <th><span class="th-name">Member Name</span></th>
 
                             <!-- * Area -->
-                            <th><span class="th-name">Area</span></th>
+                            <th style="text-align: left;"><span class="th-name">Area</span></th>
 
                             <!-- * Total Savings -->
                             <th style="text-align: right;">
@@ -71,7 +74,7 @@
                                 <td><span class="td-name">{{ $d['borrower'] }}</span></td>
 
                                 <!-- * Area -->
-                                <td><span class="td-name">{{ $d['areaName'] }}</span></td>
+                                <td style="text-align: left;"><span class="td-name">{{ $d['areaName'] }}</span></td>
 
                                 <!-- * Total Savings -->
                                 <td style="text-align: right;">
@@ -90,7 +93,7 @@
                 <div class="total-collection-footer">
                     <div class="footer-wrapper">
                         <p>Total Collection:</p> 
-                        <span id="">700.00</span>
+                        <span id="">{{ number_format($data->sum('totalSavings'), 2) }}</span>
                     </div>
                 </div>
 
@@ -211,6 +214,24 @@
     </dialog>
 </div>
 <script>
+
+        document.addEventListener('livewire:load', function () {         
+            window.livewire.on('printReport', message => {                 
+                    $.print(message.data, {
+                        globalStyles: false,
+                        mediaPrint: true,
+                        stylesheet: null,
+                        noPrintSelector: ".no-print",
+                        iframe: true,
+                        append: null,
+                        prepend: null,
+                        manuallyCopyFormValues: true,
+                        deferred: $.Deferred(),
+                        timeout: 750,
+                        title: null,
+                    });                             
+            });            
+        });           
         // *** New Application Modal *** //
         // *** New Application Modal *** //
         

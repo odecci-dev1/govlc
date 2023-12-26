@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Reports\SavingsReport;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SavingsExport;
 
 class SavingsReport extends Component
 {
@@ -26,6 +28,16 @@ class SavingsReport extends Component
 
     public function setMember($fullname = ''){
         $this->member = $fullname;
+    }
+
+    
+    public function exportReleaseReport(){
+        return Excel::download(new SavingsExport( $this->data ), 'Savings_Report_'. $this->datestart . '_' . $this->dateend .'.xlsx');
+    }
+
+    public function print(){      
+        $printhtml = view('livewire.reports.savings-report.savings-report-print', [ 'data' => $this->data, 'datestart' => $this->datestart, 'dateend' => $this->dateend, 'member' => $this->member ])->render();    
+        $this->emit('printReport', ['data' => $printhtml]);
     }
 
     public function render()

@@ -70,7 +70,7 @@
                         <div class="card">
                             <div class="p-wrap">
                                 <p>Application for Approval</p>
-                                <p>{{ isset($data['totalNewAccountsOverall']) ? $data['totalApplicationforApproval'] : 0.00 }}</p>
+                                <p>{{ isset($data['totalApplicationforApproval']) ? $data['totalApplicationforApproval'] : 0.00 }}</p>
                             </div>
                             <div class="tag-wrap">
                                 <button class="transparentButton">View All</button>
@@ -330,7 +330,7 @@
                         @php
                             $toplapses = !empty($data['totalLapsesArea']) ? $data['totalLapsesArea'] : [];
                         @endphp                       
-                        <div class="div-1">
+                        <div class="div-1" style="height: 180rem; overflow-y: auto;">
                             @if(!empty($toplapses))
                                 @foreach($toplapses as $lapses)
                                     <div class="p-wrap">

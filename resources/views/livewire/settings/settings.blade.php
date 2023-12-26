@@ -43,18 +43,32 @@
                       <span>Dashboard Display Reset</span>
                         <div class="box-wrap" style="gap: 0rem; width: 25rem; justify-content: first baseline !important;">
                           <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="1" name="noAdvancePayment" id="noAdvancePayment1">
+                            <input  wire:model.lazy="display_reset" autocomplete="off" type="radio" value="1" name="noAdvancePayment" id="noAdvancePayment1">
                             <span>Monthly</span>                                            
                           </div>
                           <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="2" name="noAdvancePayment" id="noAdvancePayment1">
+                            <input  wire:model.lazy="display_reset" autocomplete="off" type="radio" value="2" name="noAdvancePayment" id="noAdvancePayment1">
                             <span>Yearly</span>                                            
                           </div>
                         </div>
                     </div>
                     @error('monthly_target') <span class="text-required">{{ $message }}</span>@enderror
                   </div>
-                  
+
+                  <div class="rowspan">
+                    <!-- * First Name -->
+                    <div class="input-wrapper" style="padding-bottom: 3rem !important;">
+                      <span>Company Name</span>
+                      <input
+                        autocomplete="off"
+                        type="number"
+                        wire:model.lazy="company_name"
+                       style="width: 90rem;"
+                      />
+                    </div>
+                    @error('company_number') <span class="text-required">{{ $message }}</span>@enderror
+                  </div>
+
                   <div class="rowspan">
                     <!-- * First Name -->
                     <div class="input-wrapper" style="padding-bottom: 3rem !important;">
@@ -96,6 +110,11 @@
                     </div>
                     @error('company_email') <span class="text-required">{{ $message }}</span>@enderror
                   </div>                
+                </div>
+
+                <div class="rowspan">
+                    <!-- * First Name -->
+                    <button type="button" class="button">UPDATE SETTINGS</button>    
                 </div>
 
                 <!-- * Container 2: Upload Images, Files and Monthly Bills Input Fields -->
