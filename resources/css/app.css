@@ -3164,7 +3164,7 @@ body.print-portrait .page {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 5rem 0 4.5rem 0;
+  padding: 2rem 0 4.5rem 0;
   background-color: #29292B;
   /* Safari */
   /* IE 10 and IE 11 */
@@ -3302,7 +3302,7 @@ body.print-portrait .page {
 .profile-nav {
   position: fixed;
   width: 92%;
-  height: 10%;
+  height: 8%;
   right: 0;
   display: flex;
   flex-direction: row;

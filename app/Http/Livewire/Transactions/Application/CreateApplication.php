@@ -846,7 +846,7 @@ class CreateApplication extends Component
                     ]];
       
                     //$extension = $request->file('filename')->getClientOriginalExtension();
-                                   
+                    //dd( $data );       
             if($this->type == 'create'){                            
                 $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data); 
                 //dd($crt);                                                                                    
@@ -1130,7 +1130,7 @@ class CreateApplication extends Component
                     ];                                                   
                     // $extension = $request->file('filename')->getClientOriginalExtension();                    
                     //dd( json_encode($data));
-                    //dd( $data );
+                    //dd( $data );       
                     $this->resetValidation();  
                     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                                                          
                     $apiresp = $crt->getStatusCode();             

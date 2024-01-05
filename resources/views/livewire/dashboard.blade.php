@@ -1,4 +1,7 @@
 <div>
+            <script src="{{ asset('jquery-master/jquery-3.3.1.min.js') }}"></script>
+            <script src="{{ asset('jquery-master/jquery-ui.js') }}"></script>
+            <script src="{{ asset('chartjs/chart.js') }}"></script>
             <div class="md-con-1">
                 <div class="wrapper">
                     <p>Active Member</p>
@@ -138,7 +141,7 @@
                         <!-- * Line Chart -->
                         <div class="div-2">
                             <div class="graph">
-                                <canvas id="Chart"></canvas>
+                                <canvas id="myChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -316,6 +319,258 @@
                 
                                         </tr>
                                         @endforeach
+                                        @foreach($activecollections as $activecoll)
+                                        <tr>            
+                                            <!-- * Td Num-->
+                                            <td>
+                                                <span class="td-num"></span>
+                                            </td>
+                
+                                            <!-- * Area -->
+                                            <td>
+                                                <span class="td-name">{{ $activecoll['area'] }}</span>
+                                            </td>
+                
+                                            <!-- * Acrive Collection -->
+                                            <td>
+                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
+                                            </td>
+                
+                                            <!-- * New Account-->
+                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
+                
+                                            <!-- * # NPS -->
+                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
+                
+                                            <!-- * Past Due Collection -->
+                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
+                
+                                        </tr>
+                                        @endforeach
+                                        @foreach($activecollections as $activecoll)
+                                        <tr>            
+                                            <!-- * Td Num-->
+                                            <td>
+                                                <span class="td-num"></span>
+                                            </td>
+                
+                                            <!-- * Area -->
+                                            <td>
+                                                <span class="td-name">{{ $activecoll['area'] }}</span>
+                                            </td>
+                
+                                            <!-- * Acrive Collection -->
+                                            <td>
+                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
+                                            </td>
+                
+                                            <!-- * New Account-->
+                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
+                
+                                            <!-- * # NPS -->
+                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
+                
+                                            <!-- * Past Due Collection -->
+                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
+                
+                                        </tr>
+                                        @endforeach
+                                        @foreach($activecollections as $activecoll)
+                                        <tr>            
+                                            <!-- * Td Num-->
+                                            <td>
+                                                <span class="td-num"></span>
+                                            </td>
+                
+                                            <!-- * Area -->
+                                            <td>
+                                                <span class="td-name">{{ $activecoll['area'] }}</span>
+                                            </td>
+                
+                                            <!-- * Acrive Collection -->
+                                            <td>
+                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
+                                            </td>
+                
+                                            <!-- * New Account-->
+                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
+                
+                                            <!-- * # NPS -->
+                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
+                
+                                            <!-- * Past Due Collection -->
+                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
+                
+                                        </tr>
+                                        @endforeach
+                                        @foreach($activecollections as $activecoll)
+                                        <tr>            
+                                            <!-- * Td Num-->
+                                            <td>
+                                                <span class="td-num"></span>
+                                            </td>
+                
+                                            <!-- * Area -->
+                                            <td>
+                                                <span class="td-name">{{ $activecoll['area'] }}</span>
+                                            </td>
+                
+                                            <!-- * Acrive Collection -->
+                                            <td>
+                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
+                                            </td>
+                
+                                            <!-- * New Account-->
+                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
+                
+                                            <!-- * # NPS -->
+                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
+                
+                                            <!-- * Past Due Collection -->
+                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
+                
+                                        </tr>
+                                        @endforeach
+                                        @foreach($activecollections as $activecoll)
+                                        <tr>            
+                                            <!-- * Td Num-->
+                                            <td>
+                                                <span class="td-num"></span>
+                                            </td>
+                
+                                            <!-- * Area -->
+                                            <td>
+                                                <span class="td-name">{{ $activecoll['area'] }}</span>
+                                            </td>
+                
+                                            <!-- * Acrive Collection -->
+                                            <td>
+                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
+                                            </td>
+                
+                                            <!-- * New Account-->
+                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
+                
+                                            <!-- * # NPS -->
+                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
+                
+                                            <!-- * Past Due Collection -->
+                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
+                
+                                        </tr>
+                                        @endforeach
+                                        @foreach($activecollections as $activecoll)
+                                        <tr>            
+                                            <!-- * Td Num-->
+                                            <td>
+                                                <span class="td-num"></span>
+                                            </td>
+                
+                                            <!-- * Area -->
+                                            <td>
+                                                <span class="td-name">{{ $activecoll['area'] }}</span>
+                                            </td>
+                
+                                            <!-- * Acrive Collection -->
+                                            <td>
+                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
+                                            </td>
+                
+                                            <!-- * New Account-->
+                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
+                
+                                            <!-- * # NPS -->
+                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
+                
+                                            <!-- * Past Due Collection -->
+                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
+                
+                                        </tr>
+                                        @endforeach
+                                        @foreach($activecollections as $activecoll)
+                                        <tr>            
+                                            <!-- * Td Num-->
+                                            <td>
+                                                <span class="td-num"></span>
+                                            </td>
+                
+                                            <!-- * Area -->
+                                            <td>
+                                                <span class="td-name">{{ $activecoll['area'] }}</span>
+                                            </td>
+                
+                                            <!-- * Acrive Collection -->
+                                            <td>
+                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
+                                            </td>
+                
+                                            <!-- * New Account-->
+                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
+                
+                                            <!-- * # NPS -->
+                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
+                
+                                            <!-- * Past Due Collection -->
+                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
+                
+                                        </tr>
+                                        @endforeach
+                                        @foreach($activecollections as $activecoll)
+                                        <tr>            
+                                            <!-- * Td Num-->
+                                            <td>
+                                                <span class="td-num"></span>
+                                            </td>
+                
+                                            <!-- * Area -->
+                                            <td>
+                                                <span class="td-name">{{ $activecoll['area'] }}</span>
+                                            </td>
+                
+                                            <!-- * Acrive Collection -->
+                                            <td>
+                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
+                                            </td>
+                
+                                            <!-- * New Account-->
+                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
+                
+                                            <!-- * # NPS -->
+                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
+                
+                                            <!-- * Past Due Collection -->
+                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
+                
+                                        </tr>
+                                        @endforeach
+                                        @foreach($activecollections as $activecoll)
+                                        <tr>            
+                                            <!-- * Td Num-->
+                                            <td>
+                                                <span class="td-num"></span>
+                                            </td>
+                
+                                            <!-- * Area -->
+                                            <td>
+                                                <span class="td-name">{{ $activecoll['area'] }}</span>
+                                            </td>
+                
+                                            <!-- * Acrive Collection -->
+                                            <td>
+                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
+                                            </td>
+                
+                                            <!-- * New Account-->
+                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
+                
+                                            <!-- * # NPS -->
+                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
+                
+                                            <!-- * Past Due Collection -->
+                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
+                
+                                        </tr>
+                                        @endforeach
                                     @endif                                                                        
                                 </table>                                
                             </div>
@@ -349,3 +604,79 @@
                 </div>
             </div>    
 </div>
+
+<script>
+     document.addEventListener('livewire:load', function () {         
+        var ctx = document.getElementById("myChart").getContext("2d");
+        const chartData = { 
+            labels: [], // conditions to made //labels horizontal
+            datasets: [
+                    {
+                        label: "Members",
+                        data: [], // create an aync ajax function //data vertical
+                        backgroundColor: "white",
+                        borderColor: "green",
+                        borderWidth: 3,
+                    },
+            ],
+        };
+
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                yAxes: [
+                    {
+                        ticks: {
+                            beginAtZero: true,
+                        },                   
+                    },
+                ],
+            },       
+        };
+
+        // Create the chart instance
+        var myChart = new Chart(ctx, {
+            type: "line",
+            data: chartData,
+            options: chartOptions,
+        });
+
+        updateSalesChartData = function () {
+            chartData.datasets[0].data = ['100', '200', '300', '600'];
+            chartData.labels = ['1 day', '2 days', '3 days', '4 days'];
+            myChart.update();
+            chartData.datasets[0].data = chartData.datasets[0].data.map();
+            // var noofdays = $('#noofdays').val();         
+            // $.ajax({
+            //     method: 'get',
+            //     url: APP_URL + '/get/sales',    
+            //     data: {noofdays: noofdays},         
+            //     success: function (mresponse) {     
+            //         chartData.datasets[0].data = [];
+            //         chartData.labels = [];
+
+            //         var mylabels = mresponse.mlabels;
+            //         for (let i = 0; i < mylabels.length; i++) {                  
+            //             myChart.data.labels.push(mylabels[i]);
+            //         }    
+                    
+            //         var mydata = mresponse.mdata;
+            //         for (let j = 0; j < mylabels.length; j++) {                  
+            //             myChart.data.datasets[0].data.push(mydata[j]);
+            //         }                  
+            //         myChart.update();
+            //     },
+            //     dataType: 'json'
+            // });       
+            // chartData.datasets[0].data = chartData.datasets[0].data.map();
+        
+        };
+
+        updateSalesChartData();
+
+        // Update the chart data
+        setInterval(updateSalesChartData(), 1000);     
+    });           
+    
+</script>
