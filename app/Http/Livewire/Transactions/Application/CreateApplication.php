@@ -615,6 +615,11 @@ class CreateApplication extends Component
         return redirect()->to('/tranactions/application/list')->with('mmessage', 'Application has been deleted');  
     }
 
+    public function restore($naID){        
+        $restore = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Application/RestoreApplication', ['naid' => $naID]);                                               
+        return redirect()->to('/tranactions/trashed/application/list')->with('mmessage', 'Application has been restore');  
+    }
+
     public function saving($type = 1){        
         $data = [
             'fname'=> $this->member['fname'] ??= '',

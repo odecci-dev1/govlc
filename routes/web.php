@@ -36,6 +36,7 @@ use App\Http\Livewire\Reports\SavingsReport\SavingsReport;
 use App\Http\Livewire\Settings\Settings;
 use App\Http\Livewire\Dashboard;
 use App\Http\Controllers\ExportsController;
+use App\Http\Livewire\Transactions\Application\ApplicationListTrash;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,6 +120,7 @@ Route::middleware(['authenticated'])->group(function () {
     //transactions
     Route::middleware(['access:Module-08'])->group(function () {
         Route::get('/tranactions/application/list', ApplicationList::class)->name('application.list');
+        Route::get('/tranactions/trashed/application/list', ApplicationListTrash::class)->name('application.list.trashed');
     });
     Route::middleware(['access:Module-010'])->group(function () {
         Route::get('/tranactions/application/approval/list', ApplicationApprovalList::class)->name('application.approval');

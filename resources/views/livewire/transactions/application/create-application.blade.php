@@ -12,7 +12,11 @@
     <x-error-dialog :message="'Operation Failed. Retry ?'" :xmid="''" :confirmaction="session('erroraction') ? session('erroraction') : ''" :header="'Error'"></x-error-dialog>       
     
     @if($showDialog == 1)
+        @if($member['statusID'] == 0)
+        <x-dialog :message="'Are you sure you want to restore the selected data'" :xmid="$mid" :confirmaction="'restore'" :header="'Deletion'"></x-dialog>   
+        @else
         <x-dialog :message="'Are you sure you want to trash the selected data'" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
+        @endif
     @endif
 
     <div wire:loading  wire:loading.delay wire:target="store, saving, update,imgprofile,member.attachments,membusinfo.attachments,addBusinessInfo,imgcoprofile,comaker.attachments,imgmemsign,imgcosign,resetmembusinfo" class="full-screen-div-loading">
@@ -500,13 +504,15 @@
                     <!-- * Header Wrapper -->
                     <div class="header-wrapper">
                         <h2>Borrower Information</h2>
+                        @if($member['statusID'] != 0)
                         <button type="button" style="visibility: {{ !empty($searchedmemId) ? 'visible' : 'hidden' }};" class="viewLoanDetailsButton" wire:click="getLoanHistory" id="data-open-loan-details">View loan & payment history</button>
+                        @endif
                     </div>
 
                     <!-- * Buttons -->
                     <div class="btn-wrapper">
-                        @if($type == 'details')
-                            <button wire:click="update({{ isset($member['statusID']) ? $member['statusID'] : 7 }})" type="button" class="button" data-save>Update Info</button>                                 
+                        @if($type == 'details')                          
+                            <button wire:click="update({{ isset($member['statusID']) ? $member['statusID'] : 7 }})" type="button" class="button" data-save>Update Info</button>                                                           
                         @endif
                         <!-- * Save -->
                         @if($type == 'create')
@@ -515,14 +521,16 @@
                         <!-- * Save & Apply for loan -->
                         <a href="#">
                             <button type="button" wire:click="saving(2)"  wire:loading.attr="disabled" class="button" onclick="activeProgressButton()" data-proceed-to-ci>Save & Proceed to CI</button>
-                        </a>                       
-                        @elseif($type == 'view')                  
+                        </a>    
+                                      
+                        @elseif($type == 'view')      
+
                             @if($member['statusID'] == 7)
                                 @if($type != 'details')
                                     @if($usertype != 2)
                                     <button wire:click="update(7)" type="button" class="button" data-save>Update</button>
                                     <button wire:click="update(8)" onclick="showAskingDialog()" type="button" class="button" data-save>Submit And Proceed to CI</button>                      
-                                    <button onclick="showDialog('{{ $naID }}')" type="button" class="button" data-save>Trash</button>
+                                    <button onclick="showDialog('{{ $naID }}')" type="button" class="button" data-save>Trash</button>                      
                                     @endif                              
                                 @endif
                             @elseif($member['statusID'] == 8)
@@ -541,6 +549,8 @@
                                         </span>
                                     </div>
                                 </div>
+                            @elseif($member['statusID'] == 0)
+                            <button onclick="showDialog('{{ $naID }}')" type="button" class="button" data-save>Restore</button>        
                             @endif
                         @elseif($type == 'add')
                             @if($usertype != 2)
@@ -2874,6 +2884,10 @@
 
             window.archive = function($mid){
                 @this.call('archive', $mid);       
+            };
+
+            window.restore = function($mid){
+                @this.call('restore', $mid);       
             };
 
             const dataNewGroupModal = document.querySelector('[data-new-group-modal]')

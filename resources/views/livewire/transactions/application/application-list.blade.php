@@ -123,7 +123,7 @@
 
     <!-- * View Trash Button -->
         <div class="btn-container">
-            <button class="transparentButton">View Trash</button>
+            <a href="{{ URL::to('/') }}/tranactions/trashed/application/list" class="transparentButton">View Trash</a>
         </div>
     </div>
 
