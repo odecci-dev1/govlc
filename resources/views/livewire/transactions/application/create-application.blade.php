@@ -1071,7 +1071,7 @@
 
                         <!-- * Owned -->
                         <div class="radio-btn-wrapper">
-                            <input  wire:model="member.bO_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="radio" name="mem_bO_Status" value="2">
+                            <input  wire:model="member.bO_Status" {{ $member['statusID'] == 7 && $usertype != 2 ? '' : 'disabled' }} {{ $type != 'details' ? '' : 'disabled' }} type="radio" name="mem_bO_Status" value="0">
                             <span>No</span>
                         </div>
 

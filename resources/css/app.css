@@ -5894,7 +5894,7 @@ body.print-portrait .page {
   height: 100%;
   width: 100%;
   border-radius: 50%;
-  background: conic-gradient(#D6A330 50%, #FFFF4E 50%);
+  background: conic-gradient(#D6A330 90%, #FFFF4E 0%);
 }
 .main-dashboard .con-wrapper .md-con-3 .card-2:first-of-type .div-2 .circle-div::after {
   content: "";

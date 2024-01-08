@@ -160,7 +160,7 @@
                             <div class="circle-div">
                                 <div class="progress-value">
                                     <p>{{ !empty($data['totalPercentOfLastEntry']) ? number_format($data['totalPercentOfLastEntry'], 2) : 0 }}%</p>
-                                    <p>100,000</p>
+                                    <p>{{ !empty($data['totalIncomePercentage']) ? number_format($data['totalIncomePercentage'], 2) : '0.00' }}</p>
                                     <p>As of last entry</p>
                                 </div>
                             </div>
