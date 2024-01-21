@@ -10,7 +10,7 @@
     @endif
     <div class="m-con-1">
     <h2>Holiday</h2>
-    <p class="p-2">Total of <span id="numOfHolidays">{{ count($list) }}</span> Holidays</p>
+    <p class="p-2">Total of <span id="numOfHolidays">{{ $paginationPaging['totalRecord'] }}</span> Holidays</p>
 
     <!-- * Button Container -->
     <div class="container">
@@ -32,7 +32,7 @@
 
             <!-- * Search Bar -->
             <div class="search-wrap">
-                <input type="search" id="search" name="search" placeholder="Search">
+                <input type="search" wire:model="keyword" placeholder="Search">
                 <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
             </div>
 
@@ -42,7 +42,7 @@
 
     <!-- * View Trash Button -->
     <div class="btn-container">
-        <button>View Trash</button>
+        <!-- <button>View Trash</button> -->
     </div>
     </div>
 
@@ -72,7 +72,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Month</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -80,7 +80,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Day</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -88,7 +88,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Year</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -96,7 +96,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Location/Area</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -157,19 +157,17 @@
 
     </div>
 
-    <!-- * Pagination Container -->
-    <div class="pagination-container">
+            @if($paginationPaging['totalPage'] > 0)
+                <div class="pagination-container" style="overflow-x: auto;">
+                    <!-- * Pagination Links -->
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left" ></a>
+                    @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
+                    <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
+                    @endfor
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right" ></a>
 
-        <!-- * Pagination Links -->
-        <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
-        <a href="#">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">4</a>
-        <a href="#">5</a>
-        <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
-
-    </div>
+                </div>   
+            @endif
 
     </div>
 </div>

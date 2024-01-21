@@ -8,7 +8,7 @@
 
             <h2>Collection List</h2>
             <p class="p-1">
-                You have <span id="numOfCollectionList">{{ count($list) }}</span> Collection list
+                You have <span id="numOfCollectionList">{{ $paginationPaging['totalRecord'] }}</span> Collection list
             </p>
 
             <!-- * Button Container -->
@@ -34,7 +34,7 @@
 
                 <div class="primary-search-bar">
                     <div class="row">
-                        <input type="search" id="searchInput" name="search" placeholder="Search" autocomplete="off">
+                        <input type="search" wire:model="keyword" placeholder="Search" autocomplete="off">
                         <button>
                         </button>
                     </div>
@@ -149,7 +149,18 @@
                 </table>
 
             </div>
+            @if($paginationPaging['totalPage'] > 0)
+                <div class="pagination-container" style="overflow-x: auto;">
 
+                    <!-- * Pagination Links -->
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left" ></a>
+                    @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
+                    <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
+                    @endfor
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right" ></a>
+
+                </div>   
+                @endif
         </div>
 
     </div>

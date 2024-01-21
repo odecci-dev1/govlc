@@ -10,7 +10,7 @@
             <div class="m-con-1">
                 <h2>Field Officers</h2>
                 <p class="p-1">
-                    Total of <strong>{{ count($list) }}</strong> field officers
+                    Total of <strong>{{ $paginationPaging['totalRecord'] }}</strong> field officers
                 </p>
                 <!-- * Button Container -->
                 <div class="container">
@@ -42,7 +42,7 @@
 
                 <!-- * View Trash Button -->
                 <div class="btn-container">
-                    <button type="button">View Trash</button>
+                    <!-- <button type="button">View Trash</button> -->
                 </div>
             </div>
 
@@ -156,26 +156,20 @@
                     </table>
 
                 </div>
-
+                </div>
                 <!-- * Pagination Container -->
-                @if(isset($list))
-                    @if(count($list) > 25)
-                        <div class="pagination-container">
+                @if($paginationPaging['totalPage'] > 0)
+                <div class="pagination-container" style="overflow-x: auto;">
 
-                            <!-- * Pagination Links -->
-                            <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
-                            <a href="#">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            <a href="#">5</a>
-                            <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
+                    <!-- * Pagination Links -->
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left" ></a>
+                    @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
+                    <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
+                    @endfor
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right" ></a>
 
-                        </div>
-                    @endif
+                </div>   
                 @endif
-
-            </div>
 </div>
 <script>
     document.addEventListener('livewire:load', function () {

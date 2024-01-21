@@ -58,7 +58,11 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/getnoti', [NotificationController::class, 'notifications']);
 Route::get('/getnoticount', [NotificationController::class, 'getnoticount']);
 
+
+
 Route::middleware(['authenticated'])->group(function () {
+    Route::get('/notification/view', [NotificationController::class, 'viewNotification'])->name('viewNotification');
+    Route::get('/notification/mark/{notiid}', [NotificationController::class, 'markNotification'])->name('markNotification');
 
     Route::middleware(['isfo:0'])->group(function () {
         Route::middleware(['access:Module-018'])->group(function () {

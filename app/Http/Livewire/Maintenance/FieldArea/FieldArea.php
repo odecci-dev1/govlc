@@ -26,6 +26,12 @@ class FieldArea extends Component
     
     public $searchfokeyword = '';
 
+    public $paginate = [];
+    public $paginationPaging = [];
+
+    public $paginateUnassigned = [];
+    public $paginationPagingUnassigned = [];
+
     public function rules(){
         $rules = [];
         $rules['areaName'] = ['required'];       
@@ -161,12 +167,38 @@ class FieldArea extends Component
                 $this->unassignedLocations[$unassignedLocations['location']] = ['location' => $unassignedLocations['location'], 'stat' => 0]; 
             }
         }        
+
+        $this->paginate['page'] = 1;
+        $this->paginate['pageSize'] = 10;
+        $this->paginate['FilterName'] = '';
+        $this->paginationPaging['totalPage'] = 0;          
+    }
+
+    public function setPage($page = 1){
+        $this->paginate['page'] = $page;
     }
 
     public function render()
     {                      
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AreaFilter', ['areaName' => $this->keyword]);          
-        $this->list = $data->json();    
+        // $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AreaFilter', ['areaName' => $this->keyword]);          
+        // $this->list = $data->json();    
+
+        $inputs = [
+                    'page' => $this->paginate['page'],
+                    'pageSize' => $this->paginate['pageSize'],
+                    'FilterName' => $this->keyword,
+                    'status' => 'Active',
+                    'module' => 'Area',
+                ];
+
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Pagination/DisplayListPaginate', $inputs);                 
+        $this->list = $data->json()['items'];  
+        if( $data->json()['totalPage'] ){
+            $this->paginationPaging['totalPage'] = $data->json()['totalPage'];
+            $this->paginationPaging['currentPage'] = $data->json()['currentPage'];
+            $this->paginationPaging['nextPage'] = $data->json()['nextPage'] < $data->json()['totalPage'] ?  $data->json()['nextPage'] : $data->json()['totalPage'];
+            $this->paginationPaging['prevPage'] = $data->json()['prevPage'] > 0 ? $data->json()['prevPage'] : 1;
+        }
 
         $fodata = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFullname', ['fullname' => $this->searchfokeyword]);  
         $this->folist = $fodata->json();         

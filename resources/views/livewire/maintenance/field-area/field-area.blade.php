@@ -25,7 +25,7 @@
             <div class="fa-container-1">
 
                 <!-- * Vertical Container -->
-                <div class="verti-con" style="display: flex; flex-direction: column; height: fit-content;">
+                <div class="verti-con" style="display: flexs; flex-direction: column; height: fit-content;">
 
                     <!-- * Form Header -->
 
@@ -33,12 +33,12 @@
                     <div class="rowspan">
 
                         <h2>Field Area Maintenance</h2>
-                        <p>Last Updated:
+                        <!-- <p>Last Updated:
                             <span id="faUpdateDate"> 05/26/2022</span>,
                             <span id="faUpdateDay"> Thursday</span> at
                             <span id="faUpdateTime"> 9:45 AM</span> by
                             <span id="faUpdateUser"> Admin</span>
-                        </p>
+                        </p> -->
 
                     </div>
 
@@ -53,7 +53,7 @@
                         </div>
 
                         <!-- * Location -->
-                        <div class="input-wrapper">                           
+                        <div class="input-wrapper" style="min-height: 255px;">                           
                             <span>Location</span>
                             <div class="locations-container">
                                 <div class="chip-container" id="mLocationContainer">
@@ -163,7 +163,7 @@
                                     </tr>
                                     @if($list)              
                                         @foreach($list as $l)
-                                        <tr class="tr-font-size-1_3rem">
+                                        <tr class="tr-font-size-1_2rem">
                                             <!-- * Checkbox Opt -->                                            
 
                                             <!-- * Data Area Name-->
@@ -201,19 +201,14 @@
 
                             <!-- * Pagination Container -->
                             <div class="pagination-container">
-
-                                <!-- * Pagination Links -->
-                                <!-- <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a> -->
-                                <a href="#">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a>.</a>
-                                <a>.</a>
-                                <a>.</a>
-                                <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
-
+                                @if($paginationPaging['totalPage'] > 1)
+                                    <!-- * Pagination Links -->
+                                    <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left" ></a>
+                                    @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
+                                    <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
+                                    @endfor
+                                    <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right" ></a>
+                                @endif
                             </div>
                         </div>
 
@@ -222,7 +217,7 @@
                 </div>
 
                 <!-- * Horizontal Container 2 -->
-                <div class="horiz-con con2">
+                <div class="horiz-con con2"   style="height: 450px;">
 
                     <div class="box-wrap">
 
@@ -250,7 +245,7 @@
                         <div class="rowspan">
 
                             <!-- * Table Container -->
-                            <div class="table-container tbc-2">
+                            <div class="table-container tbc-2"  style="height: 300px; margin-top: 20px;">
 
                                 <!-- * Un-assigned Locations Table -->
                                 <table id="maintenanceUnAssignedLocationsTable">

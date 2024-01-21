@@ -6,7 +6,10 @@
     <!-- * Container 1: All Members Header, Buttons, and Searchbar -->
     <div class="am-con-1">
     <h2>Members</h2>
-    <p class="p-1">(Please select member status)</p>
+    <p class="p-1">
+        Total of <strong>{{ $paginationPaging['totalRecord'] }}</strong> members
+    </p>
+    
 
     <!-- * Button Container -->
     <div class="container">
@@ -19,13 +22,12 @@
             <!-- * Member Type Dropdown Button -->
             <div class="borrower-dropdown" data-bor-dropdown>
 
-                <!-- * Member Type Button -->             
-
-                <div class="select-box" style="width: 20rem;">
-                    <select  wire:model="status" class="select-option-menu">
-                        <option value="">All Status</option>     
-                        <option value="Active">Active</option>                                    
-                        <option value="Inactive">Inactive</option>                                    
+                <!-- * Member Type Button -->                           
+                <div class="select-box" style="width: 30rem;">
+                    <select  wire:model="status" wire:change="setPage(1)" class="select-option-menu">
+                        <option value="">Active and Inacive Members</option>     
+                        <option value="Active">Active Members</option>                                    
+                        <option value="Inactive">Inactive Members</option>                                    
                     </select>                       
                 </div>                
 
@@ -129,7 +131,7 @@
                 </th>
 
                 <!-- * Action -->
-                <th><span class="th-name">Action</span></th>
+                <th  style="width: 1%; text-align: center"><span class="th-name">Action</span></th>
             </tr>
 
 
@@ -160,26 +162,27 @@
                     </td>
 
                     <td>
-                        {{ $l['mem_status'] }}
+                        {{ $l['status'] }}
                     </td>
 
                     <!-- * Current Loan Data-->
                     <td class="td-curLoan">
-                        {{ number_format($l['loanAmount'], 2) }}
+                        {{ number_format($l['currentLoan'], 2) }}
                     </td>
 
                     <!-- * Outstading Balance Data-->
                     <td class="td-bal">
-                        <!-- 10,000.00 -->
+                        {{ number_format($l['outstandingBalance'], 2) }}
                     </td>
 
                     <!-- * Due Date Info-->
                     <td class="td-due">
+                    {{ date('Y-m-d', strtotime($l['lastUpdated'])) }}
                         <!-- June 4, 2023 -->
                     </td>
 
                     <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
+                    <td class="td-btns" style="width: 1%;">
                         <div class="td-btn-wrapper">
                             <a href="{{ URL::to('/') }}/members/details/{{ $l['naid'] }}" class="a-btn-view-2">View</a>                         
                         </div>
@@ -193,19 +196,18 @@
     </div>
 
     <!-- * Pagination Container -->
-    <div class="pagination-container">
+    @if($paginationPaging['totalPage'] > 0)
+    <div class="pagination-container" style="overflow-x: auto;">
 
         <!-- * Pagination Links -->
-        <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
-        <a href="#">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">4</a>
-        <a href="#">5</a>
-        <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
+        <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
+        @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
+        <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
+        @endfor
+        <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
 
     </div>
-
+    @endif
     </div>
 </main>
 

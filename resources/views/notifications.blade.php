@@ -6,7 +6,8 @@
             </tr>
             @foreach($noti as $mnoti)
             <tr>
-                <td>{{ $mnoti['actions'] }}</td>
+                <td><a href="{{ route('viewNotification', ['reference' => $mnoti['reference'], 'id' => $mnoti['id'] ]) }}">{{ $mnoti['actions'] }}</a></td>
+                <td onclick="markNoti('{{ $mnoti['id'] }}')">mark as read</td>
             </tr>
              @endforeach
         @endif

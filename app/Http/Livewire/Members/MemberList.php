@@ -15,25 +15,44 @@ class MemberList extends Component
     public $loantype = '';
     public $loantypeList;
     public $usertype;
+    public $paginate = [];
+    public $paginationPaging = [];
+
 
     public function mount(){
+        $this->paginate['page'] = 1;
+        $this->paginate['pageSize'] = 25;
+        $this->paginate['FilterName'] = '';
+        $this->status = '';
+        $this->paginate['module'] = 'Member';
+        $this->paginationPaging['totalPage'] = 0;
+        $this->paginationPaging['totalRecord'] = 0;
         $this->usertype = session()->get('auth_usertype'); 
+    }
+
+    public function setPage($page = 1){
+        $this->paginate['page'] = $page;
     }
   
     public function render()
     {
-        $getloans = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetails');  
-        $getloans = $getloans->json();       
-        $loantypeList = collect([]);
-        if(count($getloans) > 0){
-            foreach($getloans as $getloans){
-                $loantypeList[$getloans['loanTypeID']] = ['loanTypeName' => $getloans['loanTypeName'], 'loanTypeID' => $getloans['loanTypeID']];
-            }
-        }       
-        $this->loantypeList = $loantypeList; 
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/GlobalFilter/FilterSearch', ['loanType' => '',  'fullname' => $this->keyword, 'statusid' => [[ 'status' => 14 ], [ 'status' => 7 ], [ 'status' => 8 ], [ 'status' => 9 ], [ 'status' => 10 ], [ 'status' => 15 ]], 'page' => 1, 'pageSize' => 10000,  'from' => '0', 'to' => '0']);                 
-        $this->list = $data->json();  
-        //dd( $this->list);
+        $inputs = [
+                    'page' => $this->paginate['page'],
+                    'pageSize' => $this->paginate['pageSize'],
+                    'FilterName' => $this->keyword,
+                    'status' => $this->status,
+                    'module' => $this->paginate['module'],
+                  ];
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Pagination/DisplayListPaginate', $inputs);                 
+        $this->list = $data->json()['items'];  
+        if( $data->json()['totalPage'] ){
+            $this->paginationPaging['totalPage'] = $data->json()['totalPage'];
+            $this->paginationPaging['totalRecord'] = $data->json()['totalRecord'];
+            $this->paginationPaging['currentPage'] = $data->json()['currentPage'];
+            $this->paginationPaging['nextPage'] = $data->json()['nextPage'] < $data->json()['totalPage'] ?  $data->json()['nextPage'] : $data->json()['totalPage'];
+            $this->paginationPaging['prevPage'] = $data->json()['prevPage'] > 0 ? $data->json()['prevPage'] : 1;
+        }
+        
         return view('livewire.members.member-list');
     }
 }

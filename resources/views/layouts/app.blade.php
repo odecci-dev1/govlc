@@ -284,11 +284,13 @@
 
     <!-- * Navigation Profile -->
     <div class="profile-nav">
+        <!-- <span style="color: white; margin-right: 30px;">{{ session()->get('auth_userid')  }}</span> -->
         <div class="profile-nav-con">
             @php 
                 $profilepic = session()->get('auth_profile');
             @endphp
-            <div style="position: relative;">
+            
+            <div style="position: relative;">           
             <img onclick="showNoti()" style="cursor: pointer;" src="{{ URL::to('/') }}/assets/icons/bell.svg" alt="Bell" />
             <span id="noti-count" style="{{ session()->get('noti_count') == '0' || session()->get('noti_count') == '' ? 'display: none' : '' }}">{{ session()->get('noti_count') }}</span>
             </div>
@@ -385,6 +387,7 @@
             notihttp.open("GET", "{{ URL::to('/getnoticount') }}", true);
             notihttp.send();
         }, 5000);
+        
                 
     </script>
     </main>

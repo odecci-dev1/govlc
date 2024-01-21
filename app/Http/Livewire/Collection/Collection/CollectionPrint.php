@@ -22,7 +22,8 @@ class CollectionPrint extends Component
         $this->areaDetailsFooter = collect([]);
       
         $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $this->areaRefNo]);         
-        $details = $details->json();
+   
+        $details = $details->json();      
         //dd($details);
        
         if($details){
@@ -46,6 +47,7 @@ class CollectionPrint extends Component
                 }                    
             }                         
         }
+        //dd($this->areaDetails);
       // dd($this->areaDetails);
     }
 

@@ -5,7 +5,7 @@
     @if(session('mmessage'))
         <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif
-    <div wire:loading  wire:loading.delay class="full-screen-div-loading">
+    <div wire:loading  wire:loading.delay wire:target="save" class="full-screen-div-loading">
         <div class="center-loading-container">
             <div>
                 <div class="lds-dual-ring"></div>
