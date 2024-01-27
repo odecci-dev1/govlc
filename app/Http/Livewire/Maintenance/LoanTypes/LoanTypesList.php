@@ -50,6 +50,7 @@ class LoanTypesList extends Component
 
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Pagination/DisplayListPaginate', $inputs);                      
         $list = $data->json()['items'];  
+     
         if( $data->json()['totalPage'] ){
             $this->paginationPaging['totalPage'] = $data->json()['totalPage'];
             $this->paginationPaging['totalRecord'] = $data->json()['totalRecord'];

@@ -157,8 +157,8 @@
                         </div>
                         <div class="divider"></div>
                         <div class="div-2">
-                            <div class="circle-div">
-                                <div class="progress-value">
+                            <div class="circle-div" id="circle-div">
+                                <div class="progress-value" id="progress-value">
                                     <p>{{ !empty($data['totalPercentOfLastEntry']) ? number_format($data['totalPercentOfLastEntry'], 2) : 0 }}%</p>
                                     <p>{{ !empty($data['totalIncomePercentage']) ? number_format($data['totalIncomePercentage'], 2) : '0.00' }}</p>
                                     <p>As of last entry</p>
@@ -604,9 +604,24 @@
                 </div>
             </div>    
 </div>
-
+<style>
+    .main-dashboard .con-wrapper .md-con-3 .card-2:first-of-type .div-2 .circle-div::before {
+        content: "";
+        position: absolute;
+        z-index: 1;
+        aspect-ratio: 1/1;
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+        background: conic-gradient(#D6A330 {{ !empty($data['totalPercentOfLastEntry']) ? $data['totalPercentOfLastEntry'] : 0 }}%, #FFFF4E 0%);
+    }
+</style>
 <script>
-     document.addEventListener('livewire:load', function () {         
+     document.addEventListener('livewire:load', function () {   
+        // var progressValue = document.getElementById("circle-div");
+        // //background: conic-gradient(#D6A330 90%, #FFFF4E 0%);    
+        // progressValue.style.background = "conic-gradient(#D6A330 90%, #FFFF4E 0%)";
+
         var ctx = document.getElementById("myChart").getContext("2d");
         const chartData = { 
             labels: [], // conditions to made //labels horizontal
