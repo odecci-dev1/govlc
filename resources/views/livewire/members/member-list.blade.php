@@ -196,7 +196,7 @@
     </div>
 
     <!-- * Pagination Container -->
-    @if($paginationPaging['totalPage'] > 0)
+    @if($paginationPaging['totalPage'] > 1)
     <div class="pagination-container" style="overflow-x: auto;">
 
         <!-- * Pagination Links -->

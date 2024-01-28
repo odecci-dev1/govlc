@@ -254,6 +254,16 @@
                         </a>
                         @endif
 
+                        @if(in_array('Module-019', $modules))
+                        <a href="{{ URL::to('/') }}/declined/applications" data-nav-link>
+                            <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
+                                <!-- * Custom Report -->
+                                <img src="{{ URL::to('/') }}/assets/icons/sub-menu/custom-report.svg" alt="custom-report" />
+                                <span>Declined Loan Applications</span>
+                            </li>
+                        </a>
+                        @endif
+
                     </ul>
                 </div>
 

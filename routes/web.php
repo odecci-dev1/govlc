@@ -33,6 +33,7 @@ use App\Http\Livewire\Reports\ReleaseReport\ReleaseReport;
 use App\Http\Livewire\Reports\CollectionReport\CollectionReport;
 use App\Http\Livewire\Reports\PastDueReport\PastDueReport;
 use App\Http\Livewire\Reports\SavingsReport\SavingsReport;
+use App\Http\Livewire\Reports\DeclinedApplications\DeclinedApplications;
 use App\Http\Livewire\Settings\Settings;
 use App\Http\Livewire\Dashboard;
 use App\Http\Controllers\ExportsController;
@@ -70,7 +71,7 @@ Route::middleware(['authenticated'])->group(function () {
         });
 
         //members edited
-        Route::middleware(['access:Module-018'])->group(function () {
+        Route::middleware(['access:Module-019'])->group(function () {
             Route::get('/members', MemberList::class);
             Route::get('/members/{type}/{naID}', CreateApplication::class)->name('application.view');
         });
@@ -125,6 +126,8 @@ Route::middleware(['authenticated'])->group(function () {
     Route::middleware(['access:Module-08'])->group(function () {
         Route::get('/tranactions/application/list', ApplicationList::class)->name('application.list');
         Route::get('/tranactions/trashed/application/list', ApplicationListTrash::class)->name('application.list.trashed');
+
+        Route::get('/declined/applications', DeclinedApplications::class)->name('application.list');
     });
     Route::middleware(['access:Module-010'])->group(function () {
         Route::get('/tranactions/application/approval/list', ApplicationApprovalList::class)->name('application.approval');
