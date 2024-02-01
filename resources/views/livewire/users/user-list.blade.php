@@ -127,7 +127,7 @@
                     <td class="td-btns">
                     <div class="td-btn-wrapper">
                         <a href="{{ URL::to('/') }}/user/view/{{ $l['userId'] }}" class="a-btn-view-2" data-user-view>View</a>
-                        <button onclick="showDialog('{{ $l['userId'] }}')" type="button" class="a-btn-trash-2">Trash</button>
+                        <button onclick="showDialog('{{ $l['id'] }}')" type="button" class="a-btn-trash-2">Trash</button>
                     </div>
                     </td>
                 </tr>               

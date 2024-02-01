@@ -14,7 +14,7 @@ class UserList extends Component
     public $keyword = '';
 
     public function archive($userid){       
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/DeleteUser', [ 'memId' => $userid ]);                    
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/DeleteUser', [ 'id' => $userid ]);                    
         return redirect()->to('/users')->with(['mmessage'=> 'User has been archived', 'mword'=> 'Success']);    
     }
     
@@ -23,7 +23,7 @@ class UserList extends Component
     {
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserListFilter', [ 'page' => 1, 'pageSize' => 10000, 'fullname' => $this->keyword ]);          
         // dd(['column' => 'lname', 'values' => $this->keyword], ['column' => 'fname', 'values' => $this->keyword], ['column' => 'username', 'values' => $this->keyword]);       
-        $this->list = $data->json();            
+        $this->list = $data->json();          
         return view('livewire.users.user-list');
     }
 }

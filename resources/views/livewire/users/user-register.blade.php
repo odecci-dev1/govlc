@@ -218,7 +218,7 @@
                           <!-- * Update Button -->
                           <button type="button" class="button" wire:click="register">Update</button>
                           @if($mid != '')
-                          <button type="button" type="button" onclick="showDialog('{{ $userid }}')" class="button">Trash</button>
+                          <button type="button" type="button" onclick="showDialog('{{ $mid }}')" class="button">Trash</button>
                           @endif
 
                           <!-- * Cancel Button -->
