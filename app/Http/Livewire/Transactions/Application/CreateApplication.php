@@ -1417,7 +1417,8 @@ class CreateApplication extends Component
         else{
             $lastcnt = $lastcnt  + 1;
         }
-        //dd($this->membusinfo['attachments']);  
+        //dito
+        //dd( $this->membusinfo['attachments'] );
         $data = $this->validate([                                    
                                     'membusinfo.businessName' => ['required'],
                                     'membusinfo.businessType' => ['required'],
@@ -1441,7 +1442,7 @@ class CreateApplication extends Component
                                           'vos' => $data['membusinfo']['vos'],
                                           'aos' => $data['membusinfo']['aos'],    
                                           'attachments' => $this->membusinfo['attachments'],     
-                                          'old_attachments' => []                                           
+                                          'old_attachments' => $this->membusinfo['attachments']                                           
                                         ];
         //dd($this->businfo);                        
         $this->resetmembusinfo();                        
