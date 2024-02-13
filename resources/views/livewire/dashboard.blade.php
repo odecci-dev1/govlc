@@ -84,58 +84,21 @@
                     <div class="big-card">
                         <div class="div-1">
                             <h2 style="font-size: 2.5rem;">Active Members</h2>
-                            <div class="btn-wrapper">
-                                <button class="button" style="font-size: 1.5rem !important;">Select Area</button>
-                                <!-- * Filter Dropdown Button -->
-                                <div class="dropdown-button">
-                                    <div class="dropdown-select-box">
-    
-                                        <div class="dropdown-options-container" data-option-con0>
-    
-                                            <div class="dropdown-option" data-option-item0>
-    
-                                                <input type="radio" class="radio" name="category" value="7 Days" />
-                                                <label for="7 Days">
-                                                    <h4>7 Days</h4>
-                                                </label>
-    
-                                            </div>
-    
-                                            <div class="dropdown-option" data-option-item0>
-    
-                                                <input type="radio" class="radio" name="category" value="Option 2" />
-                                                <label for="Option 2">
-                                                    <h4>Option 2</h4>
-                                                </label>
-    
-                                            </div>
-    
-                                            <div class="dropdown-option" data-option-item0>
-    
-                                                <input type="radio" class="radio" name="category" value="Option 3" />
-                                                <label for="Option 3">
-                                                    <h4>Option 3</h4>
-                                                </label>
-    
-                                            </div>
-    
-                                            <div class="dropdown-option" data-option-item0>
-    
-                                                <input type="radio" class="radio" name="category" value="Option 4" />
-                                                <label for="Option 4">
-                                                    <h4>Option 4</h4>
-                                                </label>
-    
-                                            </div>
-    
-                                        </div>
-    
-                                        <div class="dropdown-selected" data-option-select0>
-                                            <h4>Select Filter</h4>
-                                        </div>
-    
-                                    </div>
-                                </div>
+                            <div class="btn-wrapper">                                
+                                <select  wire:model="" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
+                                    <option value="">All Areas</option> 
+                                    @if($area)
+                                        @foreach($area as $area)
+                                            <option value="{{ $area['areaID'] }}">{{ $area['areaName'] }}</option> 
+                                        @endforeach
+                                    @endif                                   
+                                </select>          
+                                <select  wire:model="" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
+                                    <option value="7">7 days</option>
+                                    <option value="15">15 days</option>                                    
+                                    <option value="30">30 days</option>
+                                    <option value="1">1 year</option>
+                                </select>    
                             </div>
                         </div>
                         <!-- * Line Chart -->

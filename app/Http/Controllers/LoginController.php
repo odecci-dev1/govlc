@@ -16,7 +16,7 @@ class LoginController extends Controller
       
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/LogIn', $data);    
         $res = $crt->getReasonPhrase();
-      
+              
         if($res == 'OK'){
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [ ['column' => 'username', 'values' =>  $request['username']] ]); 
             $data = $crt->json();           

@@ -189,17 +189,17 @@
                              <span class="th-name">Collectible</span>
                          </th>
 
-                         <th>
+                         <th style="padding: 0rem 0.5rem;">
                              <span class="th-name">Collected Amount</span>
                          </th>
 
                          <!-- * Amount Due -->
-                         <th>
+                         <th style="padding: 0rem 0.5rem;">
                              <span class="th-name">Balance</span>
                          </th>
 
                          <!-- * Balance -->
-                         <th>
+                         <th style="padding: 0rem 0.5rem;">
                              <span class="th-name">Past Due</span>
                          </th>
 
@@ -256,17 +256,17 @@
                                 {{ number_format($mdetails['dailyCollectibles'], 2) }}
                             </td>
 
-                            <td>
+                            <td style="padding: 0rem 0.5rem;">
                                 {{ number_format($mdetails['collectedAmount'], 2) }}
                             </td>
 
                             <!-- * Amount Due -->
-                            <td>
+                            <td style="padding: 0rem 0.5rem;">
                                 {{ number_format($mdetails['amountDue'], 2) }}
                             </td>
 
                             <!-- * Balance -->
-                            <td>
+                            <td style="padding: 0rem 0.5rem;">
                                 {{ number_format($mdetails['pastDue'], 2) }}
                             </td>
 
