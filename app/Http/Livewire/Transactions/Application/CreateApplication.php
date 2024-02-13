@@ -1889,7 +1889,7 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                //dd($data);    
+                dd($data);    
                 //ditoviewing     
                 $this->searchedmemId =  $data['memId'];
                 $this->member['statusID'] = $data['applicationStatus'];
