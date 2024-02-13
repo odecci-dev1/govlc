@@ -968,7 +968,7 @@ class CreateApplication extends Component
                                         'businessName' => $value['businessName'], 
                                         'businessType' => $value['businessType'],
                                         'businessAddress' => $value['businessAddress'],
-                                        'b_status' => 1, //$value['b_status'], error
+                                        'b_status' => $value['b_status'], //error
                                         'yob' => $value['yob'],
                                         'noe' => $value['noe'],
                                         'salary' => $value['salary'],
@@ -1443,7 +1443,7 @@ class CreateApplication extends Component
                                           'attachments' => $this->membusinfo['attachments'],     
                                           'old_attachments' => []                                           
                                         ];
-                                
+        //dd($this->businfo);                        
         $this->resetmembusinfo();                        
     }
 
@@ -1889,7 +1889,7 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];    
-                dd($data);    
+                //dd($data);    
                 //ditoviewing     
                 $this->searchedmemId =  $data['memId'];
                 $this->member['statusID'] = $data['applicationStatus'];
