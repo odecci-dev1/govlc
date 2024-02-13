@@ -278,7 +278,7 @@
             <div class="input-wrapper">
                 @if($member['statusID'] == 10)   
                 <span>Savings To Be Use</span>
-                <input wire:model.lazy="loanDetails.savingsToUse" class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="number">
+                <input wire:model.lazy="loanDetails.savingsToUse" {{ isset($loanDetails['totalSavings']) ? ($loanDetails['totalSavings'] != '' ? '' : 'disabled') : 'disabled' }} class="{{ $member['statusID'] == 10 ? (isset($loanDetails['totalSavings']) ? ($loanDetails['totalSavings'] != '' ? 'inpt-editable' : '') : '') : '' }}" type="number">
                 @error('loanDetails.savingsToUse') <span class="text-required">{{ $message }}</span> @enderror
                 @endif
             </div>
@@ -1116,7 +1116,7 @@
             <!-- * Rowspan 2: Business Name, Business Type and Business Address -->
             
             <div class="rowspan">
-            @if($type != 'details' && $member['statusID'] == 7)
+            @if($type != 'detailsasd')
                 <!-- * Business Name -->
                 <div class="input-wrapper">
                     <span>Business Name</span>
@@ -1142,7 +1142,7 @@
 
             <!-- * Rowspan 3: Rented or Owned, Years Of Business, Number Of Employees, Salary / Day, Value Of Stocks and Amount Of Sales / Day  -->
             <div class="rowspan">
-            @if($type != 'details' && $member['statusID'] == 7)
+            @if($type != 'detailss')
                 <div class="input-wrapper">
 
                     <div class="box-wrap">
