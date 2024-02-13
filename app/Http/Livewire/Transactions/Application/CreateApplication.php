@@ -1442,7 +1442,7 @@ class CreateApplication extends Component
                                           'vos' => $data['membusinfo']['vos'],
                                           'aos' => $data['membusinfo']['aos'],    
                                           'attachments' => $this->membusinfo['attachments'],     
-                                          'old_attachments' => $this->membusinfo['attachments']                                           
+                                          'old_attachments' => $this->membusinfo['old_attachments']                                         
                                         ];
         //dd($this->businfo);                        
         $this->resetmembusinfo();                        
