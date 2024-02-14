@@ -70,13 +70,14 @@
                 <!-- * Search Bar -->
                 <div class="search-wrap">
                     <!-- <input type="search" wire:keydown.enter="searchExistingMembers($event.target.value)" placeholder="Search name or member ID"> -->
-                    <input type="search" wire:model="newappmodelkeyword" placeholder="Search name or member ID">
+                    <input type="search" wire:model="newappmodelkeyword" wire:keypress="getmemberList" placeholder="Search name or member ID">
                     <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                 </div>
 
                 <!-- * Create New Button -->
-                <button wire:click="createIndividualLoan('', '{{ $loantype }}')" type="button"  wire:loading.attr="disabled" class="button">Create New</button>
-
+                <div  wire:loading.remove>
+                    <button wire:click="createIndividualLoan('', '{{ $loantype }}')" type="button"  class="button">Create New</button>
+                </div>                
             </div>
 
 
@@ -137,14 +138,7 @@
                 <!-- * Pagination Container -->
                 <div class="pagination-container">
 
-                    <!-- * Pagination Links -->
-                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
-                    <a href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
+                
 
                 </div>
 

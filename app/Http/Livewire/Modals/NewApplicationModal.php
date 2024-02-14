@@ -70,6 +70,7 @@ class NewApplicationModal extends Component
         $this->loantypeList = $loantypeList;
         $this->changeLoanType();
         //dd($this->loantypeList);
+        $this->getmemberList();
     }
 
     public function changeLoanType(){
@@ -79,6 +80,7 @@ class NewApplicationModal extends Component
         $this->loanterms = '';
         $loanId = $this->loantype;
         $this->getLoanTypeName($loanId);
+        $this->getLoanTerms();
     }
 
     public function getLoanTypeName($loanId){
@@ -88,22 +90,27 @@ class NewApplicationModal extends Component
         }
     }
 
-    public function render()
-    {
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => $this->newappmodelkeyword]);       
-        //dd( $data );
-        $this->memberlist = $data->json();  
-
+    public function getLoanTerms(){
         $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loantype]);                  
-        $loanterms = $loanterms->json();
-       // dd($loanterms);
+        $loanterms = $loanterms->json();         
         if( $loanterms ){
             $this->termsOfPaymentList = [];
             foreach( $loanterms  as  $loanterms ){
                 $this->termsOfPaymentList[$loanterms['topId']] = ['topId' => $loanterms['topId'],'termsofPayment' => $loanterms['termsofPayment'],'loanTypeId' => $loanterms['loanTypeId']];   
             }
         }
-        //dd($this->loantype);             
+        // dd($this->termsOfPaymentList);
+        // dd('as');
+    }
+
+    public function getmemberList(){           
+        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => $this->newappmodelkeyword]);       
+        //dd( $data );
+        $this->memberlist = $data->json();  
+    }
+
+    public function render()
+    {       
         return view('livewire.modals.new-application-modal');
     }
 }
