@@ -858,7 +858,7 @@ class CreateApplication extends Component
                 $apiresp = $crt->getStatusCode();                
                 if($apiresp == 200){                         
                     if($crt->json()['promtresult_status'] == 'ERROR'){
-                        session()->flash('errmmessage', $crt->json()['result']);        
+                        session()->flash('errmmessage', $crt->json()['promtresult']);        
                     }   
                     else{         
                         // $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
