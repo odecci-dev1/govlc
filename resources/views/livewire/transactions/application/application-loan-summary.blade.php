@@ -92,7 +92,7 @@
                         <p class="underline-thick">{{ isset($loansummary['approvedReleasingAmount']) ? ($loansummary['approvedReleasingAmount'] == '' ? '0' : number_format($loansummary['approvedReleasingAmount'], 2)) : 'not found' }}</p>
                         <p>&nbsp;</p>
                         <p>{{ isset($loansummary['holidayAmount']) ? number_format($loansummary['holidayAmount'], 2) : '' }}</p>
-                        <p>{{ !empty($loansummary['totalSavingsAmount']) ? number_format($loansummary['totalSavingsAmount'], 2) : '0.00' }}</p>
+                        <p>{{ !empty($loansummary['totalSavingUsed']) ? number_format($loansummary['totalSavingUsed'], 2) : '0.00' }}</p>
                         <p>{{ isset($loansummary['lifeInsurance']) ? number_format($loansummary['lifeInsurance'], 2) : '' }}</p>                                
                         <p>{{ !empty($loansummary['deductInterest']) ? ($loansummary['deductInterest'] == 2 ? '0.00' : ( number_format($loansummary['total_InterestAmount'] ??= 0.00, 2)))  : '0.00' }}</p>
                     </div>
