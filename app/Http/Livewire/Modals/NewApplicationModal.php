@@ -32,19 +32,19 @@ class NewApplicationModal extends Component
     public function createIndividualLoan($value, $loanid){
       
         $this->validate([ 'loantype' => 'required', 'loanterms' => 'required' ]);
-        if(in_array($loanid, ['LT-02'])){
+        if(in_array($loanid, ['LT-02'])){          
             return redirect()->action(
                 [CreateApplicationGroup::class], ['type' => 'create', 'loanTypeID' => $loanid, 'loanTypeName' => $this->loantypeList[$loanid]['loanTypeName'], 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
             );
         }
         else{
-            if($value == ''){
+            if($value == ''){              
                 return redirect()->action(
                     [CreateApplication::class], ['type' => 'create', 'naID' => '', 'loanTypeID' => $loanid, 'loanTypeName' => $this->loantypeList[$loanid]['loanTypeName'], 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
                 );
             }
             else{          
-                // return redirect()->to('/tranactions/application/create/'.$value);
+                // return redirect()->to('/tranactions/application/create/'.$value);            
                 return redirect()->action(
                     [CreateApplication::class], ['type' => 'create', 'naID' => $value, 'loanTypeID' => $loanid, 'loanTypeName' => $this->loantypeList[$loanid]['loanTypeName'], 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
                 );

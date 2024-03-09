@@ -43,10 +43,9 @@ class CollectionRemittance extends Component
                 "areaRefno"=> $this->areaRefNo,
                 "amountCollected"=> $this->reminfo['amntCollected']
             ];         
-            $compute = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/RemitAmountCollectedComputation', $data);             
-            //dd($compute);
+            $compute = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/RemitAmountCollectedComputation', $data);                       
             $compute = $compute->json();
-        
+           
             if($compute){         
                 $this->reminfo['lapses'] = isset($compute['lapses']) ? $compute['lapses'] : 0;
                 $this->reminfo['advance'] = isset($compute['advance']) ? $compute['advance'] : 0;              

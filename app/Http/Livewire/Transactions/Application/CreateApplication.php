@@ -1889,8 +1889,7 @@ class CreateApplication extends Component
             $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
             $resdata = $value->json();             
             if(isset($resdata[0])){        
-                $data = $resdata[0];    
-                //dd($data);    
+                $data = $resdata[0];                
                 //ditoviewing     
                 $this->searchedmemId =  $data['memId'];
                 $this->member['statusID'] = $data['applicationStatus'];

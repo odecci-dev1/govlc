@@ -85,7 +85,7 @@
                         <div class="div-1">
                             <h2 style="font-size: 2.5rem;">Active Members</h2>
                             <div class="btn-wrapper">                                
-                                <select  wire:model="" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
+                                <select  wire:model="selectarea" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
                                     <option value="">All Areas</option> 
                                     @if($area)
                                         @foreach($area as $area)
@@ -93,7 +93,7 @@
                                         @endforeach
                                     @endif                                   
                                 </select>          
-                                <select  wire:model="" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
+                                <select  wire:model="selectdays" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
                                     <option value="7">7 days</option>
                                     <option value="15">15 days</option>                                    
                                     <option value="30">30 days</option>
@@ -160,61 +160,7 @@
                 <div class="md-con-2 tlpa">
                     <!-- * Big Card -->
                     <div class="big-card">
-                        <div class="div-1">
-                            <div class="btn-wrapper">
-                                <button class="button"  style="font-size: 1.5rem !important;">View All</button>
-                                <!-- * Filter Dropdown Button -->
-                                <div class="dropdown-button">
-                                    <div class="dropdown-select-box">
-    
-                                        <div class="dropdown-options-container" data-option-con00>
-    
-                                            <div class="dropdown-option" data-option-item00>
-    
-                                                <input type="radio" class="radio" name="category" value="7 Days" />
-                                                <label for="7 Days">
-                                                    <h4>7 Days</h4>
-                                                </label>
-    
-                                            </div>
-    
-                                            <div class="dropdown-option" data-option-item00>
-    
-                                                <input type="radio" class="radio" name="category" value="Option 2" />
-                                                <label for="Option 2">
-                                                    <h4>Option 2</h4>
-                                                </label>
-    
-                                            </div>
-    
-                                            <div class="dropdown-option" data-option-item00>
-    
-                                                <input type="radio" class="radio" name="category" value="Option 3" />
-                                                <label for="Option 3">
-                                                    <h4>Option 3</h4>
-                                                </label>
-    
-                                            </div>
-    
-                                            <div class="dropdown-option" data-option-item00>
-    
-                                                <input type="radio" class="radio" name="category" value="Option 4" />
-                                                <label for="Option 4">
-                                                    <h4>Option 4</h4>
-                                                </label>
-    
-                                            </div>
-    
-                                        </div>
-    
-                                        <div class="dropdown-selected" data-option-select00>
-                                            <h4>Select Filter</h4>
-                                        </div>
-    
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                       
                         <!-- * Table -->
                         <div class="div-2">
                             <div class="table-container">
@@ -281,259 +227,7 @@
                                             <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
                 
                                         </tr>
-                                        @endforeach
-                                        @foreach($activecollections as $activecoll)
-                                        <tr>            
-                                            <!-- * Td Num-->
-                                            <td>
-                                                <span class="td-num"></span>
-                                            </td>
-                
-                                            <!-- * Area -->
-                                            <td>
-                                                <span class="td-name">{{ $activecoll['area'] }}</span>
-                                            </td>
-                
-                                            <!-- * Acrive Collection -->
-                                            <td>
-                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
-                                            </td>
-                
-                                            <!-- * New Account-->
-                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
-                
-                                            <!-- * # NPS -->
-                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
-                
-                                            <!-- * Past Due Collection -->
-                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
-                
-                                        </tr>
-                                        @endforeach
-                                        @foreach($activecollections as $activecoll)
-                                        <tr>            
-                                            <!-- * Td Num-->
-                                            <td>
-                                                <span class="td-num"></span>
-                                            </td>
-                
-                                            <!-- * Area -->
-                                            <td>
-                                                <span class="td-name">{{ $activecoll['area'] }}</span>
-                                            </td>
-                
-                                            <!-- * Acrive Collection -->
-                                            <td>
-                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
-                                            </td>
-                
-                                            <!-- * New Account-->
-                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
-                
-                                            <!-- * # NPS -->
-                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
-                
-                                            <!-- * Past Due Collection -->
-                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
-                
-                                        </tr>
-                                        @endforeach
-                                        @foreach($activecollections as $activecoll)
-                                        <tr>            
-                                            <!-- * Td Num-->
-                                            <td>
-                                                <span class="td-num"></span>
-                                            </td>
-                
-                                            <!-- * Area -->
-                                            <td>
-                                                <span class="td-name">{{ $activecoll['area'] }}</span>
-                                            </td>
-                
-                                            <!-- * Acrive Collection -->
-                                            <td>
-                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
-                                            </td>
-                
-                                            <!-- * New Account-->
-                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
-                
-                                            <!-- * # NPS -->
-                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
-                
-                                            <!-- * Past Due Collection -->
-                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
-                
-                                        </tr>
-                                        @endforeach
-                                        @foreach($activecollections as $activecoll)
-                                        <tr>            
-                                            <!-- * Td Num-->
-                                            <td>
-                                                <span class="td-num"></span>
-                                            </td>
-                
-                                            <!-- * Area -->
-                                            <td>
-                                                <span class="td-name">{{ $activecoll['area'] }}</span>
-                                            </td>
-                
-                                            <!-- * Acrive Collection -->
-                                            <td>
-                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
-                                            </td>
-                
-                                            <!-- * New Account-->
-                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
-                
-                                            <!-- * # NPS -->
-                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
-                
-                                            <!-- * Past Due Collection -->
-                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
-                
-                                        </tr>
-                                        @endforeach
-                                        @foreach($activecollections as $activecoll)
-                                        <tr>            
-                                            <!-- * Td Num-->
-                                            <td>
-                                                <span class="td-num"></span>
-                                            </td>
-                
-                                            <!-- * Area -->
-                                            <td>
-                                                <span class="td-name">{{ $activecoll['area'] }}</span>
-                                            </td>
-                
-                                            <!-- * Acrive Collection -->
-                                            <td>
-                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
-                                            </td>
-                
-                                            <!-- * New Account-->
-                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
-                
-                                            <!-- * # NPS -->
-                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
-                
-                                            <!-- * Past Due Collection -->
-                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
-                
-                                        </tr>
-                                        @endforeach
-                                        @foreach($activecollections as $activecoll)
-                                        <tr>            
-                                            <!-- * Td Num-->
-                                            <td>
-                                                <span class="td-num"></span>
-                                            </td>
-                
-                                            <!-- * Area -->
-                                            <td>
-                                                <span class="td-name">{{ $activecoll['area'] }}</span>
-                                            </td>
-                
-                                            <!-- * Acrive Collection -->
-                                            <td>
-                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
-                                            </td>
-                
-                                            <!-- * New Account-->
-                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
-                
-                                            <!-- * # NPS -->
-                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
-                
-                                            <!-- * Past Due Collection -->
-                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
-                
-                                        </tr>
-                                        @endforeach
-                                        @foreach($activecollections as $activecoll)
-                                        <tr>            
-                                            <!-- * Td Num-->
-                                            <td>
-                                                <span class="td-num"></span>
-                                            </td>
-                
-                                            <!-- * Area -->
-                                            <td>
-                                                <span class="td-name">{{ $activecoll['area'] }}</span>
-                                            </td>
-                
-                                            <!-- * Acrive Collection -->
-                                            <td>
-                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
-                                            </td>
-                
-                                            <!-- * New Account-->
-                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
-                
-                                            <!-- * # NPS -->
-                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
-                
-                                            <!-- * Past Due Collection -->
-                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
-                
-                                        </tr>
-                                        @endforeach
-                                        @foreach($activecollections as $activecoll)
-                                        <tr>            
-                                            <!-- * Td Num-->
-                                            <td>
-                                                <span class="td-num"></span>
-                                            </td>
-                
-                                            <!-- * Area -->
-                                            <td>
-                                                <span class="td-name">{{ $activecoll['area'] }}</span>
-                                            </td>
-                
-                                            <!-- * Acrive Collection -->
-                                            <td>
-                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
-                                            </td>
-                
-                                            <!-- * New Account-->
-                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
-                
-                                            <!-- * # NPS -->
-                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
-                
-                                            <!-- * Past Due Collection -->
-                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
-                
-                                        </tr>
-                                        @endforeach
-                                        @foreach($activecollections as $activecoll)
-                                        <tr>            
-                                            <!-- * Td Num-->
-                                            <td>
-                                                <span class="td-num"></span>
-                                            </td>
-                
-                                            <!-- * Area -->
-                                            <td>
-                                                <span class="td-name">{{ $activecoll['area'] }}</span>
-                                            </td>
-                
-                                            <!-- * Acrive Collection -->
-                                            <td>
-                                                <span class="td-name">{{ !empty($activecoll['activeCollection']) ? number_format($activecoll['activeCollection'], 2) : '0.00' }}</span>
-                                            </td>
-                
-                                            <!-- * New Account-->
-                                            <td class="td-name">{{ $activecoll['newAccount'] }}</td>
-                
-                                            <!-- * # NPS -->
-                                            <td class="td-bal">{{ $activecoll['noPayment'] }}</td>
-                
-                                            <!-- * Past Due Collection -->
-                                            <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
-                
-                                        </tr>
-                                        @endforeach
+                                        @endforeach                                        
                                     @endif                                                                        
                                 </table>                                
                             </div>
@@ -567,6 +261,7 @@
                 </div>
             </div>    
 </div>
+
 <style>
     .main-dashboard .con-wrapper .md-con-3 .card-2:first-of-type .div-2 .circle-div::before {
         content: "";
@@ -620,11 +315,12 @@
             options: chartOptions,
         });
 
-        updateSalesChartData = function () {
+        updateSalesChartData = function () {                
+            var cdata = <?php echo json_encode($activemembers); ?>;      
             chartData.datasets[0].data = ['100', '200', '300', '600'];
             chartData.labels = ['1 day', '2 days', '3 days', '4 days'];
             myChart.update();
-            chartData.datasets[0].data = chartData.datasets[0].data.map();
+            // chartData.datasets[0].data = chartData.datasets[0].data.map();     
             // var noofdays = $('#noofdays').val();         
             // $.ajax({
             //     method: 'get',
