@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Transactions\Application;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Request;
 
 use App\Traits\Common;
 
@@ -12,7 +13,7 @@ class CreateApplicationGroup extends Component
 
     use Common;
 
-    public $test = 'hello';
+    public $groupId = ''; 
     public $members = [];
     public $memberlist = [];
     public $groupname;
@@ -32,7 +33,8 @@ class CreateApplicationGroup extends Component
         $data = $this->validate([
             'groupname' => 'required',  
             'loandetails.loamamount' => 'required', 
-            'loandetails.paymentterms' => 'required',                                                    
+            'loandetails.paymentterms' => 'required',        
+            'loandetails.topId' => 'required',                                                              
             'loandetails.purpose' => 'required',                                                    
         ]);    
      
@@ -47,6 +49,7 @@ class CreateApplicationGroup extends Component
     public function sessionLoanDetails(){
         session()->forget('sessloandetails');
         session()->put('sessloandetails', $this->loandetails);
+        //dd(session('sessloandetails') !==null ? session('sessloandetails') : null);
     }
 
     public function store(){
@@ -58,28 +61,42 @@ class CreateApplicationGroup extends Component
                 ];
                        
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Group/SaveGroupList', $data);  
-        dd($data);
+        dd($crt);
     }
 
-    public function mount(){  
-        $this->groupname = session('sessgroupname') !==null ? session('sessgroupname') : null;
-        $loandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
-        $this->loandetails['loamamount'] = isset($loandetails['loamamount']) ? $loandetails['loamamount'] : '';
-        $this->loandetails['paymentterms'] = isset($loandetails['paymentterms']) ? $loandetails['paymentterms'] : '';
-        $this->loandetails['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';
+    public function mount(Request $request){           
+        if($this->groupId != ''){
+            session()->put('sessgroupId', $this->groupId);
+            $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Group/FilterByGroupID', ['groupID' => $this->groupId]);                  
+            $data = $data->json();          
+            if($data){
+                
+            }
+        }
+        else{
+            if(session('memdata')){
+                foreach(session('memdata') as $memdata){
+                    $this->members[] = $memdata;
+                }
+            }       
+          
+            $this->groupname = session('sessgroupname') !==null ? session('sessgroupname') : null;
+            $loandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
+            $this->loandetails['loamamount'] = isset($loandetails['loamamount']) ? $loandetails['loamamount'] : '';
+            $this->loandetails['paymentterms'] = isset($request->loantermsName) ? $request->loantermsName : (isset($loandetails['paymentterms']) ? $loandetails['paymentterms'] : '');
+            $this->loandetails['topId'] = isset($request->loantermsID) ? $request->loantermsID : (isset($loandetails['topId']) ? $loandetails['topId'] : '');
+            $this->loandetails['loanTypeID'] = isset($request->loanTypeID) ? $request->loanTypeID : (isset($loandetails['loanTypeID']) ? $loandetails['loanTypeID'] : '');
+            $this->loandetails['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';              
+        }    
     }
 
     public function render()
     {     
-        // session()->forget('memdata');  
+        //session()->forget('memdata');  
         $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => $this->searchkeyword]);       
-        $this->memberlist = $data->json();           
-     
-        if(session('memdata')){
-            foreach(session('memdata') as $memdata){
-                $this->members[] = $memdata;
-            }
-        }       
+        //dd( $data );
+        $this->memberlist = $data->json();   
+        //dd($this->members);                
         return view('livewire.transactions.application.create-application-group');
     }
 }

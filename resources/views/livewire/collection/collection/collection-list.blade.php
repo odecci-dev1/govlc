@@ -1,96 +1,4 @@
-<div>
-
-    <!-- * Filter Modal -->
-    <dialog class="am-filter-modal" data-filter-member-modal>
-
-        <div class="modal-container-3">
-
-            <!-- * Modal Header and Exit Button -->
-            <div class="modal-header">
-                <h4>Filter</h4>
-                <button class="exit-button" data-close-filter-member-modal>
-                    <img src="../../res/assets/icons/x-circle.svg" alt="exit">
-                </button>
-            </div>
-
-            <!-- * Choose Type of Loan -->
-            <div class="rowspan">
-
-                <h3>Choose Type of Loan</h3>
-                <!-- * Type Of Loan Dropdown Menu -->
-                <div class="loan-type-dropdown">
-
-                    <!-- * Type Of Loan -->
-                    <div class="input-wrapper">
-
-                        <div class="select-box">
-
-                            <div class="options-container" data-filter-type-opt-con>
-
-                                <div class="option" data-filter-type-loan-opt>
-
-                                    <input type="radio" class="radio" name="category" />
-                                    <label for="Individual Loan">
-                                        <h4>Individual Loan</h4>
-                                    </label>
-
-                                </div>
-
-                                <div class="option" data-filter-type-loan-opt>
-
-                                    <input type="radio" class="radio" name="category" />
-                                    <label for="Group Loan">
-                                        <h4>Group Loan</h4>
-                                    </label>
-
-                                </div>
-
-                                <div class="option" data-filter-type-loan-opt>
-
-                                    <input type="radio" class="radio" name="category" />
-                                    <label for="Sample Loan">
-                                        <h4>Sample Loan</h4>
-                                    </label>
-
-                                </div>
-
-                            </div>
-
-                            <div class="selected" data-filter-type-loan-select>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- * Applied Loan Amount -->
-            <div class="rowspan">
-
-                <div class="input-wrapper-modal">
-                    <span>Applied Loan Amount</span>
-                    <input autocomplete="off" type="number" id="filterAppliedLoanAmntFrom"
-                        name="filterAppliedLoanAmntFrom" placeholder="From">
-                </div>
-
-                <div class="input-wrapper-modal">
-                    <input autocomplete="off" type="number" id="filterAppliedLoanAmntTo" name="filterAppliedLoanAmntTo"
-                        placeholder="To">
-                </div>
-
-            </div>
-
-            <!-- * Save Button -->
-            <div class="rowspan">
-                <button class="button" data-save-filter-member-modal>Save</button>
-            </div>
-
-        </div>
-
-    </dialog>
-
+<div class="main-dashboard">
     <div class="na-form-con">
 
         <!-- * Collection List Containers -->
@@ -100,7 +8,7 @@
 
             <h2>Collection List</h2>
             <p class="p-1">
-                You have <span id="numOfCollectionList">10</span> Collection list
+                You have <span id="numOfCollectionList">{{ $paginationPaging['totalRecord'] }}</span> Collection list
             </p>
 
             <!-- * Button Container -->
@@ -110,16 +18,23 @@
                 <div class="wrapper">
 
                     <!-- * Add New Button -->
-                    <button class="button" data-add-new-collection>
-                        <span>Add New</span>
-                    </button>
+                    @if(!$check)
+                        <a href="{{ URL::to('/') }}/collection/create" class="button" data-add-new-collection>
+                            <span>Make Collection</span>
+                        </a>
+                    @endif
 
                 </div>
 
                 <!-- * Primary Search Bar -->
+                <div class="primary-search-bar" style="display: inline; font-size: 1.2rem;">
+                    <input wire:model="displayrecent" type="checkbox" id="displayrecent" name="displayrecent" value="1" style="margin-right: 4px !important;">
+                    <label for="displayrecent"> Display only collections for the last seven (7) days</label><br>
+                </div>
+
                 <div class="primary-search-bar">
                     <div class="row">
-                        <input type="search" id="searchInput" name="search" placeholder="Search" autocomplete="off">
+                        <input type="search" wire:model="keyword" placeholder="Search" autocomplete="off">
                         <button>
                         </button>
                     </div>
@@ -168,7 +83,7 @@
                         </th>
 
                         <!-- * Total Lapses -->
-                        <th>
+                        <th style="padding-left: 5rem;">
                             <span class="th-name">Total Lapses</span>
                         </th>
 
@@ -180,292 +95,72 @@
                     </tr>
 
                     <!-- * Table Data -->
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ABPA120230525</span>
+                    @if($list)
+                        @foreach($list as $l)
+                        <tr>
+                            @php
+                                $dateCreated = new DateTime($l['dateCreated']);
+                            @endphp
+                            <!-- * Date -->
+                            <td>
+                                <div class="td-wrapper">                                  
+                                    <div class="td-inner-wrapper">
+                                        <span class="td-name">{{ $dateCreated->format('F d, Y') }}</span>
+                                        <span>{{ $l['collection_RefNo'] }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
+                            </td>
 
-                        <!-- * Total Collectible -->
-                        <td>
-                            500.00
-                        </td>
+                            <!-- * Total Collectible -->
+                            <td>
+                                {{ number_format($l['totalCollectible'], 2) }}
+                            </td>
 
-                        <!-- * Total Balance -->
-                        <td>
-                            5,000.00
-                        </td>
+                            <!-- * Total Balance -->
+                            <td>
+                                {{ number_format($l['total_Balance'], 2) }}
+                            </td>
 
-                        <!-- * Total Savings -->
-                        <td>
-                            500.00
-                        </td>
+                            <!-- * Total Savings -->
+                            <td>
+                                {{ number_format($l['total_savings'], 2) }}
+                            </td>
 
-                        <!-- * Total Advance -->
-                        <td>
-                            500.00
-                        </td>
+                            <!-- * Total Advance -->
+                            <td>
+                                {{ number_format($l['total_advance'], 2) }}
+                            </td>
 
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
+                            <!-- * Total Lapses -->
+                            <td style="padding-left: 5rem;">
+                                {{ number_format($l['total_lapses'], 2) }}
+                            </td>
 
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ATRT120230398</span>
+                            <!-- * Table View Button -->
+                            <td class="td-btns">
+                                <div class="td-btn-wrapper">
+                                    <a href="{{ URL::to('/') }}/collection/view/{{ $l['collection_RefNo'] }}" class="a-btn-view-3" data-view-collection>View</a>
                                 </div>
-                            </div>
-                        </td>
+                            </td>
 
-                        <!-- * Total Collectible -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Balance -->
-                        <td>
-                            4,000.00
-                        </td>
-
-                        <!-- * Total Savings -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Advance -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
-
-
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ATRT120230398</span>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- * Total Collectible -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Balance -->
-                        <td>
-                            4,000.00
-                        </td>
-
-                        <!-- * Total Savings -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Advance -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
-
-
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ATRT120230398</span>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- * Total Collectible -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Balance -->
-                        <td>
-                            4,000.00
-                        </td>
-
-                        <!-- * Total Savings -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Advance -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
-
-
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ATRT120230398</span>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- * Total Collectible -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Balance -->
-                        <td>
-                            4,000.00
-                        </td>
-
-                        <!-- * Total Savings -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Advance -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
-
-
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <!-- * Date -->
-                        <td>
-                            <div class="td-wrapper">
-                                <span class="td-num"></span>
-                                <div class="td-inner-wrapper">
-                                    <span class="td-name">June 18, 2023</span>
-                                    <span>ATRT120230398</span>
-                                </div>
-                            </div>
-                        </td>
-
-                        <!-- * Total Collectible -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Balance -->
-                        <td>
-                            4,000.00
-                        </td>
-
-                        <!-- * Total Savings -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Advance -->
-                        <td>
-                            800.00
-                        </td>
-
-                        <!-- * Total Lapses -->
-                        <td>
-                            0
-                        </td>
-
-
-                        <!-- * Table View Button -->
-                        <td class="td-btns">
-                            <div class="td-btn-wrapper">
-                                <button class="a-btn-view-3" data-view-collection>View</button>
-                            </div>
-                        </td>
-
-                    </tr>
-
+                        </tr>
+                        @endforeach
+                    @endif                    
                 </table>
 
             </div>
+            @if($paginationPaging['totalPage'] > 0)
+                <div class="pagination-container" style="overflow-x: auto;">
 
+                    <!-- * Pagination Links -->
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left" ></a>
+                    @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
+                    <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
+                    @endfor
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right" ></a>
+
+                </div>   
+                @endif
         </div>
 
     </div>

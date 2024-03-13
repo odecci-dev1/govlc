@@ -1,10 +1,16 @@
 <div>    
     <!-- * Holiday Maintenance -->
     <!-- * Container 1: Holiday Maintenance Header, Buttons, and Searchbar -->
-
+  
+    @if($showDialog == 1)
+        <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
+    @endif
+    @if(session('mmessage'))
+        <x-alert :message="session('mmessage')" :words="session('mmessage')" :header="'Success'"></x-alert>   
+    @endif
     <div class="m-con-1">
     <h2>Holiday</h2>
-    <p class="p-2">Total of <span id="numOfHolidays">20</span> Holidays</p>
+    <p class="p-2">Total of <span id="numOfHolidays">{{ $paginationPaging['totalRecord'] }}</span> Holidays</p>
 
     <!-- * Button Container -->
     <div class="container">
@@ -13,19 +19,20 @@
         <div class="wrapper">
 
             <!-- * Add New Button -->
+            @if($usertype != 2)
             <a href="{{ URL::to('/') }}/maintenance/holiday/create"><button><span>Add New</span></button></a>
+            @endif
 
         </div>
 
         <!-- * Search Wrapper -->
         <div class="wrapper">
 
-            <!-- * Filter Button -->
-            <button><img src="{{ URL::to('/') }}/assets/icons/filter.svg" alt="filter"></button>
+            <!-- * Filter Button -->           
 
             <!-- * Search Bar -->
             <div class="search-wrap">
-                <input type="search" id="search" name="search" placeholder="Search">
+                <input type="search" wire:model="keyword" placeholder="Search">
                 <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
             </div>
 
@@ -35,7 +42,7 @@
 
     <!-- * View Trash Button -->
     <div class="btn-container">
-        <button>View Trash</button>
+        <!-- <button>View Trash</button> -->
     </div>
     </div>
 
@@ -65,7 +72,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Month</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -73,7 +80,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Day</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -81,7 +88,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Year</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -89,7 +96,7 @@
                 <th>
                     <div class="th-wrapper">
                         <span class="th-name">Location/Area</span>
-                        <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
+                        <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
 
@@ -137,7 +144,9 @@
                     <td class="td-btns">
                         <div class="td-btn-wrapper">
                             <a href="{{ URL::to('/') }}/maintenance/holiday/view/{{ $l['holidayID'] }}" class="a-btn-view-2" data-maintenance-view-holiday>View</a>
-                            <button class="a-btn-trash-2">Trash</button>
+                            @if($usertype != 2)
+                            <button onclick="showDialog('{{ $l['holidayID'] }}')" type="button" class="a-btn-trash-2">Trash</button>
+                            @endif
                         </div>
                     </td>
 
@@ -148,19 +157,28 @@
 
     </div>
 
-    <!-- * Pagination Container -->
-    <div class="pagination-container">
+            @if($paginationPaging['totalPage'] > 0)
+                <div class="pagination-container" style="overflow-x: auto;">
+                    <!-- * Pagination Links -->
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left" ></a>
+                    @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
+                    <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
+                    @endfor
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right" ></a>
 
-        <!-- * Pagination Links -->
-        <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
-        <a href="#">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">4</a>
-        <a href="#">5</a>
-        <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
-
-    </div>
+                </div>   
+            @endif
 
     </div>
 </div>
+<script>
+    document.addEventListener('livewire:load', function () {
+        window.showDialog = function($mid){              
+            @this.call('showDialog', $mid);        
+        };
+
+        window.archive = function($mid){
+            @this.call('archive', $mid);       
+        };
+    })
+</script>

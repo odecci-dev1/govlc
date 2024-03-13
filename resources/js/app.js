@@ -23,8 +23,9 @@ function navigationEvents() {
         if (isDropdownButton) {
 
             currentDropdown = e.target.closest("[data-dropdown]")
-                // * Hide or Show submenu toggle
-            currentDropdown.classList.toggle("showMenu")
+            // * Hide or Show submenu toggle
+            currentDropdown.classList.toggle("showMenu")            
+            dashboard.style.zIndex = 10
 
         }
 

@@ -1,7 +1,13 @@
 <div>
-@if(session('mmessage'))
-        <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+
+@if($showDialog == 1)
+    <x-dialog :message="'Are you sure you want to trash this data '" :xmid="$mid" :confirmaction="'archive'" :header="'Trash'"></x-dialog>   
 @endif
+<x-error-dialog :message="(session('errormessage') ? session('errormessage') : 'Operation Failed. Retry ?')" :xmid="''" :confirmaction="session('erroraction') ? session('erroraction') : ''" :header="'Error'"></x-error-dialog>       
+@if(session('mmessage'))
+    <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+@endif
+
 <!-- * New-Field-Officer-Container -->
 <form action="" class="no-form-con" autocomplete="off">
 
@@ -18,7 +24,7 @@
 
             <!-- * Rowspan 1: Rowspan Header: Header and Buttons -->
             <div class="rowspan">
-                <h2>New Field Officer</h2>
+                <h2>Field Officer</h2>
             </div>
 
             <!-- * Rowspan 2: First Name, Middle Name , Last Name, and Suffix -->
@@ -61,33 +67,14 @@
                 <div class="input-wrapper">
                     <span>Gender</span>
                     <div class="select-box">
-
-                        <div class="options-container" data-option-con1>
-
-                            <div class="option" data-option-item1>
-
-                                <input type="radio" wire:model.lazy="officer.gender" class="radio" id="male" value="Male" />
-                                <label for="male">
-                                    <h4>Male</h4>
-                                </label>
-
-                            </div>
-
-                            <div class="option" data-option-item1>
-
-                                <input type="radio" wire:model.lazy="officer.gender" class="radio" id="female" value="Female" />
-                                <label for="female">
-                                    <h4>Female</h4>
-                                </label>
-
-                            </div>
-
+                        <div class="select-box">
+                            <select  wire:model="officer.gender" class="select-option">
+                                <option value="">- - select - -</option>     
+                                <option value="Male">Male</option>                                    
+                                <option value="Female">Female</option>                                    
+                            </select>                       
                         </div>
-
-                        <div class="selected" style="font-weight: bold;" data-option-select1>
-                            {{ isset($officer['gender']) ? $officer['gender'] : '' }}
-                        </div>
-
+                        
                     </div>
                     @error('officer.gender') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
@@ -117,40 +104,13 @@
                 <div class="input-wrapper">
                     <span>Civil Status</span>
                     <div class="select-box">
-
-                        <div class="options-container" data-option-con2>
-
-                            <div class="option" data-option-item2>
-
-                                <input type="radio" wire:model.lazy="officer.civilStatus" id="Widow" class="radio"  value="Widow" />
-                                <label for="Widow">
-                                    <h4>Widow</h4>
-                                </label>
-
-                            </div>
-
-                            <div class="option" data-option-item2>
-
-                                <input type="radio" wire:model.lazy="officer.civilStatus" id="Married" class="radio" value="Married" />
-                                <label for="Married">
-                                    <h4>Married</h4>
-                                </label>
-
-                            </div>
-
-                            <div class="option" data-option-item2>
-
-                                <input type="radio" wire:model.lazy="officer.civilStatus" id="Single" class="radio"  value="Single" />
-                                <label for="Single">
-                                    <h4>Single</h4>
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                        <div class="selected" style="font-weight: bold;" data-option-select2>
-                            {{ isset($officer['civilStatus']) ? $officer['civilStatus'] : '' }}
+                        <div class="select-box">
+                            <select  wire:model="officer.civilStatus" class="select-option">
+                                <option value="">- - select - -</option>     
+                                <option value="Widow">Widow</option>                                    
+                                <option value="Married">Married</option>      
+                                <option value="Single">Single</option>                                     
+                            </select>                       
                         </div>
 
                     </div>
@@ -248,27 +208,105 @@
 
                     <!-- * Upload Image -->
                     <div class="input-wrapper" data-upload-image-field-officer-hover-container>
-                        <img type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" data-field-officer-image-container>
+                        @if($imgprofile)
+                            <img type="image" class="profile" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
+                        @else
+                            @if(file_exists(public_path('storage/officer_profile/'.(isset($officer['profile']) ? $officer['profile'] : 'xxxx'))))
+                                <img type="image" class="profile" src="{{ asset('storage/officer_profile/'.$officer['profile']) }}" alt="upload-image" />                                                                     
+                            @else
+                                <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                            @endif 
+                        @endif                          
                     </div>
 
                     <!-- * Button Wrapper -->
                     <div class="btn-wrapper">
+                        @error('imgprofile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <!-- * Upload Button -->
-                        <input type="file" submit="" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        @if($usertype != 2)
+                        <input type="file" wire:model="imgprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        @endif
+                        <div wire:loading wire:target="imgprofile">Uploading...</div>
                         <!-- * Attach Button -->
-                        <input type="file" submit="" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx" multiple data-attach-field-officer-file-btn></input>
+                        @if($usertype != 2)
+                        <input type="file" wire:model="officer.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-field-officer-file-btn></input>
+                        @endif
+                        <div wire:loading wire:target="officer.attachments">Uploading...</div>
+                        @error('officer.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                     </div>
 
-                    <!-- * File Chips Container -->
-                    <div class="file-wrapper" data-attach-field-officer-file-container>
+                    <!-- * File Chips Container -->           
+                    <div class="file-wrapper" style="padding: 2rem 0rem;" data-attach-file-container2>                   
+                    
+                            @if(isset($officer['attachments']))                           
+                                @if($officer['attachments'] == $officer['old_attachments'])                            
+                                    @foreach($officer['attachments'] as $attachments)                                                                                                                                
+                                            @if(file_exists(public_path('storage/officer_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
+                                                @php
+                                                    $getfilename = $attachments['filePath'];
+                                                    $filenamearray = explode("_", $getfilename);
+                                                    $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
+                                                @endphp                                               
+                                                <a href="{{ asset('storage/officer_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
+                                                    <div type="button" class="fileButton">
+                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
+                                                    {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
+                                                    </div>    
+                                                </a>   
+                                            @else
+                                                @php 
+                                                    $filename = 'File is deleted';
+                                                @endphp 
+                                                <a href="#" title="{{ $filename }}" target="_blank">                                                                                              
+                                                    <div type="button" class="fileButton">
+                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
+                                                    {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
+                                                    </div>    
+                                                </a>                                      
+                                            @endif                                
+                                                                           
+                                    @endforeach
+                                @else                            
+                                    @if(isset($officer['attachments']))                            
+                                        @foreach($officer['attachments'] as $attachments)                                                     
+                                           
+                                                <a href="{{ $attachments->path() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
+                                                    <div type="button" class="fileButton">
+                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                    {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
+                                                    </div>
+                                                </a>                                       
+                                          
+                                            <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
+                                        @endforeach
+                                    @endif   
+                                @endif   
+                                
+                            @else                              
+                                @if(isset($officer['attachments']))                            
+                                    @foreach($officer['attachments'] as $attachments)                                                     
+                                        
+                                            <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">
+                                                <div type="button" class="fileButton">
+                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                    {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
+                                                </div>
+                                            </a>                                       
+                                       
+                                        <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
+                                    @endforeach
+                                @endif   
+                            @endif                        
                     </div>
 
                     <!-- * Save Button -->
+                    @if($usertype != 2)
                     @if($foid == '')
                     <button type="button" wire:click="store" class="button save-btn">Save</button>
                     @else
                     <button type="button" wire:click="update" class="button save-btn">Update</button>
-                    <button type="button" wire:click="archive('{{ $foid }}')" class="button save-btn">Trash</button>
+                    <button type="button" onclick="showDialog('{{ $foid }}')" class="button save-btn">Trash</button>
+                    @endif
                     @endif
 
                 </div>
@@ -305,27 +343,15 @@
                 <span>Valid ID Presented</span>
                 <div class="select-box">
 
-                    <div class="options-container" data-option-con3>
-
+                    <select  wire:model="officer.typeID" class="select-option">
+                        <option value="">- - select - -</option>     
                         @if(count($idtypes) > 0)
                             @foreach($idtypes as $midtypes)
-                            <div class="option"  data-option-item3>
-
-                                <input type="radio" {{ isset($officer['typeID']) ? ($officer['typeID'] == $midtypes['typeID'] ? 'checked' : '') : '' }} wire:model.lazy="officer.typeID" wire:change="getIdTypeName('{{ $midtypes['type'] }}')" name="typeID" id="idtype{{ $midtypes['typeID'] }}" class="radio"  value="{{ $midtypes['typeID'] }}" />
-                                <label  for="idtype{{ $midtypes['typeID'] }}" style="width: 100%; height: 100%;">
-                                    <h4>{{ $midtypes['type'] }}</h4>
-                                </label>
-
-                            </div>
+                            <option value="{{ $midtypes['typeID'] }}">{{ $midtypes['type'] }}</option>     
                             @endforeach
-                        @endif                                              
-
-                    </div>
-
-                    <div class="selected" style="font-weight: bold;"  data-option-select3>
-                        {{ isset($idtypename) ? $idtypename : '' }}
-                    </div>
-
+                        @endif     
+                    </select>          
+                    
                 </div>
                 @error('officer.typeID') <span class="text-required">{{ $message }}</span>@enderror
             </div>
@@ -343,22 +369,50 @@
         <div class="rowspan">
 
             <div class="wrapper">
-
+                <!-- dito -->
                 <!-- * ID Front Image Input -->
                 <div class="input-wrapper">
                     <span>Front</span>
-                    <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">
+                    @if($imgfrontID)
+                        <img class="profile" style="object-fit: contain;" src="{{ $imgfrontID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                    @else
+                        @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['frontID']) ? $officer['frontID'] : 'xxxx'))))    
+                            <img class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/'.$officer['frontID']) }}" alt="Front Image" id="frontImage" name="frontImage">
+                        @else
+                            <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
+                        @endif 
+                    @endif   
+                    <div class="btn-wrapper">       
+                        @if($usertype != 2)         
+                        <input type="file" wire:model="imgfrontID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        @endif
+                    </div>
+                    @error('imgfrontID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- * ID Back Image Input -->
                 <div class="input-wrapper">
-                    <span>Back</span>
-                    <input type="image" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Back Image" id="backImage" name="backImage">
+                    <span>Back</span>                   
+                    @if($imgbackID)
+                        <img  class="profile" style="object-fit: contain;" src="{{ $imgbackID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                    @else
+                        @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['backID']) ? $officer['backID'] : 'xxxx'))))    
+                            <img  class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/'.$officer['backID']) }}" alt="Front Image" id="frontImage" name="frontImage">
+                        @else
+                            <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
+                        @endif 
+                    @endif   
+                    <div class="btn-wrapper">
+                        @if($usertype != 2)
+                        <input type="file" wire:model="imgbackID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        @endif
+                    </div>
+                    @error('imgbackID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                 </div>
 
             </div>
 
-            <button class="button">Upload Image</button>
+            
 
         </div>
 
@@ -396,53 +450,22 @@
 
 </div>
 <script>
-    
-        // ** Select Dropdown 1
-        const selectedOpt1 = document.querySelector('[data-option-select1]');
-        const optionsContainer1 = document.querySelector('[data-option-con1]');
-        const optionsList1 = document.querySelectorAll('[data-option-item1]');
-       
-        selectedOpt1.addEventListener("click", () => {           
-            optionsContainer1.classList.toggle("active");
-        });
+        document.addEventListener('livewire:load', function () {
+            window.showDialog = function($mid){              
+                @this.call('showDialog', $mid);        
+            };
 
-        optionsList1.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt1.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer1.classList.remove("active");
+            window.archive = function($mid){
+                @this.call('archive', $mid);       
+            };
+
+            window.livewire.on('EMIT_ERROR_ASKING_DIALOG', data =>{
+                document.getElementById('error-asking-dialog-div').style.visibility="visible";
             });
-        });
-
-        // ** Select Dropdown 2
-        const selectedOpt2 = document.querySelector('[data-option-select2]');
-        const optionsContainer2 = document.querySelector('[data-option-con2]');
-        const optionsList2 = document.querySelectorAll('[data-option-item2]');
-
-        selectedOpt2.addEventListener("click", () => {
-            optionsContainer2.classList.toggle("active");
-        });
-
-        optionsList2.forEach(option => {
-            option.addEventListener("click", () => {
-                selectedOpt2.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer2.classList.remove("active");
-            });
-        });
-
-        // ** Select Dropdown 3
-        const selectedOpt3 = document.querySelector('[data-option-select3]');
-        const optionsContainer3 = document.querySelector('[data-option-con3]');
-        const optionsList3 = document.querySelectorAll('[data-option-item3]');
-
-        selectedOpt3.addEventListener("click", () => {
-            optionsContainer3.classList.toggle("active");
-        });
-
-        optionsList3.forEach(option => {
-            option.addEventListener("click", () => {
-                // selectedOpt3.innerHTML = option.querySelector("label").innerHTML;
-                optionsContainer3.classList.remove("active");
-            });
-        });
+        })
+      
 </script>
+@if(session('errmmessage'))
+    <x-error :message="session('errmmessage')" :words="'Action not successfull'" :header="'Error'"></x-error>   
+@endif
 </div>

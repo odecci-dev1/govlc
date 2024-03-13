@@ -1,97 +1,18 @@
-<!-- * Filter Modal -->
-<dialog class="am-filter-modal" data-filter-member-modal>
-
-    <div class="modal-container-3">
-
-        <!-- * Modal Header and Exit Button -->
-        <div class="modal-header">
-            <h4>Filter</h4>
-            <button class="exit-button" data-close-filter-member-modal>
-                <img src="../../res/assets/icons/x-circle.svg" alt="exit">
-            </button>
-        </div>
-
-        <!-- * Choose Type of Loan -->
-        <div class="rowspan">
-
-            <h3>Choose Type of Loan</h3>
-            <!-- * Type Of Loan Dropdown Menu -->
-            <div class="loan-type-dropdown">
-
-                <!-- * Type Of Loan -->
-                <div class="input-wrapper">
-
-                    <div class="select-box">
-
-                        <div class="options-container" data-filter-type-opt-con>
-
-                            <div class="option" data-filter-type-loan-opt>
-
-                                <input type="radio" class="radio" name="category" />
-                                <label for="Individual Loan">
-                                    <h4>Individual Loan</h4>
-                                </label>
-
-                            </div>
-
-                            <div class="option" data-filter-type-loan-opt>
-
-                                <input type="radio" class="radio" name="category" />
-                                <label for="Group Loan">
-                                    <h4>Group Loan</h4>
-                                </label>
-
-                            </div>
-
-                            <div class="option" data-filter-type-loan-opt>
-
-                                <input type="radio" class="radio" name="category" />
-                                <label for="Sample Loan">
-                                    <h4>Sample Loan</h4>
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                        <div class="selected" data-filter-type-loan-select>
-                        </div>
-
-                    </div>
-                </div>
-
+<div class="na-form-con">
+@if(session('mmessage'))
+    <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+@endif
+<div wire:loading  wire:loading.delay.longer wire:target="remit,saveExpenses,areaRefNo" class="full-screen-div-loading">
+        <div class="center-loading-container">
+            <div>
+                <div class="lds-dual-ring"></div>
             </div>
-
-        </div>
-
-        <!-- * Applied Loan Amount -->
-        <div class="rowspan">
-
-            <div class="input-wrapper-modal">
-                <span>Applied Loan Amount</span>
-                <input autocomplete="off" type="number" id="filterAppliedLoanAmntFrom" name="filterAppliedLoanAmntFrom"
-                    placeholder="From">
+            <div class="loading-text">
+                <span>Please wait . . .</span>
             </div>
-
-            <div class="input-wrapper-modal">
-                <input autocomplete="off" type="number" id="filterAppliedLoanAmntTo" name="filterAppliedLoanAmntTo"
-                    placeholder="To">
-            </div>
-
-        </div>
-
-        <!-- * Save Button -->
-        <div class="rowspan">
-            <button class="button" data-save-filter-member-modal>Save</button>
-        </div>
-
-    </div>
-
-</dialog>
-
-<!-- * Field Expense Modal -->
-<dialog class="fe-modal" data-field-expense-modal>
-
+        </div>        
+</div>
+<dialog class="fe-modal" data-field-expense-modal wire:ignore.self>
     <div class="modal-container">
 
         <!-- * Modal Header and Exit Button -->
@@ -100,49 +21,52 @@
 
             <!-- * Add and Subtract Button  -->
             <div class="button-wrapper">
-                <button class="button" onclick="addExpenses()">Add Expense</button>
-                <button type="button" class="addOrSubButton" onclick="subExpenses()">-</button>
+                <!-- <button class="button" onclick="addExpenses()">Add Expense</button> -->
+                <button class="button" wire:click="addExpenses">Add Expense</button>
+                <!-- <button type="button" class="addOrSubButton" onclick="subExpenses()">-</button> -->
+                <button type="button" class="addOrSubButton" wire:click="subExpenses">-</button>
             </div>
-
+              
         </div>
 
         <!-- * Add Expenses -->
         <div class="box-wrap" data-expenses-container>
             <div class="rowspan child" data-expenses>
 
-                <!-- * Expense Description -->
-                <div class="input-wrapper">
-                    <input autocomplete="off"class="input" type="text" id="expenseDesc" name="expenseDesc"
-                        placeholder="Expense Description">
-                </div>
-
-                <!-- * Amount -->
-                <div class="input-wrapper-add">
-
-                    <div class="inner-container-wrapper">
-
-                        <!-- * Input Inner Wrapper -->
-                        <div class="input-inner-wrapper">
-                            <input autocomplete="off" class="input" type="number" id="amount" name="amount"
-                                placeholder="Amount">
+                @if($expcnt)
+                    @foreach($expcnt as $cnt)
+                        <!-- * Expense Description -->
+                        <div class="input-wrapper">
+                            <input autocomplete="off" wire:model.lazy="expenses.expense{{ $cnt }}" class="input" type="text" placeholder="Expense Description">
+                            @error('expenses.expense'.$cnt) <span class="text-required fw-normal" style="margin-bottom: 0;">{{ $message }}</span> @enderror
                         </div>
 
-                    </div>
-
-                </div>
+                        <!-- * Amount -->
+                        <div class="input-wrapper-add" style="margin-bottom: 2rem;">
+                            <div class="inner-container-wrapper">
+                                <!-- * Input Inner Wrapper -->
+                                <div class="input-inner-wrapper">
+                                    <input autocomplete="off" wire:model.lazy="expenses.amount{{ $cnt }}" wire:blur="getTotalExp" class="input" type="number" placeholder="Amount">
+                                   
+                                </div>
+                            </div>
+                            @error('expenses.amount'.$cnt) <span class="text-required fw-normal" style="margin-bottom: 0;">{{ $message }}</span> @enderror
+                        </div>
+                    @endforeach
+                @endif
 
             </div>
         </div>
 
         <!-- * Total -->
         <div class="box-wrap">
-            <p>Total <span id="totalFieldExpense">300</span></p>
+            <p>Total <span id="totalFieldExpense">{{ $totalexp }}</span></p>
         </div>
 
         <!-- * Cancel and Save Button -->
         <div class="box-wrap">
-            <button class="a-btn-trash" data-close-field-expense-modal>Cancel</button>
-            <button class="button" data-save-field-expense-modal>Save</button>
+            <button class="a-btn-trash" wire:click="cancelExpenses" data-close-field-expense-modal>Cancel</button>
+            <button class="button" wire:click="saveExpenses">Save</button>
         </div>
 
     </div>
@@ -150,7 +74,7 @@
 </dialog>
 
 <!-- * Remit Modal -->
-<dialog class="re-modal" data-remit-modal>
+<dialog class="re-modal" data-remit-modal wire:ignore.self>
 
     <div class="modal-container">
 
@@ -165,119 +89,109 @@
             <!-- * Amount Collected -->
             <div class="input-wrapper">
                 <span>Amount Collected</span>
-                <input autocomplete="off" type="text" id="amntCollected" name="amntCollected">
+                <input autocomplete="off" type="text" wire:model.lazy="reminfo.amntCollected"  wire:blur="computeLapses" name="amntCollected">
+                @error('reminfo.amntCollected') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
 
             <!-- * Savings -->
             <div class="input-wrapper">
                 <span>Savings</span>
-                <input autocomplete="off" type="text" id="savings" name="savings">
+                <input autocomplete="off" type="text" wire:model.lazy="reminfo.savings" name="savings">
+                @error('reminfo.savings') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
 
             <!-- * Lapses -->
             <div class="input-wrapper">
                 <span>Lapses</span>
-                <input autocomplete="off" type="text" id="lapses" name="lapses">
+                <input autocomplete="off" type="text" wire:model.lazy="reminfo.lapses" name="lapses" disabled>
+                @error('reminfo.lapses') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
 
             <!-- * Advance -->
             <div class="input-wrapper">
                 <span>Advance</span>
-                <input autocomplete="off" type="text" id="advance" name="advance">
+                <input autocomplete="off" type="text" wire:model.lazy="reminfo.advance" name="advance" disabled>
+                @error('reminfo.advance') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
 
             <!-- * Mode of Payment -->
             <div class="input-wrapper">
                 <span>Mode of Payment</span>
-                <input autocomplete="off" type="text" id="mod" name="mod">
+                <input autocomplete="off" type="text" wire:model.lazy="reminfo.modeOfPayment" name="mod">
+                @error('reminfo.modeOfPayment') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
 
         </div>
 
         <!-- * Cancel and Save Button -->
         <div class="box-wrap">
-            <button class="a-btn-trash" data-close-remit-modal>Cancel</button>
-            <button class="button" data-save-remit-modal>Save</button>
+            <button class="a-btn-trash" wire:click="resetRemittance" data-close-remit-modal>Cancel</button>
+            <button wire:click="remit" class="button">Save</button>
         </div>
 
     </div>
 
 </dialog>
-
-<div class="na-form-con">
-
     <!-- * Collection List Containers -->
     <!-- * Container 1: User list Header, Buttons, and Searchbar -->
 
-    <div class="nal-con-1">
-
+    <div class="nal-con-1">       
         <h2>Reference Number</h2>
-        <p class="p-1" id="referenceNumber">
-            ABPA120230525
-        </p>
-        <p class="p-1b" id="collectionDate">
-            July 10, 2023
-        </p>
+        <div class="input-wrapper">
+            <div class="select-box" style="display: inline;">
+                <select  wire:model="areaRefNo" class="select-option" style="padding-left: 3rem;padding-right: 3rem; margin-top: 1rem;">
+                    @if(!empty($arealist))
+                        @foreach($arealist as $alist)
+                            <option value="{{ $alist['areaRefNo'] }}">{{ $alist['areaRefNo'] }}</option>                                   
+                        @endforeach
+                    @endif                            
+                </select>   
+            </div>
+        </div>
 
         <!-- * Button Container -->
         <div class="container">
 
             <!-- * Button Wrapper -->
             <div class="wrapper">
-
                 <!-- * Field Expenses Button -->
-                <button class="button" data-open-field-expense-modal>
-                    <span>Field Expenses</span>
-                </button>
-
+                <button class="button" data-open-field-expense-modal style="height: 3.5rem;">
+                    <span>FIELD EXPENSES</span>
+                </button>                                
             </div>
 
             <!-- * Filter & Search Wrapper -->
             <div class="wrapper">
-
-                <!-- * Filter Button -->
-                <button data-open-filter-member-modal>
-                    <img src="../../res/assets/icons/filter.svg" alt="filter" />
-                </button>
-
-                <!-- * Collection Officer Search Bar -->
-                <div class="primary-search-bar">
-                    <div class="row">
-                        <input type="search" id="searchInput" name="search" placeholder="Search"
-                            autocomplete="off">
-                        <button>
-                        </button>
-                    </div>
-                    <div class="result-box" data-search-results>
-                    </div>
-                </div>
-
+                <!-- * Filter Button -->                     
+                <!-- * Collection Officer Search Bar -->        
             </div>
         </div>
 
     </div>
 
-    <div class="nal-con-1-mobile">
-
+    <div class="nal-con-1-mobile">    
         <h2>Reference Number</h2>
-        <p class="p-1" id="referenceNumber">
-            ABPA120230525
-        </p>
-        <p class="p-1b" id="collectionDate">
-            July 10, 2023
-        </p>
-
+        <div class="input-wrapper">
+            <div class="select-box" style="display: inline;">
+                <select  wire:model="areaRefNo" class="select-option" style="padding-left: 1rem;padding-right: 1rem; font-size: 1.2rem">
+                    @if(!empty($arealist))
+                        @foreach($arealist as $alist)
+                            <option value="{{ $alist['areaRefNo'] }}">{{ $alist['areaRefNo'] }}</option>                                   
+                        @endforeach
+                    @endif                            
+                </select>   
+            </div>
+        </div>
+      
         <!-- * Button Container -->
         <div class="container">
 
             <!-- * Button Wrapper -->
-            <div class="wrapper">
-
+            <div class="wrapper" style="padding-left: 1.5rem;"> 
                 <!-- * Field Expenses Button -->
-                <button class="button-2" data-open-field-expense-modal data-mobile-toggle-total-footer>
+                <button class="button-2" data-open-field-expense-modal data-mobile-toggle-total-footer style="height: 3.5rem; margin-top: 1rem;">
                     <span>Field Expenses</span>
-                </button>
-
+                </button>              
             </div>
 
             <!-- * Filter & Search Wrapper -->
@@ -285,7 +199,7 @@
 
                 <!-- * Filter Button -->
                 <button data-open-filter-member-modal>
-                    <img src="../../res/assets/icons/filter.svg" alt="filter" />
+                    <img src="{{ URL::to('/') }}/assets/icons/filter.svg" alt="filter" />
                 </button>
 
                 <!-- * Collection Officer Search Bar -->
@@ -318,10 +232,9 @@
                 <tr>
 
                     <!-- * Checkbox ALl-->
-                    <th><input type="checkbox" class="checkbox" data-select-all-checkbox></th>
-
+                  
                     <!-- * Name -->
-                    <th><span class="th-name">Name</span></th>
+                    <th><span class="th-name">Borrower</span></th>
 
                     <!-- * Collectible -->
                     <th><span class="th-name">Collectible</span></th>
@@ -342,762 +255,120 @@
                     </th>
 
                     <!-- * Mode of Payment -->
-                    <th>
+                    <!-- <th>
                         <div class="th-wrapper">
                             <span class="th-name">Mode of Payment</span>
                         </div>
-                    </th>
+                    </th> -->
 
                     <!-- * Action -->
                     <th><span class="th-name">Action</span></th>
                 </tr>
-
+                <!-- dito -->
                 <!-- * All Members Data -->
-                <tr>
+                @if($list)
+                    @foreach($list as $l)
+                    <tr>
 
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
+                        <!-- * Checkbox -->                      
 
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Dela Cruz, Juana</span>
-                        </div>
-                    </td>
-
-                    <!-- * Co-Makers Data-->
-                    <!-- <td>
+                        <!-- * Name -->
+                        <td>
                             <div class="td-wrapper">
-                                <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                                <span class="td-name">Barbosa, June</span>
+                                @if(file_exists(public_path('storage/members_profile/'.(isset($l['filePath']) ? $l['filePath'] : 'xxxx'))))                                  
+                                    <img src="{{ asset('storage/members_profile/'.$l['filePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                                @else
+                                    <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
+                                @endif                                                           
+                                <span class="td-name">{{ $l['borrower'] }}</span>
                             </div>
-                        </td> -->
+                        </td>
 
-                    <!-- * Collectible -->
-                    <td>350.00</td>
+                        <!-- * Co-Makers Data-->
+                        <!-- <td>
+                                <div class="td-wrapper">
+                                    <img src="{{ URL::to('/') }}/assets/icons/sample-dp/CoMaker-2.svg" alt="">
+                                    <span class="td-name">Barbosa, June</span>
+                                </div>
+                            </td> -->
 
-                    <!-- * Savings -->
-                    <td>350.00</td>
+                        <!-- * Collectible -->
+                        <td>{{ number_format($l['dailyCollectibles'], 2) }}</td>
 
-                    <!-- * Lapses -->
-                    <td>350.00</td>
+                        <!-- * Savings -->
+                        <td>{{ number_format((is_numeric($l['totalSavingsAmount']) ? $l['totalSavingsAmount'] : 0), 2) }}</td>
 
-                    <!-- * Advance -->
-                    <td>350.00</td>
+                        <!-- * Lapses -->
+                        <td>{{ number_format($l['lapsePayment'], 2) }}</td>
 
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
+                        <!-- * Advance -->
+                        <td>{{ number_format($l['advancePayment'], 2) }}</td>
 
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
+                        <!-- * Mode of Payment -->
+                        <!-- <td>350.00</td> -->
 
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Barbosa, June</span>
-                        </div>
-                    </td>
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Dela Cruz, Juana</span>
-                        </div>
-                    </td>
-
-                    <!-- * Co-Makers Data-->
-                    <!-- <td>
-                            <div class="td-wrapper">
-                                <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                                <span class="td-name">Barbosa, June</span>
+                        <!-- * Table View and Trash Button -->
+                        <td class="td-btns">
+                            <div class="td-btn-wrapper">
+                                <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}', {{ $l['dailyCollectibles'] }})" type="button" class="a-btn-view-3" data-open-remit-modal>Remit</button>
                             </div>
-                        </td> -->
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Barbosa, June</span>
-                        </div>
-                    </td>
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Dela Cruz, Juana</span>
-                        </div>
-                    </td>
-
-                    <!-- * Co-Makers Data-->
-                    <!-- <td>
-                            <div class="td-wrapper">
-                                <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                                <span class="td-name">Barbosa, June</span>
-                            </div>
-                        </td> -->
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Barbosa, June</span>
-                        </div>
-                    </td>
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Dela Cruz, Juana</span>
-                        </div>
-                    </td>
-
-                    <!-- * Co-Makers Data-->
-                    <!-- <td>
-                            <div class="td-wrapper">
-                                <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                                <span class="td-name">Barbosa, June</span>
-                            </div>
-                        </td> -->
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Barbosa, June</span>
-                        </div>
-                    </td>
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Dela Cruz, Juana</span>
-                        </div>
-                    </td>
-
-                    <!-- * Co-Makers Data-->
-                    <!-- <td>
-                            <div class="td-wrapper">
-                                <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                                <span class="td-name">Barbosa, June</span>
-                            </div>
-                        </td> -->
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Barbosa, June</span>
-                        </div>
-                    </td>
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Dela Cruz, Juana</span>
-                        </div>
-                    </td>
-
-                    <!-- * Co-Makers Data-->
-                    <!-- <td>
-                            <div class="td-wrapper">
-                                <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                                <span class="td-name">Barbosa, June</span>
-                            </div>
-                        </td> -->
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Barbosa, June</span>
-                        </div>
-                    </td>
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/Borrower-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Dela Cruz, Juana</span>
-                        </div>
-                    </td>
-
-                    <!-- * Co-Makers Data-->
-                    <!-- <td>
-                            <div class="td-wrapper">
-                                <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                                <span class="td-name">Barbosa, June</span>
-                            </div>
-                        </td> -->
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-
-                <tr>
-
-                    <!-- * Checkbox -->
-                    <td><input type="checkbox" class="checkbox" id="checkbox" data-select-checkbox></td>
-
-                    <!-- * Name -->
-                    <td>
-                        <div class="td-wrapper">
-                            <img src="../../res/assets/icons/sample-dp/CoMaker-2.svg" alt="">
-                            <span class="td-num"></span>
-                            <span class="td-name">Barbosa, June</span>
-                        </div>
-                    </td>
-
-                    <!-- * Collectible -->
-                    <td>350.00</td>
-
-                    <!-- * Savings -->
-                    <td>350.00</td>
-
-                    <!-- * Lapses -->
-                    <td>350.00</td>
-
-                    <!-- * Advance -->
-                    <td>350.00</td>
-
-                    <!-- * Mode of Payment -->
-                    <td>350.00</td>
-
-                    <!-- * Table View and Trash Button -->
-                    <td class="td-btns">
-
-                        <div class="td-btn-wrapper">
-                            <button class="a-btn-view-3" data-open-remit-modal>Remit</button>
-                        </div>
-
-                    </td>
-
-                </tr>
-
+                        </td>
+
+                    </tr>
+                    @endforeach
+                @endif                    
             </table>
-
         </div>
 
-        <!-- * Total Remittance Footer -->
-        <div class="total-remittance-footer">
-            <div class="expandable" data-total-remittance-footer>
-                <div class="container">
-                    <div class="box">
-                        <p>Total Collection</p>
-                        <p>350.00</p>
-                    </div>
-                    <div class="box">
-                        <p>Total Lapses</p>
-                        <p>350.00</p>
-                    </div>
-                    <div class="box">
-                        <p>Total Expenses</p>
-                        <p>350.00</p>
-                    </div>
-                    <div class="box">
-                        <p>Total Savings</p>
-                        <p>350.00</p>
-                    </div>
-                    <div class="box">
-                        <p>Total Advance</p>
-                        <p>350.00</p>
-                    </div>
-                    <div class="box">
-                        <p>Mode of payments</p>
-                        <p>Cash, GCash</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- * Total Remittance Footer -->       
 
     </div>
 
     <!-- * Container 2: User List Mobile View -->
     <div class="clr-con-2-mobile">
-
+        <!-- dito mobile-->
         <div class="container">
-            <div class="inner-container">
-                <div class="inner-wrapper">
-                    <div class="box">
-                        <img src="/res/assets/icons/sample-dp/Borrower-1.svg" alt="Display Picture">
-                    </div>
-                    <div class="box">
-                        <p>Juana Dela Cruz</p>
-                        <p>Client No: <span>1</span></p>
-                        <p>Collectible: <span>350.00</span></p>
-                    </div>
-                    <div class="box">
-                        <button class="button-2" data-open-remit-modal>Remit</button>
-                    </div>
-                </div>
-                <div class="inner-wrapper" data-show-more-details-field-exp>
-                    <div class="expandable">
-                        <div class="box">
-                            <p>Amount Collected</p>
-                            <p>350.00</p>
+            @if($list)
+                @foreach($list as $l)
+                <div class="inner-container">
+                    <div class="inner-wrapper">
+                        <div class="box" style="width: 20%; padding-left: 1rem;">
+                            <!-- <img src="/res/assets/icons/sample-dp/Borrower-1.svg" alt="Display Picture"> -->
+                            @if(file_exists(public_path('storage/members_profile/'.(isset($l['filePath']) ? $l['filePath'] : 'xxxx'))))                                  
+                                <img src="{{ asset('storage/members_profile/'.$l['filePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                            @else
+                                <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
+                            @endif               
                         </div>
-                        <div class="box">
-                            <p>Savings</p>
-                            <p>350.00</p>
+                        <div class="box" style="width: 80%;">
+                            <p>{!! $l['borrower'] !!}</p>
+                            <p>Client No: <span>{!! $l['cno'] !!}</span></p>
+                            <p>Collectible: <span>{{ number_format($l['dailyCollectibles'], 2) }}</span></p>
                         </div>
-                        <div class="box">
-                            <p>Lapse/Advance</p>
-                            <p>350.00</p>
+                        <div class="box" style="padding-right: 1rem;">
+                            <!-- <button class="button-2" data-open-remit-modal>Remit</button> -->
+                            <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}', {{ $l['dailyCollectibles'] }})" type="button" class="button-2" data-open-remit-modal>Remit</button>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="inner-container">
-                <div class="inner-wrapper">
-                    <div class="box">
-                        <img src="/res/assets/icons/sample-dp/Borrower-1.svg" alt="Display Picture">
-                    </div>
-                    <div class="box">
-                        <p>Juana Dela Cruz</p>
-                        <p>Client No: <span>1</span></p>
-                        <p>Collectible: <span>350.00</span></p>
-                    </div>
-                    <div class="box">
-                        <button class="button-2" data-open-remit-modal>Remit</button>
-                    </div>
-                </div>
-                <div class="inner-wrapper" data-show-more-details-field-exp>
-                    <div class="expandable">
-                        <div class="box">
-                            <p>Amount Collected</p>
-                            <p>350.00</p>
-                        </div>
-                        <div class="box">
-                            <p>Savings</p>
-                            <p>350.00</p>
-                        </div>
-                        <div class="box">
-                            <p>Lapse/Advance</p>
-                            <p>350.00</p>
+                    <div class="inner-wrapper" data-show-more-details-field-exp>
+                        <div class="expandable">
+                            <div class="box">
+                                <p>Amount Collected</p>
+                                <p>350.00</p>
+                            </div>
+                            <div class="box">
+                                <p>Savings</p>
+                                <p>350.00</p>
+                            </div>
+                            <div class="box">
+                                <p>Lapse/Advance</p>
+                                <p>350.00</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="inner-container">
-                <div class="inner-wrapper">
-                    <div class="box">
-                        <img src="/res/assets/icons/sample-dp/Borrower-1.svg" alt="Display Picture">
-                    </div>
-                    <div class="box">
-                        <p>Juana Dela Cruz</p>
-                        <p>Client No: <span>1</span></p>
-                        <p>Collectible: <span>350.00</span></p>
-                    </div>
-                    <div class="box">
-                        <button class="button-2" data-open-remit-modal>Remit</button>
-                    </div>
-                </div>
-                <div class="inner-wrapper" data-show-more-details-field-exp>
-                    <div class="expandable">
-                        <div class="box">
-                            <p>Amount Collected</p>
-                            <p>350.00</p>
-                        </div>
-                        <div class="box">
-                            <p>Savings</p>
-                            <p>350.00</p>
-                        </div>
-                        <div class="box">
-                            <p>Lapse/Advance</p>
-                            <p>350.00</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                @endforeach 
+            @endif            
         </div>
 
         <div class="mobile-total-remittance-footer" data-total-remittance-footer-mobile>
@@ -1130,8 +401,8 @@
         </div>
 
     </div>
+    </div>
 
-</div>
 <script>
     // ***** Field Expense Modal ***** //
 
@@ -1171,34 +442,34 @@
             const isMobile = window.innerWidth <= 430
 
             // * If mobile viewport
-            if (isMobile) {
-                saveFieldExpenseBtn.removeAttribute('data-save-field-expense-modal');
-                saveFieldExpenseBtn.setAttribute('data-show-total-remittance', '');
+            // if (isMobile) {
+            //     saveFieldExpenseBtn.removeAttribute('data-save-field-expense-modal');
+            //     saveFieldExpenseBtn.setAttribute('data-show-total-remittance', '');
 
-            } else {
+            // } else {
 
-                saveFieldExpenseBtn.removeAttribute('data-show-total-remittance', '');
-                saveFieldExpenseBtn.setAttribute('data-save-field-expense-modal', '');
+            //     saveFieldExpenseBtn.removeAttribute('data-show-total-remittance', '');
+            //     saveFieldExpenseBtn.setAttribute('data-save-field-expense-modal', '');
 
-            }
+            // }
 
-            if (saveFieldExpenseBtn.matches('[data-save-field-expense-modal]')) {
-                saveFieldExpenseBtn.addEventListener('click', () => {
-                    showMoreDetailsFieldExp.forEach((button) => {
-                        button.classList.add('show-more-details')
-                    })
-                    totalRemittanceFooter.classList.add('show-remittance-footer')
-                    totalRemittanceFooterMobile.setAttribute("show", "")
-                    fieldExpenseModal.setAttribute("closing", "")
-                    fieldExpenseModal.addEventListener("animationend", () => {
-                        fieldExpenseModal.removeAttribute("closing")
-                        fieldExpenseModal.close();
-                    }, {
-                        once: true
-                    });
-                })
+            // if (saveFieldExpenseBtn.matches('[data-save-field-expense-modal]')) {
+            //     saveFieldExpenseBtn.addEventListener('click', () => {
+            //         showMoreDetailsFieldExp.forEach((button) => {
+            //             button.classList.add('show-more-details')
+            //         })
+            //         totalRemittanceFooter.classList.add('show-remittance-footer')
+            //         totalRemittanceFooterMobile.setAttribute("show", "")
+            //         fieldExpenseModal.setAttribute("closing", "")
+            //         fieldExpenseModal.addEventListener("animationend", () => {
+            //             fieldExpenseModal.removeAttribute("closing")
+            //             fieldExpenseModal.close();
+            //         }, {
+            //             once: true
+            //         });
+            //     })
 
-            }
+            // }
 
         }
 
@@ -1267,7 +538,6 @@
     const showRemittedBtn = document.querySelector('[data-show-remitted-button]')
 
     if (remitModal) {
-
         openRemitModalBtn.forEach((button) => {
             button.addEventListener('click', () => {
                 remitModal.showModal()

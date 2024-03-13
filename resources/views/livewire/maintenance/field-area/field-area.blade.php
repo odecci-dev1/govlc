@@ -1,7 +1,20 @@
 <div>
+    @if($showDialog == 1)
+        <x-dialog :message="'Are you sure you want to trash this data '" :xmid="$mid" :confirmaction="'archive'" :header="'Trash'"></x-dialog>   
+    @endif
     @if(session('mmessage'))
         <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif
+    <div wire:loading  wire:loading.delay wire:target="store,update,openSearchOfficer" class="full-screen-div-loading">
+        <div class="center-loading-container">
+            <div>
+                <div class="lds-dual-ring"></div>
+            </div>
+            <div class="loading-text">
+                <span>Please wait . . .</span>
+            </div>
+        </div>        
+    </div>
         <!-- * Field Area Maintenance -->
         <form class="fa-form-con" id="field-area-maintenance-form" autocomplete="off">
 
@@ -12,7 +25,7 @@
             <div class="fa-container-1">
 
                 <!-- * Vertical Container -->
-                <div class="verti-con">
+                <div class="verti-con" style="display: flexs; flex-direction: column; height: fit-content;">
 
                     <!-- * Form Header -->
 
@@ -20,12 +33,12 @@
                     <div class="rowspan">
 
                         <h2>Field Area Maintenance</h2>
-                        <p>Last Updated:
+                        <!-- <p>Last Updated:
                             <span id="faUpdateDate"> 05/26/2022</span>,
                             <span id="faUpdateDay"> Thursday</span> at
                             <span id="faUpdateTime"> 9:45 AM</span> by
                             <span id="faUpdateUser"> Admin</span>
-                        </p>
+                        </p> -->
 
                     </div>
 
@@ -36,25 +49,27 @@
                         <div class="input-wrapper">
                             <span>Area Name</span>
                             <input autocomplete="off" wire:model.lazy="areaName">
+                            @error('areaName') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Location -->
-                        <div class="input-wrapper">
-                            <textarea wire:model.defer="location" style="visibility: hidden;">
-                                   
-                            </textarea>
+                        <div class="input-wrapper" style="min-height: 255px;">                           
                             <span>Location</span>
                             <div class="locations-container">
                                 <div class="chip-container" id="mLocationContainer">
-                                    @if(count($selectedunassigned) > 0)
-                                        @foreach($selectedunassigned as $selun)
-                                            <span class="tb-chip" data-tb-chip="">{{ $unassigned[$selun] }}<span wire:click="removeSelUnassigned('{{ $selun }}')" class="tb-chips-w-x"></span></span>
+                                    <!-- <span class="tb-chip" data-tb-chip=""><span wire:click="removeSelUnassigned('')" class="tb-chips-w-x"></span></span>                                                     -->
+                                    @if(isset($selectedLocations))
+                                        @foreach($selectedLocations as $key => $value)
+                                            <span class="tb-chip" data-tb-chip="">{{ $value['location'] }}
+                                                @if($usertype != 2)
+                                                <span wire:click="removeFromSelected('{{ $value['location'] }}', {{ $value['stat'] }})" class="tb-chips-w-x"></span>
+                                                @endif
+                                            </span>
                                         @endforeach
                                     @endif
-                                    <!-- <span class="tb-chip" data-tb-chip="">Bocaue<span class="tb-chips-w-x"></span></span>                                    -->
-                                </div>
-                                <!-- <input class="input-chips" autocomplete="off" type="text" id="mInputLocation" name="mLocation"> -->
+                                </div>                                
                             </div>
+                            @error('selectedLocations') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Search Wrapper -->
@@ -63,11 +78,11 @@
                             <!-- * Search Bar -->                            
                             <div class="search-wrap">                               
                                 <input type="hidden" wire:model.lazy="foid" placeholder="field officer id" >
-                                <input type="search" wire:model.lazy="fullname" placeholder="Search" >
-                                <img wire:click; src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">                               
+                                <input type="search" readonly wire:model.lazy="fullname" placeholder="Select field officer" >    
+                                @error('foid') <span class="text-required fw-normal">{{ $message }}</span>@enderror                            
                             </div>
                             <div class="input-wrapper" style="padding-top: 20px;">
-                                <button type="button" wire:click="openSearchOfficer"  id="data-open-new-group-modal" class="button">Search</button>
+                                <button type="button" wire:click="openSearchOfficer"  id="data-open-new-group-modal" class="button">Search Field Officer</button>
                             </div>
 
                         </div>
@@ -76,12 +91,19 @@
 
                     <!-- * Rowspan 3: Save Button -->
                     <div class="rowspan">
-
+                        @if($usertype != 2)
+                        @if($areaID == '')
                         <!-- * Save Button -->
                         <div class="input-wrapper">
                             <button type="button" wire:click="store" class="button">Save</button>
                         </div>
-
+                        @else
+                        <div class="input-wrapper" style="display: inline;">
+                            <button type="button" wire:click="resetFields" class="button">Cancel</button>
+                            <button type="button" wire:click="update" class="button">Update</button>
+                        </div>                       
+                        @endif
+                        @endif
                     </div>
 
 
@@ -124,8 +146,7 @@
                                     <!-- * Table Header -->
                                     <tr>
 
-                                        <!-- * Checkbox ALl-->
-                                        <th><input type="checkbox" class="checkbox" data-select-all-checkbox></th>
+                                        <!-- * Checkbox ALl-->                                       
 
                                         <!-- * Area Name -->
                                         <th><span class="th-name">Area Name</span></th>
@@ -137,31 +158,26 @@
                                         <th><span class="th-name">Field Officer</span></th>
 
                                         <!-- * Action -->
-                                        <th><span class="th-name">Action</span></th>
+                                        <th style="text-align: center;"><span class="th-name">Action</span></th>
 
                                     </tr>
-
                                     @if($list)              
                                         @foreach($list as $l)
-                                        <tr data-area-maintenance>
-
-                                            <!-- * Checkbox Opt -->
-                                            <td>
-                                                <input type="checkbox" class="checkbox" data-select-checkbox>
-                                            </td>
+                                        <tr class="tr-font-size-1_2rem">
+                                            <!-- * Checkbox Opt -->                                            
 
                                             <!-- * Data Area Name-->
-                                            <td class="td-name" data-area-name>
+                                            <td wire:click="selectArea('{{ $l['areaID'] }}')" class="td-name" data-area-name>
                                                {{ $l['areaName'] }}
                                             </td>
 
                                             <!-- * Data Locations-->
-                                            <td class="td-name" data-area-location>
+                                            <td  wire:click="selectArea('{{ $l['areaID'] }}')" class="td-name" data-area-location>
                                                 {{ $l['location'] }}
                                             </td>
 
                                             <!-- * Data Field Officer-->
-                                            <td class="td-field-off" data-area-field-officer>
+                                            <td  wire:click="selectArea('{{ $l['areaID'] }}')" class="td-field-off" data-area-field-officer>
                                                 {{ $l['fullname'] }}
                                             </td>
 
@@ -169,32 +185,30 @@
                                             <td class="td-btns" data-area-button>
                                                 <div class="td-btn-wrapper">
                                                     <!-- <button class="a-btn-view">View</button> -->
-                                                    <button class="a-btn-trash-2" data-area-trash-btn>Trash</button>
+                                                    @if($usertype != 2)
+                                                    <button type="button" onclick="showDialog('{{ $l['areaID'] }}')" class="a-btn-trash-2 font-size-1_2rem fw-normal" data-area-trash-btn>Trash</button>
+                                                    @endif
                                                 </div>
                                             </td>
 
                                         </tr>
                                         @endforeach
-                                    @endif                                       
+                                    @endif 
+                                                                    
                                 </table>
 
                             </div>
 
                             <!-- * Pagination Container -->
                             <div class="pagination-container">
-
-                                <!-- * Pagination Links -->
-                                <!-- <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a> -->
-                                <a href="#">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <a href="#">5</a>
-                                <a>.</a>
-                                <a>.</a>
-                                <a>.</a>
-                                <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
-
+                                @if($paginationPaging['totalPage'] > 1)
+                                    <!-- * Pagination Links -->
+                                    <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left" ></a>
+                                    @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
+                                    <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
+                                    @endfor
+                                    <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right" ></a>
+                                @endif
                             </div>
                         </div>
 
@@ -203,7 +217,7 @@
                 </div>
 
                 <!-- * Horizontal Container 2 -->
-                <div class="horiz-con con2">
+                <div class="horiz-con con2"   style="height: 450px;">
 
                     <div class="box-wrap">
 
@@ -231,7 +245,7 @@
                         <div class="rowspan">
 
                             <!-- * Table Container -->
-                            <div class="table-container tbc-2">
+                            <div class="table-container tbc-2"  style="height: 300px; margin-top: 20px;">
 
                                 <!-- * Un-assigned Locations Table -->
                                 <table id="maintenanceUnAssignedLocationsTable">
@@ -240,7 +254,7 @@
                                     <tr>
 
                                         <!-- * Checkbox ALl-->
-                                        <th><input type="checkbox" class="checkbox" data-select-all-checkbox></th>
+                                        <th></th>
 
                                         <!-- * Locations -->
                                         <th><span class="th-name">Locations</span></th>
@@ -249,27 +263,24 @@
 
 
                                     <!-- * Un-assigned Locations Data -->
-                                    @if($unassigned)
-                                        @foreach($unassigned as $unkey => $unvalue )
-                                        <tr data-location>
-
-                                            <!-- * Checkbox Opt -->
+                                    @if(isset($unassignedLocations))
+                                        @foreach($unassignedLocations as $unassigned)
+                                        <tr>
                                             <td>
-                                                <input wire:model="selectedunassigned" wire:click="setLocationName" value="{{ $unkey }}" type="checkbox" class="checkbox" >
+                                                <!-- <input wire:model="chkunassigned"   value="{{ $unassigned['location'] }}" type="checkbox" class="checkbox" > -->
+                                                @if($usertype != 2)
+                                                <button type="button" wire:click="addToSelected('{{ $unassigned['location'] }}', {{ $unassigned['stat'] }})" class="btn-add-icon"> + </button>
+                                                @endif
                                             </td>
 
                                             <!-- * Data Locations-->
                                             <td class="td-name">
-                                                {{ $unvalue }}
+                                                {{ $unassigned['location'] }}
                                             </td>
-
-
                                         </tr>
                                         @endforeach
-                                    @endif
-
-                                </table>
-                                {{ var_export($selectedunassigned) }}    
+                                    @endif                                   
+                                </table>                             
                             </div>
 
                             <!-- * Pagination Container -->
@@ -299,7 +310,7 @@
         </div>
         </form>
         <!-- * New Group Application Modal -->
-    <dialog class="ng-modal" data-new-group-modal wire:ignore>
+    <dialog class="ng-modal" data-new-group-modal wire:ignore.self>
         <div class="modal-container">
 
             <!-- * Exit Button -->
@@ -317,7 +328,7 @@
 
                     <!-- * Search Bar -->
                     <div class="search-wrap">
-                        <input type="search" wire:model="searchkeyword" placeholder="Search field officer">
+                        <input type="search" wire:model="searchfokeyword" placeholder="Search field officer">
                         <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                     </div>
 
@@ -353,6 +364,31 @@
 
                             </tr>
 
+                            @if(isset($folist) > 0)
+                                @foreach($folist as $fol)
+                                <tr>
+                                    <!-- * Officer Name -->
+                                    <td>
+
+                                        <!-- * Officers' Name-->
+                                        <div class="td-wrapper">
+                                            <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
+                                            <span class="td-name">{{ $fol['lname'] . ', ' . $fol['fname'] . ' ' . mb_substr($fol['mname'], 0, 1) . '.' }}</span>
+                                        </div>
+
+                                    </td>
+
+                                    <!-- * Action -->
+                                    <td class="td-btns">
+                                        <div class="td-btn-wrapper">                                           
+                                            <button type="button" onclick="selectFO('{{ $fol['foid'] }}', '{{ $fol['lname'] . ', ' . $fol['fname'] . ' ' . mb_substr($fol['mname'], 0, 1) . '.' }}')" class="a-btn-trash-2">Select</button>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                @endforeach
+                            @endif     
+
                           
 
                         </table>
@@ -383,6 +419,14 @@
     </dialog>
         <script>
             document.addEventListener('livewire:load', function() {
+                window.showDialog = function($mid){            
+                    @this.call('showDialog', $mid);        
+                };
+
+                window.archive = function($mid){
+                    @this.call('trash', $mid);       
+                };
+                
                 const dataNewGroupModal = document.querySelector('[data-new-group-modal]')
                 const openNewGroupModal = document.querySelector('#data-open-new-group-modal')
                 const closeNewGroupModal = document.querySelector('#data-close-new-group-modal')
@@ -402,11 +446,13 @@
                     dataNewGroupModal.showModal()
                 });
 
-                // let input = document.getElementById('groupname');
+                window.selectFO = function($foid, $fullname){
+                    @this.call('selectFO', $foid, $fullname);       
+                };
 
-                // input.addEventListener('blur', () => {
-                //     @this.dispatch('your-event-name');
-                // });
+                window.livewire.on('closeSearchFOModal', message => {
+                    dataNewGroupModal.close();
+                });
             })
         </script>
 </div>

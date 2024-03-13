@@ -10,6 +10,7 @@ class DashboardController extends Controller
 {
     //http://localhost:8081/api = put in .env
     public function test(){
+       
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get('http://localhost:8081/api/Member/MemberList');
         // dd($data->json());
         foreach($data->json() as $d){

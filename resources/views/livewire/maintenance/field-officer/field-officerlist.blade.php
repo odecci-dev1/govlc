@@ -1,4 +1,4 @@
-<div>
+<div class="main-dashboard">
     @if($showDialog == 1)
         <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
     @endif
@@ -9,7 +9,9 @@
             <!-- * Container 1: Maintenance Header, Buttons, and Searchbar -->
             <div class="m-con-1">
                 <h2>Field Officers</h2>
-
+                <p class="p-1">
+                    Total of <strong>{{ $paginationPaging['totalRecord'] }}</strong> field officers
+                </p>
                 <!-- * Button Container -->
                 <div class="container">
 
@@ -17,9 +19,11 @@
                     <div class="wrapper">
 
                         <!-- * Add New Button -->
-                        <button>
-                            <a href="{{ URL::to('/') }}/maintenance/fieldofficer/create"><span>Add New</span></a>
-                        </button>
+                        <!-- <button> -->
+                            @if($usertype != 2)
+                            <a href="{{ URL::to('/') }}/maintenance/fieldofficer/create" class="button"><span>Add New</span></a>
+                            @endif
+                        <!-- </button> -->
 
                     </div>
 
@@ -38,12 +42,12 @@
 
                 <!-- * View Trash Button -->
                 <div class="btn-container">
-                    <button wire:click="showDialog" type="button">View Trash</button>
+                    <!-- <button type="button">View Trash</button> -->
                 </div>
             </div>
 
             <!-- * Container 2: Maintenance Field Officer Table and Pagination -->
-            <div class="m-con-2 min-height">
+            <div class="m-con-2 min-height" style="height:clamp(100% - 21rem, 40rem, 80vh); overflow-y: auto;">
 
                 <!-- * Table Container -->
                 <div class="table-container">
@@ -54,8 +58,7 @@
                         <!-- * Table Header -->
                         <tr>
 
-                            <!-- * Number -->
-                            <th></th>
+                            <!-- * Number -->                         
 
                             <!-- * Name -->
                             <th>
@@ -92,7 +95,7 @@
                             </th>
 
                             <!-- * Action -->
-                            <th>
+                            <th style="width: 1%; text-align:center; padding: 1rem 0;">
                                 <span class="th-name">Action</span>
                             </th>
                         </tr>
@@ -104,9 +107,7 @@
                             <tr>
 
                                 <!-- * Number -->
-                                <td>
-                                    <span class="td-num-out"></span>
-                                </td>
+                               
 
                                 <!-- * Officer Name -->
                                 <td>
@@ -114,7 +115,7 @@
                                     <!-- * Officers' Name-->
                                     <div class="td-wrapper">
                                         <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
-                                        <span class="td-name">{{ $l['lname'] . ', ' . $l['fname'] . ' ' . mb_substr($l['mname'], 0, 1) . '.' }}</span>
+                                        <span class="td-name">{{ $l['lname'] . ', ' . $l['fname'] . ' ' . mb_substr($l['mname'], 0, 1) . ($l['mname'] == '' ? '' : '.') }}</span>
                                     </div>
 
                                 </td>
@@ -135,15 +136,17 @@
                                 </td>
 
                                 <!-- * Area -->
-                                <td class="td-area">
-                                    unassigned
+                                <td class="td-area" title="{{ $l['arealists'] }}">                                  
+                                    {{ strlen( $l['arealists'] ) > 23 ? substr( $l['arealists'], 0, 23) . '...' :  $l['arealists'] }}
                                 </td>
 
                                 <!-- * Action -->
                                 <td class="td-btns">
                                     <div class="td-btn-wrapper">
                                         <a href="{{ URL::to('/') }}/maintenance/fieldofficer/view/{{ $l['foid'] }}" class="a-btn-view-2" data-maintenance-view-field-officer>View</a>
+                                        @if($usertype != 2)
                                         <button type="button" onclick="showDialog('{{ $l['foid'] }}')" class="a-btn-trash-2">Trash</button>
+                                        @endif
                                     </div>
                                 </td>
 
@@ -153,26 +156,20 @@
                     </table>
 
                 </div>
-
+                </div>
                 <!-- * Pagination Container -->
-                @if(isset($list))
-                @if(count($list) > 25)
-                <div class="pagination-container">
+                @if($paginationPaging['totalPage'] > 0)
+                <div class="pagination-container" style="overflow-x: auto;">
 
                     <!-- * Pagination Links -->
-                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
-                    <a href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <a href="#">5</a>
-                    <a href="#"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left" ></a>
+                    @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
+                    <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
+                    @endfor
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right" ></a>
 
-                </div>
+                </div>   
                 @endif
-                @endif
-
-            </div>
 </div>
 <script>
     document.addEventListener('livewire:load', function () {

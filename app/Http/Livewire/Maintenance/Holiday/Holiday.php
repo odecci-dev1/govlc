@@ -5,8 +5,12 @@ namespace App\Http\Livewire\Maintenance\Holiday;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
+use App\Traits\Common;
+
 class Holiday extends Component
 {
+
+    use Common;
 
     public $name;
     public $day;
@@ -16,6 +20,7 @@ class Holiday extends Component
     public $repeat;
     public $date;
     public $holid;
+    public $usertype;
 
     public function rules(){
         $rules = [];
@@ -27,6 +32,12 @@ class Holiday extends Component
         $rules['location'] = 'required';  
         $rules['repeat'] = 'required';  
         return $rules;
+    }
+
+    public function messages(){
+        $messages = [];
+        $messages['date.required'] = 'Select date';  
+        return $messages;
     }
 
     public function setDate($date, $month, $dayAndWeekday, $year){
@@ -47,7 +58,10 @@ class Holiday extends Component
                 ];
 
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Holiday/AddNewHoliday', $data);         
-        return redirect()->to('/maintenance/holiday/list')->with('message', 'Holiday successfully saved');    
+        // dd( $crt ); asd
+        $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Holiday/GetLastHolidayList');        
+        $getlast = $getlast->json(); 
+        return redirect()->to('/maintenance/holiday/view/'.(isset($getlast['holidayID']) ? $getlast['holidayID'] : ''))->with(['mmessage'=> 'Holiday has been saved', 'mword'=> 'Success']);    
     }
 
     public function update(){   
@@ -62,7 +76,8 @@ class Holiday extends Component
             ];
 
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Holiday/UpdateHolidayDetails', $data);           
-            return redirect()->to('/maintenance/holiday/view/'.$this->holid)->with('message', 'Holiday successfully saved');    
+            // dd( $crt ); 
+            return redirect()->to('/maintenance/holiday/view/'.$this->holid)->with(['mmessage'=> 'Holiday has been updated', 'mword'=> 'Success']);      
         }
         catch (\Exception $e) {           
             throw $e;            
@@ -75,6 +90,7 @@ class Holiday extends Component
     }
 
     public function mount($holid = ""){
+        $this->usertype = session()->get('auth_usertype'); 
         if($holid != ''){
             $this->holid = $holid;
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Holiday/HolidayViewFilter', [ 'holidayID' => $this->holid ]);     

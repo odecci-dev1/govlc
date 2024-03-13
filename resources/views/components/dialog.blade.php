@@ -13,14 +13,13 @@
             <!-- * Modal Body -->
             <div class="rowspan">
                 <img src="{{ URL::to('/') }}/assets/icons/modal-icon/asking-deletion.svg" alt="Asking">
-                <p>Are you sure you want to Permanently 
-                    delete the selected data?</p>
+                <p>{{ $message }}?</p>
             </div>
 
             <!-- * Yes or No Button -->
             <div class="rowspan">
                 <button type="button" autofocus onclick="{{ $confirmaction }}('{{ $xmid }}')" class="modalButton" data-deletion-yes>Yes</button>
-                <button wire:click="closeDialog" type="button" class="modalAlertButton" data-deletion-no>No</button>
+                <button type="button" wire:click="closeDialog" type="button" class="modalAlertButton" data-deletion-no>No</button>
             </div>
 
         </div>

@@ -1,8 +1,14 @@
-<div>
+<div class="main-dashboard">
 <div class="ul-con-1">
+          @if($showDialog == 1)
+            <x-dialog :message="'Are you sure you want to Permanently delete the selected data? '" :xmid="$mid" :confirmaction="'archive'" :header="'Deletion'"></x-dialog>   
+          @endif
+          @if(session('mmessage'))
+              <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
+          @endif
           <h2>User List</h2>
           <p class="p-1">
-            Total of <span id="numActiveUsers">10</span> active users
+            Total of <strong>{{ count($list) }}</strong> active users
           </p>
 
           <!-- * Button Container -->
@@ -17,11 +23,7 @@
 
             <!-- * Search Wrapper -->
             <div class="wrapper">
-              <!-- * Filter Button -->
-              <button>
-                <img src="{{ URL::to('/') }}/assets/icons/filter.svg" alt="filter" />
-              </button>
-
+              <!-- * Filter Button -->           
               <!-- * Search Bar -->
               <div class="search-wrap">
                 <input
@@ -54,13 +56,13 @@
               <!-- * Table Header -->
               <tr>
                 <!-- * Checkbox ALl-->
-                <th>
+                <!-- <th>
                   <input
                     type="checkbox"
                     class="checkbox"
                     data-select-all-checkbox
                   />
-                </th>
+                </th> -->
 
                 <!-- * User -->
                 <th>
@@ -83,7 +85,7 @@
                 </th>
 
                 <!-- * Action -->
-                <th><span class="th-name">Action</span></th>
+                <th style="width: 1%; text-align:center; padding: 1rem 0;"><span class="th-name">Action</span></th>
               </tr>
 
               <!-- * User List Data -->
@@ -91,17 +93,18 @@
                 @foreach($list as $l)
                 <tr>
                     <!-- * Checkbox Opt -->
-                    <td><input type="checkbox" class="checkbox" data-select-checkbox/></td>
+                    <!-- <td><input type="checkbox" class="checkbox" data-select-checkbox/></td> -->
 
                     <td>
                     <!-- * User -->
                     <div class="td-wrapper">
-                        <img
-                        src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg"
-                        alt="Dela Cruz, Juana"
-                        />
-                        <span class="td-num">1</span>
-                        <span class="td-name">{{ $l['lname'] }}, {{ $l['fname'] }}</span>
+                          @if(file_exists(public_path('storage/users_profile/'.(isset($l['profilePath']) ? ($l['profilePath'] != '' ? $l['profilePath'] : 'xxxxxx') : 'xxxx'))))                                  
+                              <img src="{{ asset('storage/users_profile/'.$l['profilePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                          @else
+                              <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
+                          @endif    
+                      
+                        <span class="td-name">{{ $l['fullname'] }}</span>
                     </div>
                     </td>
 
@@ -123,8 +126,8 @@
                     <!-- * Table View and Trash Button -->
                     <td class="td-btns">
                     <div class="td-btn-wrapper">
-                        <a href="{{ URL::to('/') }}/user/view/{{ $l['username'] }}" class="a-btn-view-2" data-user-view>View</a>
-                        <button class="a-btn-trash-2">Trash</button>
+                        <a href="{{ URL::to('/') }}/user/view/{{ $l['userId'] }}" class="a-btn-view-2" data-user-view>View</a>
+                        <button onclick="showDialog('{{ $l['id'] }}')" type="button" class="a-btn-trash-2">Trash</button>
                     </div>
                     </td>
                 </tr>               
@@ -136,3 +139,14 @@
 
         </div>
 </div>
+<script>
+    document.addEventListener('livewire:load', function () {
+        window.showDialog = function($mid){                    
+          @this.call('showDialog', $mid);        
+        };
+
+        window.archive = function($mid){
+            @this.call('archive', $mid);       
+        };
+    })
+</script>

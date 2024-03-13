@@ -41,8 +41,7 @@
                         <span>Password</span>
                     </div>
                     <!-- * Form Buttons -->
-                    <div class="wrapper">
-                        <button type="submit" class="forgot-btn">Forgot Password</button>
+                    <div class="wrapper">                        
                         <button type="submit" class="login-btn">Login</button>
                     </div>
                 </div>
