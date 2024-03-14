@@ -85,15 +85,15 @@
                         <div class="div-1">
                             <h2 style="font-size: 2.5rem;">Active Members</h2>
                             <div class="btn-wrapper">                                
-                                <select  wire:model="selectarea" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
+                                <select  wire:model="selectarea" onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
                                     <option value="">All Areas</option> 
                                     @if($area)
                                         @foreach($area as $area)
-                                            <option value="{{ $area['areaID'] }}">{{ $area['areaName'] }}</option> 
+                                            <option value="{{ $area['areaName'] }}">{{ $area['areaName'] }}</option> 
                                         @endforeach
                                     @endif                                   
                                 </select>          
-                                <select  wire:model="selectdays" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
+                                <select  wire:model="selectdays"  onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
                                     <option value="7">7 days</option>
                                     <option value="15">15 days</option>                                    
                                     <option value="30">30 days</option>
@@ -102,7 +102,7 @@
                             </div>
                         </div>
                         <!-- * Line Chart -->
-                        <div class="div-2">
+                        <div class="div-2" wire:ignore>
                             <div class="graph">
                                 <canvas id="myChart"></canvas>
                             </div>
@@ -318,16 +318,17 @@
         updateSalesChartData = function () {         
             const mlabels = [];
             const mdata = [];
-            var cdata = <?php echo json_encode($activemembers); ?>;    
+            var cdata = <?php echo json_encode($activemembers); ?>;               
            
             for (let j = 0; j < cdata.length; j++) {                  
                 mlabels.push(cdata[j]['date']); 
                 mdata.push(cdata[j]['count']);   
             } 
-
+           
             chartData.datasets[0].data = mdata;
             chartData.labels = mlabels;
             myChart.update();
+            // alert(mdata);
             // chartData.datasets[0].data = chartData.datasets[0].data.map();     
             // var noofdays = $('#noofdays').val();         
             // $.ajax({
@@ -356,9 +357,9 @@
         };
 
       
-
+        updateSalesChartData();
         // Update the chart data
-        setInterval(updateSalesChartData(), 1000);     
+        // setInterval(updateSalesChartData(), 1000);     
     });           
     
 </script>
