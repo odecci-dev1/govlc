@@ -205,13 +205,12 @@
                     <!-- * Submenu -->
                     <ul class="sub-menu">
                         @if(in_array('Module-013', $modules))
-                        <a href="{{ URL::to('/') }}/outstanding/report" data-nav-link>
-                            <li style="padding: 1.3rem 4rem 1.3rem 2rem;">
-                                <!-- * Outstanding Reports -->
+                        <!-- <a href="{{ URL::to('/') }}/outstanding/report" data-nav-link>
+                            <li style="padding: 1.3rem 4rem 1.3rem 2rem;">                            
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/outstanding-report.svg" alt="" />
                                 <span>Outstanding Reports</span>
                             </li>
-                        </a>
+                        </a> -->
                         @endif
 
                         @if(in_array('Module-014', $modules))

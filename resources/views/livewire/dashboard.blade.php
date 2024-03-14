@@ -76,7 +76,7 @@
                                 <p>{{ isset($data['totalApplicationforApproval']) ? $data['totalApplicationforApproval'] : 0.00 }}</p>
                             </div>
                             <div class="tag-wrap">
-                                <button class="transparentButton">View All</button>
+                                <a href="{{ URL::to('/') }}/collection/list" class="transparentButton">View All</a>
                             </div>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
                             @endif
                         </div>
                         <div class="div-2">
-                            <a href="#" class="button">View All</a>
+                            <a href="{{ URL::to('/') }}/collection/list" class="button">View All</a>
                         </div>
                     </div>
                 </div>
@@ -255,7 +255,7 @@
                             @endif                            
                         </div>
                         <div class="div-2">
-                            <button class="button">View All</button>
+                            <a href="{{ URL::to('/') }}/collection/list" class="button">View All</a>
                         </div>
                     </div>
                 </div>
@@ -315,10 +315,18 @@
             options: chartOptions,
         });
 
-        updateSalesChartData = function () {                
-            var cdata = <?php echo json_encode($activemembers); ?>;      
-            chartData.datasets[0].data = ['100', '200', '300', '600'];
-            chartData.labels = ['1 day', '2 days', '3 days', '4 days'];
+        updateSalesChartData = function () {         
+            const mlabels = [];
+            const mdata = [];
+            var cdata = <?php echo json_encode($activemembers); ?>;    
+           
+            for (let j = 0; j < cdata.length; j++) {                  
+                mlabels.push(cdata[j]['date']); 
+                mdata.push(cdata[j]['count']);   
+            } 
+
+            chartData.datasets[0].data = mdata;
+            chartData.labels = mlabels;
             myChart.update();
             // chartData.datasets[0].data = chartData.datasets[0].data.map();     
             // var noofdays = $('#noofdays').val();         
@@ -347,7 +355,7 @@
         
         };
 
-        updateSalesChartData();
+      
 
         // Update the chart data
         setInterval(updateSalesChartData(), 1000);     

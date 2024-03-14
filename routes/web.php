@@ -67,7 +67,7 @@ Route::middleware(['authenticated'])->group(function () {
 
     Route::middleware(['isfo:0'])->group(function () {
         Route::middleware(['access:Module-018'])->group(function () {
-            Route::get('/dashboard', Dashboard::class)->name('dashboard');
+            Route::get('/dashboard', Dashboard::class)->name('dashboard');           
         });
 
         //members edited

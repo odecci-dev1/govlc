@@ -10,8 +10,8 @@ class Dashboard extends Component
 {
     public $data;
     public $area = [];
-    public $selectarea = 'ALL';
-    public $selectdays = 1;
+    public $selectarea = 'AREA 1';
+    public $selectdays = 90;
     public $activemembers = [];
 
     public function render()
@@ -22,8 +22,8 @@ class Dashboard extends Component
         $getarea =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/AreasList');      
         $this->area = $getarea->json();       
 
-        $getactivemembers =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/ActiveMemberFilterbyDays', ['days' => $this->selectdays, 'category' => $this->selectarea]);  
-        $this->activemembers = $getactivemembers->json();           
+        $getactivemembers =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/DashboardGraph', ['days' => $this->selectdays, 'category' => $this->selectarea]);  
+        $this->activemembers = $getactivemembers->json();                  
         return view('livewire.dashboard');
     }
 }
