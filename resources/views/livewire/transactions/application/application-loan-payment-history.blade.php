@@ -39,16 +39,16 @@
                                 <th>Due Date</th>     
                                 <th>Status</th>                               
                             </tr>
-                            @if($loanhistory)
-                                @foreach($loanhistory as $loanhistory)
-                                <tr wire:click="viewApplication('{{ $loanhistory['naid'] }}')">
-                                    <td>{{ $loanhistory['loanPrincipal'] }}</td>                                  
-                                    <td>{{ $loanhistory['totalSavingsAmount'] }}</td>
-                                    <td>{{ $loanhistory['penalty'] }}</td>
-                                    <td>{{ $loanhistory['amountDue'] }}</td>
-                                    <td>{{ $loanhistory['releasingDate'] }}</td>
-                                    <td>{{ date('m-d-Y', strtotime($loanhistory['dueDate'])) }}</td>   
-                                    <td>status</td>                                      
+                            @if($loanhistory)                                                           
+                                @foreach($loanhistory as $lhistory)
+                                <tr wire:click="getPaymentHistory('{{ $lhistory['naid'] }}')">
+                                    <td>{{ $lhistory['loanPrincipal'] }}</td>                                  
+                                    <td>{{ $lhistory['totalSavingsAmount'] }}</td>
+                                    <td>{{ $lhistory['penalty'] }}</td>
+                                    <td>{{ $lhistory['amountDue'] }}</td>
+                                    <td>{{ $lhistory['releasingDate'] }}</td>
+                                    <td>{{ date('m-d-Y', strtotime($lhistory['dueDate'])) }}</td>   
+                                    <td>{{ $lhistory['status'] }}</td>                                      
                                 </tr>   
                                 @endforeach
                             @endif                        
@@ -81,7 +81,7 @@
                     </div>
 
                     <!-- * Rowspan 2: Payment History Table -->
-                    <div class="rowspan">
+                    <div class="rowspan"  style="overflow-y: auto;">
                         <table>
                             <tr>
                                 <th>Loan Amount</th>

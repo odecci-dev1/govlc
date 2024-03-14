@@ -1515,22 +1515,37 @@ class CreateApplication extends Component
 
     public function getLoanHistory(){         
         $loanhistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                 
-        $apiresp = $loanhistory->getStatusCode();       
+        $apiresp = $loanhistory->getStatusCode();   
+        
         if($apiresp != 400){
-            $loanhistory = $loanhistory->json();                                       
-            $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['naid' => $this->searchedmemId]);                 
-            $paymenthistory = $paymenthistory->json();  
-            
+            $loanhistory = $loanhistory->json();   
             if($loanhistory){
                 $this->loanhistory = collect($loanhistory);        
-                //dd($this->loanhistory);          
-            }
-            if($paymenthistory){
-                $this->paymenthistory = collect($paymenthistory);       
-                dd($this->paymenthistory);             
-            }
+                         
+            }        
+
+            // $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['naid' => $this->searchedmemId]);                 
+            // $paymenthistory = $paymenthistory->json();            
+           
+            // if($paymenthistory){
+            //     $this->paymenthistory = collect($paymenthistory);       
+            //     dd($this->paymenthistory);             
+            // }
         }
     }    
+
+    public function getPaymentHistory($naid){         
+
+        $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['naid' =>$naid]);                 
+               
+        $apiresp = $paymenthistory->getStatusCode();   
+        if($apiresp != 400){
+            $paymenthistory = $paymenthistory->json();   
+            if($paymenthistory){
+                $this->paymenthistory = collect($paymenthistory);                         
+            }
+        }       
+    }  
 
 
 

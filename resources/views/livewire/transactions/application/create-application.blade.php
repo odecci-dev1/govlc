@@ -145,9 +145,7 @@
                         <span>Check Number</span>
                         <input wire:model.lazy="loanDetails.denomination" {{ $member['statusID'] == 15 ? 'disabled' : '' }} class="{{ $member['statusID'] == 10 ? 'inpt-editable' : '' }}" type="text" id="denomination" name="denomination">
                         @error('loanDetails.denomination') <span class="text-required">{{ $message }}</span> @enderror
-                    @endif
-                   
-                  
+                    @endif                                     
                 </div>                                            
             @endif
 
