@@ -85,7 +85,7 @@
                         <div class="div-1">
                             <h2 style="font-size: 2.5rem;">Active Members</h2>
                             <div class="btn-wrapper">                                
-                                <select  wire:model="selectarea" id="selectarea" wire:loading.attr="disabled" onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
+                                <select  id="selectarea" wire:loading.attr="disabled" onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
                                     <option value="">All Areas</option> 
                                     @if($area)
                                         @foreach($area as $area)
@@ -93,7 +93,7 @@
                                         @endforeach
                                     @endif                                   
                                 </select>          
-                                <select  wire:model="selectdays" id="selectdays" wire:loading.attr="disabled" onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
+                                <select  id="selectdays" wire:loading.attr="disabled" onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
                                     <option value="7">7 days</option>
                                     <option value="15">15 days</option>                                    
                                     <option value="30">30 days</option>
@@ -133,7 +133,7 @@
                     <div class="card-2 " style="display: inline;">
                         <h3>Top Collectibles Per Area</h3>
                         @php
-                            $topcollectibles = !empty($data['topCollectiblesAreas']) ? $data['topCollectiblesAreas'] : [];
+                            //$topcollectibles = !empty($data['topCollectiblesAreas']) ? $data['topCollectiblesAreas'] : [];
                         @endphp
                         <div class="div-1" style="height: 21rem; overflow-y: auto;">
                             @if(!empty($topcollectibles))
@@ -196,7 +196,7 @@
                                     </tr>
                                     <!-- dito -->
                                     @php
-                                        $activecollections = !empty($data['areaActiveCollection']) ? $data['areaActiveCollection'] : [];
+                                        //$activecollections = !empty($data['areaActiveCollection']) ? $data['areaActiveCollection'] : [];
                                     @endphp   
                                     <!-- * Data Table -->
                                     @if($activecollections)
@@ -240,7 +240,7 @@
                     <div class="card-2 tlpa">
                         <h3>Top Lapses Per Area</h3>
                         @php
-                            $toplapses = !empty($data['totalLapsesArea']) ? $data['totalLapsesArea'] : [];
+                            //$toplapses = !empty($data['totalLapsesArea']) ? $data['totalLapsesArea'] : [];
                         @endphp                       
                         <div class="div-1" style="height: 180rem; overflow-y: auto;">
                             @if(!empty($toplapses))

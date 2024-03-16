@@ -25,7 +25,7 @@
                 <!-- * Member Type Button -->                           
                 <div class="select-box" style="width: 30rem;">
                     <select  wire:model="status" wire:change="setPage(1)" class="select-option-menu">
-                        <option value="">Active and Inacive Members</option>     
+                        <option value="">Active and Inactive Members</option>     
                         <option value="Active">Active Members</option>                                    
                         <option value="Inactive">Inactive Members</option>                                    
                     </select>                       
