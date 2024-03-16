@@ -85,7 +85,7 @@
                         <div class="div-1">
                             <h2 style="font-size: 2.5rem;">Active Members</h2>
                             <div class="btn-wrapper">                                
-                                <select  wire:model="selectarea" onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
+                                <select  wire:model="selectarea" id="selectarea" wire:loading.attr="disabled" onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
                                     <option value="">All Areas</option> 
                                     @if($area)
                                         @foreach($area as $area)
@@ -93,7 +93,7 @@
                                         @endforeach
                                     @endif                                   
                                 </select>          
-                                <select  wire:model="selectdays"  onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
+                                <select  wire:model="selectdays" id="selectdays" wire:loading.attr="disabled" onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
                                     <option value="7">7 days</option>
                                     <option value="15">15 days</option>                                    
                                     <option value="30">30 days</option>
@@ -315,45 +315,45 @@
             options: chartOptions,
         });
 
-        updateSalesChartData = function () {         
-            const mlabels = [];
-            const mdata = [];
-            var cdata = <?php echo json_encode($activemembers); ?>;               
+        // updateSalesChartData = function () {         
+        //     const mlabels = [];
+        //     const mdata = [];
+        //     var cdata = <?php echo json_encode($activemembers); ?>;               
            
-            for (let j = 0; j < cdata.length; j++) {                  
-                mlabels.push(cdata[j]['date']); 
-                mdata.push(cdata[j]['count']);   
-            } 
-           
-            chartData.datasets[0].data = mdata;
-            chartData.labels = mlabels;
-            myChart.update();
-            // alert(mdata);
-            // chartData.datasets[0].data = chartData.datasets[0].data.map();     
-            // var noofdays = $('#noofdays').val();         
-            // $.ajax({
-            //     method: 'get',
-            //     url: APP_URL + '/get/sales',    
-            //     data: {noofdays: noofdays},         
-            //     success: function (mresponse) {     
-            //         chartData.datasets[0].data = [];
-            //         chartData.labels = [];
+        //     for (let j = 0; j < cdata.length; j++) {                  
+        //         mlabels.push(cdata[j]['date']); 
+        //         mdata.push(cdata[j]['count']);   
+        //     } 
+                       
+        //     chartData.datasets[0].data = mdata;
+        //     chartData.labels = mlabels;
+        //     myChart.update();                 
+        // };          
 
-            //         var mylabels = mresponse.mlabels;
-            //         for (let i = 0; i < mylabels.length; i++) {                  
-            //             myChart.data.labels.push(mylabels[i]);
-            //         }    
+        updateSalesChartData = function () {  
+            var area = document.getElementById('selectarea');
+            var days = document.getElementById('selectdays');        
+            $.ajax({
+                method: 'get',
+                url: '/get/active/members',    
+                data: { area: area.value, days: days.value},   
+                success: function (data) {                   
+                    const mlabels = [];
+                    const mdata = [];                    
+                    for (let j = 0; j < data.length; j++) {                               
+                        mlabels.push(data[j]['date']); 
+                        mdata.push(data[j]['count']);   
+                    }  
                     
-            //         var mydata = mresponse.mdata;
-            //         for (let j = 0; j < mylabels.length; j++) {                  
-            //             myChart.data.datasets[0].data.push(mydata[j]);
-            //         }                  
-            //         myChart.update();
-            //     },
-            //     dataType: 'json'
-            // });       
-            // chartData.datasets[0].data = chartData.datasets[0].data.map();
-        
+                    chartData.datasets[0].data = mdata;
+                    chartData.labels = mlabels;
+                    myChart.update();          
+                },
+                error:function (data){
+                    alert("Error");   
+                },
+                dataType: 'json'
+            });          
         };
 
       

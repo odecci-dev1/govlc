@@ -22,9 +22,9 @@ class Dashboard extends Component
         $getarea =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/AreasList');      
         $this->area = $getarea->json();       
 
-        $getactivemembers =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/DashboardGraph', ['days' => $this->selectdays, 'category' => $this->selectarea]);  
-        $this->activemembers = $getactivemembers->json();   
-                  
+        // $getactivemembers =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/DashboardGraph', ['days' => $this->selectdays, 'category' => $this->selectarea]);  
+        // $this->activemembers = $getactivemembers->json();   
+                
         return view('livewire.dashboard');
     }
 }

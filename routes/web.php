@@ -37,6 +37,7 @@ use App\Http\Livewire\Reports\DeclinedApplications\DeclinedApplications;
 use App\Http\Livewire\Settings\Settings;
 use App\Http\Livewire\Dashboard;
 use App\Http\Controllers\ExportsController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Transactions\Application\ApplicationListTrash;
 
 /*
@@ -67,7 +68,9 @@ Route::middleware(['authenticated'])->group(function () {
 
     Route::middleware(['isfo:0'])->group(function () {
         Route::middleware(['access:Module-018'])->group(function () {
-            Route::get('/dashboard', Dashboard::class)->name('dashboard');           
+            Route::get('/dashboard', Dashboard::class)->name('dashboard');
+            
+            Route::get('/get/active/members', [DashboardController::class, 'getActiveMembers'])->name('dashboard.sales');
         });
 
         //members edited
