@@ -23,8 +23,7 @@ class CollectionPrint extends Component
       
         $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $this->areaRefNo]);         
    
-        $details = $details->json();      
-        //dd($details);
+        $details = $details->json();           
        
         if($details){
             $details = $details[0];                       
@@ -39,14 +38,16 @@ class CollectionPrint extends Component
                                         'total_lapses' => $details['total_lapses'],
                                         'total_collectedAmount' => $details['total_collectedAmount'],
                                       ];
-                //dd($collections);                      
+                //dd($collections);     
+                $cnt = 0;                 
                 foreach($collections as $coll){
+                    $cnt = $cnt + 1;          
                     if($coll['payment_Status'] != 'Paid'){
-                        $this->areaDetails =  $this->areaDetails->push($coll);
+                        $this->areaDetails =  $this->areaDetails->put($cnt, $coll);
                     }                   
                 }                    
             }                         
-        }
+        }      
         //dd($this->areaDetails);
       // dd($this->areaDetails);
     }

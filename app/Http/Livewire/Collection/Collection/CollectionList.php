@@ -45,6 +45,7 @@ class CollectionList extends Component
         // }     
         // $this->check = $this->list->where('dateCreated', $date)->first();   
         
+        $date = date('m/d/Y').' 12:00:00 AM';       
         $inputs = [
                     'page' => $this->paginate['page'],
                     'pageSize' => $this->paginate['pageSize'],
@@ -54,7 +55,11 @@ class CollectionList extends Component
                 ];
 
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Pagination/DisplayListPaginate', $inputs);                 
-        $this->list = $data->json()['items'];  
+    
+        $this->list =  collect($data->json()['items']);  
+                
+        $this->check = $this->list->where('dateCreated', $date)->first();       
+
         if( $data->json()['totalPage'] ){
             $this->paginationPaging['totalPage'] = $data->json()['totalPage'];
             $this->paginationPaging['totalRecord'] = $data->json()['totalRecord'];

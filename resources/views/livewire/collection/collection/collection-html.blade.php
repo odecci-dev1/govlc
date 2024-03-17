@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gold One Victory Lending App</title>
     @vite(['resources/css/app.css', 'resources/js/app.js']) 
+    <style>
+        
+    </style>
     @livewireStyles
 </head>
 

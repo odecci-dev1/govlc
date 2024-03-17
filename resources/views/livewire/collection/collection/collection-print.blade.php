@@ -29,7 +29,7 @@
                     $count = $count + 1;
                     if($count > 12){
                         $pagenum = $pagenum + 1;
-                        $count = 0;
+                        $count = 1;
                     }
                     array_push($arrpage[$pagenum], $mdetails);
                 }
@@ -41,9 +41,9 @@
                             <div class="header-wrapper">
                                 <p>Field Officer: <span id="printFieldOfficerName">{{ !empty($areaDetails[0]['fieldOfficer']) ? $areaDetails[0]['fieldOfficer'] : 'No data' }}</span>
                                 </p>
-                                <p><span id="printAreaNum">{{ $areaDetails[0]['areaName'] }}</span></p>
+                                <p><span id="printAreaNum">{{ $areaDetails->first()['areaName'] }}</span></p>
                                 <p>Collection List Number <span
-                                        id="printCollectionListNumber">{{ $areaDetails[0]['area_RefNo'] }}</span></p>
+                                        id="printCollectionListNumber">{{ $areaDetails->first()['area_RefNo'] }}</span></p>
                             </div>
                             <div class="body-wrapper">                                                                                
                                     @php 
@@ -61,7 +61,9 @@
                                     @php 
                                         $cntbox = $cntbox + 1;
                                     @endphp
+                                      
                                     <div class="box" style="{{ isset($dtl['cno']) ? '' : 'outline: none;' }}">
+                                  
                                         @if(isset($dtl['cno']))
                                             <p>Client No: <span id="printClientNo">{{ $dtl['cno'] }}</span></p>
                                             <p>Name: <span id="printClientName">{{ $dtl['borrower'] }}</span></p>
@@ -71,11 +73,9 @@
                                             @endphp
                                             <p>Date Released: <span id="printDateReleased">{{ $realeseDate->format('F d, Y') }}</span></p>
                                             <p>Due Date: <span id="printDueDate">{{ $dueDate->format('F d, Y') }}</span></p>
-                                            <p>Collectible: <span
-                                                    id="printCollectible">{{ number_format($dtl['dailyCollectibles'], 2) }}</span></p>
+                                            <p>Collectible: <span  id="printCollectible">{{ number_format($dtl['dailyCollectibles'], 2) }}</span></p>
                                             <p>Balance: <span id="printBalance">{{ number_format($dtl['amountDue'], 2) }}</span></p>
-                                            <p>Overall Savings: <span
-                                                    id="printOverallSavings">{{ number_format($dtl['totalSavingsAmount'], 2) }}</span> </p>
+                                            <p>Overall Savings: <span id="printOverallSavings">{{ number_format($dtl['totalSavingsAmount'], 2) }}</span> </p>
                                             <p>Balance Savings: <span id="printBalanceSavings"></span></p>
                                             <p>Savings Payment: <span id="printSavingsPayment"></span></p>
                                             <p>Advance / Lapses: <span

@@ -8,7 +8,7 @@
 
             <h2>Collection List</h2>
             <p class="p-1">
-                You have <span id="numOfCollectionList">{{ $paginationPaging['totalRecord'] }}</span> Collection list
+                You have <span id="numOfCollectionList">{{ $paginationPaging['totalRecord'] }}</span> Collection Items
             </p>
 
             <!-- * Button Container -->
@@ -96,7 +96,7 @@
 
                     <!-- * Table Data -->
                     @if($list)
-                        @foreach($list as $l)
+                        @foreach($list->sortBy('dateCreated') as $l)
                         <tr>
                             @php
                                 $dateCreated = new DateTime($l['dateCreated']);
