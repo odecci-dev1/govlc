@@ -36,14 +36,14 @@
                 </div>
 
                 <!-- * Primary Search Bar -->
-                <div class="primary-search-bar" style="display: inline; font-size: 1.2rem;">
+                <div class="primary-search-bar" style="display: inline; font-size: 1.2rem !important;">
                     <input wire:model="displayrecent" type="checkbox" id="displayrecent" name="displayrecent" value="1" style="margin-right: 4px !important;">
                     <label for="displayrecent"> Display only collections for the last seven (7) days</label><br>
                 </div>
 
                 <div class="primary-search-bar">
                     <div class="row">
-                        <input type="search" wire:model="keyword" wire:input="setToFalse" placeholder="Search" autocomplete="off">
+                        <input type="search" wire:model="keyword" style="width: 53rem; font-weight: normal !important;" wire:input="setToFalse" placeholder="Search by collection reference ex : COL-AREA-0012" autocomplete="off">
                         <button>
                         </button>
                     </div>
