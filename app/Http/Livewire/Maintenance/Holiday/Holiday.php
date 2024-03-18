@@ -58,10 +58,18 @@ class Holiday extends Component
                 ];
 
         $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Holiday/AddNewHoliday', $data);         
+        $apiresp = $crt->getStatusCode();                
+        if($apiresp == 200){                                   
+            $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Holiday/GetLastHolidayList');        
+            $getlast = $getlast->json(); 
+            return redirect()->to('/maintenance/holiday/view/'.(isset($getlast['holidayID']) ? $getlast['holidayID'] : ''))->with(['mmessage'=> 'Holiday has been saved', 'mword'=> 'Success']);
+        }
+        else{          
+            session()->flash('errmmessage', $crt->body());      
+        }
+        $this->resetValidation();         
         // dd( $crt ); asd
-        $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Holiday/GetLastHolidayList');        
-        $getlast = $getlast->json(); 
-        return redirect()->to('/maintenance/holiday/view/'.(isset($getlast['holidayID']) ? $getlast['holidayID'] : ''))->with(['mmessage'=> 'Holiday has been saved', 'mword'=> 'Success']);    
+           
     }
 
     public function update(){   

@@ -6,6 +6,9 @@
     @if($showDialog == 1)
         <x-dialog :message="'Are you sure you want to trash this data '" :xmid="$mid" :confirmaction="'archive'" :header="'Trash'"></x-dialog>   
     @endif
+    @if(session('errmmessage'))
+        <x-error :message="session('errmmessage')" :words="'Action not successfull'" :header="'Error'"></x-error>   
+    @endif
     @if(session('mmessage'))
     <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
     @endif

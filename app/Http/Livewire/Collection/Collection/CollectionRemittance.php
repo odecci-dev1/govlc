@@ -185,7 +185,7 @@ class CollectionRemittance extends Component
                 $this->list = collect($data[0]['collection']);           
             }   
         }
-        //dd($this->list);   
+        dd($this->list);   
         return view('livewire.collection.collection.collection-remittance');
     }
 }
