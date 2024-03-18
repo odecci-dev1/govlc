@@ -3,7 +3,16 @@
 
         <!-- * Collection List Containers -->
         <!-- * Container 1: User list Header, Buttons, and Searchbar -->
-
+        <div wire:loading.delay.longest  class="full-screen-div-loading">
+            <div class="center-loading-container">
+                <div>
+                    <div class="lds-dual-ring"></div>
+                </div>
+                <div class="loading-text">
+                    <span>Please wait . . .</span>
+                </div>
+            </div>        
+        </div>
         <div class="nal-con-1">
 
             <h2>Collection List</h2>
@@ -34,7 +43,7 @@
 
                 <div class="primary-search-bar">
                     <div class="row">
-                        <input type="search" wire:model="keyword" placeholder="Search" autocomplete="off">
+                        <input type="search" wire:model="keyword" wire:input="setToFalse" placeholder="Search" autocomplete="off">
                         <button>
                         </button>
                     </div>
