@@ -27,7 +27,7 @@ class CollectedExport implements FromCollection, WithHeadings
         if($this->mdata){
                 foreach($this->mdata as $dt){
                     $cnt = $cnt + 1;
-                    $data->put($cnt, [ 'areaName' => $dt['areaName'], 'fieldOfficer' => $dt['fieldOfficer'], 'totalCollection' => $dt['totalCollection'], 'totalSavings' => $dt['totalSavings'], 'totalLapses' => $dt['totalLapses'], 'totalAdvance' => $dt['totalAdvance'], 'cashRemit' => $dt['cashRemit'], 'totalNP' => (!empty($dt['totalNP']) ? $dt['totalNP'] : ''), 'dateCollected' =>  date('Y-m-d', strtotime($dt['dateCollected'])) ]);
+                    $data->put($cnt, [ 'areaName' => $dt['areaName'], 'fieldOfficer' => $dt['fieldOfficer'], 'totalCollection' => $dt['totalCollection'], 'totalSavings' => $dt['totalSavings'], 'totalLapses' => $dt['totalLapses'], 'totalAdvance' => $dt['totalAdvance'], 'cashRemit' => $dt['cashRemit'], 'totalNP' => (!empty($dt['totalNP']) ? $dt['totalNP'] : '') ]);
                 }
         }
         return collect($data);
@@ -35,6 +35,6 @@ class CollectedExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ["AREA", "FIELD OFFICER", "TOTAL COLLECTIONS", "TOTAL SAVINGS", "TOTAL LAPSES", "TOTAL ADVANCES", "CASH REMITTED", "TOTAL NP", "COLLECTION DATE"];
+        return ["AREA", "FIELD OFFICER", "TOTAL COLLECTIONS", "TOTAL SAVINGS", "TOTAL LAPSES", "TOTAL ADVANCES", "CASH REMITTED", "TOTAL NP"];
     }
 }

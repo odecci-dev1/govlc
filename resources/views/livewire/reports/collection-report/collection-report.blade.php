@@ -79,10 +79,7 @@
                             <th style="text-align: center;">
                                 <span class="th-name">Total NP</span> 
                             </th>
-
-                            <th>
-                                <span class="th-name">Collection Date</span> 
-                            </th>
+                          
                         </tr>
 
                         <!-- * All Members Data -->
@@ -118,11 +115,6 @@
                                     <td  style="text-align: center;">
                                         <span class="td-name">{{ !empty($data['totalNP']) ? $data['totalNP'] : 0 }}</span>
                                     </td>
-
-                                    <td>
-                                        <span class="td-name">{{ !empty($data['dateCollected']) ? date('Y-m-d', strtotime($data['dateCollected'])) : 0 }}</span>
-                                    </td>
-
                                 </tr>
                                 @endforeach
                             @endif

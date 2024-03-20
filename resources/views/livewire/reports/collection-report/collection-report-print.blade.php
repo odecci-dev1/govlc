@@ -49,8 +49,7 @@
                                     <th  style="text-align: right;">Total Lapses</th>
                                     <th  style="text-align: right;">Total Advances</th>
                                     <th  style="text-align: right;">Cash Remitted</th>
-                                    <th  style="text-align: center;">Total NP</th>
-                                    <th>Collection Date</th>                                   
+                                    <th  style="text-align: center;">Total NP</th>                                                             
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,10 +84,6 @@
 
                                     <td  style="text-align: center;">
                                         <span class="td-name">{{ !empty($data['totalNP']) ? $data['totalNP'] : 0 }}</span>
-                                    </td>
-
-                                    <td>
-                                        <span class="td-name">{{ !empty($data['dateCollected']) ? date('Y-m-d', strtotime($data['dateCollected'])) : 0 }}</span>
                                     </td>
 
                                 </tr>
