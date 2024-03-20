@@ -1788,7 +1788,8 @@ class CreateApplication extends Component
 
                 if($request->naID != ''){                        
                     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $request->naID]]);                         
-                    $resdata = $value->json();                                                                                           
+                    $resdata = $value->json();   
+                                                                                                  
                     if(!empty($resdata[0])){
                         $data = $resdata[0];                        
                         $this->searchedmemId =  $request->naID;
@@ -1813,92 +1814,224 @@ class CreateApplication extends Component
                         $this->member['zipCode'] = $data['zipCode'];
                         $this->member['profile'] = $data['profilePath'];   
                         $this->renderCity();
-                        $this->renderBarangay();                       
-                    }            
-                }
-                else{                     
-                    // $this->member['fname'] = 'Jumar';  
-                    // $this->member['lname'] = 'Badajos';
-                    // $this->member['mname'] = '';
-                    // $this->member['suffix'] = ''; 
-                    // $this->member['age'] = '22'; 
-                    // $this->member['barangay'] = 'Rivera';  
-                    // $this->member['city'] = 'CITY OF SAN JUAN'; 
-                    // $this->member['civil_Status'] = 'Married';  
-                    // $this->member['cno'] = '02233666666'; 
-                    // $this->member['country'] = 'Philippines'; 
-                    // $this->member['dob'] = date('Y-m-d', strtotime('12/27/1991'));
-                    // $this->member['emailAddress'] = 'test@gmail.com'; 
-                    // $this->member['gender'] = 'Male';
-                    // $this->member['houseNo'] = 'No. 9 GB';
-                    // $this->member['house_Stats'] = '2'; 
-                    // $this->member['pob'] = 'Bani, Pangasinan';
-                    // $this->member['province'] = 'NCR, SECOND DISTRICT'; 
-                    // $this->member['yearsStay'] = '5';
-                    // $this->member['zipCode'] = '';  
-                    // $this->renderCity();
-                    // $this->renderBarangay();         
-                }
-              
-                // $this->member['electricBill'] = '250'; 
-                // $this->member['waterBill'] = '100'; 
-                // $this->member['otherBills'] = '1000'; 
-                // $this->member['dailyExpenses'] = '10000'; 
-                // $this->member['jobDescription'] = 'Programmer'; 
-                // $this->member['yos'] = '7'; 
-                // $this->member['monthlySalary'] = '15000'; 
-                // $this->member['otherSOC'] = 'Freelancer'; 
-                // $this->member['bO_Status'] = '1'; 
-                // $this->member['companyName'] = 'SOEN'; 
-                // $this->member['companyAddress'] = 'ORTIGAS'; 
-                // $this->member['emp_Status'] = '1'; 
-                // $this->member['f_Fname'] = 'Jezz'; 
-                // $this->member['f_Lname'] = 'Eurolfan'; 
-                // $this->member['f_Mname'] = 'Javier'; 
-                // $this->member['f_Suffix'] = ''; 
-                // $this->member['f_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
-                // $this->member['f_Age'] = '30'; 
-                // $this->member['f_NOD'] = '0'; 
-                // $this->member['f_YOS'] = '5'; 
-                // $this->member['f_Emp_Status'] = '1'; 
-                // $this->member['f_Job'] = 'Cashier'; 
-                // $this->member['f_CompanyName'] = 'SOEN'; 
-                // $this->member['f_RTTB'] = '';     
-                // $this->member['loanAmount'] = '30000';                
-                // $this->member['purpose'] = 'For Business'; 
+                        $this->renderBarangay(); 
+                        
+                        $files = $data['files'];
+                        $this->member['attachments'] = [];
+                        $this->member['profile'] = '';
+                        $this->member['signature'] = '';
+                        if($files){
+                            foreach($files as $mfiles){
+                                if($mfiles['fileType'] == 'Profile'){
+                                    $this->member['profile'] = $mfiles['filePath'];
+                                }
         
-                // $this->comaker['co_Fname'] = 'Thea'; 
-                // $this->comaker['co_Lname'] = 'Badajos'; 
-                // $this->comaker['co_Mname'] = 'Eurolfan'; 
-                // $this->comaker['co_Suffix'] = ''; 
-                // $this->comaker['co_Age'] = '26'; 
-                // $this->comaker['co_Barangay'] = 'Rivera'; 
-                // $this->comaker['co_City'] = 'CITY OF SAN JUAN'; 
-                // $this->comaker['co_Civil_Status'] = 'Single'; 
-                // $this->comaker['co_Cno'] = '023369990'; 
-                // $this->comaker['co_Country'] = 'Philippines'; 
-                // $this->comaker['co_DOB'] = date('Y-m-d', strtotime('12/27/1991'));
-                // $this->comaker['co_EmailAddress'] = 'test@gmail.com'; 
-                // $this->comaker['co_Gender'] = 'Female'; 
-                // $this->comaker['co_HouseNo'] = '566233';         
-                // $this->comaker['co_House_Stats'] = '2'; 
-                // $this->comaker['co_POB'] = 'Pangasinan'; 
-                // $this->comaker['co_Province'] = 'NCR, SECOND DISTRICT'; 
-                // $this->comaker['co_YearsStay'] = '5'; 
-                // $this->comaker['co_ZipCode'] = ''; 
-                // $this->comaker['co_RTTB'] = 'Sister'; 
-                // $this->comaker['co_Status'] = ''; 
-                // $this->comaker['co_JobDescription'] = 'Cashier'; 
-                // $this->comaker['co_YOS'] = '0'; 
-                // $this->comaker['co_MonthlySalary'] = '15000'; 
-                // $this->comaker['co_OtherSOC'] = 'none'; 
-                // $this->comaker['co_BO_Status'] = '1'; 
-                // $this->comaker['co_CompanyName'] = 'SOEN'; 
-                // $this->comaker['co_CompanyID'] = 'asd'; 
-                // $this->comaker['co_Emp_Status'] = '1'; 
-                // $this->comaker['remarks'] = ''; 
-                // $this->renderCoCity();
-                // $this->renderCoBarangay();
+                                if($mfiles['fileType'] == 'File'){
+                                    $this->member['attachments'][] = [ 'fileName' => $mfiles['filePath'] , 'filePath' => $mfiles['filePath'] ];
+                                }
+        
+                                if($mfiles['fileType'] == 'Singature'){
+                                    $this->member['signature'] = $mfiles['filePath'];
+                                }
+                            }
+                            $this->member['old_attachments'] = $this->member['attachments'];
+                            $this->member['old_profile'] = $this->member['profile'];                  
+                            $this->member['old_signature'] = $this->member['signature'];
+                        }
+
+                        $cofiles = $data['co_Files'];
+                        $this->comaker['attachments'] = [];
+                        $this->comaker['profile'] = '';
+                        $this->comaker['signature'] = '';
+                        if($cofiles){
+                            
+                            foreach($cofiles as $cfiles){                      
+                                if($cfiles['fileType'] == 'Profile'){
+                                    $this->comaker['profile'] = $cfiles['filePath'];
+                                    
+                                }
+        
+                                if($cfiles['fileType'] == 'File'){
+                                    $this->comaker['attachments'][] = [ 'fileName' => $cfiles['filePath'] , 'filePath' => $cfiles['filePath'] ];                
+                                }
+        
+                                if($cfiles['fileType'] == 'Singature'){
+                                    $this->comaker['signature'] = $cfiles['filePath'];
+                                }
+                            }                   
+        
+                            $this->comaker['old_attachments'] = $this->comaker['attachments'];
+                            $this->comaker['old_profile'] = $this->comaker['profile'];   
+                            $this->comaker['old_signature'] = $this->comaker['signature'];
+                        }
+
+                        $this->member['electricBill'] = $data['electricBill']; 
+                        $this->member['waterBill'] = $data['waterBill']; 
+                        $this->member['otherBills'] = $data['otherBills']; 
+                        $this->member['dailyExpenses'] = $data['dailyExpenses']; 
+
+                        $this->member['jobDescription'] = $data['jobDescription']; 
+                        $this->member['yos'] = $data['yos']; 
+                        $this->member['monthlySalary'] = $data['monthlySalary']; 
+                        $this->member['otherSOC'] = $data['otherSOC']; 
+                        $this->member['bO_Status'] = $data['bO_Status'] == 'True' ? 1 : 0;               
+                        $this->member['companyName'] = $data['companyName'];
+                        $this->member['companyAddress'] = $data['companyAddress'];  
+                        $this->member['emp_Status'] = $data['emp_Status'];   
+                        
+                        $this->member['f_Fname'] = $data['f_Fname']; 
+                        $this->member['f_Lname'] = $data['f_Lname']; 
+                        $this->member['f_Mname'] = $data['f_Mname']; 
+                        $this->member['f_Suffix'] = $data['f_Suffix']; 
+                        $this->member['f_DOB'] = date('Y-m-d', strtotime($data['f_DOB'])); 
+                        $this->member['f_Age'] = $data['f_Age']; 
+                        $this->member['f_NOD'] = $data['f_NOD']; 
+                        $this->member['f_YOS'] = $data['f_YOS']; 
+                        $this->member['f_Emp_Status'] = $data['f_Emp_Status']; 
+                        $this->member['f_Job'] = $data['f_Job']; 
+                        $this->member['f_CompanyName'] = $data['f_CompanyName']; 
+                        $this->member['f_RTTB'] = $data['f_RTTB'];    
+                        $this->member['famId'] = $data['famId'];   
+                        
+                        $this->comaker['co_Fname'] = $data['co_Fname']; 
+                        $this->comaker['co_Lname'] = $data['co_Lname']; 
+                        $this->comaker['co_Mname'] = $data['co_Mname']; 
+                        $this->comaker['co_Suffix'] = $data['co_Suffix']; 
+                        $this->comaker['co_Age'] = $data['co_Age']; 
+                        $this->comaker['co_Barangay'] = $data['co_Barangay']; 
+                        $this->comaker['co_City'] = $data['co_City']; 
+                        $this->comaker['co_Civil_Status'] = $data['co_Civil_Status']; 
+                        $this->comaker['co_Cno'] = $data['co_Cno']; 
+                        $this->comaker['co_Country'] = $data['co_Country']; 
+                        $this->comaker['co_DOB'] = $data['co_DOB']; 
+                        $this->comaker['co_EmailAddress'] = $data['co_EmailAddress']; 
+                        $this->comaker['co_Gender'] = $data['co_Gender']; 
+                        $this->comaker['co_HouseNo'] = $data['co_HouseNo'];         
+                        $this->comaker['co_House_Stats'] = $data['co_HouseStatusId']; 
+                        $this->comaker['co_POB'] = $data['co_POB']; 
+                        $this->comaker['co_Province'] = $data['co_Province']; 
+                        
+                        if($this->member['statusID'] != 7){                  
+                            $this->cobarangays->put(1, ['brgyDesc' => $data['co_Barangay']]);        
+                        }
+                        $this->member['city'] = $data['city'];   
+                        if($this->member['statusID'] != 7){                 
+                            $this->cocities->put(1, ['citymunDesc' => $data['co_City']]);    
+                        }            
+                        if($this->member['statusID'] != 7){                   
+                            $this->coprovinces->put(1, ['provDesc' => $data['co_Province']]);    
+                        } 
+                        $this->comaker['co_YearsStay'] = $data['co_YearsStay']; 
+                        $this->comaker['co_ZipCode'] = $data['co_ZipCode']; 
+                        $this->comaker['co_RTTB'] = $data['co_RTTB']; 
+                        $this->comaker['co_Status'] = ''; 
+                        $this->comaker['co_JobDescription'] = $data['co_JobDescription']; 
+                        $this->comaker['co_YOS'] = $data['coj_YOS'];  
+                        $this->comaker['co_MonthlySalary'] = $data['co_MonthlySalary']; 
+                        $this->comaker['co_OtherSOC'] = $data['co_OtherSOC']; 
+                        $this->comaker['co_BO_Status'] = $data['co_BO_Status'] == "True" ? 1 : 0; 
+                        $this->comaker['co_CompanyName'] = $data['co_CompanyName']; 
+                        $this->comaker['co_CompanyID'] = $data['co_CompanyAddress']; 
+                        $this->comaker['co_Emp_Status'] = $data['co_Emp_Status'];                
+                        //dd($data);
+                        // $this->cntmemchild
+                        
+                        $child = $data['child'];              
+                        if(count($child) > 0){
+                            $this->cntmemchild = [];
+                            $cntchild = 0;
+                            foreach($child as $mchild){     
+                                $cntchild = $cntchild + 1;               
+                                $this->cntmemchild[] = $cntchild;
+                                $this->inpchild['fname'.$cntchild] = $mchild['fname'];   
+                                $this->inpchild['mname'.$cntchild] = $mchild['mname'];                             
+                                $this->inpchild['lname'.$cntchild] = $mchild['lname'];  
+                                $this->inpchild['age'.$cntchild] = $mchild['age'];    
+                                $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
+                            }                   
+                        }                                   
+        
+                        $businessInfo = $data['business'];   
+                        //dd($businessInfo);
+                        if(count($businessInfo)>0){
+                            $cntbusinfo = 0;                  
+                            foreach($businessInfo as $businfo){
+                                $cntbusinfo = $cntbusinfo + 1;
+                                $this->businfo[$cntbusinfo] = [ 
+                                                                'businessName' => $businfo['businessName'],
+                                                                'businessType' => $businfo['businessType'],
+                                                                'businessAddress' => $businfo['businessAddress'],                                   
+                                                                'b_status' => $businfo['b_statusID'],
+                                                                'yob' => $businfo['yob'],
+                                                                'noe' => $businfo['noe'],
+                                                                'salary' => $businfo['salary'],
+                                                                'vos' => $businfo['vos'],
+                                                                'aos' => $businfo['aos'],
+                                                                'attachments' => $businfo['businessFiles'],
+                                                                'old_attachments' => $businfo['businessFiles'],
+                                                            ];    
+                            }
+                        }
+                    
+                        $motors= $data['assets'];
+                        if(count($motors) > 0){
+                            $this->hasvehicle = 1;
+                            $motorscnt = 0;
+                            foreach($motors as $mmotors){
+                                $motorscnt = $motorscnt + 1;
+                                $this->vehicle[$motorscnt] = [ 'vehicle' => $mmotors['motorVehicles'] ];  
+                                $this->inpvehicle['vehicle'.$motorscnt] = $mmotors['motorVehicles'];                       
+                            }
+                        }
+                        else{
+                            $this->hasvehicle = 0;
+                        }
+                        
+                        $properties= $data['property'];
+                        if(count($properties) > 0){
+                            $this->hasproperties = 1;
+                            $propertiescnt = 0;
+                            foreach($properties as $mproperties){
+                                $propertiescnt = $propertiescnt + 1;
+                                $this->properties[$propertiescnt] = [ 'property' => $mproperties['property'] ];  
+                                $this->inpproperties['property'.$propertiescnt] = $mproperties['property'];                       
+                            }
+                        }       
+                        else{
+                            $this->hasproperties = 0;
+                        }           
+        
+                        $appliances= $data['appliances'];
+                        //dd($appliances);
+                        if(count($appliances) > 0){                   
+                            $appliancescnt = 0;
+                            foreach($appliances as $mappliances){
+                                $appliancescnt = $appliancescnt + 1;
+                                $this->appliances[$appliancescnt] = [ 'appliance' => $mappliances['appliances'], 'brand' => $mappliances['brand'] ];  
+                                $this->inpappliances['appliance'.$appliancescnt] = $mappliances['appliances'];   
+                                $this->inpappliances['brand'.$appliancescnt] = $mappliances['brand'];                        
+                            }
+                        }   
+        
+                        $bank= $data['bank'];
+                        if(count($bank) > 0){                   
+                            $bankcnt = 0;
+                            foreach($bank as $mbank){
+                                $bankcnt = $bankcnt + 1;
+                                $this->bank[$bankcnt] = [ 'account' => $mbank['bankName'], 'address' => $mbank['address'] ];  
+                                $this->inpbank['account'.$bankcnt] = $mbank['bankName'];   
+                                $this->inpbank['address'.$bankcnt] = $mbank['address'];                        
+                            }
+                        }   
+
+                        $this->renderCoCity();
+                        $this->renderCoBarangay();
+                        //create existing
+                    }      
+                    
+                    
+                }
+               
         }
         else if($this->type == 'view' || $this->type == 'details'){
             $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
