@@ -32,8 +32,8 @@ class Dashboard extends Component
         $toplapses =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/TotalLapsesAreas');      
         $this->toplapses = $toplapses->json();  
 
-        $activecollections =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/ActiveCollections');      
-        $this->activecollections = $activecollections->json();  
+        $activecollections =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/ActiveCollection');      
+        $this->activecollections = $activecollections->json();         
 
         return view('livewire.dashboard');
     }
