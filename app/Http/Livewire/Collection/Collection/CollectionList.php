@@ -49,9 +49,9 @@ class CollectionList extends Component
         // else{
         //     $this->list = $mlist;
         // }     
-        // $this->check = $this->list->where('dateCreated', $date)->first();   
+        //$this->check = $this->list->where('dateCreated', $date)->first();   
         
-        $date = date('m/d/Y').' 12:00:00 AM';
+        $date = date('n/j/Y').' 12:00:00 AM';
         
         if( $this->displayrecent ){
             $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/Areas', ['showprev' => 'true']);               
@@ -70,9 +70,7 @@ class CollectionList extends Component
 
             $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Pagination/DisplayListPaginate', $inputs);                 
         
-            $this->list =  collect($data->json()['items']);  
-                    
-            $this->check = $this->list->where('dateCreated', $date)->first();       
+            $this->list =  collect($data->json()['items']);                                             
 
             if( $data->json()['totalPage'] ){
                 $this->paginationPaging['totalPage'] = $data->json()['totalPage'];
@@ -82,7 +80,8 @@ class CollectionList extends Component
                 $this->paginationPaging['prevPage'] = $data->json()['prevPage'] > 0 ? $data->json()['prevPage'] : 1;
             }
         }
-
+        $this->check = $this->list->where('dateCreated', $date)->first();   
+        //dd(   $this->list );    
         return view('livewire.collection.collection.collection-list');
     }
 }
