@@ -43,6 +43,10 @@
                       <span>Dashboard Display Reset</span>
                         <div class="box-wrap" style="gap: 0rem; width: 25rem; justify-content: first baseline !important;">
                           <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
+                            <input  wire:model.lazy="display_reset" autocomplete="off" type="radio" value="3" name="noAdvancePayment" id="noAdvancePayment3">
+                            <span>Daily</span>                                            
+                          </div>
+                          <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
                             <input  wire:model.lazy="display_reset" autocomplete="off" type="radio" value="1" name="noAdvancePayment" id="noAdvancePayment1">
                             <span>Monthly</span>                                            
                           </div>
