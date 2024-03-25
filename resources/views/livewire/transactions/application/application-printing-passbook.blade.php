@@ -132,9 +132,9 @@
                                             <table>
                                                 <!-- * Header -->
                                                     <tr>
-                                                        <th>No. of days</th>
-                                                        <th>Date</th>
-                                                        <th>Amount Paid</th>
+                                                        <th>No.</th>
+                                                        <th  style="width: 80px !important">Date</th>
+                                                        <th  style="width: 80px !important">Amount Paid</th>
                                                         <th>Savings</th>
                                                         <th>Clients Sign</th>
                                                         <th>Field Officer Sign</th>
@@ -553,11 +553,11 @@
                                         <!-- * Box-2 -->
                                         <div class="box">
                                             <table>
-                                                <!-- * Header -->
+                                                <!-- * Header -->                                       
                                                     <tr>
-                                                        <th>No. of days</th>
-                                                        <th>Date</th>
-                                                        <th>Amount Paid</th>
+                                                        <th>No.</th>
+                                                        <th style="width: 80px !important">Date</th>
+                                                        <th style="width: 80px !important">Amount Paid</th>
                                                         <th>Savings</th>
                                                         <th>Clients Sign</th>
                                                         <th>Field Officer Sign</th>
