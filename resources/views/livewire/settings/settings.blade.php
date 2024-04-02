@@ -1,7 +1,8 @@
 <div>
-<div class="main-dashboard">
-        @if(session('sessmessage'))
-            <x-alert :message="session('sessmessage')" :words="session('sessmword') ? session('sessmword') : ''" :header="'Success'"></x-alert>   
+<div class="main-dashboard">     
+        <x-error-dialog :message="(session('errormessage') ? session('errormessage') : 'Operation Failed. Retry ?')" :xmid="''" :confirmaction="session('erroraction') ? session('erroraction') : ''" :header="'Error'"></x-error-dialog>       
+        @if(session('mmessage'))
+            <x-alert :message="session('mmessage')" :words="session('mword')" :header="'Success'"></x-alert>   
         @endif
         <!-- * Add New User Container -->
         <form action="" class="na-form-con" autocomplete="off">
@@ -65,7 +66,7 @@
                       <span>Company Name</span>
                       <input
                         autocomplete="off"
-                        type="number"
+                        type="text"
                         wire:model.lazy="company_name"
                        style="width: 90rem;"
                       />
@@ -118,7 +119,7 @@
 
                 <div class="rowspan">
                     <!-- * First Name -->
-                    <button type="button" class="button">UPDATE SETTINGS</button>    
+                    <button type="button" wire:click="update" class="button">UPDATE SETTINGS</button>    
                 </div>
 
                 <!-- * Container 2: Upload Images, Files and Monthly Bills Input Fields -->
@@ -130,3 +131,14 @@
         </form>
       </div>
 </div>
+<script>
+        document.addEventListener('livewire:load', function () {          
+            window.livewire.on('EMIT_ERROR_ASKING_DIALOG', data =>{
+                document.getElementById('error-asking-dialog-div').style.visibility="visible";
+            });
+        })
+      
+</script>
+@if(session('errmmessage'))
+    <x-error :message="session('errmmessage')" :words="'Action not successfull'" :header="'Error'"></x-error>   
+@endif
