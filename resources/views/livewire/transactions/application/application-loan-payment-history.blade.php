@@ -37,7 +37,8 @@
                                 <th>Outstanding Balance</th>
                                 <th>Date Released</th>
                                 <th>Due Date</th>     
-                                <th>Status</th>                               
+                                <th>Status</th> 
+                                <th style="width: 1%;">Option</th>                                      
                             </tr>
                             @if($loanhistory)                                                           
                                 @foreach($loanhistory as $lhistory)
@@ -48,7 +49,12 @@
                                     <td>{{ $lhistory['amountDue'] }}</td>
                                     <td>{{ $lhistory['releasingDate'] }}</td>
                                     <td>{{ date('m-d-Y', strtotime($lhistory['dueDate'])) }}</td>   
-                                    <td>{{ $lhistory['status'] }}</td>                                      
+                                    <td>{{ $lhistory['status'] }}</td>  
+                                    <td class="td-btns" style="width: 1%;">
+                                        <div class="td-btn-wrapper">
+                                            <a href="{{ URL::to('/') }}/members/details/{{ $lhistory['naid'] }}" class="a-btn-view-2">View</a>                         
+                                        </div>
+                                    </td>                                                                  
                                 </tr>   
                                 @endforeach
                             @endif                        

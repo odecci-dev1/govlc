@@ -184,7 +184,7 @@
                     <!-- * Table View and Trash Button -->
                     <td class="td-btns" style="width: 1%;">
                         <div class="td-btn-wrapper">
-                            <a href="{{ URL::to('/') }}/members/details/{{ $l['naid'] }}" class="a-btn-view-2">View</a>                         
+                            <a href="{{ URL::to('/') }}/members/details/{{ $l['memId'] }}" class="a-btn-view-2">View</a>                         
                         </div>
                     </td>
 
