@@ -55,8 +55,10 @@ class Collection extends Component
     }
 
     public function approveDenominations(){
-        $sumDetails = $this->areaDetails->where('areaID', $this->areaID)->sum('collectedAmount');       
-        if(round($this->totalDenomination, 2) != round($sumDetails, 2)){    
+        $sumDetails = $this->areaDetails->where('areaID', $this->areaID)->sum('collectedAmount'); 
+        $total_savings =  $this->areaDetailsFooter->where('areaID', $this->areaID)->first();  
+       
+        if(round($this->totalDenomination != round($sumDetails + $total_savings['total_savings'], 2), 2)){    
             session()->flash('RESPONSE_NOT_EQUAL_DENOMINATIONS_MODAL', 'Denominations is not equal to total collected amount');
         }
         else{
@@ -86,11 +88,11 @@ class Collection extends Component
     public function reject(){
         $this->validate(['rejectReason' => 'required']);
         $data = [
-            "areaID"=> $this->areaID,
-            "areaRefno"=> $this->areaRefNo,
-            "remarks" => $this->rejectReason,  
-            "foid" => $this->foid,                             
-        ];
+                    "areaID"=> $this->areaID,
+                    "areaRefno"=> $this->areaRefNo,
+                    "remarks" => $this->rejectReason,  
+                    "foid" => $this->foid,                             
+                ];
         $collect = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Reject', $data);         
         $this->emit('RESPONSE_CLOSE_REJECTION_MODAL', ['url' => URL::to('/').'/collection/view/'.$this->colrefNo]);            
     }
@@ -115,6 +117,7 @@ class Collection extends Component
      
         $this->areaDetails = collect([]);
         $this->areaDetailsFooter = collect([]);
+       
         if($this->areaID == ''){
             $this->areaID = $areaID;       
             $this->foid = $foid;
@@ -168,8 +171,7 @@ class Collection extends Component
                             $this->areaDetails =  $this->areaDetails->push($coll);
                         }                        
                     }                                                 
-                }
-                //dd($this->areaDetails);
+                }               
         }
     }
 

@@ -74,13 +74,25 @@
     <!-- * Box-wrap: Total Cash Denomination and Collected Amount -->
     <div class="box-wrap">
         <div class="inner-box-wrap">
-            <p>TOTAL</p>
+            <p style="font-weight: normal;">DENOMINATION</p>
             <span id="totalCashDenom">{{ $totalDenomination == 0 ? '-' : number_format($totalDenomination, 2) }}</span>
         </div>
+        <div class="inner-box-wrap">
+            <p>SAVINGS</p>
+            <span id="totalCashDenom">  {{ $footer ? number_format($footer['total_savings'], 2) : '0.00' }}</span>
+        </div>
+        @php
+            $totalcoll = ($footer ? $footer['total_savings'] : 0);
+        @endphp
         <div class="inner-box-wrap">
             <p>COLLECTED AMOUNT</p>            
             <span id="collectedAmnt">{{ number_format($sumCollected, 2) }}</span>
         </div>
+        <div class="inner-box-wrap">
+            <p>TOTAL COLLECTION</p>
+            <span id="totalCashDenom">{{ number_format($sumCollected + $totalcoll, 2) }}</span>
+        </div>
+        
     </div>
 
     <!-- * Approve Button -->

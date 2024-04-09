@@ -511,24 +511,8 @@
         if (cashDenominationModal) {
 
             if(openCashDenominationBtn){
-                openCashDenominationBtn.addEventListener('click', () => {
-                  
+                openCashDenominationBtn.addEventListener('click', () => {                  
                     cashDenominationModal.showModal()
-
-                    // approveCashDenominationBtn.addEventListener('click', () => {
-                    //     areaMenuButton.forEach((button) => {
-                    //         if (button.matches('.view-selected-area')) {
-                    //             button.classList.add('area-is-collected')
-                    //             printRemitButton.classList.remove('show-print-remit-buttons')
-                    //             // collectionSummaryContainer.classList.add('show-summary')
-                    //         }
-                    //         button.style.pointerEvents = 'auto'
-                    //         if (button.classList.contains('area-is-collected')) {
-                    //             collectionSummaryContainer.classList.add('show-summary')
-                    //             button.style.pointerEvents = 'none'
-                    //         }    
-                    //     })
-                    // })
                 })
             }
             closeCashDenominationBtn.addEventListener('click', () => {
