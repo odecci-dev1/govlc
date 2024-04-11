@@ -157,6 +157,7 @@ class Collection extends Component
                     $collections = $details['collection'];
                    
                     if($collections){
+                        
                         $this->areaDetailsFooter[$this->areaID] = [               
                                                         'areaID' => $this->areaID,                                                        
                                                         'totalCollectible' => $details['totalCollectible'],
@@ -166,7 +167,7 @@ class Collection extends Component
                                                         'total_lapses' => $details['total_lapses'],
                                                         'total_collectedAmount' => $details['total_collectedAmount'],
                                                         'total_FieldExpenses' => $details['total_FieldExpenses'],
-                                                        'total_daily_savings' => collect($details)->sum('dailySavings'),
+                                                        'total_daily_savings' => collect($details['collection'])->sum('dailySavings'),
                                                      ];
                         foreach($collections as $coll){
                             $this->areaDetails =  $this->areaDetails->push($coll);
