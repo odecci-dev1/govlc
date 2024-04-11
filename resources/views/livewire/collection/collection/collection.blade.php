@@ -379,7 +379,7 @@
                  </div>
                  <div class="box">
                      <p>Total Collected Amount:</p>
-                     <span>{{ $footer ? number_format($footer['total_collectedAmount'] - $footer['total_advance'], 2) : '0.00' }}</span>
+                     <span>{{ $footer ? number_format($footer['total_collectedAmount'], 2) : '0.00' }}</span>
                  </div>
                  <!-- * Total Balance: -->
                  <div class="box">
