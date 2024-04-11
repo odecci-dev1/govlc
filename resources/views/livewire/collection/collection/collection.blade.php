@@ -326,7 +326,7 @@
                                             <p>{{ $realeseDate->format('F d, Y') }}</p>
                                             <p>{{ $dueDate->format('F d, Y') }}</p>
                                             <p>{{ $mdetails['typeOfCollection'] }}</p>
-                                            <p>{{ number_format($mdetails['totalSavingsAmount'], 2) }}</p>
+                                            <p>{{ number_format($mdetails['dailySavings'], 2) }}</p>
                                             <p>{{ $mdetails['naid'] }} <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $mdetails['naid'] }}" class="cust-link" target="_blank">view</a></p>
                                         </div>
                                     </div>
@@ -389,7 +389,7 @@
                  <!-- * Total Savings: -->
                  <div class="box">
                      <p>Total Savings:</p>
-                     <span>{{ $footer ? number_format($footer['total_savings'], 2) : '0.00' }}</span>
+                     <span>{{ $footer ? number_format($footer['total_daily_savings'], 2) : '0.00' }}</span>
                  </div>
                  <!-- * Total Advance: -->
                  <div class="box">

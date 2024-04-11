@@ -58,7 +58,7 @@ class Collection extends Component
         $sumDetails = $this->areaDetails->where('areaID', $this->areaID)->sum('collectedAmount'); 
         $total_savings =  $this->areaDetailsFooter->where('areaID', $this->areaID)->first();  
        
-        if(round($this->totalDenomination != round($sumDetails + $total_savings['total_savings'], 2), 2)){    
+        if(round($this->totalDenomination != round($sumDetails + $total_savings['total_daily_savings'], 2), 2)){    
             session()->flash('RESPONSE_NOT_EQUAL_DENOMINATIONS_MODAL', 'Denominations is not equal to total collected amount');
         }
         else{
@@ -166,6 +166,7 @@ class Collection extends Component
                                                         'total_lapses' => $details['total_lapses'],
                                                         'total_collectedAmount' => $details['total_collectedAmount'],
                                                         'total_FieldExpenses' => $details['total_FieldExpenses'],
+                                                        'total_daily_savings' => collect($details)->sum('dailySavings'),
                                                      ];
                         foreach($collections as $coll){
                             $this->areaDetails =  $this->areaDetails->push($coll);
