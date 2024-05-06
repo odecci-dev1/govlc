@@ -2623,13 +2623,13 @@ body.print-portrait .page {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   padding: 3.1rem 1.2rem;
   outline: 1px dashed #29292B;
   gap: 1.8rem;
 }
 .printables-container .page .body-wrapper .box-wrapper .box p, .printables-container .page .body-wrapper .box-wrapper .box span {
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: 700;
 }
 .printables-container .page .body-wrapper .table-container table tr:first-of-type {
@@ -2677,10 +2677,10 @@ body.print-portrait .page {
   gap: 0.2rem;
 }
 .printables-container .page .body-wrapper .table-container table td .td-wrapper p:first-of-type {
-  font-size: 1rem;
+  font-size: 1.4rem;
 }
 .printables-container .page .body-wrapper .table-container table td .td-wrapper span {
-  font-size: 0.8rem;
+  font-size: 1.1rem;
 }
 .printables-container .page .body-wrapper .table-container table .td-name {
   margin: 0;
