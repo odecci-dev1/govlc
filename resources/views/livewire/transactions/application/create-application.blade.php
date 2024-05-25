@@ -810,16 +810,17 @@
                     <!-- * Colspan 1: Upload Image and Attach Files Buttons  -->
                     <div class="colspan">                       
                         <!-- * Upload Image -->
-                        <div class="input-wrapper">
+                        <div class="input-wrapper">                                                       
                             @if($imgprofile)
                                 <img type="image" class="profile" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image">
                             @else
                                 @if(file_exists(public_path('storage/members_profile/'.(isset($member['profile']) ? $member['profile'] : 'xxxx'))))
                                     <img type="image" class="profile" src="{{ asset('storage/members_profile/'.$member['profile']) }}" alt="upload-image" />                                                                     
                                 @else
-                                    <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                                    <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />  
+                                    <p style="position: absolute">Max Size: 2MB</p>                                                 
                                 @endif 
-                            @endif             
+                            @endif      
                         </div>
                         @error('imgprofile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         
@@ -838,21 +839,7 @@
                           
                             @if(isset($member['attachments']))
                                 @if($member['attachments'] == $member['old_attachments'])                            
-                                    @foreach($member['attachments'] as $attachments)                                                     
-                                        <!-- <div type="button" class="fileButton">
-                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">                                           
-                                            @if(file_exists(public_path('storage/members_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
-                                                @php
-                                                    $getfilename = $attachments['filePath'];
-                                                    $filenamearray = explode("_", $getfilename);
-                                                    $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
-                                                @endphp                                               
-                                                <a href="{{ asset('storage/members_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
-                                                    {{ strlen($filename) > 10 ? strtolower(substr($filename, 0, 10)) . '...' : $filename }}
-                                                </a>                                               
-                                            @endif                                
-                                        </div>                                         -->
-                                                                           
+                                    @foreach($member['attachments'] as $attachments)                                                                                         
                                             @if(file_exists(public_path('storage/members_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
                                                 @php
                                                     $getfilename = $attachments['filePath'];
@@ -2368,6 +2355,7 @@
                                             <img type="image" class="profile" src="{{ asset('storage/comakers_profile/'.$comaker['profile']) }}" alt="upload-image" />                                                                     
                                         @else
                                             <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                                            <p style="position: absolute">Max Size: 2MB</p>
                                         @endif 
                                     @endif             
                                 </div>
@@ -2638,11 +2626,13 @@
                                 @if(file_exists(public_path('storage/members_signature/'.(isset($member['signature']) ? $member['signature'] : 'xxxx'))))
                                     <img type="image" src="{{ asset('storage/members_signature/'.$member['signature']) }}" alt="upload-image" />                                                                     
                                 @else
-                                    <img id="applicantSig">                                              
+                                    <img id="applicantSig">
+                                    <p style="position: absolute">Max Size: 2MB</p>                                              
                                 @endif 
                             @endif       
                             <span>Applicant’s Signature</span>
                         </div>
+                        @error('imgmemsign') <span class="text-required">{{ $message }}</span>@enderror    
                     </div>
 
                     <!-- * Upload Applicant Signature Button -->
@@ -2679,11 +2669,13 @@
                                 @if(file_exists(public_path('storage/comakers_signature/'.(isset($comaker['signature']) ? $comaker['signature'] : 'xxxx'))))
                                     <img type="image"  src="{{ asset('storage/comakers_signature/'.$comaker['signature']) }}" alt="upload-image" />                                                                     
                                 @else
-                                    <img id="comSig">                                       
+                                    <img id="comSig">  
+                                    <p style="position: absolute">Max Size: 2MB</p>                                     
                                 @endif 
                             @endif       
                             <span>Co-Maker Signature</span>
                         </div>
+                        @error('imgcosign') <span class="text-required">{{ $message }}</span>@enderror   
                     </div>
 
                     <!-- * Upload Co-Maker Signature Button -->

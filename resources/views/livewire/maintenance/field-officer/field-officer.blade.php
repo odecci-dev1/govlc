@@ -214,7 +214,8 @@
                             @if(file_exists(public_path('storage/officer_profile/'.(isset($officer['profile']) ? $officer['profile'] : 'xxxx'))))
                                 <img type="image" class="profile" src="{{ asset('storage/officer_profile/'.$officer['profile']) }}" alt="upload-image" />                                                                     
                             @else
-                                <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
+                                <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />   
+                                <p style="position: absolute">Max Size: 2MB</p>                                            
                             @endif 
                         @endif                          
                     </div>
@@ -375,11 +376,14 @@
                     <span>Front</span>
                     @if($imgfrontID)
                         <img class="profile" style="object-fit: contain;" src="{{ $imgfrontID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                        <p >&nbsp;</p>
                     @else
                         @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['frontID']) ? $officer['frontID'] : 'xxxx'))))    
                             <img class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/'.$officer['frontID']) }}" alt="Front Image" id="frontImage" name="frontImage">
+                            <p >&nbsp;</p>
                         @else
                             <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
+                            <p >Max Size: 2MB</p>
                         @endif 
                     @endif   
                     <div class="btn-wrapper">       
@@ -395,11 +399,14 @@
                     <span>Back</span>                   
                     @if($imgbackID)
                         <img  class="profile" style="object-fit: contain;" src="{{ $imgbackID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                        <p >&nbsp;</p>
                     @else
                         @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['backID']) ? $officer['backID'] : 'xxxx'))))    
                             <img  class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/'.$officer['backID']) }}" alt="Front Image" id="frontImage" name="frontImage">
+                            <p >&nbsp;</p>
                         @else
                             <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
+                            <p >Max Size: 2MB</p>
                         @endif 
                     @endif   
                     <div class="btn-wrapper">

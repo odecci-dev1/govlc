@@ -1516,10 +1516,10 @@ class CreateApplication extends Component
     public function getLoanHistory(){              
         $loanhistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                        
         $apiresp = $loanhistory->getStatusCode();   
-        
+     
         if($apiresp != 400){
             $loanhistory = $loanhistory->json();   
-            //dd( $loanhistory );
+            
             if($loanhistory){
                 $this->loanhistory = collect($loanhistory);        
                          
@@ -1535,8 +1535,7 @@ class CreateApplication extends Component
         }
     }    
 
-    public function getPaymentHistory($naid){         
-
+    public function getPaymentHistory($naid){               
         $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['naid' =>$naid]);                 
                
         $apiresp = $paymenthistory->getStatusCode();   
@@ -2046,7 +2045,7 @@ class CreateApplication extends Component
             $resdata = $value->json();             
             if(isset($resdata[0])){        
                 $data = $resdata[0];                
-                //ditoviewing     
+                //dd($data);
                 $this->searchedmemId =  $data['memId'];
                 $this->member['statusID'] = $data['applicationStatus'];
                 if($this->type == 'view'){
