@@ -828,7 +828,7 @@
                             @if($type != 'details')
                             <!-- * Upload Button -->
                                 @if($usertype != 2)
-                                <input type="file"  wire:model="imgprofile" {!! $member['statusID'] == 7 && $usertype != 2 ? '' : 'style="display: none;"' !!} {!! $type != 'details' ? '' : 'style="display: none;"' !!} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
+                                <input type="file"  wire:model="imgprofile"  {!! $member['statusID'] == 7 && $usertype != 2 ? '' : 'style="display: none;"' !!} {!! $type != 'details' ? '' : 'style="display: none;"' !!} class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-borrower-image-btn></input>
                                 <!-- * Attach Button -->
                                 <input type="file"  wire:model="member.attachments" {!! $member['statusID'] == 7 && $usertype != 2 ? '' : 'style="display: none;"' !!} {!! $type != 'details' ? '' : 'style="display: none;"' !!} class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-file-btn></input>
                                 @endif
