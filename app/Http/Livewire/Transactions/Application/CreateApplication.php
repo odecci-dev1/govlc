@@ -445,6 +445,13 @@ class CreateApplication extends Component
         return $messages;        
     }
 
+    public function updatedimgprofile()
+    {             
+        $this->validate([
+            'imgprofile' => 'image|max:10000', //'file|mimes:png,jpg,pdf|max:102400', // 1MB Max
+        ]);        
+    }
+
     public function clearJobInfo(){
         if(isset($this->member['emp_Status'])){
             if($this->member['emp_Status'] == 0){

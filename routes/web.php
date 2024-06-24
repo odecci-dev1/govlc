@@ -61,6 +61,8 @@ Route::get('/getnoti', [NotificationController::class, 'notifications']);
 Route::get('/getnoticount', [NotificationController::class, 'getnoticount']);
 
 
+Route::get('/test', [NotificationController::class, 'testMe']);
+
 
 Route::middleware(['authenticated'])->group(function () {
     Route::get('/notification/view', [NotificationController::class, 'viewNotification'])->name('viewNotification');
@@ -195,6 +197,7 @@ Route::middleware(['authenticated'])->group(function () {
     Route::get('/collection/report', CollectionReport::class);
     Route::get('/savings/report', SavingsReport::class);
     Route::get('/pastdue/report', PastDueReport::class);
+
 
 });
 //reports
