@@ -42,7 +42,7 @@ class NotificationController extends Controller
         //     dd('okds');
         // } catch (\Exception $e) {
         //     die("Could not connect to the database.  Please check your configuration. error:" . $e );
-        // }
+        // }asdasdas
 
         //DB::connection('sqlsrv')->table('tbl_Application_Model')->where('id', 1)->get();
         return Application::get();
