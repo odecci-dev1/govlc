@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
 use App\Traits\Common;
+use App\Models\TblFieldOfficer;
 
 class FieldOfficerlist extends Component
 {
@@ -43,23 +44,24 @@ class FieldOfficerlist extends Component
         // $this->list = $data->json();        
         // //dd($this->list);
 
-        $inputs = [
-                    'page' => $this->paginate['page'],
-                    'pageSize' => $this->paginate['pageSize'],
-                    'FilterName' => $this->keyword,
-                    'status' => 'Active',
-                    'module' => 'FieldOfficer',
-                  ];
+        $this->list = TblFieldOfficer::paginate(25);     
+        // $inputs = [
+        //              'page' => $this->paginate['page'],
+        //              'pageSize' => $this->paginate['pageSize'],
+        //              'FilterName' => $this->keyword,
+        //              'status' => 'Active',
+        //              'module' => 'FieldOfficer',
+        //           ];
      
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Pagination/DisplayListPaginate', $inputs);                 
-        $this->list = $data->json()['items'];  
-        if( $data->json()['totalPage'] ){
-            $this->paginationPaging['totalPage'] = $data->json()['totalPage'];
-            $this->paginationPaging['totalRecord'] = $data->json()['totalRecord'];
-            $this->paginationPaging['currentPage'] = $data->json()['currentPage'];
-            $this->paginationPaging['nextPage'] = $data->json()['nextPage'] < $data->json()['totalPage'] ?  $data->json()['nextPage'] : $data->json()['totalPage'];
-            $this->paginationPaging['prevPage'] = $data->json()['prevPage'] > 0 ? $data->json()['prevPage'] : 1;
-        }
+        // $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Pagination/DisplayListPaginate', $inputs);                 
+        // $this->list = $data->json()['items'];  
+        // if( $data->json()['totalPage'] ){
+        //     $this->paginationPaging['totalPage'] = $data->json()['totalPage'];
+        //     $this->paginationPaging['totalRecord'] = $data->json()['totalRecord'];
+        //     $this->paginationPaging['currentPage'] = $data->json()['currentPage'];
+        //     $this->paginationPaging['nextPage'] = $data->json()['nextPage'] < $data->json()['totalPage'] ?  $data->json()['nextPage'] : $data->json()['totalPage'];
+        //     $this->paginationPaging['prevPage'] = $data->json()['prevPage'] > 0 ? $data->json()['prevPage'] : 1;
+        // }
 
 
         return view('livewire.maintenance.field-officer.field-officerlist');

@@ -8,8 +8,8 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 
 use App\Traits\Common;
-
 use function PHPUnit\Framework\isNull;
+use App\Models\TblFieldOfficer;
 
 class FieldOfficer extends Component
 {   
@@ -180,9 +180,14 @@ class FieldOfficer extends Component
 
 
     public function store(){   
-        try {                  
+        try { 
+                     
             $input = $this->validate();        
 
+            $crt = new TblFieldOfficer();
+            $crt->Fname = $input['officer']['fname'] ??= '';
+            $crt->save();
+           
             $data = [
                         "fname"=> $input['officer']['fname'] ??= '',
                         "lname"=> $input['officer']['lname'] ??= '',
