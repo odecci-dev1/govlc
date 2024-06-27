@@ -13,7 +13,7 @@ class FieldOfficerlist extends Component
 
     use Common;
     public $usertype;
-    public $list = [];
+    // public $list = [];
     public $keyword = '';
     public $paginate = [];
     public $paginationPaging = [];
@@ -44,7 +44,21 @@ class FieldOfficerlist extends Component
         // $this->list = $data->json();        
         // //dd($this->list);
 
-        $this->list = TblFieldOfficer::paginate(25);     
+        $mlist = TblFieldOfficer::where('fname', 'like', '%'. $this->keyword .'%')
+        ->leftJoin('tbl_Area_Model', function($join){ $join->on('tbl_FieldOfficer_Model.FOID', '=', 'tbl_Area_Model.FOID'); })
+        ->selectRaw("tbl_FieldOfficer_Model.Lname as Lname,
+                    tbl_FieldOfficer_Model.Fname as Fname, 
+                    tbl_FieldOfficer_Model.Mname as Mname,
+                    tbl_FieldOfficer_Model.Cno as Cno,
+                    tbl_FieldOfficer_Model.Age as Age,
+                    tbl_FieldOfficer_Model.HouseNo as HouseNo,
+                    tbl_FieldOfficer_Model.Barangay as Barangay,
+                    tbl_FieldOfficer_Model.City as City,
+                    tbl_FieldOfficer_Model.Region as Region,
+                    tbl_FieldOfficer_Model.FOID as FOID,
+                    CONCAT(tbl_Area_Model.Area, ' ', tbl_Area_Model.City) as arealists")
+        ->paginate(50);    
+        //dd($this->list); 
         // $inputs = [
         //              'page' => $this->paginate['page'],
         //              'pageSize' => $this->paginate['pageSize'],
@@ -64,6 +78,6 @@ class FieldOfficerlist extends Component
         // }
 
 
-        return view('livewire.maintenance.field-officer.field-officerlist');
+        return view('livewire.maintenance.field-officer.field-officerlist', ['list' => $mlist]);
     }
 }

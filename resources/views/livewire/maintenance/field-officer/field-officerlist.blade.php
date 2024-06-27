@@ -115,24 +115,24 @@
                                     <!-- * Officers' Name-->
                                     <div class="td-wrapper">
                                         <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
-                                        <span class="td-name">{{ $l['lname'] . ', ' . $l['fname'] . ' ' . mb_substr($l['mname'], 0, 1) . ($l['mname'] == '' ? '' : '.') }}</span>
+                                        <span class="td-name">{{ $l['Lname'] . ', ' . $l['Fname'] . ' ' . mb_substr($l['Mname'], 0, 1) . ($l['Mname'] == '' ? '' : '.') }}</span>
                                     </div>
 
                                 </td>
 
                                 <!-- * Contact Number 1 -->
                                 <td class="td-con-1">
-                                    {{ $l['cno'] }}
+                                    {{ $l['Cno'] }}
                                 </td>
 
                                 <!-- * Address -->
                                 <td class="td-address">
-                                    {{ $l['houseNo'] . ', ' . $l['barangay'] . ', ' . $l['city'] . ', '. $l['region'] }}
+                                    {{ $l['HouseNo'] . ', ' . $l['Barangay'] . ', ' . $l['City'] . ', '. $l['Region'] }}
                                 </td>
 
                                 <!-- * Contact Number 2 -->
                                 <td class="td-con-2">
-                                    {{ $l['age'] }}
+                                    {{ $l['Age'] }}
                                 </td>
 
                                 <!-- * Area -->
@@ -143,9 +143,9 @@
                                 <!-- * Action -->
                                 <td class="td-btns">
                                     <div class="td-btn-wrapper">
-                                        <a href="{{ URL::to('/') }}/maintenance/fieldofficer/view/{{ $l['foid'] }}" class="a-btn-view-2" data-maintenance-view-field-officer>View</a>
+                                        <a href="{{ URL::to('/') }}/maintenance/fieldofficer/view/{{ $l['FOID'] }}" class="a-btn-view-2" data-maintenance-view-field-officer>View</a>
                                         @if($usertype != 2)
-                                        <button type="button" onclick="showDialog('{{ $l['foid'] }}')" class="a-btn-trash-2">Trash</button>
+                                        <button type="button" onclick="showDialog('{{ $l['FOID'] }}')" class="a-btn-trash-2">Trash</button>
                                         @endif
                                     </div>
                                 </td>
@@ -158,18 +158,12 @@
                 </div>
                 </div>
                 <!-- * Pagination Container -->
-                @if($paginationPaging['totalPage'] > 0)
+        
                 <div class="pagination-container" style="overflow-x: auto;">
 
-                    <!-- * Pagination Links -->
-                    <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left" ></a>
-                    @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
-                    <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
-                    @endfor
-                    <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right" ></a>
 
                 </div>   
-                @endif
+
 </div>
 <script>
     document.addEventListener('livewire:load', function () {
