@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\URL;
 use Livewire\Component;
 use Symfony\Component\Console\Input\Input;
 
+use App\Models\Application;
+use App\Models\Members;
+use App\Models\MonthlyBills;
+use App\Models\JobInfo;
+
 class CreateApplication extends Component
 {
 
@@ -723,139 +728,140 @@ class CreateApplication extends Component
                                     'address' => $this->inpbank['address'.$key]   ];
                     }
                 }
-            }
-
-            // $profilename = '';
-            // if(isset($this->member['profile'])){
-            //     $time = time();
-            //     $profilename = 'members_profile_'.$time;
-            //     $this->member['profile']->storeAs('public/members_profile', $profilename);   
-            //     // $profileimages = [ [ 'additionalProp1' => [$profilename] ] ]; 
-            //     // $upprofile = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UploadProfileImage', $profileimages);              
-            // }          
+            } 
             
-            // $memattachements = [];
-            // if(isset($this->member['attachments'])){
-            //     //dd( $this->member['attachments'] );
-            //     foreach ($this->member['attachments'] as $attachments) {
-            //         $time = time();
-            //         $filename = 'members_attachments_'.$time.'_'.$attachments->getClientOriginalName();
-            //         $attachments->storeAs('public/members_attachments', $filename);   
-            //         $memattachements[] = [ 'fileName' =>  $filename, 'filePath' => $filename ];
-            //     }
-            // }           
+            $mem = new Members();
+            $mem->Fname = $input['member']['fname'] ??= '';
+            $mem->Lname = $input['member']['lname'] ??= '';
+            $mem->Mname = $input['member']['mname'] ??= '';
+            $mem->Suffix = $input['member']['suffix'] ??= '';
+            $mem->Age = $input['member']['age'] ??= '0';
+            $mem->Barangay = $input['member']['barangay'] ??= '';
+            $mem->City = $input['member']['city'] ??= '';
+            $mem->Civil_Status = $input['member']['civil_Status'] ??= 'Single';
+            $mem->Cno = $input['member']['cno'] ??= '';
+            $mem->Country = $input['member']['country'] ??= '';
+            $mem->DOB = $input['member']['dob'] ??= null;
+            $mem->EmailAddress = $input['member']['emailAddress'] ??= '';
+            $mem->Gender = $input['member']['gender'] ??= '';
+            $mem->HouseNo = $input['member']['houseNo'] ??= '';
+            $mem->House_Stats = $input['member']['house_Stats'] ??= '0';
+            $mem->POB = $input['member']['pob'] ??= '';
+            $mem->Province = $input['member']['province'] ??= '';
+            $mem->YearsStay = $input['member']['yearsStay'] ??= '0';
+            $mem->ZipCode = $input['member']['zipCode'] ??= '';
+            $mem->Status = 1;
+            $mem->DateCreated = Carbon::now();
+            $mem->DateUpdated = Carbon::now();
+            $mem->MemId = 'MEM-01';
+            $mem->OwnProperty = null;
+            $mem->OwnVehicles = null;
+            $mem->save();
 
-            $data = [[          "fname"=> $input['member']['fname'] ??= '',
-                                "lname"=> $input['member']['lname'] ??= '',
-                                "mname"=> $input['member']['mname'] ??= '',
-                                "suffix"=> $input['member']['suffix'] ??= '',
-                                "age"=> $input['member']['age'] ??= '0',
-                                "barangay"=> $input['member']['barangay'] ??= '',
-                                "city"=> $input['member']['city'] ??= '',
-                                "civil_Status"=> $input['member']['civil_Status'] ??= 'Single',
-                                "cno"=> $input['member']['cno'] ??= '',
-                                "country"=> $input['member']['country'] ??= '',
-                                "dob"=> $input['member']['dob'] ??= null, //not saving if null or blank
-                                "emailAddress"=> $input['member']['emailAddress'] ??= '',
-                                "gender"=> $input['member']['gender'] ??= '',
-                                "houseNo"=> $input['member']['houseNo'] ??= '',
-                                "house_Stats"=> $input['member']['house_Stats'] ??= '0',
-                                "pob"=> $input['member']['pob'] ??= '',
-                                "province"=> $input['member']['province'] ??= '',
-                                "yearsStay"=> $input['member']['yearsStay'] ??= '0',
-                                "zipCode"=> $input['member']['zipCode'] ??= '',
-                                "status"=> '1',
-                                "dateCreated"=> null,
-                                "dateUpdated"=> null,
-                                "memId"=> null,
-                                "electricBill"=> $input['member']['electricBill'] ??= '0',
-                                "waterBill"=> $input['member']['waterBill'] ??= '0',
-                                "otherBills"=> $input['member']['otherBills'] ??= '0',
-                                "dailyExpenses"=> $input['member']['dailyExpenses'] ??= '0',
-                                "jobDescription"=> $input['member']['jobDescription'] ??= '',
-                                "yos"=> !empty($input['member']['yos']) ? $input['member']['yos'] : '0',
-                                "monthlySalary"=> !empty($input['member']['monthlySalary']) ? $input['member']['monthlySalary'] : '0',
-                                "otherSOC"=> $input['member']['otherSOC'] ??= '',
-                                "bO_Status"=> $input['member']['bO_Status'] ??= '0',
-                                "companyName"=> $input['member']['companyName'] ??= '',
-                                "companyAddress"=> $input['member']['companyAddress'] ??= '',
-                                "emp_Status"=> $input['member']['emp_Status'] ??= '0',
-                                "f_Fname"=> $input['member']['f_Fname'] ??= '',
-                                "f_Lname"=> $input['member']['f_Lname'] ??= '',
-                                "f_Mname"=> $input['member']['f_Mname'] ??= '',
-                                "f_Suffix"=> $input['member']['f_Suffix'] ??= '',
-                                "f_DOB"=> $input['member']['f_DOB'] ??= null,
-                                "f_Age"=> $input['member']['f_Age'] ??= '0',
-                                "f_NOD"=> $input['member']['f_NOD'] ??= '0',
-                                "f_YOS"=> !empty($input['member']['f_YOS']) ? $input['member']['f_YOS'] : '0',
-                                "f_Emp_Status"=>  $input['member']['f_Emp_Status'] ??= '0',
-                                "f_Job"=> $input['member']['f_Job'] ??= '',
-                                "f_CompanyName"=> $input['member']['f_CompanyName'] ??= '',
-                                "f_RTTB"=> '', 
-                                "famId"=> "string", ///check if caused error not exist latest working
-                                "business"=> $businesses,
-                                "loanAmount"=> $input['member']['loanAmount'] ??= '0',
-                                'loanTypeId' => $this->loanDetails['loanTypeID'],
-                                "termsOfPayment"=> $this->loanDetails['loantermsID'] ??= '',
-                                "purpose"=> $input['member']['purpose'] ??= '',
-                                "child"=> $childs,
-                                "appliances"=> $appliances,
-                                "property"=> $properties,
-                                "assets"=> $assets,
-                                "bank"=> $banks,
-                                "co_Fname"=> $input['comaker']['co_Fname'] ??= '',
-                                "co_Lname"=> $input['comaker']['co_Lname'] ??= '',
-                                "co_Mname"=> $input['comaker']['co_Mname'] ??= '',
-                                "co_Suffix"=> $input['comaker']['co_Suffix'] ??= '',
-                                "co_Age"=> $input['comaker']['co_Age'] ??= '0',
-                                "co_Barangay"=> $input['comaker']['co_Barangay'] ??= '',
-                                "co_City"=> $input['comaker']['co_City'] ??= '',
-                                "co_Civil_Status"=> $input['comaker']['co_Civil_Status'] ??= '',
-                                "co_Cno"=> $input['comaker']['co_Cno'] ??= '',
-                                "co_Country"=> $input['comaker']['co_Country'] ??= '',
-                                "co_DOB"=>  $input['comaker']['co_DOB'] ??= null,
-                                "co_EmailAddress"=> $input['comaker']['co_EmailAddress'] ??= '',
-                                "co_Gender"=> $input['comaker']['co_Gender'] ??= '',
-                                "co_HouseNo"=> $input['comaker']['co_HouseNo'] ??= '',
-                                "co_House_Stats"=> $input['comaker']['co_House_Stats'] ??= '0',
-                                "co_POB"=> $input['comaker']['co_POB'] ??= '',
-                                "co_Province"=> $input['comaker']['co_Province'] ??= '',
-                                "co_YearsStay"=> $input['comaker']['co_YearsStay'] ??= '0',
-                                "co_ZipCode"=> $input['comaker']['co_ZipCode'] ??= '',
-                                "co_RTTB"=> $input['comaker']['co_RTTB'] ??= '',
-                                "co_Status"=> '1',
-                                "co_JobDescription"=> $input['comaker']['co_JobDescription'] ??= '',
-                                "co_YOS"=> !empty($input['comaker']['co_YOS'] ??= '0') ? $input['comaker']['co_YOS'] ??= '0' : '0',
-                                "co_MonthlySalary"=> !empty($input['comaker']['co_MonthlySalary']) ? $input['comaker']['co_MonthlySalary'] : '0',
-                                "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
-                                "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
-                                "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
-                                "co_CompanyAddress"=>  $input['comaker']['co_CompanyID'] ??= '',///check if caused error not exist latest working
-                                "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
-                                "co_Emp_Status"=> $input['comaker']['co_Emp_Status'] ??= '0', //'1', //$input['comaker']['co_Emp_Status'],
-                                "remarks"=> '',
-                                "applicationStatus" => $type == 1 ? 7 : 8,
-                                "profileName"=> $this->storeProfileImage(),
-                                "profileFilePath"=> $this->storeProfileImage(),
-                                "co_ProfileName"=> $this->storeCoProfileImage(),
-                                "co_ProfileFilePath"=> $this->storeCoProfileImage(),
-                                "requirementsFile"=> $this->storeAttachments(),                                                                                   
-                                "signatureUpload"=> [
-                                    [
-                                      "fileName"=> $this->storeSignature(),
-                                      "filePath"=> $this->storeSignature()
-                                    ]
-                                  ],
-                                  "co_RequirementsFile"=> $this->storeCoAttachments(),
-                                  "co_SignatureUpload"=> [
-                                    [
-                                      "fileName"=> $this->storeCoSignature(),
-                                      "filePath"=> $this->storeCoSignature()
-                                    ]
-                                  ],
-                                  "userId"=> session()->get('auth_userid'),
-                                  "naid"=>  $this->naID
-                    ]];
+            $expense = new MonthlyBills();
+            $expense->MemId = 'MEM-01';
+            $expense->ElectricBill = $input['member']['electricBill'] ??= '0';
+            $expense->WaterBill = $input['member']['waterBill'] ??= '0';
+            $expense->OtherBills = $input['member']['otherBills'] ??= '0';
+            $expense->DailyExpenses = $input['member']['dailyExpenses'] ??= '0';
+            $expense->Status = 1;
+            $expense->DateCreated = Carbon::now();
+            $expense->DateUpdated = Carbon::now();
+            $expense->save();
+
+            $jobinfo = new JobInfo();
+            $jobinfo->JobDescription = $input['member']['jobDescription'] ??= '';
+            $jobinfo->YOS = !empty($input['member']['yos']) ? $input['member']['yos'] : '0';
+            $jobinfo->CompanyName = $input['member']['companyName'] ??= '';
+            $jobinfo->MonthlySalary = !empty($input['member']['monthlySalary']) ? $input['member']['monthlySalary'] : '0';
+            $jobinfo->OtherSOC = $input['member']['otherSOC'] ??= '';
+            $jobinfo->Status = 1;
+            $jobinfo->DateCreated = Carbon::now();
+            $jobinfo->DateUpdated = Carbon::now();
+            $jobinfo->BO_Status = $input['member']['bO_Status'] ??= '0';
+            $jobinfo->Emp_Status = 1;
+            $jobinfo->MemId = 'MEM-01';
+            $jobinfo->save();
+
+            //dito
+                               
+                    //"companyAddress"=> $input['member']['companyAddress'] ??= ''                                                     
+                    //             "f_Fname"=> $input['member']['f_Fname'] ??= '',
+                    //             "f_Lname"=> $input['member']['f_Lname'] ??= '',
+                    //             "f_Mname"=> $input['member']['f_Mname'] ??= '',
+                    //             "f_Suffix"=> $input['member']['f_Suffix'] ??= '',
+                    //             "f_DOB"=> $input['member']['f_DOB'] ??= null,
+                    //             "f_Age"=> $input['member']['f_Age'] ??= '0',
+                    //             "f_NOD"=> $input['member']['f_NOD'] ??= '0',
+                    //             "f_YOS"=> !empty($input['member']['f_YOS']) ? $input['member']['f_YOS'] : '0',
+                    //             "f_Emp_Status"=>  $input['member']['f_Emp_Status'] ??= '0',
+                    //             "f_Job"=> $input['member']['f_Job'] ??= '',
+                    //             "f_CompanyName"=> $input['member']['f_CompanyName'] ??= '',
+                    //             "f_RTTB"=> '', 
+                    //             "famId"=> "string", ///check if caused error not exist latest working
+                    //             "business"=> $businesses,
+                    //             "loanAmount"=> $input['member']['loanAmount'] ??= '0',
+                    //             'loanTypeId' => $this->loanDetails['loanTypeID'],
+                    //             "termsOfPayment"=> $this->loanDetails['loantermsID'] ??= '',
+                    //             "purpose"=> $input['member']['purpose'] ??= '',
+                    //             "child"=> $childs,
+                    //             "appliances"=> $appliances,
+                    //             "property"=> $properties,
+                    //             "assets"=> $assets,
+                    //             "bank"=> $banks,
+                    //             "co_Fname"=> $input['comaker']['co_Fname'] ??= '',
+                    //             "co_Lname"=> $input['comaker']['co_Lname'] ??= '',
+                    //             "co_Mname"=> $input['comaker']['co_Mname'] ??= '',
+                    //             "co_Suffix"=> $input['comaker']['co_Suffix'] ??= '',
+                    //             "co_Age"=> $input['comaker']['co_Age'] ??= '0',
+                    //             "co_Barangay"=> $input['comaker']['co_Barangay'] ??= '',
+                    //             "co_City"=> $input['comaker']['co_City'] ??= '',
+                    //             "co_Civil_Status"=> $input['comaker']['co_Civil_Status'] ??= '',
+                    //             "co_Cno"=> $input['comaker']['co_Cno'] ??= '',
+                    //             "co_Country"=> $input['comaker']['co_Country'] ??= '',
+                    //             "co_DOB"=>  $input['comaker']['co_DOB'] ??= null,
+                    //             "co_EmailAddress"=> $input['comaker']['co_EmailAddress'] ??= '',
+                    //             "co_Gender"=> $input['comaker']['co_Gender'] ??= '',
+                    //             "co_HouseNo"=> $input['comaker']['co_HouseNo'] ??= '',
+                    //             "co_House_Stats"=> $input['comaker']['co_House_Stats'] ??= '0',
+                    //             "co_POB"=> $input['comaker']['co_POB'] ??= '',
+                    //             "co_Province"=> $input['comaker']['co_Province'] ??= '',
+                    //             "co_YearsStay"=> $input['comaker']['co_YearsStay'] ??= '0',
+                    //             "co_ZipCode"=> $input['comaker']['co_ZipCode'] ??= '',
+                    //             "co_RTTB"=> $input['comaker']['co_RTTB'] ??= '',
+                    //             "co_Status"=> '1',
+                    //             "co_JobDescription"=> $input['comaker']['co_JobDescription'] ??= '',
+                    //             "co_YOS"=> !empty($input['comaker']['co_YOS'] ??= '0') ? $input['comaker']['co_YOS'] ??= '0' : '0',
+                    //             "co_MonthlySalary"=> !empty($input['comaker']['co_MonthlySalary']) ? $input['comaker']['co_MonthlySalary'] : '0',
+                    //             "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
+                    //             "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
+                    //             "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
+                    //             "co_CompanyAddress"=>  $input['comaker']['co_CompanyID'] ??= '',///check if caused error not exist latest working
+                    //             "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
+                    //             "co_Emp_Status"=> $input['comaker']['co_Emp_Status'] ??= '0', //'1', //$input['comaker']['co_Emp_Status'],
+                    //             "remarks"=> '',
+                    //             "applicationStatus" => $type == 1 ? 7 : 8,
+                    //             "profileName"=> $this->storeProfileImage(),
+                    //             "profileFilePath"=> $this->storeProfileImage(),
+                    //             "co_ProfileName"=> $this->storeCoProfileImage(),
+                    //             "co_ProfileFilePath"=> $this->storeCoProfileImage(),
+                    //             "requirementsFile"=> $this->storeAttachments(),                                                                                   
+                    //             "signatureUpload"=> [
+                    //                 [
+                    //                   "fileName"=> $this->storeSignature(),
+                    //                   "filePath"=> $this->storeSignature()
+                    //                 ]
+                    //               ],
+                    //               "co_RequirementsFile"=> $this->storeCoAttachments(),
+                    //               "co_SignatureUpload"=> [
+                    //                 [
+                    //                   "fileName"=> $this->storeCoSignature(),
+                    //                   "filePath"=> $this->storeCoSignature()
+                    //                 ]
+                    //               ],
+                    //               "userId"=> session()->get('auth_userid'),
+                    //               "naid"=>  $this->naID
+                    // ]];
       
                     //$extension = $request->file('filename')->getClientOriginalExtension();
                     //dd( $data );       
@@ -917,6 +923,8 @@ class CreateApplication extends Component
             throw $e;            
         }
     }
+
+    
    
     public function storeBusinessInfoAttachments($oldattachments, $businessattachments){
         $memattachements = [];            
@@ -1423,8 +1431,7 @@ class CreateApplication extends Component
         }
         else{
             $lastcnt = $lastcnt  + 1;
-        }
-        //dito
+        }       
         //dd( $this->membusinfo['attachments'] );
         $data = $this->validate([                                    
                                     'membusinfo.businessName' => ['required'],
