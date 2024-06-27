@@ -9,4 +9,5 @@ class Application extends Model
 {
     use HasFactory;
     protected $table = 'tbl_Application_Model';
+    public $timestamps = false;
 }

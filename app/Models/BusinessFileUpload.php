@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FamBackground extends Model
+class BusinessFileUpload extends Model
 {
     use HasFactory;
-    protected $table = 'tbl_FamBackground_Model';
+    protected $table = 'tbl_BusinessFileUpload_Model';
     public $timestamps = false;
 }

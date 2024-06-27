@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use App\Models\Application;
+use App\Models\Members;
 use DB;
 
 class NotificationController extends Controller
@@ -45,7 +45,7 @@ class NotificationController extends Controller
         // }asdasdas
 
         //DB::connection('sqlsrv')->table('tbl_Application_Model')->where('id', 1)->get();
-        return Application::get();
+        return Members::get();
    
         // $users = DB::select('select * from tbl_Application_Model ');
     }

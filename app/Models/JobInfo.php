@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class JobInfo extends Model
 {
     use HasFactory;
+    protected $table = 'tbl_JobInfo_Model';
+    public $timestamps = false;
 }

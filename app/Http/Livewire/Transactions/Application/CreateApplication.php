@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Transactions\Application;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\DB;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\Common;
@@ -10,12 +9,15 @@ use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\URL;
 use Livewire\Component;
-use Symfony\Component\Console\Input\Input;
+use DB;
 
 use App\Models\Application;
 use App\Models\Members;
 use App\Models\MonthlyBills;
 use App\Models\JobInfo;
+use App\Models\FamBackground;
+use App\Models\BusinessInformation;
+use App\Models\BusinessFileUpload;
 
 class CreateApplication extends Component
 {
@@ -655,7 +657,8 @@ class CreateApplication extends Component
     }
 
 
-    public function store($type = 1){               
+    public function store($type = 1){  
+        DB::beginTransaction();             
         try {                        
             $this->resetValidation();          
             $input = $this->validate();     
@@ -666,69 +669,69 @@ class CreateApplication extends Component
             $assets = [];
             $properties = [];
 
-            if($this->hasvehicle == 1){
-                if(count($this->vehicle) > 0){
-                    foreach($this->vehicle as $key => $value){                   
-                        $assets[] = [ 'motorVehicles' => $this->inpvehicle['vehicle'.$key] ];  
-                    }            
-                }
-            }
+            // if($this->hasvehicle == 1){
+            //     if(count($this->vehicle) > 0){
+            //         foreach($this->vehicle as $key => $value){                   
+            //             $assets[] = [ 'motorVehicles' => $this->inpvehicle['vehicle'.$key] ];  
+            //         }            
+            //     }
+            // }
     
-            if($this->hasproperties == 1){
-                if(count($this->properties) > 0){
-                    foreach($this->properties as $key => $value){                    
-                        $properties[] = [ 'property' => $this->inpproperties['property'.$key] ];                
-                    }            
-                }
-            }  
+            // if($this->hasproperties == 1){
+            //     if(count($this->properties) > 0){
+            //         foreach($this->properties as $key => $value){                    
+            //             $properties[] = [ 'property' => $this->inpproperties['property'.$key] ];                
+            //         }            
+            //     }
+            // }  
          
-            if(count($this->cntmemchild) > 0){
-                if((isset($this->inpchild['fname1']) ? $this->inpchild['fname1'] != '' : false)  || (isset($this->inpchild['mname1']) ? $this->inpchild['mname1'] != '' : false) || (isset($this->inpchild['lname1']) ? $this->inpchild['lname1'] != '' : false) || (isset($this->inpchild['age1']) ? $this->inpchild['age1'] != '' : false) || (isset($this->inpchild['school1']) ? $this->inpchild['school1'] != '' : false)){
-                    foreach($this->cntmemchild as $cntmemchild){
-                        $childs[] = [   'fname' => $this->inpchild['fname'.$cntmemchild] ??= '', 
-                                        'mname' => $this->inpchild['mname'.$cntmemchild] ??= '',
-                                        'lname' => $this->inpchild['lname'.$cntmemchild] ??= '',
-                                        'age' => $this->inpchild['age'.$cntmemchild] ??= '0',
-                                        'nos' => $this->inpchild['school'.$cntmemchild] ??= '',
-                                        'famId' => null,    ];
-                    }
-                }
-            }
+            // if(count($this->cntmemchild) > 0){
+            //     if((isset($this->inpchild['fname1']) ? $this->inpchild['fname1'] != '' : false)  || (isset($this->inpchild['mname1']) ? $this->inpchild['mname1'] != '' : false) || (isset($this->inpchild['lname1']) ? $this->inpchild['lname1'] != '' : false) || (isset($this->inpchild['age1']) ? $this->inpchild['age1'] != '' : false) || (isset($this->inpchild['school1']) ? $this->inpchild['school1'] != '' : false)){
+            //         foreach($this->cntmemchild as $cntmemchild){
+            //             $childs[] = [   'fname' => $this->inpchild['fname'.$cntmemchild] ??= '', 
+            //                             'mname' => $this->inpchild['mname'.$cntmemchild] ??= '',
+            //                             'lname' => $this->inpchild['lname'.$cntmemchild] ??= '',
+            //                             'age' => $this->inpchild['age'.$cntmemchild] ??= '0',
+            //                             'nos' => $this->inpchild['school'.$cntmemchild] ??= '',
+            //                             'famId' => null,    ];
+            //         }
+            //     }
+            // }
            
-            if(count( $this->businfo) > 0){
-                foreach($this->businfo as $key => $value){
-                    $businesses[] = [   'businessName' => $value['businessName'], 
-                                        'businessType' => $value['businessType'],
-                                        'businessAddress' => $value['businessAddress'],
-                                        'b_status' => $value['b_status'],
-                                        'yob' => $value['yob'],
-                                        'noe' => $value['noe'],
-                                        'salary' => $value['salary'],
-                                        'vos' => $value['vos'],
-                                        'aos' => $value['aos'],
-                                        'businessFiles' => $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] )  
-                                    ];
-                }
-            }
+            // if(count( $this->businfo) > 0){
+            //     foreach($this->businfo as $key => $value){
+            //         $businesses[] = [   'businessName' => $value['businessName'], 
+            //                             'businessType' => $value['businessType'],
+            //                             'businessAddress' => $value['businessAddress'],
+            //                             'b_status' => $value['b_status'],
+            //                             'yob' => $value['yob'],
+            //                             'noe' => $value['noe'],
+            //                             'salary' => $value['salary'],
+            //                             'vos' => $value['vos'],
+            //                             'aos' => $value['aos'],
+            //                             'businessFiles' => $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] )  
+            //                         ];
+            //     }
+            // }
 
-            if(count( $this->appliances) > 0){
-                if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
-                    foreach($this->appliances as $key => $value){
-                        $appliances[] = [   'brand' => $this->inpappliances['brand'.$key], 
-                                            'appliances' => $this->inpappliances['appliance'.$key],
-                                            'naid' => ''   ];
-                    }
-                }               
-            }
+            // if(count( $this->appliances) > 0){
+            //     if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
+            //         foreach($this->appliances as $key => $value){
+            //             $appliances[] = [   'brand' => $this->inpappliances['brand'.$key], 
+            //                                 'appliances' => $this->inpappliances['appliance'.$key],
+            //                                 'naid' => ''   ];
+            //         }
+            //     }               
+            // }
 
-            if(count( $this->bank) > 0){
-                if((isset($this->inpbank['account1']) ? $this->inpbank['account1'] != '' : false)  || (isset($this->inpbank['address1']) ? $this->inpbank['address1'] != '' : false)){
-                    foreach($this->bank as $key => $value){
-                        $banks[] = [   'bankName' => $this->inpbank['account'.$key], 
-                                    'address' => $this->inpbank['address'.$key]   ];
-                    }
-                }
-            } 
+            // if(count( $this->bank) > 0){
+            //     if((isset($this->inpbank['account1']) ? $this->inpbank['account1'] != '' : false)  || (isset($this->inpbank['address1']) ? $this->inpbank['address1'] != '' : false)){
+            //         foreach($this->bank as $key => $value){
+            //             $banks[] = [   'bankName' => $this->inpbank['account'.$key], 
+            //                         'address' => $this->inpbank['address'.$key]   ];
+            //         }
+            //     }
+            // } 
             
             $mem = new Members();
             $mem->Fname = $input['member']['fname'] ??= '';
@@ -753,13 +756,13 @@ class CreateApplication extends Component
             $mem->Status = 1;
             $mem->DateCreated = Carbon::now();
             $mem->DateUpdated = Carbon::now();
-            $mem->MemId = 'MEM-01';
+            //$mem->MemId = 'MEM-01';
             $mem->OwnProperty = null;
             $mem->OwnVehicles = null;
             $mem->save();
 
             $expense = new MonthlyBills();
-            $expense->MemId = 'MEM-01';
+            $expense->MemId = $mem->id;
             $expense->ElectricBill = $input['member']['electricBill'] ??= '0';
             $expense->WaterBill = $input['member']['waterBill'] ??= '0';
             $expense->OtherBills = $input['member']['otherBills'] ??= '0';
@@ -779,27 +782,60 @@ class CreateApplication extends Component
             $jobinfo->DateCreated = Carbon::now();
             $jobinfo->DateUpdated = Carbon::now();
             $jobinfo->BO_Status = $input['member']['bO_Status'] ??= '0';
-            $jobinfo->Emp_Status = 1;
-            $jobinfo->MemId = 'MEM-01';
+            $jobinfo->Emp_Status = $input['member']['emp_Status'] ??= '0';
+            $jobinfo->MemId = $mem->id;
             $jobinfo->save();
+
+            $famback = new FamBackground();
+            $famback->Fname = $input['member']['f_Fname'] ??= '';
+            $famback->Mname = $input['member']['f_Mname'] ??= '';
+            $famback->Lname = $input['member']['f_Lname'] ??= '';
+            $famback->Suffix = $input['member']['f_Suffix'] ??= '';
+            $famback->DOB = $input['member']['f_DOB'] ??= null;
+            $famback->Age = $input['member']['f_Age'] ??= '0';
+            $famback->Emp_Status = $input['member']['f_Emp_Status'] ??= '0';
+            $famback->Position = $input['member']['f_Job'] ??= '';
+            $famback->YOS = !empty($input['member']['f_YOS']) ? $input['member']['f_YOS'] : '0';
+            $famback->CmpId = $input['member']['f_CompanyName'] ??= '';
+            $famback->NOD = $input['member']['f_NOD'] ??= '0';
+            $famback->RTTB = '';
+            $famback->MemId = $mem->id;
+            $famback->Status = 1;
+            $famback->DateCreated = Carbon::now();
+            $famback->DateUpdated = Carbon::now();          
+            $famback->save();
+
+            if(count( $this->businfo) > 0){
+                foreach($this->businfo as $key => $value){
+                    $businfo = new BusinessInformation();
+                    $businfo->BusinessName = $value['businessName'];
+                    $businfo->BusinessType = $value['businessType'];
+                    $businfo->BusinessAddress = $value['businessAddress'];
+                    $businfo->B_status = $value['b_status'];
+                    $businfo->YOB = $value['yob'];
+                    $businfo->NOE = $value['noe'];
+                    $businfo->Salary = $value['salary'];
+                    $businfo->VOS = $value['vos'];
+                    $businfo->AOS = $value['aos'];
+                    $businfo->Status = 1;
+                    $businfo->DateCreated = Carbon::now();
+                    $businfo->DateUpdated = Carbon::now();
+                    $businfo->MemId = $mem->id;
+                    $businfo->save();
+
+                    $busfile = new BusinessFileUpload();
+                    $busfile->BIID = $businfo->id;
+                    $busfile->FileName = $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] );
+                    $busfile->FilePath = $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] );
+                    $busfile->Status = 1;
+                    $busfile->DateCreated = Carbon::now();
+                    $busfile->save();                             
+                }
+            }
 
             //dito
                                
-                    //"companyAddress"=> $input['member']['companyAddress'] ??= ''                                                     
-                    //             "f_Fname"=> $input['member']['f_Fname'] ??= '',
-                    //             "f_Lname"=> $input['member']['f_Lname'] ??= '',
-                    //             "f_Mname"=> $input['member']['f_Mname'] ??= '',
-                    //             "f_Suffix"=> $input['member']['f_Suffix'] ??= '',
-                    //             "f_DOB"=> $input['member']['f_DOB'] ??= null,
-                    //             "f_Age"=> $input['member']['f_Age'] ??= '0',
-                    //             "f_NOD"=> $input['member']['f_NOD'] ??= '0',
-                    //             "f_YOS"=> !empty($input['member']['f_YOS']) ? $input['member']['f_YOS'] : '0',
-                    //             "f_Emp_Status"=>  $input['member']['f_Emp_Status'] ??= '0',
-                    //             "f_Job"=> $input['member']['f_Job'] ??= '',
-                    //             "f_CompanyName"=> $input['member']['f_CompanyName'] ??= '',
-                    //             "f_RTTB"=> '', 
-                    //             "famId"=> "string", ///check if caused error not exist latest working
-                    //             "business"=> $businesses,
+                    //"companyAddress"=> $input['member']['companyAddress'] ??= ''                                                                                        
                     //             "loanAmount"=> $input['member']['loanAmount'] ??= '0',
                     //             'loanTypeId' => $this->loanDetails['loanTypeID'],
                     //             "termsOfPayment"=> $this->loanDetails['loantermsID'] ??= '',
@@ -865,62 +901,64 @@ class CreateApplication extends Component
       
                     //$extension = $request->file('filename')->getClientOriginalExtension();
                     //dd( $data );       
-            if($this->type == 'create'){                            
-                $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data); 
-                //dd($crt);                                                                                    
-                $apiresp = $crt->getStatusCode();                
-                if($apiresp == 200){                         
-                    if($crt->json()['promtresult_status'] == 'ERROR'){
-                        session()->flash('errmmessage', $crt->json()['promtresult']);        
-                    }   
-                    else{         
-                        // $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
-                        // $getlast = $getlast->json();
-                        //dd($getlast);   
-                        // $modules = session()->get('auth_usermodules');
-                        // $usertype = session()->get('auth_usertype'); 
+            // if($this->type == 'create'){                            
+            //     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data); 
+            //     //dd($crt);                                                                                    
+            //     $apiresp = $crt->getStatusCode();                
+            //     if($apiresp == 200){                         
+            //         if($crt->json()['promtresult_status'] == 'ERROR'){
+            //             session()->flash('errmmessage', $crt->json()['promtresult']);        
+            //         }   
+            //         else{         
+            //             // $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
+            //             // $getlast = $getlast->json();
+            //             //dd($getlast);   
+            //             // $modules = session()->get('auth_usermodules');
+            //             // $usertype = session()->get('auth_usertype'); 
 
-                        // if(in_array('Module-09', $modules) || in_array($usertype, [1,2])){
-                        //     $this->resetValidation();         
-                        //     return redirect()->to('/tranactions/application/view/'.$crt->json()['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
-                        // }
-                        // else{
-                        //     $this->resetValidation();         
-                        //     return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
-                        // }
+            //             // if(in_array('Module-09', $modules) || in_array($usertype, [1,2])){
+            //             //     $this->resetValidation();         
+            //             //     return redirect()->to('/tranactions/application/view/'.$crt->json()['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+            //             // }
+            //             // else{
+            //             //     $this->resetValidation();         
+            //             //     return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+            //             // }
 
-                        $this->resetValidation();         
-                        return redirect()->to('/tranactions/application/view/'.$crt->json()['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
-                    }
-                }
-                else{
-                    $this->resetValidation();         
-                    session()->flash('erroraction', 'saving(1)');                   
-                    $this->emit('EMIT_ERROR_ASKING_DIALOG');
-                }
-            }
-            else{              
-                $membersongroup = session('memdata') !==null ? session('memdata') : [];
-                $errorcount = 0;
-                if(count($membersongroup) > 0){
-                    foreach($membersongroup as $mem){                        
-                        if( $mem['fname'] == $input['member']['fname']){
-                            $errorcount = $errorcount + 1;                           
-                        }
-                    }
-                }
+            //             $this->resetValidation();         
+            //             return redirect()->to('/tranactions/application/view/'.$crt->json()['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+            //         }
+            //     }
+            //     else{
+            //         $this->resetValidation();         
+            //         session()->flash('erroraction', 'saving(1)');                   
+            //         $this->emit('EMIT_ERROR_ASKING_DIALOG');
+            //     }
+            // }
+            // else{              
+            //     $membersongroup = session('memdata') !==null ? session('memdata') : [];
+            //     $errorcount = 0;
+            //     if(count($membersongroup) > 0){
+            //         foreach($membersongroup as $mem){                        
+            //             if( $mem['fname'] == $input['member']['fname']){
+            //                 $errorcount = $errorcount + 1;                           
+            //             }
+            //         }
+            //     }
                
-                if($errorcount > 0){
-                    session()->flash('errmmessage', 'Member already exist in group');
-                }
-                else{
-                    session()->push('memdata', $data[0]);
-                    return redirect()->to('/tranactions/group/application/create');
-                }
-            }
+            //     if($errorcount > 0){
+            //         session()->flash('errmmessage', 'Member already exist in group');
+            //     }
+            //     else{
+            //         session()->push('memdata', $data[0]);
+            //         return redirect()->to('/tranactions/group/application/create');
+            //     }
+            // }
+            DB::commit();   
         }
         catch (\Exception $e) {           
-            throw $e;            
+            DB::rollback();        
+            dd($e);               
         }
     }
 
@@ -2044,6 +2082,82 @@ class CreateApplication extends Component
                     }      
                     
                     
+                }
+                else{
+                    $this->member['fname'] = '1Jumar';  
+                    $this->member['lname'] = '1Cave';
+                    $this->member['mname'] = '1Badajos';
+                    $this->member['suffix'] = ''; 
+                    $this->member['age'] = '22'; 
+                    // $this->member['barangay'] = 'Rivera';  
+                    // $this->member['city'] = 'San Juan'; 
+                    $this->member['civil_Status'] = 'Married';  
+                    $this->member['cno'] = '02233666666'; 
+                    $this->member['country'] = 'Philippines'; 
+                    $this->member['dob'] = date('Y-m-d', strtotime('12/27/2000'));
+                    $this->member['emailAddress'] = 'test@gmail.com'; 
+                    $this->member['gender'] = 'Male';
+                    $this->member['houseNo'] = 'No. 9 GB';
+                    $this->member['house_Stats'] = '2'; 
+                    $this->member['pob'] = 'Bani, Pangasinan';
+                    // $this->member['province'] = 'NCR'; 
+                    $this->member['yearsStay'] = '5';
+                    $this->member['zipCode'] = '';   
+
+                    $this->member['electricBill'] = '250'; 
+                    $this->member['waterBill'] = '100'; 
+                    $this->member['otherBills'] = '1000'; 
+                    $this->member['dailyExpenses'] = '10000'; 
+                    $this->member['jobDescription'] = 'Programmer'; 
+                    $this->member['yos'] = '7'; 
+                    $this->member['monthlySalary'] = '15000'; 
+                    $this->member['otherSOC'] = 'Freelancer'; 
+                    $this->member['bO_Status'] = '1'; 
+                    $this->member['companyName'] = 'SOEN'; 
+                    $this->member['emp_Status'] = '1'; 
+                    $this->member['f_Fname'] = 'Jezz'; 
+                    $this->member['f_Lname'] = 'Eurolfan'; 
+                    $this->member['f_Mname'] = 'Javier'; 
+                    $this->member['f_Suffix'] = ''; 
+                    $this->member['f_DOB'] = date('Y-m-d', strtotime('12/27/2000'));
+                    $this->member['f_Age'] = '30'; 
+                    $this->member['f_NOD'] = '0'; 
+                    $this->member['f_YOS'] = '5'; 
+                    $this->member['f_Emp_Status'] = '1'; 
+                    $this->member['f_Job'] = 'Cashier'; 
+                    $this->member['f_CompanyName'] = 'SOEN'; 
+                    $this->member['f_RTTB'] = '';     
+                
+                    $this->comaker['co_Fname'] = 'Thea'; 
+                    $this->comaker['co_Lname'] = 'Badajos'; 
+                    $this->comaker['co_Mname'] = 'Eurolfan'; 
+                    $this->comaker['co_Suffix'] = ''; 
+                    $this->comaker['co_Age'] = '26'; 
+                    // $this->comaker['co_Barangay'] = 'Rivera'; 
+                    // $this->comaker['co_City'] = 'San Juan'; 
+                    $this->comaker['co_Civil_Status'] = 'Single'; 
+                    $this->comaker['co_Cno'] = '023369990'; 
+                    $this->comaker['co_Country'] = 'Philippines'; 
+                    $this->comaker['co_DOB'] = date('Y-m-d', strtotime('12/27/2000'));
+                    $this->comaker['co_EmailAddress'] = ''; 
+                    $this->comaker['co_Gender'] = 'Female'; 
+                    $this->comaker['co_HouseNo'] = '566233';         
+                    $this->comaker['co_House_Stats'] = '2'; 
+                    $this->comaker['co_POB'] = 'Pangasinan'; 
+                    // $this->comaker['co_Province'] = 'Iloilo'; 
+                    $this->comaker['co_YearsStay'] = '5'; 
+                    $this->comaker['co_ZipCode'] = ''; 
+                    $this->comaker['co_RTTB'] = ''; 
+                    $this->comaker['co_Status'] = ''; 
+                    $this->comaker['co_JobDescription'] = 'Cashier'; 
+                    $this->comaker['co_YOS'] = '0'; 
+                    $this->comaker['co_MonthlySalary'] = '15000'; 
+                    $this->comaker['co_OtherSOC'] = 'none'; 
+                    $this->comaker['co_BO_Status'] = '1'; 
+                    $this->comaker['co_CompanyName'] = 'SOEN'; 
+                    $this->comaker['co_CompanyID'] = 'string'; 
+                    $this->comaker['co_Emp_Status'] = '1'; 
+                    $this->comaker['remarks'] = ''; 
                 }
                
         }
