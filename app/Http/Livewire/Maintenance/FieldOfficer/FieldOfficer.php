@@ -322,7 +322,7 @@ class FieldOfficer extends Component
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFOID', [ 'foid' => $this->foid ]);     
             $res = $data->json();
             $res = $res[0];   
-            //dd( $res);
+          //  dd( $res);
             $this->officer['fname'] =  $res['fname'];
             $this->officer['mname'] =  $res['mname'];
             $this->officer['lname'] =  $res['lname'];
