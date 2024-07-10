@@ -24,6 +24,7 @@ use App\Models\Appliances;
 use App\Models\Assets;
 use App\Models\Properties;
 use App\Models\BankAccounts;
+use App\Models\FileUpload;
 use App\Models\CoMaker;
 use App\Models\CoMakerFileUpload;
 use App\Models\CoMakerJobInfo;
@@ -644,105 +645,61 @@ class CreateApplication extends Component
     }
 
     public function saving($type = 1){        
-        $data = [
-            'fname'=> $this->member['fname'] ??= '',
-            'mname'=> $this->member['mname'] ??= '',
-            'lname'=> $this->member['lname'] ??= '',
-            'pob'=> $this->member['pob'] ??= '',
-            'barangay'=> $this->member['barangay'] ??= '',
-            'dob'=> $this->member['dob'] ??= '',
-            'age'=> $this->member['age'] ??= '',
-        ];
-        $checkmem = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/Member_PromptExistingLoan', $data);                                               
-        $checkmem = $checkmem->body();        
-        if($checkmem == 'Member has a Existing Loans'){  
-            session()->flash('EXISTINGMEMBERTYPE', $type);         
-            session()->flash('EXISTINGMEMBER', $checkmem);        
-        }
-        else{
-            $this->store($type);
-        }
-        //$this->store($type);
+        $this->store($type);       
     }
 
-
     public function store($type = 1){  
+        $mem = Members::where('Fname', $this->member['fname'])
+                                ->where('Mname', $this->member['mname'])
+                                ->where('Lname', $this->member['lname'])
+                                ->where('Suffix', $this->member['suffix'])
+                                ->where('POB', $this->member['pob'])
+                                ->whereDate('DOB', $this->member['dob'])->first();
+                      
+        if($mem){
+            $checkapplication = LoanDetails::where('MemId', $mem->id)->where('Status', '!=', 14)->get();                          
+            if($checkapplication){
+                session()->flash('errmmessage', 'Member has an existing application for approval'); 
+                return false;
+            }
+            
+            $checkapplicationbalance = LoanDetails::leftJoin('tbl_Collection_AreaMember_Model as collection', 'tbl_LoanDetails_Model.id', 'collection.NAID')
+                ->select(DB::raw('(sum(tbl_LoanDetails_Model.LoanAmount) - sum(collection.CollectedAmount)) as balance'))->where('MemId', $mem->id)
+                ->havingRaw('(sum(tbl_LoanDetails_Model.LoanAmount) - sum(collection.CollectedAmount)) > 0')->groupBy('tbl_LoanDetails_Model.id')->get();                          
+            if($checkapplicationbalance){
+                session()->flash('errmmessage', 'Member already has an existing loan'); 
+                return false;
+            }          
+           
+            //dito
+        }
+
+        $comem = CoMaker::where('Fname', $this->comaker['co_Fname'])
+                ->where('Mname', $this->comaker['co_Mname'])
+                ->where('Lnam', $this->comaker['co_Lname'])
+                ->where('Suffi', $this->comaker['co_Suffix'])
+                ->where('POB', $this->comaker['co_POB'])
+                ->whereDate('DOB', $this->comaker['co_DOB'])->first();
+
+        if( $comem ){
+            session()->flash('errmmessage', 'Comaker already exist to other loan application'); 
+            return false;
+        }     
+
+        $this->resetValidation();          
+        $input = $this->validate();     
         DB::beginTransaction();             
-        try {                        
-            $this->resetValidation();          
-            $input = $this->validate();     
+        try {                                   
             $childs = [];
             $businesses = [];
             $appliances = [];
             $banks = [];
             $assets = [];
             $properties = [];
-
-            // if($this->hasvehicle == 1){
-            //     if(count($this->vehicle) > 0){
-            //         foreach($this->vehicle as $key => $value){                   
-            //             $assets[] = [ 'motorVehicles' => $this->inpvehicle['vehicle'.$key] ];  
-            //         }            
-            //     }
-            // }
-    
-            // if($this->hasproperties == 1){
-            //     if(count($this->properties) > 0){
-            //         foreach($this->properties as $key => $value){                    
-            //             $properties[] = [ 'property' => $this->inpproperties['property'.$key] ];                
-            //         }            
-            //     }
-            // }  
-         
-            // if(count($this->cntmemchild) > 0){
-            //     if((isset($this->inpchild['fname1']) ? $this->inpchild['fname1'] != '' : false)  || (isset($this->inpchild['mname1']) ? $this->inpchild['mname1'] != '' : false) || (isset($this->inpchild['lname1']) ? $this->inpchild['lname1'] != '' : false) || (isset($this->inpchild['age1']) ? $this->inpchild['age1'] != '' : false) || (isset($this->inpchild['school1']) ? $this->inpchild['school1'] != '' : false)){
-            //         foreach($this->cntmemchild as $cntmemchild){
-            //             $childs[] = [   'fname' => $this->inpchild['fname'.$cntmemchild] ??= '', 
-            //                             'mname' => $this->inpchild['mname'.$cntmemchild] ??= '',
-            //                             'lname' => $this->inpchild['lname'.$cntmemchild] ??= '',
-            //                             'age' => $this->inpchild['age'.$cntmemchild] ??= '0',
-            //                             'nos' => $this->inpchild['school'.$cntmemchild] ??= '',
-            //                             'famId' => null,    ];
-            //         }
-            //     }
-            // }
-           
-            // if(count( $this->businfo) > 0){
-            //     foreach($this->businfo as $key => $value){
-            //         $businesses[] = [   'businessName' => $value['businessName'], 
-            //                             'businessType' => $value['businessType'],
-            //                             'businessAddress' => $value['businessAddress'],
-            //                             'b_status' => $value['b_status'],
-            //                             'yob' => $value['yob'],
-            //                             'noe' => $value['noe'],
-            //                             'salary' => $value['salary'],
-            //                             'vos' => $value['vos'],
-            //                             'aos' => $value['aos'],
-            //                             'businessFiles' => $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] )  
-            //                         ];
-            //     }
-            // }
-
-            // if(count( $this->appliances) > 0){
-            //     if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
-            //         foreach($this->appliances as $key => $value){
-            //             $appliances[] = [   'brand' => $this->inpappliances['brand'.$key], 
-            //                                 'appliances' => $this->inpappliances['appliance'.$key],
-            //                                 'naid' => ''   ];
-            //         }
-            //     }               
-            // }
-
-            // if(count( $this->bank) > 0){
-            //     if((isset($this->inpbank['account1']) ? $this->inpbank['account1'] != '' : false)  || (isset($this->inpbank['address1']) ? $this->inpbank['address1'] != '' : false)){
-            //         foreach($this->bank as $key => $value){
-            //             $banks[] = [   'bankName' => $this->inpbank['account'.$key], 
-            //                         'address' => $this->inpbank['address'.$key]   ];
-            //         }
-            //     }
-            // } 
-            
-            $mem = new Members();
+                              
+            if(!$mem){
+                $mem = new Members();
+            }
             $mem->Fname = $input['member']['fname'] ??= '';
             $mem->Lname = $input['member']['lname'] ??= '';
             $mem->Mname = $input['member']['mname'] ??= '';
@@ -763,8 +720,13 @@ class CreateApplication extends Component
             $mem->YearsStay = $input['member']['yearsStay'] ??= '0';
             $mem->ZipCode = $input['member']['zipCode'] ??= '';
             $mem->Status = 1;
-            $mem->DateCreated = Carbon::now();
-            $mem->DateUpdated = Carbon::now();
+            if(!$mem){
+                $mem->DateCreated = Carbon::now();
+                $mem->DateUpdated = Carbon::now();
+            }
+            else{
+                $mem->DateUpdated = Carbon::now();
+            }
             //$mem->MemId = 'MEM-01';
             $mem->OwnProperty = null;
             $mem->OwnVehicles = null;
@@ -841,20 +803,7 @@ class CreateApplication extends Component
                     $busfile->save();                             
                 }
             }
-
-            $loand = new LoanDetails();
-            $loand->LoanAmount = $input['member']['loanAmount'] ??= '0';
-            $loand->TermsOfPayment = $this->loanDetails['loantermsID'] ??= '';
-            $loand->Purpose = $input['member']['purpose'] ??= '';
-            $loand->MemId = $mem->id;
-            $loand->DateCreated = Carbon::now();
-            $loand->DateUpdated = Carbon::now();
-            $loand->Status = $type == 1 ? 7 : 8;
-            $loand->GroupId = null;
-            $loand->LoanTypeID =  $this->loanDetails['loanTypeID'];
-            $loand->InterestAmount = null;          
-            $loand->save();
-
+          
             if(count($this->cntmemchild) > 0){
                 if((isset($this->inpchild['fname1']) ? $this->inpchild['fname1'] != '' : false)  || (isset($this->inpchild['mname1']) ? $this->inpchild['mname1'] != '' : false) || (isset($this->inpchild['lname1']) ? $this->inpchild['lname1'] != '' : false) || (isset($this->inpchild['age1']) ? $this->inpchild['age1'] != '' : false) || (isset($this->inpchild['school1']) ? $this->inpchild['school1'] != '' : false)){
                     foreach($this->cntmemchild as $cntmemchild){
@@ -881,7 +830,7 @@ class CreateApplication extends Component
                         $appliances->Description = $this->inpappliances['appliance'.$key];
                         $appliances->DateCreated = Carbon::now();
                         $appliances->DateUpdated = Carbon::now();
-                        $appliances->NAID = $loand->id;
+                        $appliances->NAID = null;
                         $appliances->MemId = $mem->id;
                         $appliances->Status = 1;                        
                     }
@@ -973,32 +922,120 @@ class CreateApplication extends Component
             $comakerjob->CMID = $comaker->id;
             $comakerjob->companyAddress = $input['comaker']['co_CompanyID'] ??= '';
             $comakerjob->save();
+          
+            $fileuploads = [   'MemId' => $mem->id
+                                ,'FileName' => $this->storeProfileImage() 
+                                ,'FilePath' => $this->storeProfileImage()
+                                ,'Status' => 1
+                                ,'DateCreated' => Carbon::now()
+                                ,'DateUpdated' => Carbon::now()
+                                ,'Type' => 1 ];
+            FileUpload::create($fileuploads);
+
+            $cofileupload = [
+                                'CMID' =>  $comaker->id
+                                ,'FileName' => $this->storeCoProfileImage()
+                                ,'FilePath' => $this->storeCoProfileImage()
+                                ,'Status' => 1
+                                ,'DateCreated' => Carbon::now()
+                            ];
+            CoMakerFileUpload::create($cofileupload);
+            //dd($this->storeAttachments());
+            if(count($this->storeAttachments()) > 0){
+                foreach( $this->storeAttachments() as $attc ){
+                    $fileuploads = [   'MemId' => $mem->id
+                                        ,'FileName' => $attc['fileName'] 
+                                        ,'FilePath' => $attc['fileName']
+                                        ,'Status' => 1
+                                        ,'DateCreated' => Carbon::now()
+                                        ,'DateUpdated' => Carbon::now()
+                                        ,'Type' => 2 ];
+                    FileUpload::create($fileuploads);
+                }
+            }
+
+            $fileuploads = [   'MemId' => $mem->id
+                        ,'FileName' => $this->storeSignature() 
+                        ,'FilePath' => $this->storeSignature()
+                        ,'Status' => 1
+                        ,'DateCreated' => Carbon::now()
+                        ,'DateUpdated' => Carbon::now()
+                        ,'Type' => 3 ];
+            FileUpload::create($fileuploads);
+
+             //dd($this->storeCoAttachments());
+             if(count($this->storeCoAttachments()) > 0){
+                foreach( $this->storeCoAttachments() as $attc ){
+                    $cofileupload = [
+                                        'CMID' =>  $comaker->id
+                                        ,'FileName' => $attc['fileName'] 
+                                        ,'FilePath' => $attc['fileName'] 
+                                        ,'Status' => 2
+                                        ,'DateCreated' => Carbon::now()
+                                    ];
+                    CoMakerFileUpload::create($cofileupload);
+                }
+            }
+
+            $cofileupload = [
+                            'CMID' =>  $comaker->id
+                            ,'FileName' => $this->storeCoSignature()
+                            ,'FilePath' => $this->storeCoSignature()
+                            ,'Status' => 3
+                            ,'DateCreated' => Carbon::now()
+                        ];
+            CoMakerFileUpload::create($cofileupload);
+
+            $getmem = Members::where('id', $mem->id)->select('MemId')->first();
+                      
+            $app = new Application();        
+            $app->MemId = $mem->id;
+            $app->DateCreated = Carbon::now();
+            //$app->DateApproval = null;
+            $app->Remarks = '';           
+            $app->Status = $type == 1 ? 7 : 8;
+            // $app->CI_ApprovedBy = null;            
+            // $app->CI_ApprovalDate = null;
+            // $app->ReleasingDate = null;
+            // $app->DeclineDate = null;
+            // $app->DeclinedBy = null;
+            // $app->App_ApprovedBy_1 = null;
+            // $app->App_ApprovalDate_1 = null;
+            // $app->App_ApprovedBy_2 = null;
+            // $app->App_ApprovalDate_2 = null;
+            // $app->App_Note = null;
+            // $app->App_Notedby = null;
+            // $app->App_NotedDate = null;
+            $app->CreatedBy = session()->get('auth_userid');
+            // $app->SubmittedBy = null;
+            // $app->DateSubmitted = null;
+            // $app->ReleasedBy = null;
+            $app->save();
+
+            $loand = new LoanDetails();
+            $loand->LoanAmount = $input['member']['loanAmount'] ??= '0';
+            $loand->TermsOfPayment = $this->loanDetails['loantermsID'] ??= '';
+            $loand->Purpose = $input['member']['purpose'] ??= '';
+            $loand->MemId = $mem->id;
+            $loand->DateCreated = Carbon::now();
+            $loand->DateUpdated = Carbon::now();
+            $loand->Status = $type == 1 ? 7 : 8;         
+            $loand->LoanTypeID =  $this->loanDetails['loanTypeID'];            
+            $loand->NAID = $app->id;       
+            $loand->save();        
+            DB::commit();   
+
+            $getnaid = Application::where('id', $app->id)->select('NAID')->first();
+            $this->resetValidation();         
+            return redirect()->to('/tranactions/application/view/'.$getnaid->NAID)->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
+
             //dito
                                
                     //             "companyAddress"=> $input['member']['companyAddress'] ??= ''     
                     //             "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
-                    //             "remarks"=> '',
-                                    
-                    //             "profileName"=> $this->storeProfileImage(),
-                    //             "profileFilePath"=> $this->storeProfileImage(),
-                    //             "co_ProfileName"=> $this->storeCoProfileImage(),
-                    //             "co_ProfileFilePath"=> $this->storeCoProfileImage(),
-                    //             "requirementsFile"=> $this->storeAttachments(),                                                                                   
-                    //             "signatureUpload"=> [
-                    //                 [
-                    //                   "fileName"=> $this->storeSignature(),
-                    //                   "filePath"=> $this->storeSignature()
-                    //                 ]
-                    //               ],
-                    //               "co_RequirementsFile"=> $this->storeCoAttachments(),
-                    //               "co_SignatureUpload"=> [
-                    //                 [
-                    //                   "fileName"=> $this->storeCoSignature(),
-                    //                   "filePath"=> $this->storeCoSignature()
-                    //                 ]
-                    //               ],
-                    //               "userId"=> session()->get('auth_userid'),
-                    //               "naid"=>  $this->naID
+                    //             "remarks"=> '',                                                                                  
+     
+                    //               "userId"=> session()->get('auth_userid'),                 
                     // ]];
       
                     //$extension = $request->file('filename')->getClientOriginalExtension();
@@ -1056,7 +1093,7 @@ class CreateApplication extends Component
             //         return redirect()->to('/tranactions/group/application/create');
             //     }
             // }
-            DB::commit();   
+            
         }
         catch (\Exception $e) {           
             DB::rollback();        

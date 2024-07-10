@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CoMakerFileUpload extends Model
+class FileUpload extends Model
 {
     use HasFactory;
-    protected $table = 'tbl_CoMakerFileUpload_Model';
-    protected $fillable =['CMID'
+    protected $table = 'tbl_fileupload_Model';
+    protected $fillable = [ 'MemId'
                             ,'FileName'
                             ,'FilePath'
                             ,'Status'
-                            ,'DateCreated'];
-    
+                            ,'DateCreated'
+                            ,'DateUpdated'
+                            ,'Type'];
     public $timestamps = false;
 }
