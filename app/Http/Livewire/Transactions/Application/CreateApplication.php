@@ -18,6 +18,15 @@ use App\Models\JobInfo;
 use App\Models\FamBackground;
 use App\Models\BusinessInformation;
 use App\Models\BusinessFileUpload;
+use App\Models\LoanDetails;
+use App\Models\ChildInfo;
+use App\Models\Appliances;
+use App\Models\Assets;
+use App\Models\Properties;
+use App\Models\BankAccounts;
+use App\Models\CoMaker;
+use App\Models\CoMakerFileUpload;
+use App\Models\CoMakerJobInfo;
 
 class CreateApplication extends Component
 {
@@ -833,50 +842,143 @@ class CreateApplication extends Component
                 }
             }
 
+            $loand = new LoanDetails();
+            $loand->LoanAmount = $input['member']['loanAmount'] ??= '0';
+            $loand->TermsOfPayment = $this->loanDetails['loantermsID'] ??= '';
+            $loand->Purpose = $input['member']['purpose'] ??= '';
+            $loand->MemId = $mem->id;
+            $loand->DateCreated = Carbon::now();
+            $loand->DateUpdated = Carbon::now();
+            $loand->Status = $type == 1 ? 7 : 8;
+            $loand->GroupId = null;
+            $loand->LoanTypeID =  $this->loanDetails['loanTypeID'];
+            $loand->InterestAmount = null;          
+            $loand->save();
+
+            if(count($this->cntmemchild) > 0){
+                if((isset($this->inpchild['fname1']) ? $this->inpchild['fname1'] != '' : false)  || (isset($this->inpchild['mname1']) ? $this->inpchild['mname1'] != '' : false) || (isset($this->inpchild['lname1']) ? $this->inpchild['lname1'] != '' : false) || (isset($this->inpchild['age1']) ? $this->inpchild['age1'] != '' : false) || (isset($this->inpchild['school1']) ? $this->inpchild['school1'] != '' : false)){
+                    foreach($this->cntmemchild as $cntmemchild){
+                        $childinfo = new ChildInfo();
+                        $childinfo->Fname = $this->inpchild['fname'.$cntmemchild] ??= '';
+                        $childinfo->Mname = $this->inpchild['mname'.$cntmemchild] ??= '';
+                        $childinfo->Lname = $this->inpchild['lname'.$cntmemchild] ??= '';
+                        $childinfo->Age = $this->inpchild['age'.$cntmemchild] ??= '0';
+                        $childinfo->NOS = $this->inpchild['school'.$cntmemchild] ??= '';
+                        $childinfo->FamId = $famback->id;
+                        $childinfo->Status = 1;
+                        $childinfo->DateCreated = Carbon::now();
+                        $childinfo->DateUpdated = Carbon::now();
+                        $childinfo->save();
+                    }
+                }
+            }
+
+            if(count( $this->appliances) > 0){
+                if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
+                    foreach($this->appliances as $key => $value){
+                        $appliances = new Appliances();
+                        $appliances->Brand = $this->inpappliances['brand'.$key];
+                        $appliances->Description = $this->inpappliances['appliance'.$key];
+                        $appliances->DateCreated = Carbon::now();
+                        $appliances->DateUpdated = Carbon::now();
+                        $appliances->NAID = $loand->id;
+                        $appliances->MemId = $mem->id;
+                        $appliances->Status = 1;                        
+                    }
+                }               
+            }
+
+            if($this->hasproperties == 1){
+                if(count($this->properties) > 0){
+                    foreach($this->properties as $key => $value){      
+                        $property = new Properties();             
+                        $property->Property = $this->inpproperties['property'.$key];
+                        $property->DateCreated = Carbon::now();
+                        $property->DateUpdated = Carbon::now();
+                        $property->Status = 1;
+                        $property->MemId = $mem->id;
+                        $property->save();                                   
+                    }            
+                }
+            } 
+            
+            if($this->hasvehicle == 1){
+                if(count($this->vehicle) > 0){
+                    foreach($this->vehicle as $key => $value){                   
+                        $vehicle = new Assets();
+                        $vehicle->MotorVehicles = $this->inpvehicle['vehicle'.$key];
+                        $vehicle->DateCreated = Carbon::now();
+                        $vehicle->DateUpdated = Carbon::now();
+                        $vehicle->Status = 1;
+                        $vehicle->MemId = $mem->id;
+                        $vehicle->save();
+                        $assets[] = [ 'motorVehicles' => $this->inpvehicle['vehicle'.$key] ];  
+                    }            
+                }
+            }
+
+            if(count( $this->bank) > 0){
+                if((isset($this->inpbank['account1']) ? $this->inpbank['account1'] != '' : false)  || (isset($this->inpbank['address1']) ? $this->inpbank['address1'] != '' : false)){
+                    foreach($this->bank as $key => $value){
+                        $bank = new BankAccounts();    
+                        $bank->BankName = $this->inpbank['account'.$key];
+                        $bank->Address = $this->inpbank['address'.$key];
+                        $bank->DateCreated = Carbon::now();
+                        $bank->DateUpdated = Carbon::now();                       
+                        $bank->Status = 1;
+                        $bank->MemId = $mem->id;
+                        $bank->save();
+                    }
+                }
+            }
+            
+            $comaker = new CoMaker();
+            $comaker->Fname = $input['comaker']['co_Fname'] ??= '';
+            $comaker->Mname = $input['comaker']['co_Mname'] ??= '';
+            $comaker->Lnam = $input['comaker']['co_Lname'] ??= '';
+            $comaker->Suffi = $input['comaker']['co_Suffix'] ??= '';
+            $comaker->Gender = $input['comaker']['co_Gender'] ??= '';
+            $comaker->DOB = $input['comaker']['co_DOB'] ??= null;
+            $comaker->Age = $input['comaker']['co_Age'] ??= '0';
+            $comaker->POB = $input['comaker']['co_POB'] ??= '';
+            $comaker->CivilStatus = $input['comaker']['co_Civil_Status'] ??= '';
+            $comaker->Cno = $input['comaker']['co_Cno'] ??= '';
+            $comaker->EmailAddress = $input['comaker']['co_EmailAddress'] ??= '';
+            $comaker->House_Stats = $input['comaker']['co_House_Stats'] ??= '0';
+            $comaker->HouseNo = $input['comaker']['co_HouseNo'] ??= '';
+            $comaker->Barangay = $input['comaker']['co_Barangay'] ??= '';
+            $comaker->City = $input['comaker']['co_City'] ??= '';
+            $comaker->Region = $input['comaker']['co_Province'] ??= '';
+            $comaker->Country = $input['comaker']['co_Country'] ??= '';
+            $comaker->ZipCode = $input['comaker']['co_ZipCode'] ??= '';
+            $comaker->YearsStay = $input['comaker']['co_YearsStay'] ??= '0';
+            $comaker->RTTB = $input['comaker']['co_RTTB'] ??= '';            
+            $comaker->Status = 1;
+            $comaker->DateCreated = Carbon::now();
+            $comaker->DateUpdated = Carbon::now();
+            $comaker->MemId = $mem->id;
+            $comaker->save();
+
+            $comakerjob = new CoMakerJobInfo();
+            $comakerjob->JobDescription = $input['comaker']['co_JobDescription'] ??= '';
+            $comakerjob->YOS = !empty($input['comaker']['co_YOS'] ??= '0') ? $input['comaker']['co_YOS'] ??= '0' : '0';
+            $comakerjob->CompanyName = $input['comaker']['co_CompanyName'] ??= '';
+            $comakerjob->MonthlySalary = !empty($input['comaker']['co_MonthlySalary']) ? $input['comaker']['co_MonthlySalary'] : '0';
+            $comakerjob->OtherSOC = $input['comaker']['co_OtherSOC'] ??= '';
+            $comakerjob->Status = 1;
+            $comakerjob->DateCreated = Carbon::now();
+            $comakerjob->DateUpdated = Carbon::now();
+            $comakerjob->BO_Status = $input['comaker']['co_BO_Status'] ??= '0';
+            $comakerjob->Emp_Status = $input['comaker']['co_Emp_Status'] ??= '0'; //'1', //$input['comaker']['co_Emp_Status'];
+            $comakerjob->CMID = $comaker->id;
+            $comakerjob->companyAddress = $input['comaker']['co_CompanyID'] ??= '';
+            $comakerjob->save();
             //dito
                                
-                    //"companyAddress"=> $input['member']['companyAddress'] ??= ''                                                                                        
-                    //             "loanAmount"=> $input['member']['loanAmount'] ??= '0',
-                    //             'loanTypeId' => $this->loanDetails['loanTypeID'],
-                    //             "termsOfPayment"=> $this->loanDetails['loantermsID'] ??= '',
-                    //             "purpose"=> $input['member']['purpose'] ??= '',
-                    //             "child"=> $childs,
-                    //             "appliances"=> $appliances,
-                    //             "property"=> $properties,
-                    //             "assets"=> $assets,
-                    //             "bank"=> $banks,
-                    //             "co_Fname"=> $input['comaker']['co_Fname'] ??= '',
-                    //             "co_Lname"=> $input['comaker']['co_Lname'] ??= '',
-                    //             "co_Mname"=> $input['comaker']['co_Mname'] ??= '',
-                    //             "co_Suffix"=> $input['comaker']['co_Suffix'] ??= '',
-                    //             "co_Age"=> $input['comaker']['co_Age'] ??= '0',
-                    //             "co_Barangay"=> $input['comaker']['co_Barangay'] ??= '',
-                    //             "co_City"=> $input['comaker']['co_City'] ??= '',
-                    //             "co_Civil_Status"=> $input['comaker']['co_Civil_Status'] ??= '',
-                    //             "co_Cno"=> $input['comaker']['co_Cno'] ??= '',
-                    //             "co_Country"=> $input['comaker']['co_Country'] ??= '',
-                    //             "co_DOB"=>  $input['comaker']['co_DOB'] ??= null,
-                    //             "co_EmailAddress"=> $input['comaker']['co_EmailAddress'] ??= '',
-                    //             "co_Gender"=> $input['comaker']['co_Gender'] ??= '',
-                    //             "co_HouseNo"=> $input['comaker']['co_HouseNo'] ??= '',
-                    //             "co_House_Stats"=> $input['comaker']['co_House_Stats'] ??= '0',
-                    //             "co_POB"=> $input['comaker']['co_POB'] ??= '',
-                    //             "co_Province"=> $input['comaker']['co_Province'] ??= '',
-                    //             "co_YearsStay"=> $input['comaker']['co_YearsStay'] ??= '0',
-                    //             "co_ZipCode"=> $input['comaker']['co_ZipCode'] ??= '',
-                    //             "co_RTTB"=> $input['comaker']['co_RTTB'] ??= '',
-                    //             "co_Status"=> '1',
-                    //             "co_JobDescription"=> $input['comaker']['co_JobDescription'] ??= '',
-                    //             "co_YOS"=> !empty($input['comaker']['co_YOS'] ??= '0') ? $input['comaker']['co_YOS'] ??= '0' : '0',
-                    //             "co_MonthlySalary"=> !empty($input['comaker']['co_MonthlySalary']) ? $input['comaker']['co_MonthlySalary'] : '0',
-                    //             "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
-                    //             "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
-                    //             "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
-                    //             "co_CompanyAddress"=>  $input['comaker']['co_CompanyID'] ??= '',///check if caused error not exist latest working
+                    //             "companyAddress"=> $input['member']['companyAddress'] ??= ''     
                     //             "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
-                    //             "co_Emp_Status"=> $input['comaker']['co_Emp_Status'] ??= '0', //'1', //$input['comaker']['co_Emp_Status'],
                     //             "remarks"=> '',
-                    //             "applicationStatus" => $type == 1 ? 7 : 8,
+                                    
                     //             "profileName"=> $this->storeProfileImage(),
                     //             "profileFilePath"=> $this->storeProfileImage(),
                     //             "co_ProfileName"=> $this->storeCoProfileImage(),
