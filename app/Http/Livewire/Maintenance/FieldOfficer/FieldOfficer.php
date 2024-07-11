@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Traits\Common;
 use function PHPUnit\Framework\isNull;
-use App\Models\TblFieldOfficer;
+use App\Models\FieldOfficer as TblFieldOfficer;
+use Illuminate\Support\Facades\Log;
 
 class FieldOfficer extends Component
 {   
@@ -25,6 +26,7 @@ class FieldOfficer extends Component
     public $imgprofile;
     public $imgfrontID;
     public $imgbackID;
+
     public function rules(){                
         $rules = []; 
         $rules['officer.fname'] = 'required';
@@ -97,13 +99,13 @@ class FieldOfficer extends Component
         if($this->imgprofile){
             $deletefiles = [];
             if(isset($this->officer['profile'])){
-                $deletefiles[] = 'public/officer_profile/'.$this->officer['profile'];
+                $deletefiles[] = 'officer_profile/'.$this->officer['profile'];
             }
             Storage::delete($deletefiles);       
             
             $time = time();          
             $profilename = 'officer_profile_'.$time.'.'.$this->imgprofile->getClientOriginalExtension();         
-            $this->imgprofile->storeAs('public/officer_profile', $profilename);    
+            $this->imgprofile->storeAs('officer_profile', $profilename);    
         }
         else{
             $profilename = $this->officer['profile'];  
@@ -118,13 +120,13 @@ class FieldOfficer extends Component
         if($this->imgfrontID){
             $deletefiles = [];
             if(isset($this->officer['frontID'])){
-                $deletefiles[] = 'public/officer_ids/'.$this->officer['frontID'];
+                $deletefiles[] = 'officer_ids/'.$this->officer['frontID'];
             }
             Storage::delete($deletefiles);       
             
             $time = time();          
             $frontidname = 'officer_frontid_'.$time.'.'.$this->imgfrontID->getClientOriginalExtension();             
-            $this->imgfrontID->storeAs('public/officer_ids', $frontidname); 
+            $this->imgfrontID->storeAs('officer_ids', $frontidname); 
         }
         else{
             $frontidname = $this->officer['frontID'];  
@@ -138,13 +140,13 @@ class FieldOfficer extends Component
         if($this->imgbackID){
             $deletefiles = [];
             if(isset($this->officer['backID'])){
-                $deletefiles[] = 'public/officer_ids/'.$this->officer['backID'];
+                $deletefiles[] = 'officer_ids/'.$this->officer['backID'];
             }
             Storage::delete($deletefiles);       
                 
             $time = time();          
             $backidname = 'officer_backid_'.$time.'.'.$this->imgbackID->getClientOriginalExtension();    
-            $this->imgbackID->storeAs('public/officer_ids', $backidname);    
+            $this->imgbackID->storeAs('officer_ids', $backidname);    
         }
         else{
             $backidname = $this->officer['backID'];  
@@ -162,14 +164,14 @@ class FieldOfficer extends Component
                 $deletefiles = [];
                 if(isset($this->officer['old_attachments'])){
                     foreach($this->officer['old_attachments'] as $oldfiles){
-                        $deletefiles[] = 'public/officer_attachments/'.$oldfiles['filePath'];
+                        $deletefiles[] = 'officer_attachments/'.$oldfiles['filePath'];
                     }
                 }
                 Storage::delete($deletefiles);       
                 foreach ($this->officer['attachments'] as $attachments) {
                     $time = time();
                     $filename = 'officer_attachments_'.$time.'_'.$attachments->getClientOriginalName();
-                    $attachments->storeAs('public/officer_attachments', $filename);   
+                    $attachments->storeAs('officer_attachments', $filename);   
                     $memattachements[] = [ 'filePath' => $filename ];
                 }
             }
@@ -178,59 +180,46 @@ class FieldOfficer extends Component
         return $memattachements;
     }
 
-
     public function store(){   
         try { 
-                     
             $input = $this->validate();        
 
-            $crt = new TblFieldOfficer();
-            $crt->Fname = $input['officer']['fname'] ??= '';
-            $crt->save();
-           
-            $data = [
-                        "fname"=> $input['officer']['fname'] ??= '',
-                        "lname"=> $input['officer']['lname'] ??= '',
-                        "mname"=> $input['officer']['mname'] ??= '',
-                        "suffix"=> $input['officer']['suffix'] ??= '',
-                        "gender"=> $input['officer']['gender'] ??= '',
-                        "dob"=> $input['officer']['dob'] ??= null,
-                        "age"=> $input['officer']['age'] ??= '0',
-                        "pob"=> $input['officer']['pob'] ??= '',
-                        "civilStatus"=> $input['officer']['civilStatus'] ??= '',
-                        "cno"=> $input['officer']['cno'] ??= '',
-                        "emailAddress"=> $input['officer']['emailAddress'] ??= '',
-                        "houseNo"=> $input['officer']['houseNo'] ??= '',
-                        "barangay"=> $input['officer']['barangay'] ??= '',
-                        "city"=> $input['officer']['city'] ??= '',
-                        "region"=> $input['officer']['region'] ??= '',
-                        "country"=> $input['officer']['country'] ??= '',
-                        "sss"=> $input['officer']['sss'] ??= '',
-                        "pagIbig"=> $input['officer']['pagIbig'] ??= '',
-                        "philHealth"=> $input['officer']['philHealth'] ??= '',
-                        "idNum"=> $input['officer']['idNum'] ??= null,
-                        "typeID"=> $input['officer']['typeID'] ??= '',                     
-                        "profilePath"=> $this->storeProfileImage(),
-                        "frontID_Path"=> $this->storeFrontIdImage(),
-                        "backID_Path"=> $this->storeBackIdImage(),
-                        "uploadFiles"=> $this->storeAttachments()
-                    ]; 
+            $officer = new TblFieldOfficer();
+            $officer->fill([
+                'Fname' => $input['officer']['fname'] ?? '',
+                'Lname' => $input['officer']['lname'] ?? '',
+                'Mname' => $input['officer']['mname'] ?? '',
+                'Suffix' => $input['officer']['suffix'] ?? '',
+                'Gender' => $input['officer']['gender'] ?? '',
+                'DOB' => $input['officer']['dob'] ?? null,
+                'Age' => $input['officer']['age'] ?? '0',
+                'POB' => $input['officer']['pob'] ?? '',
+                'CivilStatus' => $input['officer']['civilStatus'] ?? '',
+                'Cno' => $input['officer']['cno'] ?? '',
+                'EmailAddress' => $input['officer']['emailAddress'] ?? '',
+                'HouseNo' => $input['officer']['houseNo'] ?? '',
+                'Barangay' => $input['officer']['barangay'] ?? '',
+                'City' => $input['officer']['city'] ?? '',
+                'Region' => $input['officer']['region'] ?? '',
+                'Country' => $input['officer']['country'] ?? '',
+                'SSS' => $input['officer']['sss'] ?? '',
+                'PagIbig' => $input['officer']['pagIbig'] ?? '',
+                'PhilHealth' => $input['officer']['philHealth'] ?? '',
+                'ID_Number' => $input['officer']['id_Num'] ?? null,
+                'IDType' => $input['officer']['typeID'] ?? '',
+                'ProfilePath' => $this->storeProfileImage(),
+                'FrontID_Path' => $this->storeFrontIdImage(),
+                'BackID_Path' => $this->storeBackIdImage(),
+            ]);
+            
+            $officer->save();
 
+            $latestOfficer = TblFieldOfficer::latest()->first();
+            $foid = $latestOfficer->FOID;
             $this->resetValidation();
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/SaveFieldOfficer', $data);                   
-            $apiresp = $crt->getStatusCode();                
-            if($apiresp == 200){     
-                $get = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/GetLastOfficerList');
-                $get = $get->json();
-                return redirect()->to('/maintenance/fieldofficer/view/'.$get['foid'])->with('mmessage', 'Field officer successfully saved');    
-            }
-            else{
-                $this->resetValidation();         
-                session()->flash('erroraction', 'store');
-                session()->flash('errormessage', 'Operation Failed. Maybe Field Officer Already Exist. Retry ?');                                
-                $this->emit('EMIT_ERROR_ASKING_DIALOG');
-            }            
-
+            // return redirect()->route('fieldofficer.view'. $foid)
+            // ->with('message', 'Field officer successfully saved');    
+            return redirect()->to('/maintenance/fieldofficer/view/'. $foid)->with('message', 'Field officer successfully saved');    
         }
         catch (\Exception $e) {           
             throw $e;            
@@ -291,77 +280,105 @@ class FieldOfficer extends Component
         $this->officer['age'] = $age;           
     }
 
-    public function archive($foid){       
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/DeleteFO', [ 'foid' => $foid ]);                    
-        if($data->body() == 'Successfully Deleted'){
-            return redirect()->to('/maintenance/fieldofficer/list')->with('message', 'Filed officer has been archived');    
-        }
-        else{           
-            $this->closeDialog();
-            session()->flash('errmmessage', 'Deletion Failed. '.$data->body().'.');                                            
-        }
+    // public function archive($foid){       
+    //     $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/DeleteFO', [ 'foid' => $foid ]);                    
+    //     if($data->body() == 'Successfully Deleted'){
+    //         return redirect()->to('/maintenance/fieldofficer/list')->with('message', 'Filed officer has been archived');    
+    //     }
+    //     else{           
+    //         $this->closeDialog();
+    //         session()->flash('errmmessage', 'Deletion Failed. '.$data->body().'.');                                            
+    //     }
        
+    // }
+
+    public function archive($id)
+    {
+        dd($id);
+        // Find the officer by FOID
+        $officer = TblFieldOfficer::where('Id', $id)->first();
+
+        dd($officer);
+        if ($officer) {
+            // Attempt to delete the officer
+            if ($officer->delete()) {
+                return redirect()->to('/maintenance/fieldofficer/list')->with('mmessage', 'Field officer has been archived');
+            } else {
+                // Handle deletion failure
+                $this->closeDialog();
+                session()->flash('errmessage', 'Deletion Failed. Unable to delete field officer.');
+            }
+        } else {
+            // Handle officer not found
+            $this->closeDialog();
+            session()->flash('errmessage', 'Deletion Failed. Field officer not found.');
+        }
     }
- 
-    public function mount($foid = ''){
+
+
+    public function mount($id){
+        dd($id);
+
         $this->usertype = session()->get('auth_usertype'); 
         $this->officer['old_profile'] = '';
         $this->officer['old_attachments'] = [];
         $this->officer['old_frontID'] = '';
         $this->officer['old_backID'] = '';
-        $idtypes = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/IDTypeList');  
-        $idtypes = $idtypes->json();
+
+        $idtypes = TblFieldOfficer::getIdTypes();  
         if(count($idtypes) > 0){
             foreach($idtypes as $midtypes){
                 $this->idtypes[$midtypes['typeID']] = ['type' => $midtypes['type'], 'typeID' => $midtypes['typeID']];
             }
         }
-        // dd($this->idtypes);
-        if($foid != ''){
-            $this->foid = $foid;
-            $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFOID', [ 'foid' => $this->foid ]);     
-            $res = $data->json();
-            $res = $res[0];   
-          //  dd( $res);
-            $this->officer['fname'] =  $res['fname'];
-            $this->officer['mname'] =  $res['mname'];
-            $this->officer['lname'] =  $res['lname'];
-            $this->officer['suffix'] =  $res['suffix'];
-            $this->officer['gender'] =  $res['gender'];
-            $this->officer['dob'] =  date('Y-m-d', strtotime($res['dob']));
-            $this->officer['age'] =  $res['age'];
-            $this->officer['pob'] =  $res['pob'];            
-            $this->officer['civilStatus'] =  $res['civilStatus'];
-            $this->officer['cno'] =  $res['cno'];
-            $this->officer['emailAddress'] =  $res['emailAddress'];
+        // *** Get the Id *** 
+        // $officers = TblFieldOfficer::all()->where("Id", );
 
-            $this->officer['houseNo'] =  $res['houseNo'];
-            $this->officer['barangay'] =  $res['barangay'];
-            $this->officer['emailAddress'] =  $res['emailAddress'];
-            $this->officer['city'] =  $res['city'];
-            $this->officer['region'] =  $res['region'];
-            $this->officer['country'] =  $res['country'];
-            $this->officer['sss'] =  $res['sss'];
-            $this->officer['pagIbig'] =  $res['pagIbig'];
-            $this->officer['philHealth'] =  $res['philHealth'];
-            $this->officer['idNum'] =  $res['idNum'];
-            $this->officer['typeID'] =  $res['typeID']; 
+        
+        // dd($id);
+        // if($id != ''){
+        //     $officer = $officers->where('Id', $id)->first();
+        //     dd($officers);
+ 
+        //     $this->officer['fname'] =  $officer->Fname;
+        //     $this->officer['mname'] =  $officer->Mname;
+        //     $this->officer['lname'] =  $officer->Lname;
+        //     $this->officer['suffix'] =  $officer->Suffix;
+        //     $this->officer['gender'] =  $officer->Gender;
+        //     $this->officer['dob'] =  $officer->DOB->format('Y-m-d');
+        //     $this->officer['age'] =  $officer->Age;
+        //     $this->officer['pob'] =  $officer->POB;            
+        //     $this->officer['civilStatus'] =  $officer->CivilStatus;
+        //     $this->officer['cno'] =  $officer->Cno;
+        //     $this->officer['emailAddress'] =  $officer->EmailAddress;
 
-            $this->officer['profile'] = $res['profilePath'];
-            $this->officer['old_profile'] = $res['profilePath'];
-            $this->officer['attachments'] = $res['files'];       
-            $this->officer['old_attachments'] = $res['files'];    
+        //     $this->officer['houseNo'] =  $officer->HouseNo;
+        //     $this->officer['barangay'] =  $officer->Barangay;
+        //     $this->officer['emailAddress'] =  $officer->EmailAddress;
+        //     $this->officer['city'] =  $officer->City;
+        //     $this->officer['region'] =  $officer->Region;
+        //     $this->officer['country'] =  $officer->Country;
+        //     $this->officer['sss'] =  $officer->SSS;
+        //     $this->officer['pagIbig'] =  $officer->PagIbig;
+        //     $this->officer['philHealth'] =  $officer->PhilHealth;
+        //     $this->officer['idNum'] =  $officer->ID_Number;
+        //     $this->officer['typeID'] =  $officer->IDType; 
+
+        //     $this->officer['profile'] = $officer->profilePath;
+        //     $this->officer['old_profile'] = $officer->profilePath;
+        //     $this->officer['attachments'] = $officer->files;       
+        //     $this->officer['old_attachments'] = $officer->files;    
             
-            $this->officer['frontID'] = $res['frontID_Path'];
-            $this->officer['old_frontID'] = $res['frontID_Path'];
-            $this->officer['backID'] = $res['backID_Path'];
-            $this->officer['old_backID'] = $res['backID_Path'];
+        //     $this->officer['frontID'] = $officer->frontID_Path;
+        //     $this->officer['old_frontID'] = $officer->frontID_Path;
+        //     $this->officer['backID'] = $officer->backID_Path;
+        //     $this->officer['old_backID'] = $officer->backID_Path;
 
-            $idtypename = isset($this->idtypes[$res['typeID']]) ? $this->idtypes[$res['typeID']] : ''; 
-            if( $idtypename != '' ){   
-                $this->getIdTypeName( $idtypename['type'] );
-            }
-        }
+        //     $idtypename = isset($this->idtypes[$officer->IDType]) ? $this->idtypes[$officer->IDType] : ''; 
+        //     if($idtypename != ''){   
+        //         $this->getIdTypeName($idtypename['type']);
+        //     }
+        // }
     }   
 
     public function getIdTypeName($idname){
