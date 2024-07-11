@@ -5,6 +5,9 @@ namespace App\Http\Livewire\Maintenance\FieldOfficer;
 use Livewire\Component;
 use App\Traits\Common;
 use App\Models\FieldOfficer as TblFieldOfficer;
+use App\Models\Status;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FieldOfficerlist extends Component
 {
@@ -15,33 +18,81 @@ class FieldOfficerlist extends Component
     public $paginate = [];
     public $paginationPaging = [];
 
-    // public function archive($id)
+    // public function archive($foid)
     // {
-    //     $officer = TblFieldOfficer::find($id);
-    //     dd($officer);
-    //     if ($officer) {
-    //         $officer->delete();fie
+    //     // Find the field officer by FOID
+    //     $officer = TblFieldOfficer::where('FOID', $foid)->first();
+
+    //     // Check if officer exists
+    //     if (!$officer) {
+    //         // Handle case where officer with $foid does not exist
+    //         session()->flash('error', 'Field officer not found.');
+    //         return redirect()->to('/maintenance/fieldofficer/list');
     //     }
-    //     return redirect()->to('/maintenance/fieldofficer/list')->with(['mmessage' => 'Field officer has been archived', 'mword' => 'Success']);
+
+    //     // Archive the officer by changing status to inactive (assuming status ID 2 means inactive)
+    //     try {
+    //         // Get the Status object for inactive status
+    //         $statusInactive = Status::find(2); // Assuming status ID 2 is for inactive status
+
+    //         // Associate the officer with the inactive status
+    //         $officer->status()->associate($statusInactive);
+    //         $officer->save();
+
+    //         // Log success
+    //         Log::info('Field officer archived successfully: ' . $officer->FOID);
+
+    //         // Redirect with success message
+    //         return redirect()->to('/maintenance/fieldofficer/list')->with('message', 'Field officer has been archived');
+    //     } catch (\Exception $e) {
+    //         // Log the error
+    //         Log::error('Failed to archive field officer: ' . $e->getMessage());
+
+    //         // Flash error message
+    //         session()->flash('error', 'Failed to archive field officer: ' . $e->getMessage());
+    //     }
+
+    //     // Redirect back to officer list page
+    //     return redirect()->to('/maintenance/fieldofficer/list');
     // }
-    
 
-    public function archive($id)
+    public function archive($foid)
     {
-        // Find officer by FOID (assuming $id is FOID)
-        $officer = TblFieldOfficer::find($id);
-        // Check if officer exists
-        if (!$officer) {
-            // Handle case where officer with $id does not exist
-            session()->flash('error', 'Field officer not found.');
-            return redirect()->to('/maintenance/fieldofficer/list');
-        }
-
-        // Delete the officer
         try {
+            // Find the field officer by FOID
+            $officer = TblFieldOfficer::where('FOID', $foid)->first();
+
+            // Check if officer exists
+            if (!$officer) {
+                // Handle case where officer with $foid does not exist
+                session()->flash('error', 'Field officer not found.');
+                return redirect()->to('/maintenance/fieldofficer/list');
+            }
+
+            // Get the Status object for inactive status (assuming status ID 2 means inactive)
+            $statusInactive = Status::find(2);
+
+            if (!$statusInactive) {
+                throw new \Exception('Inactive status not found.');
+            }
+
+            // Associate the officer with the inactive status
+            $officer->status()->associate($statusInactive);
+            $officer->save();
             $officer->delete();
-            session()->flash('success', 'Field officer has been archived successfully.');
+
+            // Perform soft delete (optional, if you want to keep historical records)
+
+            // Log success
+            Log::info('Field officer archived successfully: ' . $officer->FOID . "  its current status: " . $officer->status->Name);
+
+            // Redirect with success message
+            return redirect()->to('/maintenance/fieldofficer/list')->with('message', 'Field officer has been archived');
         } catch (\Exception $e) {
+            // Log the error
+            Log::error('Failed to archive field officer: ' . $e->getMessage());
+
+            // Flash error message
             session()->flash('error', 'Failed to archive field officer: ' . $e->getMessage());
         }
 
@@ -66,7 +117,10 @@ class FieldOfficerlist extends Component
 
     public function render()
     {
-        $query = TblFieldOfficer::query();
+        // Query only active field officers (status ID 1)
+        $query = TblFieldOfficer::whereHas('status', function ($query) {
+            $query->where('id', 1);
+        });
 
         if ($this->keyword) {
             $query->where(function ($query) {

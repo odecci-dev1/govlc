@@ -18,7 +18,7 @@ class FieldOfficer extends Model
         // Define your fillable attributes here
         'Fname', 'Lname', 'Mname', 'Suffix', 'Gender', 'DOB', 'Age', 'POB',
         'CivilStatus', 'Cno', 'EmailAddress', 'HouseNo', 'Barangay', 'City',
-        'Region', 'Country', 'SSS', 'PagIbig', 'PhilHealth', 'ID_Number', 'IDType',
+        'Region', 'Country', 'Status', 'SSS', 'PagIbig', 'PhilHealth', 'ID_Number', 'IDType',
         'ProfilePath', 'FrontID_Path', 'BackID_Path', 'DateCreated', 'DateUpdated', // Include DateCreated and DateUpdated
     ];
 
@@ -44,7 +44,7 @@ class FieldOfficer extends Model
 
     public static function getFieldOfficerByFOID($foid)
     {
-        return self::where('FOID', $foid)->with('files')->first();
+        return self::where('FOID', $foid)->with('files')->with('Status')->first();
     }
 
     public function getProfilePathAttribute($value)
@@ -74,22 +74,22 @@ class FieldOfficer extends Model
 
     public function setProfilePathAttribute($value)
     {
-        $this->attributes['ProfilePath'] = $value ? 'officer_profile/' . $value : null;
+        $this->attributes['ProfilePath'] = $value ? $value : null;
     }
 
     public function setFrontIdPathAttribute($value)
     {
-        $this->attributes['FrontID_Path'] = $value ? 'officer_ids/' . $value : null;
+        $this->attributes['FrontID_Path'] = $value ? $value : null;
     }
 
     public function setBackIdPathAttribute($value)
     {
-        $this->attributes['BackID_Path'] = $value ? 'officer_ids/' . $value : null;
+        $this->attributes['BackID_Path'] = $value ? $value : null;
     }
 
     public function status()
     {
-        return $this->belongsTo(Status::class, 'status_id');
+        return $this->belongsTo(Status::class, 'Status');
     }
 
     public function area()

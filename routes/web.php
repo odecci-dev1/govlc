@@ -100,7 +100,7 @@ Route::middleware(['authenticated'])->group(function () {
     Route::middleware(['access:Module-01'])->group(function () {
         Route::get('/maintenance/fieldofficer/list', FieldOfficerlist::class)->name('fieldofficer.list');
         Route::get('/maintenance/fieldofficer/create', FieldOfficer::class)->name('fieldofficer.create');
-        Route::get('/maintenance/fieldofficer/view/{id}', FieldOfficer::class)->name('fieldofficer.view');
+        Route::get('/maintenance/fieldofficer/view/{foid}', FieldOfficer::class)->name('fieldofficer.view');
     });
     //field officer
 

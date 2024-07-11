@@ -137,12 +137,18 @@
                                     {{-- {{ strlen( $officer->area->Area ) > 23 ? substr( $officer->area->Area, 0, 23) . '...' :  $officer->area }} --}}
                                 </td>
 
+                                <!-- * Area -->
+                                
+                                <td class="td-area">       
+                                    {{ $officer->status->Id }}
+                                </td>
+
                                 <!-- * Action -->
                                 <td class="td-btns">
                                     <div class="td-btn-wrapper">
                                         <a href="{{ URL::to('/') }}/maintenance/fieldofficer/view/{{ $officer->FOID }}" class="a-btn-view-2" data-maintenance-view-field-officer>View</a>
                                         @if($usertype != 2)
-                                        <button type="button" onclick="showDialog('{{ $officer->Id }}')" class="a-btn-trash-2">Trash</button>
+                                        <button type="button" onclick="showDialog('{{ $officer->FOID }}')" class="a-btn-trash-2">Trash</button>
                                         @endif
                                     </div>
                                 </td>
