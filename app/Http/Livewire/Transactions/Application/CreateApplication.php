@@ -2301,20 +2301,18 @@ class CreateApplication extends Component
                
         }
         else if($this->type == 'view' || $this->type == 'details'){
-            if($this->type == 'view'){
-                $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
-            }
-            else{
-                $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $this->naID]]);
-            }
+            // if($this->type == 'view'){
+            //     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
+            // }
+            // else{
+            //     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $this->naID]]);
+            // }
             
-            
-            $resdata = $value->json();             
-            if(isset($resdata[0])){        
-                $data = $resdata[0];                
+            $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first();              
+            if($res){                              
                 //dd($data);
-                $this->searchedmemId =  $data['memId'];
-                $this->member['statusID'] = $data['applicationStatus'];
+                $this->searchedmemId = $res->MemId;
+                $this->member['statusID'] = $res->Status;
                 if($this->type == 'view'){
                     if( $this->member['statusID'] == 8 ){
                         if(!in_array('Module-09',$this->modules)){
@@ -2346,38 +2344,39 @@ class CreateApplication extends Component
                 //get loan payment and history
                 //dd($data['individualLoan']);
                 
-                if($this->type == 'view'){
-                    $this->loanDetails['loanTypeID'] = $data['individualLoan'][0]['loanTypeID'];
-                    $this->loanDetails['loanTypeName'] = $data['individualLoan'][0]['loanType'];
-                    $this->loanDetails['loantermsID'] = $data['termsOfPayment']; 
-                    $this->loanDetails['loantermsName'] = $data['individualLoan'][0]['nameOfTerms']; 
+                if($this->type == 'view'){       
+                    //ditox        
+                    $this->loanDetails['loanTypeID'] = $res->detail['LoanTypeID'];
+                    $this->loanDetails['loanTypeName'] = $res->loantype['LoanTypeName'];
+                    $this->loanDetails['loantermsID'] = $res->detail['LoanTypeName']; 
+                    $this->loanDetails['loantermsName'] = $res->termsofpayment['NameOfTerms']; 
 
-                    $this->loanDetails['loanType'] = isset($data['individualLoan'][0]['loanType']) ? $data['individualLoan'][0]['loanType'] : '';                  
-                    $this->loanDetails['loanAmount'] = in_array($data['applicationStatus'], [8,9]) ? ($data['individualLoan'][0]['loanAmount'] ??= 0) : $data['individualLoan'][0]['approvedLoanAmount'];
-                    $this->loanDetails['purpose'] = $data['purpose'];
+                    $this->loanDetails['loanType'] = $res->loantype['LoanTypeName'];                  
+                    $this->loanDetails['loanAmount'] = in_array($res->Status, [7,8,9]) ? ($res->detail->LoanAmount ??= 0) : $res->detail->ApprovedLoanAmount;
+                    $this->loanDetails['purpose'] = $res->detail->Purpose;
                     //$this->loanDetails['terms'] = $data['termsOfPayment']; //$data['individualLoan'][0]['terms'];
                                     
                     $this->loanDetails['noofnopayment'] = 0; 
                     $this->loanDetails['noofloans'] = 0; 
                                         
-                    $this->loanDetails['app_ApprovedBy_1'] = $data['individualLoan'][0]['app_ApprovedBy_1'];
-                    $this->loanDetails['app_ApprovalDate_1'] = $data['individualLoan'][0]['app_ApprovalDate_1'];
+                    $this->loanDetails['app_ApprovedBy_1'] = $res->App_ApprovedBy_1;
+                    $this->loanDetails['app_ApprovalDate_1'] = $res->App_ApprovalDate_1;
 
-                    $this->loanDetails['app_ApprovedBy_1_name'] = $this->getUserName($data['individualLoan'][0]['app_ApprovedBy_1']);
-                    $this->loanDetails['app_ApprovalDate_1_timeint'] = $this->calculateTimeDifference($data['individualLoan'][0]['app_ApprovalDate_1'], Carbon::now());
+                    $this->loanDetails['app_ApprovedBy_1_name'] = null; //$this->getUserName($data['individualLoan'][0]['app_ApprovedBy_1']);
+                    $this->loanDetails['app_ApprovalDate_1_timeint'] = null; //$this->calculateTimeDifference($data['individualLoan'][0]['app_ApprovalDate_1'], Carbon::now());
                     
-                    $ciuserid = isset($data['individualLoan'][0]['cI_ApprovedBy']) ? $data['individualLoan'][0]['cI_ApprovedBy'] : '';                
+                    $ciuserid = null; //isset($data['individualLoan'][0]['cI_ApprovedBy']) ? $data['individualLoan'][0]['cI_ApprovedBy'] : '';                
                     $this->loanDetails['approvedBy'] = $this->getUserName($ciuserid);                                                           
-                    $this->loanDetails['notes'] = isset($data['individualLoan'][0]['app_Note']) ? $data['individualLoan'][0]['app_Note'] : ''; 
-                    $this->loanDetails['ldid'] = $data['individualLoan'][0]['ldid'];
-                    $this->loanDetails['topId'] = $data['termsOfPayment'];  
+                    $this->loanDetails['notes'] = $res->App_Note; 
+                    $this->loanDetails['ldid'] = $res->detail->LDID;
+                    $this->loanDetails['topId'] = $res->detail->TermsOfPayment;  
 
-                    $this->loanDetails['modeOfRelease'] = $data['individualLoan'][0]['modeOfRelease'];
-                    $this->loanDetails['denomination'] = $data['individualLoan'][0]['modeOfReleaseReference'];
-                    $this->loanDetails['courier'] = $data['individualLoan'][0]['courerier'];
-                    $this->loanDetails['courieremployee'] = $data['individualLoan'][0]['courerierName'];
-                    $this->loanDetails['courierclient'] = $data['individualLoan'][0]['courerierName'];
-                    $this->loanDetails['couriercno'] = $data['individualLoan'][0]['courierCNo'];
+                    $this->loanDetails['modeOfRelease'] = $res->detail->ModeOfRelease;
+                    $this->loanDetails['denomination'] = $res->detail->Denomination;
+                    $this->loanDetails['courier'] = $res->detail->Courerier;
+                    $this->loanDetails['courieremployee'] = $res->detail->CourerierName;
+                    $this->loanDetails['courierclient'] = $res->detail->CourerierName;
+                    $this->loanDetails['couriercno'] = $res->detail->CourierCNo;
 
                     $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loanDetails['loanTypeID']]);                                    
                     $loanterms = $loanterms->json();
@@ -2401,16 +2400,20 @@ class CreateApplication extends Component
                     $this->loanDetails['total_InterestAmount'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['total_InterestAmount'] :  $this->loansummary['approveedInterest']) : ''; 
                     $this->loanDetails['total_LoanReceivable'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['total_LoanReceivable'] :  $this->loansummary['approvedReleasingAmount']) : ''; 
                     $this->loanDetails['dailyCollectibles'] = isset($getloansummary[0]) ? ((!empty($this->loansummary['approvedDailyAmountDue']) ? $this->loansummary['approvedDailyAmountDue'] : 0) > 0 ? $this->loansummary['approvedDailyAmountDue'] :  $this->loansummary['dailyCollectibles']) : ''; 
-                    $this->loanDetails['totalSavings'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';                    
+                    $this->loanDetails['totalSavings'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';   
+                    
+                    //totalSavingUsed, totalSavingsAmount, notarialFee, advancePayment, total_InterestAmount, total_LoanReceivable, total_LoanReceivable, dailyCollectibles, totalSavings
+                    
                    
-                    $this->loanDetails['remarks'] = $data['individualLoan'][0]['remarks'];
-                    $this->loanDetails['ci_time'] = $this->calculateTimeDifference($data['dateCreated'], Carbon::now());                                       
+                    $this->loanDetails['remarks'] = $res->Remarks;
+                    $this->loanDetails['ci_time'] = $this->calculateTimeDifference($res->DateCreated, Carbon::now());                                       
                 }
                 
                 //dd( Carbon::now() );
                 
                 //images and files
                 $files = $data['files'];
+                
                 $this->member['attachments'] = [];
                 $this->member['profile'] = '';
                 $this->member['signature'] = '';

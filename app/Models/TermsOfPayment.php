@@ -5,12 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CoMaker extends Model
+class TermsOfPayment extends Model
 {
     use HasFactory;
-    protected $table = 'tbl_CoMaker_Model';
-    public $timestamps = false;
-
-    protected $fillable = ['Lname'];
-    
+    protected $table = 'tbl_TermsOfPayment_Model'; 
+    public $timestamps = false; 
 }

@@ -174,8 +174,8 @@
 
                 <!-- * Applied Loan Amount -->
                 <th>
-                    <div class="th-wrapper">
-                        <span class="th-name">Applied Loan Amount</span>
+                    <div class="th-wrapper" style="align-items: end;">
+                        <span class="th-name" style="text-align: right;">Applied Loan Amount</span>
                         <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                     </div>
                 </th>
@@ -208,37 +208,37 @@
                         
                     <!-- * Borrower -->
                     <td>
-                       {{ $l['borrower'] }}
+                       {{ $l->member->Lname }}, {{ $l->member->Fname . (!empty($l->member->Suffix) ? ' '.$l->member->Suffix : '') }}  {{ mb_substr($l->member->Mname, 0, 1) }}. 
                     </td>
 
                     <!-- * Borrower Contact Number -->
                     <td>
-                        {{ $l['cno'] }}
+                       {{ $l->member->Cno }}
                     </td>
                         
                     <!-- * Co-Borrower -->
                     <td>
-                        {{ $l['coBorrower'] }}
+                        {{ $l->comaker->Lname }}, {{ $l->comaker->Fname . (!empty($l->comaker->Suffi) ? ' '.$l->comaker->Suffi : '') }}  {{ mb_substr($l->comaker->Mname, 0, 1) }}. 
                     </td>
 
                     <!-- * Co-Borrower Contact Number -->
                     <td>
-                         {{ $l['co_Cno'] }}
+                        {{ $l->comaker->Cno }}
                     </td>
 
                     <!-- * Applied Loan Amount -->
                     <td class="td-num">
-                        {{ $l['loanAmount'] }}
+                        {{ $l->detail->LoanAmount }}
                     </td>
 
                     <!-- * Loan type -->
                     <td>
-                        {{ $l['loanType'] }}
+                        {{ $l->loantype->LoanTypeName }}
                     </td>
 
                     <!-- * Date Created -->
                     <td>
-                        {{ date('m/d/Y', strtotime($l['dateCreated'])) }}
+                        {{ date('m/d/Y', strtotime($l->DateCreated)) }}
                     </td>
 
                     <!-- * Table View and Trash Button -->
@@ -247,7 +247,7 @@
                             @if($l['loanTypeID'] == 'LT-02')
                                 <a href="{{ URL::to('/') }}/tranactions/group/application/view/{{ $l['groupId'] }}" class="a-btn-view-3" data-view-application>View</a>
                             @else
-                                <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $l['naid'] }}" class="a-btn-view-3" data-view-application>View</a>
+                                <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $l->NAID }}" class="a-btn-view-3" data-view-application>View</a>
                             @endif
                             <button  onclick="showDialog('{{ $l['naid'] }}')"  type="button" class="a-btn-trash-5">Trash</button>
                         </div>
