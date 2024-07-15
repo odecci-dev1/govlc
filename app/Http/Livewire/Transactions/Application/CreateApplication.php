@@ -2307,7 +2307,7 @@ class CreateApplication extends Component
             //     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $this->naID]]);
             // }
             
-            $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first();              
+            $res = Application::where('NAID', $this->naID)->with('member')->with('comaker')->with('detail')->with('loantype')->with('termsofpayment')->first();              
             if($res){                              
                 //dd($data);
                 $this->searchedmemId = $res->MemId;
@@ -2407,117 +2407,111 @@ class CreateApplication extends Component
                     $this->loanDetails['ci_time'] = $this->calculateTimeDifference($res->DateCreated, Carbon::now());                                       
                 }
                 
-                dd( $res->member->fileuploads );                
-                //images and files
-                $files = $data['files'];
-                
                 $this->member['attachments'] = [];
                 $this->member['profile'] = '';
                 $this->member['signature'] = '';
-                if($files){
-                    foreach($files as $mfiles){
-                        if($mfiles['fileType'] == 'Profile'){
-                            $this->member['profile'] = $mfiles['filePath'];
-                        }
-
-                        if($mfiles['fileType'] == 'File'){
-                            $this->member['attachments'][] = [ 'fileName' => $mfiles['filePath'] , 'filePath' => $mfiles['filePath'] ];
-                        }
-
-                        if($mfiles['fileType'] == 'Singature'){
-                            $this->member['signature'] = $mfiles['filePath'];
-                        }
+                $memfiles = $res->member->fileuploads;
+                if($memfiles){
+                    foreach($memfiles as $memfile){
+                        if($memfile->Type == 1){
+                            $this->member['profile'] = $memfile->FilePath;
+                        }  
+                        if($memfile->Type == 2){                            
+                            $this->member['attachments'][] = [ 'fileName' => $memfile->FilePath , 'filePath' => $memfile->FilePath ];
+                        }   
+                        if($memfile->Type == 3){                            
+                            $this->member['signature'] = $memfile->FilePath;
+                        }   
                     }
                     $this->member['old_attachments'] = $this->member['attachments'];
                     $this->member['old_profile'] = $this->member['profile'];                  
                     $this->member['old_signature'] = $this->member['signature'];
-                }
+                }                
+                //images and files
+
                 //dito
-                $cofiles = $data['co_Files'];
+                //$cofiles = $data['co_Files'];         
                 $this->comaker['attachments'] = [];
                 $this->comaker['profile'] = '';
                 $this->comaker['signature'] = '';
+                $cofiles = $res->member->comaker->fileuploads;              
                 if($cofiles){
-                    
-                    foreach($cofiles as $cfiles){                      
-                        if($cfiles['fileType'] == 'Profile'){
-                            $this->comaker['profile'] = $cfiles['filePath'];
-                            
-                        }
-
-                        if($cfiles['fileType'] == 'File'){
-                            $this->comaker['attachments'][] = [ 'fileName' => $cfiles['filePath'] , 'filePath' => $cfiles['filePath'] ];                
-                        }
-
-                        if($cfiles['fileType'] == 'Singature'){
-                            $this->comaker['signature'] = $cfiles['filePath'];
-                        }
-                    }                   
-
+                    foreach($cofiles as $cofile){
+                        if($cofile->Type == 1){
+                            $this->comaker['profile'] = $cofile->FilePath;
+                        }  
+                        if($cofile->Type == 2){                            
+                            $this->comaker['attachments'][] = [ 'fileName' => $cofile->FilePath , 'filePath' => $cofile->FilePath ];
+                        }   
+                        if($cofile->Type == 3){                            
+                            $this->comaker['signature'] = $cofile->FilePath;
+                        }   
+                    }
                     $this->comaker['old_attachments'] = $this->comaker['attachments'];
-                    $this->comaker['old_profile'] = $this->comaker['profile'];   
+                    $this->comaker['old_profile'] = $this->comaker['profile'];                  
                     $this->comaker['old_signature'] = $this->comaker['signature'];
-                }
+                }                
+                
                 //images and files
             
-                $this->member['fname'] = $data['fname'];  
-                $this->member['lname'] = $data['lname'];
-                $this->member['mname'] = $data['mname'];
-                $this->member['suffix'] = $data['suffix']; 
-                $this->member['age'] = $data['age'];         
-                $this->member['barangay'] = $data['barangay'];  
+                $this->member['fname'] = $res->member->Fname;  
+                $this->member['lname'] = $res->member->Lname;
+                $this->member['mname'] = $res->member->Mname;
+                $this->member['suffix'] = $res->member->Suffix; 
+                $this->member['age'] = $res->member->Age;         
+                $this->member['barangay'] = $res->member->Barangay;  
                 if($this->member['statusID'] != 7){                 
-                    $this->barangays->put(1, ['brgyDesc' => $data['barangay']]);        
+                    $this->barangays->put(1, ['brgyDesc' => $res->member->Barangay]);        
                 }
-                $this->member['city'] = $data['city'];   
+                $this->member['city'] = $res->member->City;   
                 if($this->member['statusID'] != 7){                
-                    $this->cities->put(1, ['citymunDesc' => $data['city']]);          
+                    $this->cities->put(1, ['citymunDesc' => $res->member->City]);          
                 }                           
-                $this->member['civil_Status'] = $data['civil_Status'];  
-                $this->member['cno'] = $data['cno']; 
-                $this->member['country'] = $data['country']; 
-                $this->member['dob'] = date('Y-m-d', strtotime($data['dob']));
-                $this->member['emailAddress'] = $data['emailAddress']; 
-                $this->member['gender'] = $data['gender'];
-                $this->member['houseNo'] = $data['houseNo'];
-                $this->member['house_Stats'] = $data['houseStatusId'];          
-                $this->member['pob'] = $data['pob'];
-                $this->member['province'] = $data['province']; 
+                $this->member['civil_Status'] = $res->member->Civil_Status;  
+                $this->member['cno'] = $res->member->Cno; 
+                $this->member['country'] = $res->member->Country; 
+                $this->member['dob'] = date('Y-m-d', strtotime($res->member->DOB));
+                $this->member['emailAddress'] = $res->member->EmailAddress; 
+                $this->member['gender'] = $res->member->Gender;
+                $this->member['houseNo'] = $res->member->HouseNo;
+                $this->member['house_Stats'] = $res->member->House_Stats;          
+                $this->member['pob'] = $res->member->POB;
+                $this->member['province'] = $res->member->Province; 
                 if($this->member['statusID'] != 7){                   
-                    $this->provinces->put(1, ['provDesc' => $data['province']]);                  
-                } 
-                $this->member['yearsStay'] = $data['yearsStay'];
-                $this->member['zipCode'] = $data['zipCode'];
-                $this->member['status'] = $data['status'];              
-                $this->member['electricBill'] = $data['electricBill']; 
-                $this->member['waterBill'] = $data['waterBill']; 
-                $this->member['otherBills'] = $data['otherBills']; 
-                $this->member['dailyExpenses'] = $data['dailyExpenses']; 
-                $this->member['jobDescription'] = $data['jobDescription']; 
-                $this->member['yos'] = $data['yos']; 
-                $this->member['monthlySalary'] = $data['monthlySalary']; 
-                $this->member['otherSOC'] = $data['otherSOC']; 
-                $this->member['bO_Status'] = $data['bO_Status'] == 'True' ? 1 : 0;               
-                $this->member['companyName'] = $data['companyName'];
-                $this->member['companyAddress'] = $data['companyAddress'];  
-                $this->member['emp_Status'] = $data['emp_Status'];              
-                $this->member['f_Fname'] = $data['f_Fname']; 
-                $this->member['f_Lname'] = $data['f_Lname']; 
-                $this->member['f_Mname'] = $data['f_Mname']; 
-                $this->member['f_Suffix'] = $data['f_Suffix']; 
-                $this->member['f_DOB'] = date('Y-m-d', strtotime($data['f_DOB'])); 
-                $this->member['f_Age'] = $data['f_Age']; 
-                $this->member['f_NOD'] = $data['f_NOD']; 
-                $this->member['f_YOS'] = $data['f_YOS']; 
-                $this->member['f_Emp_Status'] = $data['f_Emp_Status']; 
-                $this->member['f_Job'] = $data['f_Job']; 
-                $this->member['f_CompanyName'] = $data['f_CompanyName']; 
-                $this->member['f_RTTB'] = $data['f_RTTB'];    
-                $this->member['famId'] = $data['famId'];     
+                    $this->provinces->put(1, ['provDesc' => $res->member->Province]);                  
+                }               
+                $this->member['yearsStay'] = $res->member->YearsStay;
+                $this->member['zipCode'] = $res->member->ZipCode;
+                $this->member['status'] = $res->member->Status;              
+                $this->member['electricBill'] = $res->member->monthlybills->ElectricBill; 
+                $this->member['waterBill'] = $res->member->monthlybills->WaterBill; 
+                $this->member['otherBills'] = $res->member->monthlybills->OtherBills; 
+                $this->member['dailyExpenses'] = $res->member->monthlybills->DailyExpenses; 
+                $this->member['jobDescription'] = $res->member->jobinfo->JobDescription; 
+                $this->member['yos'] = $res->member->jobinfo->YOS; 
+                $this->member['monthlySalary'] = $res->member->jobinfo->MonthlySalary;
+                $this->member['otherSOC'] = $res->member->jobinfo->OtherSOC;
+                $this->member['bO_Status'] = $res->member->jobinfo->BO_Status;           
+                $this->member['companyName'] = $res->member->jobinfo->CompanyName;
+                $this->member['companyAddress'] = $res->member->jobinfo->CompanyAddress;
+                $this->member['emp_Status'] = $res->member->jobinfo->Emp_Status; 
+                $this->member['f_Fname'] = $res->member->familybackground->Fname; 
+                $this->member['f_Lname'] = $res->member->familybackground->Lname;
+                $this->member['f_Mname'] = $res->member->familybackground->Mname;
+                $this->member['f_Suffix'] = $res->member->familybackground->Suffix;
+                $this->member['f_DOB'] = date('Y-m-d', strtotime($res->member->familybackground->DOB)); 
+                $this->member['f_Age'] = $res->member->familybackground->Age; 
+                $this->member['f_NOD'] = $res->member->familybackground->NOD;
+                $this->member['f_YOS'] = $res->member->familybackground->YOS;
+                $this->member['f_Emp_Status'] = $res->member->familybackground->Emp_Status;
+                $this->member['f_Job'] = $res->member->familybackground->Position;
+                $this->member['f_CompanyName'] = $res->member->familybackground->CmpId;
+                $this->member['f_RTTB'] = $res->member->familybackground->RTTB;
+                $this->member['famId'] = $res->member->familybackground->FamId;               
                 if($this->type == 'view'){
-                    $this->member['loanAmount'] = !empty($data['individualLoan'][0]['loanAmount']) ?$data['individualLoan'][0]['loanAmount'] : 0; //$data['loanAmount'];  cant find in api
-                    $this->member['termsOfPayment'] = $data['individualLoan'][0]['nameOfTerms'];
-                    $this->member['purpose'] = $data['purpose']; 
+                    $this->member['loanAmount'] = $res->detail->LoanAmount; //$data['loanAmount'];  cant find in api
+                    $this->member['termsOfPayment'] = $res->detail->termsofpayment->NameOfTerms;//$data['individualLoan'][0]['nameOfTerms'];
+                    $this->member['purpose'] = $res->detail->Purpose; 
                 }               
            
                 $this->comaker['co_Fname'] = $data['co_Fname']; 

@@ -50,6 +50,22 @@ class Members extends Model
         return $this->hasMany(FileUpload::class, 'MemId', 'Id')->select('id', '*');
     }
 
+    public function monthlybills(): HasOne
+    {
+        return $this->HasOne(MonthlyBills::class, 'MemId', 'Id')->select('id', '*')->withDefault();
+    }
+
+    public function jobinfo(): HasOne
+    {
+        return $this->HasOne(JobInfo::class, 'MemId', 'Id')->select('id', '*')->withDefault();
+    }
+
+    public function familybackground(): HasOne
+    {
+        return $this->HasOne(FamBackground::class, 'MemId', 'Id')->select('id', '*')->withDefault();
+    }
+
+
     public function getFullNameAttribute()
     {
         return $this->Lname.', '.$this->Fname.(!empty($this->Suffix) ? ' '.$this->Suffix : '').' '.mb_substr($this->Mname, 0, 1).'.';
