@@ -202,7 +202,7 @@
             <div class="box-wrap">
 
                 <h3>Upload Files</h3>
-
+                <span>{{ asset($officer['profile']) }}</span>
                 <!-- * Colspan 1: Upload Image, Attach Files and Save Buttons  -->
                 <div class="colspan">
 
@@ -211,10 +211,10 @@
                         @if($imgprofile)
                             <img type="image" class="profile" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
                         @else
-                            @if(file_exists(public_path('storage/officer_profile/'.(isset($officer['profile']) ? $officer['profile'] : 'xxxx'))))
-                                <img type="image" class="profile" src="{{ asset('storage/officer_profile/'.$officer['profile']) }}" alt="upload-image" />                                                                     
+                            @if(file_exists(public_path('storage/officer_profile/'.(isset($officer['ProfilePath']) ? $officer['ProfilePath'] : 'xxxx'))))
+                                <img type="image" class="profile" src="{{ asset('storage/officer_profile/'.$officer['ProfilePath']) }}" alt="upload-image" />                                                                     
                             @else
-                                <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />   
+                                <img type="image" class="ProfilePath" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />   
                                 <p style="position: absolute">Max Size: 2MB</p>                                            
                             @endif 
                         @endif                          
@@ -302,12 +302,12 @@
 
                     <!-- * Save Button -->
                     @if($usertype != 2)
-                    @if($foid == '')
-                    <button type="button" wire:click="store" class="button save-btn">Save</button>
-                    @else
-                    <button type="button" wire:click="update" class="button save-btn">Update</button>
-                    <button type="button" onclick="showDialog('{{ $foid }}')" class="button save-btn">Trash</button>
-                    @endif
+                        @if($foid == null)
+                            <button type="button" wire:click="store" class="button save-btn">Save</button>
+                        @else   
+                        <button type="button" wire:click="update" class="button save-btn">Update</button>
+                        <button type="button" onclick="showDialog('{{ $foid }}')" class="button save-btn">Trash</button>
+                        @endif
                     @endif
 
                 </div>
@@ -371,15 +371,18 @@
 
             <div class="wrapper">
                 <!-- dito -->
-                <!-- * ID Front Image Input -->
+                <!-- * ID Front Image Input --> 
                 <div class="input-wrapper">
                     <span>Front</span>
-                    @if($imgfrontID)
+                    {{-- <span>{{ $officer[] }}</span> --}}
+                    {{-- <span>{{ asset($officer['frontID']) }}</span> --}}
+                    <span>{{ $officer['backID'] }}</span>
+                    @if($imgfrontID)    
                         <img class="profile" style="object-fit: contain;" src="{{ $imgfrontID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
-                        <p >&nbsp;</p>
+                        <p>&nbsp;</p>
                     @else
                         @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['frontID']) ? $officer['frontID'] : 'xxxx'))))    
-                            <img class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/'.$officer['frontID']) }}" alt="Front Image" id="frontImage" name="frontImage">
+                            <img class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/' . $officer['frontID']) }}" alt="Front Image" id="frontImage" name="frontImage">
                             <p >&nbsp;</p>
                         @else
                             <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
