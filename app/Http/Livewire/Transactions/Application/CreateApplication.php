@@ -670,8 +670,7 @@ class CreateApplication extends Component
                 session()->flash('errmmessage', 'Member already has an existing loan'); 
                 return false;
             }          
-           
-            //dito
+                      
         }
 
         $comem = CoMaker::where('Fname', $this->comaker['co_Fname'])
@@ -1029,7 +1028,7 @@ class CreateApplication extends Component
             $this->resetValidation();         
             return redirect()->to('/tranactions/application/view/'.$getnaid->NAID)->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
 
-            //dito
+          
                                
                     //             "companyAddress"=> $input['member']['companyAddress'] ??= ''     
                     //             "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
@@ -2345,7 +2344,7 @@ class CreateApplication extends Component
                 //dd($data['individualLoan']);
                 
                 if($this->type == 'view'){       
-                    //ditox        
+          
                     $this->loanDetails['loanTypeID'] = $res->detail['LoanTypeID'];
                     $this->loanDetails['loanTypeName'] = $res->loantype['LoanTypeName'];
                     $this->loanDetails['loantermsID'] = $res->detail['LoanTypeName']; 
@@ -2403,8 +2402,7 @@ class CreateApplication extends Component
                     $this->loanDetails['totalSavings'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';   
                     
                     //totalSavingUsed, totalSavingsAmount, notarialFee, advancePayment, total_InterestAmount, total_LoanReceivable, total_LoanReceivable, dailyCollectibles, totalSavings
-                    
-                   
+                                       
                     $this->loanDetails['remarks'] = $res->Remarks;
                     $this->loanDetails['ci_time'] = $this->calculateTimeDifference($res->DateCreated, Carbon::now());                                       
                 }
@@ -2435,7 +2433,7 @@ class CreateApplication extends Component
                     $this->member['old_profile'] = $this->member['profile'];                  
                     $this->member['old_signature'] = $this->member['signature'];
                 }
-
+                //dito
                 $cofiles = $data['co_Files'];
                 $this->comaker['attachments'] = [];
                 $this->comaker['profile'] = '';
