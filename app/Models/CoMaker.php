@@ -12,5 +12,10 @@ class CoMaker extends Model
     public $timestamps = false;
 
     protected $fillable = ['Lname'];
+
+    public function getFullNameAttribute()
+    {      
+        return $this->Lname.', '.$this->Fname.(!empty($this->Suffi) ? ' '.$this->Suffi : '').' '.mb_substr($this->Mname, 0, 1).'.';
+    }
     
 }

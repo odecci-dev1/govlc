@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Members extends Model
 {
@@ -41,12 +42,17 @@ class Members extends Model
 
     public function comaker(): HasOne
     {
-        return $this->hasOne(CoMaker::class, 'id', 'MemId')->select('id', '*')->withDefault();
+        return $this->hasOne(CoMaker::class, 'MemId', 'Id')->select('id', '*')->withDefault();
     }
 
-    // public function getFullNameAttribute()
-    // {
-    //     return "{$this->Fname} {$this->Nmane}";
-    // }
+    public function fileuploads(): HasMany
+    {
+        return $this->hasMany(FileUpload::class, 'MemId', 'Id')->select('id', '*');
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->Lname.', '.$this->Fname.(!empty($this->Suffix) ? ' '.$this->Suffix : '').' '.mb_substr($this->Mname, 0, 1).'.';
+    }
 
 }

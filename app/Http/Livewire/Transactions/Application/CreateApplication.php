@@ -2407,8 +2407,7 @@ class CreateApplication extends Component
                     $this->loanDetails['ci_time'] = $this->calculateTimeDifference($res->DateCreated, Carbon::now());                                       
                 }
                 
-                //dd( Carbon::now() );
-                
+                dd( $res->member->fileuploads );                
                 //images and files
                 $files = $data['files'];
                 

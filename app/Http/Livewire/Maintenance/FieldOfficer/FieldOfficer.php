@@ -283,7 +283,7 @@ class FieldOfficer extends Component
             $input = $this->validate();
 
             $officer = TblFieldOfficer::where('FOID', $this->foid)->first();
-
+            dd( $officer );
             if ($officer) {
                 $officer->Fname = $input['officer']['fname'] ?? '';
                 $officer->Lname = $input['officer']['lname'] ?? '';
@@ -312,9 +312,9 @@ class FieldOfficer extends Component
                 $officer->files = $this->storeAttachments();
                 $officer->DateUpdated = now();
 
-                dd($input);
+                
                 $officer->save();
-
+                //dd( $input['officer']['lname'] ?? '' );
                 return redirect()->to('/maintenance/fieldofficer/view/' . $this->foid)->with('message', 'Field officer successfully updated');
             } else {
                 // Handle case where officer with given FOID is not found

@@ -208,7 +208,7 @@
                         
                     <!-- * Borrower -->
                     <td>
-                       {{ $l->member->Lname }}, {{ $l->member->Fname . (!empty($l->member->Suffix) ? ' '.$l->member->Suffix : '') }}  {{ mb_substr($l->member->Mname, 0, 1) }}. 
+                       {{ $l->member->fullname }}. 
                     </td>
 
                     <!-- * Borrower Contact Number -->
@@ -218,7 +218,7 @@
                         
                     <!-- * Co-Borrower -->
                     <td>
-                        {{ $l->comaker->Lname }}, {{ $l->comaker->Fname . (!empty($l->comaker->Suffi) ? ' '.$l->comaker->Suffi : '') }}  {{ mb_substr($l->comaker->Mname, 0, 1) }}. 
+                        {{ $l->comaker->fullname }} 
                     </td>
 
                     <!-- * Co-Borrower Contact Number -->
