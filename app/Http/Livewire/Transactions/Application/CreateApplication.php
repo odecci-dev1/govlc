@@ -2307,7 +2307,7 @@ class CreateApplication extends Component
             //     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $this->naID]]);
             // }
             
-            $res = Application::where('NAID', $this->naID)->with('member')->with('comaker')->with('detail')->with('loantype')->with('termsofpayment')->first();              
+            $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first();              
             if($res){                              
                 //dd($data);
                 $this->searchedmemId = $res->MemId;
@@ -2429,12 +2429,13 @@ class CreateApplication extends Component
                 }                
                 //images and files
 
+                $comakerdtl = $res->member->comaker;
                 //dito
                 //$cofiles = $data['co_Files'];         
                 $this->comaker['attachments'] = [];
                 $this->comaker['profile'] = '';
                 $this->comaker['signature'] = '';
-                $cofiles = $res->member->comaker->fileuploads;              
+                $cofiles = $comakerdtl->fileuploads;              
                 if($cofiles){
                     foreach($cofiles as $cofile){
                         if($cofile->Type == 1){
@@ -2479,7 +2480,8 @@ class CreateApplication extends Component
                 $this->member['province'] = $res->member->Province; 
                 if($this->member['statusID'] != 7){                   
                     $this->provinces->put(1, ['provDesc' => $res->member->Province]);                  
-                }               
+                }           
+                $memfambackground = $res->member->familybackground;
                 $this->member['yearsStay'] = $res->member->YearsStay;
                 $this->member['zipCode'] = $res->member->ZipCode;
                 $this->member['status'] = $res->member->Status;              
@@ -2495,42 +2497,42 @@ class CreateApplication extends Component
                 $this->member['companyName'] = $res->member->jobinfo->CompanyName;
                 $this->member['companyAddress'] = $res->member->jobinfo->CompanyAddress;
                 $this->member['emp_Status'] = $res->member->jobinfo->Emp_Status; 
-                $this->member['f_Fname'] = $res->member->familybackground->Fname; 
-                $this->member['f_Lname'] = $res->member->familybackground->Lname;
-                $this->member['f_Mname'] = $res->member->familybackground->Mname;
-                $this->member['f_Suffix'] = $res->member->familybackground->Suffix;
-                $this->member['f_DOB'] = date('Y-m-d', strtotime($res->member->familybackground->DOB)); 
-                $this->member['f_Age'] = $res->member->familybackground->Age; 
-                $this->member['f_NOD'] = $res->member->familybackground->NOD;
-                $this->member['f_YOS'] = $res->member->familybackground->YOS;
-                $this->member['f_Emp_Status'] = $res->member->familybackground->Emp_Status;
-                $this->member['f_Job'] = $res->member->familybackground->Position;
-                $this->member['f_CompanyName'] = $res->member->familybackground->CmpId;
-                $this->member['f_RTTB'] = $res->member->familybackground->RTTB;
-                $this->member['famId'] = $res->member->familybackground->FamId;               
+                $this->member['f_Fname'] = $memfambackground->Fname; 
+                $this->member['f_Lname'] = $memfambackground->Lname;
+                $this->member['f_Mname'] = $memfambackground->Mname;
+                $this->member['f_Suffix'] = $memfambackground->Suffix;
+                $this->member['f_DOB'] = date('Y-m-d', strtotime($memfambackground->DOB)); 
+                $this->member['f_Age'] = $memfambackground->Age; 
+                $this->member['f_NOD'] = $memfambackground->NOD;
+                $this->member['f_YOS'] = $memfambackground->YOS;
+                $this->member['f_Emp_Status'] = $memfambackground->Emp_Status;
+                $this->member['f_Job'] = $memfambackground->Position;
+                $this->member['f_CompanyName'] = $memfambackground->CmpId;
+                $this->member['f_RTTB'] = $memfambackground->RTTB;
+                $this->member['famId'] = $memfambackground->FamId;               
                 if($this->type == 'view'){
                     $this->member['loanAmount'] = $res->detail->LoanAmount; //$data['loanAmount'];  cant find in api
                     $this->member['termsOfPayment'] = $res->detail->termsofpayment->NameOfTerms;//$data['individualLoan'][0]['nameOfTerms'];
                     $this->member['purpose'] = $res->detail->Purpose; 
                 }               
-           
-                $this->comaker['co_Fname'] = $data['co_Fname']; 
-                $this->comaker['co_Lname'] = $data['co_Lname']; 
-                $this->comaker['co_Mname'] = $data['co_Mname']; 
-                $this->comaker['co_Suffix'] = $data['co_Suffix']; 
-                $this->comaker['co_Age'] = $data['co_Age']; 
-                $this->comaker['co_Barangay'] = $data['co_Barangay']; 
-                $this->comaker['co_City'] = $data['co_City']; 
-                $this->comaker['co_Civil_Status'] = $data['co_Civil_Status']; 
-                $this->comaker['co_Cno'] = $data['co_Cno']; 
-                $this->comaker['co_Country'] = $data['co_Country']; 
-                $this->comaker['co_DOB'] = $data['co_DOB']; 
-                $this->comaker['co_EmailAddress'] = $data['co_EmailAddress']; 
-                $this->comaker['co_Gender'] = $data['co_Gender']; 
-                $this->comaker['co_HouseNo'] = $data['co_HouseNo'];         
-                $this->comaker['co_House_Stats'] = $data['co_HouseStatusId']; 
-                $this->comaker['co_POB'] = $data['co_POB']; 
-                $this->comaker['co_Province'] = $data['co_Province']; 
+               
+                $this->comaker['co_Fname'] = $comakerdtl->Fname; 
+                $this->comaker['co_Lname'] = $comakerdtl->Lnam;
+                $this->comaker['co_Mname'] = $comakerdtl->Mname;
+                $this->comaker['co_Suffix'] = $comakerdtl->Suffi; 
+                $this->comaker['co_Age'] = $comakerdtl->Age;
+                $this->comaker['co_Barangay'] = $comakerdtl->Fname; 
+                $this->comaker['co_City'] = $comakerdtl->City; 
+                $this->comaker['co_Civil_Status'] = $comakerdtl->CivilStatus;
+                $this->comaker['co_Cno'] = $comakerdtl->Cno;
+                $this->comaker['co_Country'] = $comakerdtl->Country; 
+                $this->comaker['co_DOB'] = $comakerdtl->DOB;
+                $this->comaker['co_EmailAddress'] = $comakerdtl->EmailAddress;
+                $this->comaker['co_Gender'] = $comakerdtl->Gender;
+                $this->comaker['co_HouseNo'] = $comakerdtl->HouseNo;
+                $this->comaker['co_House_Stats'] = $comakerdtl->House_Stats; 
+                $this->comaker['co_POB'] = $comakerdtl->POB;
+                $this->comaker['co_Province'] = $comakerdtl->Province;
                 
                 if($this->member['statusID'] != 7){                  
                     $this->cobarangays->put(1, ['brgyDesc' => $data['co_Barangay']]);        
