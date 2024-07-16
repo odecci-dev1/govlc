@@ -17,6 +17,7 @@ class FieldOfficerlist extends Component
     public $keyword = '';
     public $paginate = [];
     public $paginationPaging = [];
+    public $selectedFoid = null;
 
     // public function archive($foid)
     // {
@@ -55,6 +56,21 @@ class FieldOfficerlist extends Component
     //     // Redirect back to officer list page
     //     return redirect()->to('/maintenance/fieldofficer/list');
     // }
+
+    public function mount()
+    {
+        $this->paginate['page'] = 1;
+        $this->paginate['pageSize'] = 15;
+        $this->paginate['FilterName'] = '';
+        $this->paginationPaging['totalPage'] = 0;
+        $this->paginationPaging['totalRecord'] = 0;
+        $this->usertype = session()->get('auth_usertype');
+    }
+
+    public function setPage($page = 1)
+    {
+        $this->paginate['page'] = $page;
+    }
 
     public function archive($foid)
     {
@@ -98,21 +114,6 @@ class FieldOfficerlist extends Component
 
         // Redirect back to officer list page
         return redirect()->to('/maintenance/fieldofficer/list');
-    }
-
-    public function mount()
-    {
-        $this->paginate['page'] = 1;
-        $this->paginate['pageSize'] = 15;
-        $this->paginate['FilterName'] = '';
-        $this->paginationPaging['totalPage'] = 0;
-        $this->paginationPaging['totalRecord'] = 0;
-        $this->usertype = session()->get('auth_usertype');
-    }
-
-    public function setPage($page = 1)
-    {
-        $this->paginate['page'] = $page;
     }
 
     public function render()

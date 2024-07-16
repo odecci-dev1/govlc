@@ -15,7 +15,11 @@ class FOFile extends Model
         'FOID', 
         'FilePath',
         'FileType',
+        'DateCreated',
     ];
+
+    const CREATED_AT = 'DateCreated';
+    const UPDATED_AT = null;
 
     public function officer()
     {

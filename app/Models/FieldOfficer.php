@@ -12,20 +12,33 @@ class FieldOfficer extends Model
 
     protected $table = 'tbl_FieldOfficer_Model';
 
-    // protected $primaryKey = 'FOID';
+    // protected $fillable = [
+    //     'Id', 'Fname', 'Lname', 'Mname', 'Suffix', 'Gender', 'DOB', 'Age', 'POB', 'CivilStatus', 'Cno', 'EmailAddress', 
+    //     'HouseNo', 'Barangay', 'City', 'Region', 'Country', 
+    //     'Status', 'DateCreated', 'DateUpdated', 'FOID', 'ProfilePath',
+    //     'FrontID_Path', 'BackID_Path', 'ID_Number',
+    //     'SSS', 'TIN', 'PagIbig', 'PhilHealth', 'IDType',
+    //     'Attachments', 
+    // ];
 
     protected $fillable = [
-        // Define your fillable attributes here
-        'Fname', 'Lname', 'Mname', 'Suffix', 'Gender', 'DOB', 'Age', 'POB',
-        'CivilStatus', 'Cno', 'EmailAddress', 'HouseNo', 'Barangay', 'City',
-        'Region', 'Country', 'Status', 'SSS', 'PagIbig', 'PhilHealth', 'ID_Number', 'IDType',
-        'ProfilePath', 'FrontID_Path', 'BackID_Path', 'DateCreated', 'DateUpdated', // Include DateCreated and DateUpdated
+        'Fname', 'Lname', 'Mname', 'Suffix', 'Gender', 'DOB', 'Age', 'POB', 'CivilStatus', 'Cno', 'EmailAddress', 
+        'HouseNo', 'Barangay', 'City', 'Region', 'Country', 
+        'Status', 'DateCreated', 'DateUpdated',  'ProfilePath',
+        'FrontID_Path', 'BackID_Path', 'ID_Number',
+        'SSS', 'TIN', 'PagIbig', 'PhilHealth', 'IDType',
+        'Attachments', 
+    ];
+
+    protected $guarded = [
+        'Id', 'FOID',
     ];
 
     protected $casts = [
         'DOB' => 'date:Y-m-d',
         'uploadFiles' => 'array'
     ];
+
 
     const CREATED_AT = 'DateCreated';
     const UPDATED_AT = 'DateUpdated';
@@ -99,7 +112,7 @@ class FieldOfficer extends Model
 
     public function files()
     {
-        return $this->hasMany(FOFile::class, 'FOID', 'FOID')->where('filePath', 'LIKE', 'officer_attachments/%');
+        return $this->hasMany(FOFile::class, 'FOID', 'FOID');
     }
 
 }

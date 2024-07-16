@@ -139,13 +139,14 @@
 
                                 <!-- * Area -->
                                 
-                                <td class="td-area">       
+                                {{-- <td class="td-area">       
                                     {{ $officer->status->Id }}
-                                </td>
+                                </td> --}}
 
                                 <!-- * Action -->
                                 <td class="td-btns">
                                     <div class="td-btn-wrapper">
+                                        {{-- <button wire:click="selectOfficer('{{ $officer->FOID }}')" class="a-btn-view-2" data-maintenance-view-field-officer>View</button> --}}
                                         <a href="{{ URL::to('/') }}/maintenance/fieldofficer/view/{{ $officer->FOID }}" class="a-btn-view-2" data-maintenance-view-field-officer>View</a>
                                         @if($usertype != 2)
                                         <button type="button" onclick="showDialog('{{ $officer->FOID }}')" class="a-btn-trash-2">Trash</button>

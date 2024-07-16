@@ -77,9 +77,9 @@
                             <span>Field Officer</span>
                             <!-- * Search Bar -->                            
                             <div class="search-wrap">                               
-                                <input type="hidden" wire:model.lazy="foid" placeholder="field officer id" >
+                                <input type="hidden" wire:model.lazy="FOID" placeholder="field officer id" >
                                 <input type="search" readonly wire:model.lazy="fullname" placeholder="Select field officer" >    
-                                @error('foid') <span class="text-required fw-normal">{{ $message }}</span>@enderror                            
+                                @error('FOID') <span class="text-required fw-normal">{{ $message }}</span>@enderror                            
                             </div>
                             <div class="input-wrapper" style="padding-top: 20px;">
                                 <button type="button" wire:click="openSearchOfficer"  id="data-open-new-group-modal" class="button">Search Field Officer</button>
@@ -161,24 +161,28 @@
                                         <th style="text-align: center;"><span class="th-name">Action</span></th>
 
                                     </tr>
-                                    @if($list)              
-                                        @foreach($list as $l)
+                                    @if($areas)              
+                                        {{-- {{ dd($areas) }} --}}
+                                        @foreach($areas as $area)
                                         <tr class="tr-font-size-1_2rem">
                                             <!-- * Checkbox Opt -->                                            
-
                                             <!-- * Data Area Name-->
-                                            <td wire:click="selectArea('{{ $l['areaID'] }}')" class="td-name" data-area-name>
-                                               {{ $l['areaName'] }}
+                                            <td wire:click="selectArea('{{ $area->Id }}')" class="td-name" data-area-name>
+                                                {{ $area->Area }}
                                             </td>
-
+                                    
                                             <!-- * Data Locations-->
-                                            <td  wire:click="selectArea('{{ $l['areaID'] }}')" class="td-name" data-area-location>
-                                                {{ $l['location'] }}
+                                            <td wire:click="selectArea('{{ $area->Id }}')" class="td-name" data-area-location>
+                                                {{ is_array($area->City) ? implode(', ', $area->City) : $area->City }}
                                             </td>
-
+                                    
                                             <!-- * Data Field Officer-->
-                                            <td  wire:click="selectArea('{{ $l['areaID'] }}')" class="td-field-off" data-area-field-officer>
-                                                {{ $l['fullname'] }}
+                                            <td wire:click="selectArea('{{ $area->Id }}')" class="td-field-off" data-area-field-officer>
+                                                @if($area->fieldOfficer)
+                                                    {{ $area->fieldOfficer->Lname . ', ' . $area->fieldOfficer->Fname . ' ' . mb_substr($area->fieldOfficer->Mname, 0, 1) }}
+                                                @else
+                                                    N/A
+                                                @endif
                                             </td>
 
                                             <!-- * Table Trash Button -->
@@ -186,7 +190,7 @@
                                                 <div class="td-btn-wrapper">
                                                     <!-- <button class="a-btn-view">View</button> -->
                                                     @if($usertype != 2)
-                                                    <button type="button" onclick="showDialog('{{ $l['areaID'] }}')" class="a-btn-trash-2 font-size-1_2rem fw-normal" data-area-trash-btn>Trash</button>
+                                                    <button type="button" onclick="showDialog('{{ $area['areaID'] }}')" class="a-btn-trash-2 font-size-1_2rem fw-normal" data-area-trash-btn>Trash</button>
                                                     @endif
                                                 </div>
                                             </td>
@@ -365,7 +369,7 @@
                             </tr>
 
                             @if(isset($folist) > 0)
-                                @foreach($folist as $fol)
+                                @foreach($folist as $fo)
                                 <tr>
                                     <!-- * Officer Name -->
                                     <td>
@@ -373,7 +377,7 @@
                                         <!-- * Officers' Name-->
                                         <div class="td-wrapper">
                                             <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
-                                            <span class="td-name">{{ $fol['lname'] . ', ' . $fol['fname'] . ' ' . mb_substr($fol['mname'], 0, 1) . '.' }}</span>
+                                            <span class="td-name">{{ $fo['Lname'] . ', ' . $fo['Fname'] . ' ' . mb_substr($fo['Mname'], 0, 1) . '.' }}</span>
                                         </div>
 
                                     </td>
@@ -381,7 +385,7 @@
                                     <!-- * Action -->
                                     <td class="td-btns">
                                         <div class="td-btn-wrapper">                                           
-                                            <button type="button" onclick="selectFO('{{ $fol['foid'] }}', '{{ $fol['lname'] . ', ' . $fol['fname'] . ' ' . mb_substr($fol['mname'], 0, 1) . '.' }}')" class="a-btn-trash-2">Select</button>
+                                            <button type="button" onclick="selectFO('{{ $fo['FOID'] }}', '{{ $fo['Lname'] . ', ' . $fo['Fname'] . ' ' . mb_substr($fo['Mname'], 0, 1) . '.' }}')" class="a-btn-trash-2">Select</button>
                                         </div>
                                     </td>
 
