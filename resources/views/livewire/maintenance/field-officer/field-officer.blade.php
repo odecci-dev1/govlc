@@ -16,7 +16,7 @@
 
     <!-- * Container 1: New Member Form Fields and Buttons -->
     <div class="no-container-1">
-
+             
         <!-- * Big Container -->
         <div class="big-con">
 
@@ -29,33 +29,32 @@
 
             <!-- * Rowspan 2: First Name, Middle Name , Last Name, and Suffix -->
             <div class="rowspan">
-
                 <!-- * First Name -->
                 <div class="input-wrapper">
                     <span>First Name</span>
-                    <input wire:model.lazy="officer.fname" autocomplete="off" type="text" >
-                    @error('officer.fname') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.Fname" autocomplete="off" type="text" >
+                    @error('officer.Fname') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Middle Name -->
                 <div class="input-wrapper">
                     <span>Middle Name</span>
-                    <input wire:model.lazy="officer.mname" autocomplete="off" type="text" >
-                    @error('officer.mname') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.Mname" autocomplete="off" type="text" >
+                    @error('officer.Mname') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Last Name -->
                 <div class="input-wrapper">
                     <span>Last Name</span>
-                    <input wire:model.lazy="officer.lname" autocomplete="off" type="text" >
-                    @error('officer.lname') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.Lname" autocomplete="off" type="text" >
+                    @error('officer.Lname') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Suffix -->
                 <div class="input-wrapper">
                     <span>Suffix</span>
-                    <input wire:model.lazy="officer.suffix" autocomplete="off" type="text" >
-                    @error('officer.suffix') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.Suffix" autocomplete="off" type="text" >
+                    @error('officer.Suffix') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -68,7 +67,7 @@
                     <span>Gender</span>
                     <div class="select-box">
                         <div class="select-box">
-                            <select  wire:model="officer.gender" class="select-option">
+                            <select wire:model="officer.Gender" class="select-option">
                                 <option value="">- - select - -</option>     
                                 <option value="Male">Male</option>                                    
                                 <option value="Female">Female</option>                                    
@@ -76,28 +75,28 @@
                         </div>
                         
                     </div>
-                    @error('officer.gender') <span class="text-required">{{ $message }}</span>@enderror
+                    @error('officer.Gender') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Date Of Birth -->
                 <div class="input-wrapper">
                     <span>Date Of Birth</span>
-                    <input wire:model.lazy="officer.dob" wire:change="getofficerAge" autocomplete="off" type="date" >
-                    @error('officer.dob') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.DOB" wire:change="getofficerAge" autocomplete="off" type="date" >
+                    @error('officer.DOB') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Age -->
                 <div class="input-wrapper">
                     <span>Age</span>
-                    <input wire:model.lazy="officer.age" disabled autocomplete="off" type="number" >
-                    @error('officer.age') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.Age" disabled autocomplete="off" type="number" >
+                    @error('officer.Age') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Place Of Birth -->
                 <div class="input-wrapper">
                     <span>Place Of Birth</span>
-                    <input wire:model.lazy="officer.pob" autocomplete="off" type="text">
-                    @error('officer.pob') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.POB" autocomplete="off" type="text">
+                    @error('officer.POB') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Civil Status -->
@@ -105,7 +104,7 @@
                     <span>Civil Status</span>
                     <div class="select-box">
                         <div class="select-box">
-                            <select  wire:model="officer.civilStatus" class="select-option">
+                            <select  wire:model="officer.CivilStatus" class="select-option">
                                 <option value="">- - select - -</option>     
                                 <option value="Widow">Widow</option>                                    
                                 <option value="Married">Married</option>      
@@ -114,7 +113,7 @@
                         </div>
 
                     </div>
-                    @error('officer.civilStatus') <span class="text-required">{{ $message }}</span>@enderror
+                    @error('officer.CivilStatus') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -126,8 +125,8 @@
                 <div class="input-wrapper">
                     <div class="input-wrapper">
                         <span>Contact Number</span>
-                        <input wire:model.lazy="officer.cno" autocomplete="off" type="number" >
-                        @error('officer.cno') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.lazy="officer.Cno" autocomplete="off" type="number" >
+                        @error('officer.Cno') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
                 </div>
 
@@ -135,8 +134,8 @@
                 <div class="input-wrapper">
                     <div class="input-wrapper">
                         <span>Email Address</span>
-                        <input wire:model.lazy="officer.emailAddress" autocomplete="off" type="email" >
-                        @error('officer.emailAddress') <span class="text-required">{{ $message }}</span>@enderror
+                        <input wire:model.lazy="officer.EmailAddress" autocomplete="off" type="email" >
+                        @error('officer.EmailAddress') <span class="text-required">{{ $message }}</span>@enderror
                     </div>
                 </div>
 
@@ -148,15 +147,15 @@
                 <!-- * House No./ Bldg. No./ Room No./ Subdivision/ Street -->
                 <div class="input-wrapper">
                     <span>House No./ Bldg. No./ Room No./ Subdivision/ Street</span>
-                    <input wire:model.lazy="officer.houseNo" autocomplete="off" type="text" >
-                    @error('officer.houseNo') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.HouseNo" autocomplete="off" type="text" >
+                    @error('officer.HouseNo') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Barangay -->
                 <div class="input-wrapper">
                     <span>Barangay</span>
-                    <input wire:model.lazy="officer.barangay" autocomplete="off" type="text"  >
-                    @error('officer.barangay') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.Barangay" autocomplete="off" type="text"  >
+                    @error('officer.Barangay') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -168,22 +167,22 @@
                 <!-- * City / Municipality -->
                 <div class="input-wrapper">
                     <span>City / Municipality</span>
-                    <input wire:model.lazy="officer.city" autocomplete="off" type="text" >
-                    @error('officer.city') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.City" autocomplete="off" type="text" >
+                    @error('officer.City') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Province / Region -->
                 <div class="input-wrapper">
                     <span>Province / Region</span>
-                    <input wire:model.lazy="officer.region" autocomplete="off" type="text"  >
-                    @error('officer.region') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.Region" autocomplete="off" type="text"  >
+                    @error('officer.Region') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Country -->
                 <div class="input-wrapper">
                     <span>Country</span>
-                    <input wire:model.lazy="officer.country" autocomplete="off" type="text"  >
-                    @error('officer.country') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.Country" autocomplete="off" type="text"  >
+                    @error('officer.Country') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
 
@@ -202,104 +201,90 @@
             <div class="box-wrap">
 
                 <h3>Upload Files</h3>
-                <span>{{ asset($officer['profile']) }}</span>
                 <!-- * Colspan 1: Upload Image, Attach Files and Save Buttons  -->
                 <div class="colspan">
-
-                    <!-- * Upload Image -->
+                   
+                    <!-- Upload Image -->
                     <div class="input-wrapper" data-upload-image-field-officer-hover-container>
-                        @if($imgprofile)
-                            <img type="image" class="profile" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
-                        @else
-                            @if(file_exists(public_path('storage/officer_profile/'.(isset($officer['ProfilePath']) ? $officer['ProfilePath'] : 'xxxx'))))
-                                <img type="image" class="profile" src="{{ asset('storage/officer_profile/'.$officer['ProfilePath']) }}" alt="upload-image" />                                                                     
+                        @if(isset($officer['Profile']) && !empty($officer['Profile']))
+                            @if(is_object($officer['Profile']) && method_exists($officer['Profile'], 'temporaryUrl'))
+                                <img type="image" class="profile" src="{{ $officer['Profile']->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
+                            @elseif(isset($officer['Profile']) && file_exists(public_path('storage/officer_profile/' . $officer['Profile'])))
+                                <img type="image" class="profile" src="{{ asset('storage/officer_profile/' . $officer['Profile']) }}" alt="upload-image" />
+                            @elseif($officer['Profile'] == '')
+                                <!-- Display default image when profile is empty -->
                             @else
-                                <img type="image" class="ProfilePath" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />   
-                                <p style="position: absolute">Max Size: 2MB</p>                                            
-                            @endif 
-                        @endif                          
+                                @php
+                                    $defaultImagePath = public_path('assets/icons/upload-image.svg');
+                                    $profileImagePath = public_path('storage/officer_profile/' . $officer['Profile']);
+                                @endphp
+                                @if(file_exists($profileImagePath))
+                                    <img type="image" class="profile" src="{{ asset('storage/officer_profile/' . $officer['Profile']) }}" alt="upload-image" />
+                                @else
+                                    <img type="image" class="ProfilePath" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />
+                                    <p style="position: absolute">Max Size: 2MB</p>
+                                @endif
+                            @endif
+                        @else
+                            <img type="image" class="ProfilePath" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />   
+                            <p style="position: absolute">Max Size: 2MB</p>
+                        @endif
                     </div>
 
                     <!-- * Button Wrapper -->
                     <div class="btn-wrapper">
-                        @error('imgprofile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
+                        @error('officer.Profile') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                         <!-- * Upload Button -->
                         @if($usertype != 2)
-                        <input type="file" wire:model="imgprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        <input type="file" wire:model="officer.Profile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                         @endif
-                        <div wire:loading wire:target="imgprofile">Uploading...</div>
+                        <div wire:loading wire:target="officer.Profile">Uploading...</div>
                         <!-- * Attach Button -->
                         @if($usertype != 2)
-                        <input type="file" wire:model="officer.attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-field-officer-file-btn></input>
+                        <input type="file" wire:model="officer.Attachments" class="input-image attach-file-btn" accept=".txt, .pdf, .docx, .xlsx, .jpg, .jpeg, .png" multiple data-attach-field-officer-file-btn></input>
                         @endif
-                        <div wire:loading wire:target="officer.attachments">Uploading...</div>
-                        @error('officer.attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
+                        <div wire:loading wire:target="officer.Attachments">Uploading...</div>
+                        @error('officer.Attachments') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                     </div>
 
                     <!-- * File Chips Container -->           
                     <div class="file-wrapper" style="padding: 2rem 0rem;" data-attach-file-container2>                   
+                        @if(isset($officer['Attachments']))
+                            @foreach($officer['Attachments'] as $attachment)
+                                @php
+                                    // Determine if $attachment is from the FieldOfficer model or another source
+                                    $filePath = is_array($attachment) ? (isset($attachment['FilePath']) ? $attachment['FilePath'] : '') : $attachment->path();
+                                    $filename = is_array($attachment) ? (isset($attachment['FilePath']) ? basename($attachment['FilePath']) : '') : $attachment->getClientOriginalName();
+                                    $filename = preg_replace('/^officer_attachments_\d+_/', '', $filename);
+                                @endphp
                     
-                            @if(isset($officer['attachments']))                           
-                                @if($officer['attachments'] == $officer['old_attachments'])                            
-                                    @foreach($officer['attachments'] as $attachments)                                                                                                                                
-                                            @if(file_exists(public_path('storage/officer_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
-                                                @php
-                                                    $getfilename = $attachments['filePath'];
-                                                    $filenamearray = explode("_", $getfilename);
-                                                    $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
-                                                @endphp                                               
-                                                <a href="{{ asset('storage/officer_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
-                                                    <div type="button" class="fileButton">
-                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
-                                                    {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
-                                                    </div>    
-                                                </a>   
-                                            @else
-                                                @php 
-                                                    $filename = 'File is deleted';
-                                                @endphp 
-                                                <a href="#" title="{{ $filename }}" target="_blank">                                                                                              
-                                                    <div type="button" class="fileButton">
-                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
-                                                    {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
-                                                    </div>    
-                                                </a>                                      
-                                            @endif                                
-                                                                           
-                                    @endforeach
-                                @else                            
-                                    @if(isset($officer['attachments']))                            
-                                        @foreach($officer['attachments'] as $attachments)                                                     
-                                           
-                                                <a href="{{ $attachments->path() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
-                                                    <div type="button" class="fileButton">
-                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                                    {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
-                                                    </div>
-                                                </a>                                       
-                                          
-                                            <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
-                                        @endforeach
-                                    @endif   
-                                @endif   
-                                
-                            @else                              
-                                @if(isset($officer['attachments']))                            
-                                    @foreach($officer['attachments'] as $attachments)                                                     
-                                        
-                                            <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">
-                                                <div type="button" class="fileButton">
-                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                                    {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
-                                                </div>
-                                            </a>                                       
-                                       
-                                        <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
-                                    @endforeach
-                                @endif   
-                            @endif                        
+                                @if(!empty($filePath))
+                                    <div style="position: relative">
+                                        <a href="{{ asset($filePath) }}" src="{{ asset('storage/officer_attachments/' . $officer['Profile']) }}" title="{{ $filename }}" target="_blank">                                                                                              
+                                            <div type="button" class="fileButton">
+                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
+                                                {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
+                                            </div>    
+                                        </a>
+                                        {{-- *** Delete File Button *** --}}
+                                        <button 
+                                            style="
+                                                position: absolute; 
+                                                top: -8px;
+                                                right: 0;
+                                                padding: 1.2px 5px; 
+                                                color: white; 
+                                                background: red; 
+                                                border-radius: 50%;"
+                                            >
+                                            <span >x</span>
+                                        </button>
+                                    </div>
+                                @endif
+                            @endforeach
+                        @endif
                     </div>
-
+                  
                     <!-- * Save Button -->
                     @if($usertype != 2)
                         @if($foid == null)
@@ -344,7 +329,7 @@
                 <span>Valid ID Presented</span>
                 <div class="select-box">
 
-                    <select  wire:model="officer.typeID" class="select-option">
+                    <select  wire:model="officer.IDType" class="select-option">
                         <option value="">- - select - -</option>     
                         @if(count($idtypes) > 0)
                             @foreach($idtypes as $midtypes)
@@ -354,14 +339,14 @@
                     </select>          
                     
                 </div>
-                @error('officer.typeID') <span class="text-required">{{ $message }}</span>@enderror
+                @error('officer.IDType') <span class="text-required">{{ $message }}</span>@enderror
             </div>
 
             <!-- * ID Number -->
             <div class="input-wrapper">
                 <span>ID Number</span>
-                <input wire:model.lazy="officer.idNum" type="text">
-                @error('officer.idNum') <span class="text-required">{{ $message }}</span>@enderror
+                <input wire:model.lazy="officer.ID_Number" type="text">
+                @error('officer.ID_Number') <span class="text-required">{{ $message }}</span>@enderror
             </div>
 
         </div>
@@ -370,59 +355,66 @@
         <div class="rowspan">
 
             <div class="wrapper">
-                <!-- dito -->
+
                 <!-- * ID Front Image Input --> 
                 <div class="input-wrapper">
                     <span>Front</span>
-                    {{-- <span>{{ $officer[] }}</span> --}}
-                    {{-- <span>{{ asset($officer['frontID']) }}</span> --}}
-                    <span>{{ $officer['backID'] }}</span>
-                    @if($imgfrontID)    
-                        <img class="profile" style="object-fit: contain;" src="{{ $imgfrontID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
-                        <p>&nbsp;</p>
-                    @else
-                        @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['frontID']) ? $officer['frontID'] : 'xxxx'))))    
-                            <img class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/' . $officer['frontID']) }}" alt="Front Image" id="frontImage" name="frontImage">
-                            <p >&nbsp;</p>
+                    @if(isset($officer['FrontID']) && !empty($officer['FrontID']))
+                        @if(is_object($officer['FrontID']) && method_exists($officer['FrontID'], 'temporaryUrl'))
+                            <img class="profile" style="object-fit: contain;" src="{{ $officer['FrontID']->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                            <p>&nbsp;</p>
+                        @elseif(file_exists(public_path('storage/officer_ids/' . $officer['FrontID'])))
+                            <img class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/' . $officer['FrontID']) }}" alt="Front Image" id="frontImage" name="frontImage">
+                            <p>&nbsp;</p>
                         @else
                             <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
-                            <p >Max Size: 2MB</p>
-                        @endif 
-                    @endif   
+                            <p>Max Size: 2MB</p>
+                        @endif
+                    @else
+                        <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
+                        <p>Max Size: 2MB</p>
+                    @endif
+
                     <div class="btn-wrapper">       
                         @if($usertype != 2)         
-                        <input type="file" wire:model="imgfrontID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        <input type="file" wire:model="officer.FrontID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                         @endif
                     </div>
-                    @error('imgfrontID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
+                    <div wire:loading wire:target="officer.FrontID">Uploading...</div>
+
+                    @error('officer.FrontID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                 </div>
 
                 <!-- * ID Back Image Input -->
                 <div class="input-wrapper">
                     <span>Back</span>                   
-                    @if($imgbackID)
-                        <img  class="profile" style="object-fit: contain;" src="{{ $imgbackID->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
-                        <p >&nbsp;</p>
-                    @else
-                        @if(file_exists(public_path('storage/officer_ids/'.(isset($officer['backID']) ? $officer['backID'] : 'xxxx'))))    
-                            <img  class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/'.$officer['backID']) }}" alt="Front Image" id="frontImage" name="frontImage">
-                            <p >&nbsp;</p>
+                    @if(isset($officer['BackID']) && !empty($officer['BackID']))
+                        @if(is_object($officer['BackID']) && method_exists($officer['BackID'], 'temporaryUrl'))
+                            <img class="profile" style="object-fit: contain;" src="{{ $officer['BackID']->temporaryUrl() }}" alt="Back Image" id="BackImage" name="BackImage">
+                            <p>&nbsp;</p>
+                        @elseif(file_exists(public_path('storage/officer_ids/' . $officer['BackID'])))
+                            <img class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/' . $officer['BackID']) }}" alt="Back Image" id="BackImage" name="BackImage">
+                            <p>&nbsp;</p>
                         @else
-                            <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
-                            <p >Max Size: 2MB</p>
-                        @endif 
-                    @endif   
+                            <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Back Image" id="BackImage" name="BackImage">                                             
+                            <p>Max Size: 2MB</p>
+                        @endif
+                    @else
+                        <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Back Image" id="BackImage" name="BackImage">                                             
+                        <p>Max Size: 2MB</p>
+                    @endif
+
                     <div class="btn-wrapper">
                         @if($usertype != 2)
-                        <input type="file" wire:model="imgbackID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
+                        <input type="file" wire:model="officer.BackID" class="input-image upload-profile-image-btn" style="margin-top: 1rem; background-color: #d6a330;" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                         @endif
                     </div>
-                    @error('imgbackID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
+                    <div wire:loading wire:target="officer.BackID">Uploading...</div>
+
+                    @error('officer.BackID') <span class="text-required" style="text-align: center;">{{ $message }}</span> @enderror
                 </div>
 
             </div>
-
-            
 
         </div>
 
@@ -434,15 +426,15 @@
                 <!-- * Philhealth Number -->
                 <div class="input-wrapper">
                     <span>Philhealth Number</span>
-                    <input wire:model.lazy="officer.philHealth" type="text">
-                    @error('officer.philHealth') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.PhilHealth" type="text">
+                    @error('officer.PhilHealth') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
                 <!-- * Pag-ibig Number -->
                 <div class="input-wrapper">
                     <span>Pag-ibig Number</span>
-                    <input wire:model.lazy="officer.pagIbig" type="text" >
-                    @error('officer.pagIbig') <span class="text-required">{{ $message }}</span>@enderror
+                    <input wire:model.lazy="officer.PagIbig" type="text" >
+                    @error('officer.PagIbig') <span class="text-required">{{ $message }}</span>@enderror
                 </div>
 
             </div>
@@ -450,8 +442,8 @@
             <!-- * SSS Number -->
             <div class="input-wrapper">
                 <span>SSS Number</span>
-                <input wire:model.lazy="officer.sss" type="text" >
-                @error('officer.sss') <span class="text-required">{{ $message }}</span>@enderror
+                <input wire:model.lazy="officer.SSS" type="text" >
+                @error('officer.SSS') <span class="text-required">{{ $message }}</span>@enderror
             </div>
 
         </div>

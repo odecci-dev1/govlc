@@ -12,13 +12,24 @@ class Area extends Model
     protected $table = 'tbl_Area_Model';
 
     protected $fillable = [
-        'areaName',
-        'location',
-        'foid',
+        'Area',
+        'City',
+        'FOID',
+        'Status',
     ];
 
-    public function fieldOfficers()
+    protected $casts = [
+        'City' => 'array',
+    ];
+
+    protected $primaryKey = 'Id'; // Ensure 'Id' is specified as the primary key
+    public $incrementing = true; 
+
+    const CREATED_AT = 'DateCreated';
+    const UPDATED_AT = 'DateUpdated';
+
+    public function fieldOfficer()
     {
-        return $this->hasMany(FieldOfficer::class, 'area_id');
+        return $this->belongsTo(FieldOfficer::class, 'FOID', 'foid');
     }
 }
