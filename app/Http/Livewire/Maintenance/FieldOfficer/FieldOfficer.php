@@ -12,6 +12,7 @@ use function PHPUnit\Framework\isNull;
 use App\Models\FieldOfficer as TblFieldOfficer;
 use App\Models\FOFile;
 use App\Models\Status;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 
 class FieldOfficer extends Component
@@ -108,19 +109,77 @@ class FieldOfficer extends Component
         $this->officer['Age'] = $age;           
     }
 
+    // public function storeProfileImage()
+    // {
+    //     $profilename = '';
+
+    //     if ($this->officer['Profile']) {
+    //         if(isset($this->officer['profile'])){
+    //             $deletefiles[] = 'officer_profile/'.$this->officer['profile'];
+    //         }
+
+    //         $time = time();
+    //         $profilename = 'officer_profile_' . $time . '.' . $this->officer['Profile']->getClientOriginalExtension();
+    //         $this->officer['Profile']->storeAs('officer_profile', $profilename, 'public');
+    //     } else {
+    //         $profilename = $this->officer['Profile'];
+    //     }
+    //     // } elseif (is_string($this->officer['Profile'])) {
+    //     //     $profilename = $this->officer['Profile'];
+    //     // }
+
+    //     return $profilename;
+    // }
+
+    // public function storeFrontIdImage()
+    // {
+    //     $frontidname = '';
+    //     if($this->officer['FrontID']){
+    //         $deletefiles = [];
+    //         if(isset($this->officer['FrontID'])){
+    //             $deletefiles[] = 'officer_ids/'.$this->officer['FrontID'];
+    //         }
+    //         Storage::delete($deletefiles);       
+            
+    //         $time = time();          
+    //         $frontidname = 'officer_frontid_'.$time.'.'.$this->officer['FrontID']->getClientOriginalExtension();             
+    //         $this->officer['FrontID']->storeAs('officer_ids', $frontidname, 'public'); 
+    //     }
+    //     else{
+    //         $frontidname = $this->officer['FrontID'];  
+    //     }  
+    //     return $frontidname;
+    // }
+
+    // public function storeBackIdImage()
+    // {
+    //     $backidname = '';
+    //     if($this->officer['BackID']){
+    //         $deletefiles = [];
+    //         if(isset($this->officer['BackID'])){
+    //             $deletefiles[] = 'officer_ids/'.$this->officer['BackID'];
+    //         }
+    //         Storage::delete($deletefiles);       
+                
+    //         $time = time();          
+    //         $backidname = 'officer_backid_'.$time.'.'.$this->officer['BackID']->getClientOriginalExtension();    
+    //         $this->officer['BackID']->storeAs('officer_ids', $backidname, 'public');    
+    //     }
+    //     else{
+    //         $backidname = $this->officer['BackID'];  
+    //     } 
+    //     return $backidname;
+    // }
+
     public function storeProfileImage()
     {
         $profilename = '';
 
-        if ($this->officer['Profile']) {
-            if ($this->officerDetails && $this->officerDetails->ProfilePath) {
-                Storage::delete('officer_profile/' . $this->officerDetails->ProfilePath);
-            }
-
+        if ($this->officer['Profile'] instanceof UploadedFile) {
             $time = time();
             $profilename = 'officer_profile_' . $time . '.' . $this->officer['Profile']->getClientOriginalExtension();
             $this->officer['Profile']->storeAs('officer_profile', $profilename, 'public');
-        } elseif (is_string($this->officer['Profile'])) {
+        } else {
             $profilename = $this->officer['Profile'];
         }
 
@@ -130,42 +189,33 @@ class FieldOfficer extends Component
     public function storeFrontIdImage()
     {
         $frontidname = '';
-        if($this->officer['FrontID']){
-            $deletefiles = [];
-            if(isset($this->officer['FrontID'])){
-                $deletefiles[] = 'officer_ids/'.$this->officer['FrontID'];
-            }
-            Storage::delete($deletefiles);       
-            
-            $time = time();          
-            $frontidname = 'officer_frontid_'.$time.'.'.$this->officer['FrontID']->getClientOriginalExtension();             
-            $this->officer['FrontID']->storeAs('officer_ids', $frontidname, 'public'); 
+
+        if ($this->officer['FrontID'] instanceof UploadedFile) {
+            $time = time();
+            $frontidname = 'officer_frontid_' . $time . '.' . $this->officer['FrontID']->getClientOriginalExtension();
+            $this->officer['FrontID']->storeAs('officer_ids', $frontidname, 'public');
+        } else {
+            $frontidname = $this->officer['FrontID'];
         }
-        else{
-            $frontidname = $this->officer['FrontID'];  
-        }  
+
         return $frontidname;
     }
 
     public function storeBackIdImage()
     {
         $backidname = '';
-        if($this->officer['BackID']){
-            $deletefiles = [];
-            if(isset($this->officer['BackID'])){
-                $deletefiles[] = 'officer_ids/'.$this->officer['BackID'];
-            }
-            Storage::delete($deletefiles);       
-                
-            $time = time();          
-            $backidname = 'officer_backid_'.$time.'.'.$this->officer['BackID']->getClientOriginalExtension();    
-            $this->officer['BackID']->storeAs('officer_ids', $backidname, 'public');    
+
+        if ($this->officer['BackID'] instanceof UploadedFile) {
+            $time = time();
+            $backidname = 'officer_backid_' . $time . '.' . $this->officer['BackID']->getClientOriginalExtension();
+            $this->officer['BackID']->storeAs('officer_ids', $backidname, 'public');
+        } else {
+            $backidname = $this->officer['BackID'];
         }
-        else{
-            $backidname = $this->officer['BackID'];  
-        } 
+
         return $backidname;
     }
+
 
     public function storeAttachments($foid)
     {
@@ -240,7 +290,6 @@ class FieldOfficer extends Component
                 'IDType' => $input['officer']['IDType'] ?? '',
             ]);
 
-            // dd($officer);
 
             $latestOfficer = TblFieldOfficer::latest()->first();
             $foid = $latestOfficer->FOID;
@@ -261,15 +310,10 @@ class FieldOfficer extends Component
         try {
             $this->validate();
 
-            Log::info('Updating field officer with FOID: ' . $this->foid);
-
-            $officer = TblFieldOfficer::where('FOID', $this->foid)->first();
+            $officer = TblFieldOfficer::where('FOID', $this->foid);
             if ($officer) {
-
-                Log::info('Officer details before update: ', $officer->toArray());
-
-                $officer->update([
-                    'Id' => $this->officer['Id'],
+                
+                $data = [
                     'Fname' => $this->officer['Fname'],
                     'Mname' => $this->officer['Mname'],
                     'Lname' => $this->officer['Lname'],
@@ -291,11 +335,10 @@ class FieldOfficer extends Component
                     'Status' => 1,
                     'DateCreated' => $this->officer['DateCreated'],
                     'DateUpdated' => now(),
-                    'FOID' => $this->officer['FOID'],
-                    'ProfilePath' => $this->officer['Profile'] ?? $this->storeProfileImage(),
+                    'ProfilePath' => $this->storeProfileImage(),
                     
-                    'FrontID_Path' => $this->officer['FrontID'] ?? $this->storeFrontIdImage(),
-                    'BackID_Path' => $this->officer['BackID'] ?? $this->storeBackIdImage(),
+                    'FrontID_Path' => $this->storeFrontIdImage(),
+                    'BackID_Path' => $this->storeBackIdImage(),
                     'ID_Number' => $this->officer['ID_Number'] ?? null,
     
                     'SSS' => $this->officer['SSS'],
@@ -303,15 +346,13 @@ class FieldOfficer extends Component
                     'PagIbig' => $this->officer['PagIbig'],
                     'PhilHealth' => $this->officer['PhilHealth'],
                     'IDType' => $this->officer['IDType'],
-                ]);
+                ];
 
-                Log::info('Officer details after update: ', $officer->toArray());
+                $officer->update($data);
 
                 $attachments = $this->storeAttachments($this->foid);
                 FOFile::insert($attachments);
 
-                Log::info('Attachments stored: ', $attachments);
-                
                 $this->resetValidation();
 
                 return redirect()->to('/maintenance/fieldofficer/view/' . $this->foid)->with('mmessage', 'Field officer updated successfully!');
@@ -328,10 +369,10 @@ class FieldOfficer extends Component
 
     public function archive()
     {
-        $officer = TblFieldOfficer::getFieldOfficerByFOID($this->foid);
+        $officer = TblFieldOfficer::where('FOID', $this->foid);
 
         if ($officer) {
-            
+
             $officer->update([
                 'Status' =>  2,
             ]);
@@ -368,7 +409,7 @@ class FieldOfficer extends Component
             'Region' => '',
             'Country' => '',
 
-            'Status' => '',
+            'Status' => 1,
             'DateCreated' => '',
             'DateUpdated' => '',
             'FOID' => '',

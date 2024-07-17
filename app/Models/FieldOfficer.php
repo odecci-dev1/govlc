@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class FieldOfficer extends Model
@@ -11,15 +12,6 @@ class FieldOfficer extends Model
     use HasFactory;
 
     protected $table = 'tbl_FieldOfficer_Model';
-
-    // protected $fillable = [
-    //     'Id', 'Fname', 'Lname', 'Mname', 'Suffix', 'Gender', 'DOB', 'Age', 'POB', 'CivilStatus', 'Cno', 'EmailAddress', 
-    //     'HouseNo', 'Barangay', 'City', 'Region', 'Country', 
-    //     'Status', 'DateCreated', 'DateUpdated', 'FOID', 'ProfilePath',
-    //     'FrontID_Path', 'BackID_Path', 'ID_Number',
-    //     'SSS', 'TIN', 'PagIbig', 'PhilHealth', 'IDType',
-    //     'Attachments', 
-    // ];
 
     protected $fillable = [
         'Fname', 'Lname', 'Mname', 'Suffix', 'Gender', 'DOB', 'Age', 'POB', 'CivilStatus', 'Cno', 'EmailAddress', 
@@ -38,7 +30,6 @@ class FieldOfficer extends Model
         'DOB' => 'date:Y-m-d',
         'uploadFiles' => 'array'
     ];
-
 
     const CREATED_AT = 'DateCreated';
     const UPDATED_AT = 'DateUpdated';
@@ -60,6 +51,7 @@ class FieldOfficer extends Model
         return self::where('FOID', $foid)->with('files')->with('Status')->first();
     }
 
+    // * Accessors
     public function getProfilePathAttribute($value)
     {
         return $value ? Storage::url($value) : null;
@@ -75,6 +67,7 @@ class FieldOfficer extends Model
         return $value ? Storage::url($value) : null;
     }
 
+    // * Mutators
     public function setDobAttribute($value)
     {
         $this->attributes['DOB'] = $value ? date('Y-m-d', strtotime($value)) : null;
@@ -100,6 +93,7 @@ class FieldOfficer extends Model
         $this->attributes['BackID_Path'] = $value ? $value : null;
     }
 
+    // * Relationships
     public function status()
     {
         return $this->belongsTo(Status::class, 'Status');
@@ -115,4 +109,12 @@ class FieldOfficer extends Model
         return $this->hasMany(FOFile::class, 'FOID', 'FOID');
     }
 
+    public function updateFieldOfficer($data)
+    {
+        $data['DateUpdated'] = now();
+        Log::info('Updating FieldOfficer', ['data' => $data, 'FOID' => $this->FOID]);
+        $result = $this->update($data);
+        Log::info('Update Result', ['result' => $result]);
+        return $result;
+    }
 }

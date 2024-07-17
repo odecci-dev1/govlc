@@ -203,32 +203,33 @@
                 <h3>Upload Files</h3>
                 <!-- * Colspan 1: Upload Image, Attach Files and Save Buttons  -->
                 <div class="colspan">
-                    {{-- <!-- * Upload Image -->
-                    <div class="input-wrapper" data-upload-image-field-officer-hover-container>
-                        @if($officer['Profile'])
-                            <img type="image" class="profile" src="{{ $officer['Profile']->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
-                        @else
-                            @if(file_exists(public_path('storage/officer_profile/'.(isset($officer['Profile']) ? $officer['Profile'] : 'xxxx'))))
-                                <img type="image" class="profile" src="{{ $officer['Profile'] }}" alt="upload-image" />                                                                     
-                            @else
-                                <img type="image" class="ProfilePath" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />   
-                                <p style="position: absolute">Max Size: 2MB</p>                                            
-                            @endif 
-                        @endif                          
-                    </div> --}}
-
+                   
                     <!-- Upload Image -->
                     <div class="input-wrapper" data-upload-image-field-officer-hover-container>
-                        @if(is_object($officer['Profile']) && method_exists($officer['Profile'], 'temporaryUrl'))
-                            <img type="image" class="profile" src="{{ $officer['Profile']->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
-                        @elseif(isset($officer['Profile']) && file_exists(public_path('storage/officer_profile/' . $officer['Profile'])))
-                            <img type="image" class="profile" src="{{ asset('storage/officer_profile/' . $officer['Profile']) }}" alt="upload-image" />
+                        @if(isset($officer['Profile']) && !empty($officer['Profile']))
+                            @if(is_object($officer['Profile']) && method_exists($officer['Profile'], 'temporaryUrl'))
+                                <img type="image" class="profile" src="{{ $officer['Profile']->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
+                            @elseif(isset($officer['Profile']) && file_exists(public_path('storage/officer_profile/' . $officer['Profile'])))
+                                <img type="image" class="profile" src="{{ asset('storage/officer_profile/' . $officer['Profile']) }}" alt="upload-image" />
+                            @elseif($officer['Profile'] == '')
+                                <!-- Display default image when profile is empty -->
+                            @else
+                                @php
+                                    $defaultImagePath = public_path('assets/icons/upload-image.svg');
+                                    $profileImagePath = public_path('storage/officer_profile/' . $officer['Profile']);
+                                @endphp
+                                @if(file_exists($profileImagePath))
+                                    <img type="image" class="profile" src="{{ asset('storage/officer_profile/' . $officer['Profile']) }}" alt="upload-image" />
+                                @else
+                                    <img type="image" class="ProfilePath" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />
+                                    <p style="position: absolute">Max Size: 2MB</p>
+                                @endif
+                            @endif
                         @else
                             <img type="image" class="ProfilePath" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />   
                             <p style="position: absolute">Max Size: 2MB</p>
                         @endif
                     </div>
-
 
                     <!-- * Button Wrapper -->
                     <div class="btn-wrapper">
@@ -247,67 +248,6 @@
                     </div>
 
                     <!-- * File Chips Container -->           
-                    {{-- <div class="file-wrapper" style="padding: 2rem 0rem;" data-attach-file-container2>                   
-                        @if(isset($officer['Attachments']))                           
-                            @if($officer['Attachments'] == $officer['Old_Attachments'])                            
-                                @foreach($officer['Attachments'] as $attachments)                                                                                                                                
-                                        @if(file_exists(public_path('storage/officer_attachments/'.(isset($attachments['filePath']) ? $attachments['filePath'] : $attachments->getClientOriginalName() ))))
-                                            @php
-                                                $getfilename = $attachments['filePath'];
-                                                $filenamearray = explode("_", $getfilename);
-                                                $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
-                                            @endphp                                               
-                                            <a href="{{ asset('storage/officer_attachments/'.$attachments['filePath']) }}" title="{{ $filename }}" target="_blank">                                                                                              
-                                                <div type="button" class="fileButton">
-                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
-                                                {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
-                                                </div>    
-                                            </a>   
-                                        @else
-                                            @php 
-                                                $filename = 'File is deleted';
-                                            @endphp 
-                                            <a href="#" title="{{ $filename }}" target="_blank">                                                                                              
-                                                <div type="button" class="fileButton">
-                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
-                                                {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
-                                                </div>    
-                                            </a>                                      
-                                        @endif                                
-                                                                        
-                                @endforeach
-                            @else                            
-                                @if(isset($officer['Attachments']))                            
-                                    @foreach($officer['Attachments'] as $attachments)                                                     
-                                        
-                                            <a href="{{ $attachments->path() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">                                                    
-                                                <div type="button" class="fileButton">
-                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                                {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
-                                                </div>
-                                            </a>                                       
-                                        
-                                        <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
-                                    @endforeach
-                                @endif   
-                            @endif   
-                            
-                        @else                              
-                            @if(isset($officer['Attachments']))                            
-                                @foreach($officer['Attachments'] as $attachments)                                                     
-                                    
-                                        <a href="{{ $attachments->path() }}" target="_blank" alt="file.png">
-                                            <div type="button" class="fileButton">
-                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
-                                                {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
-                                            </div>
-                                        </a>                                       
-                                    
-                                    <!-- <button type="button" class="fileButton"><img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">{{ $attachments->getClientOriginalName() }}</button> -->
-                                @endforeach
-                            @endif   
-                        @endif                        
-                    </div> --}}
                     <div class="file-wrapper" style="padding: 2rem 0rem;" data-attach-file-container2>                   
                         @if(isset($officer['Attachments']))
                             @foreach($officer['Attachments'] as $attachment)
@@ -415,23 +355,25 @@
         <div class="rowspan">
 
             <div class="wrapper">
-               
 
                 <!-- * ID Front Image Input --> 
                 <div class="input-wrapper">
                     <span>Front</span>
-                    @if(isset($officer['FrontID']) && is_object($officer['FrontID']))
-                        <img class="profile" style="object-fit: contain;" src="{{ $officer['FrontID']->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
-                        <p>&nbsp;</p>
-                    @else
-                        @if(isset($officer['FrontID']) && file_exists(public_path('storage/officer_ids/' . $officer['FrontID'])))
+                    @if(isset($officer['FrontID']) && !empty($officer['FrontID']))
+                        @if(is_object($officer['FrontID']) && method_exists($officer['FrontID'], 'temporaryUrl'))
+                            <img class="profile" style="object-fit: contain;" src="{{ $officer['FrontID']->temporaryUrl() }}" alt="Front Image" id="frontImage" name="frontImage">
+                            <p>&nbsp;</p>
+                        @elseif(file_exists(public_path('storage/officer_ids/' . $officer['FrontID'])))
                             <img class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/' . $officer['FrontID']) }}" alt="Front Image" id="frontImage" name="frontImage">
                             <p>&nbsp;</p>
                         @else
                             <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
                             <p>Max Size: 2MB</p>
                         @endif
-                    @endif  
+                    @else
+                        <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Front Image" id="frontImage" name="frontImage">                                             
+                        <p>Max Size: 2MB</p>
+                    @endif
 
                     <div class="btn-wrapper">       
                         @if($usertype != 2)         
@@ -446,18 +388,21 @@
                 <!-- * ID Back Image Input -->
                 <div class="input-wrapper">
                     <span>Back</span>                   
-                    @if(isset($officer['BackID']) && is_object($officer['BackID']))
-                        <img class="profile" style="object-fit: contain;" src="{{ $officer['BackID']->temporaryUrl() }}" alt="Back Image" id="BackImage" name="BackImage">
-                        <p>&nbsp;</p>
-                    @else
-                        @if(isset($officer['BackID']) && file_exists(public_path('storage/officer_ids/' . $officer['BackID'])))
+                    @if(isset($officer['BackID']) && !empty($officer['BackID']))
+                        @if(is_object($officer['BackID']) && method_exists($officer['BackID'], 'temporaryUrl'))
+                            <img class="profile" style="object-fit: contain;" src="{{ $officer['BackID']->temporaryUrl() }}" alt="Back Image" id="BackImage" name="BackImage">
+                            <p>&nbsp;</p>
+                        @elseif(file_exists(public_path('storage/officer_ids/' . $officer['BackID'])))
                             <img class="profile" style="object-fit: contain;" src="{{ asset('storage/officer_ids/' . $officer['BackID']) }}" alt="Back Image" id="BackImage" name="BackImage">
                             <p>&nbsp;</p>
                         @else
                             <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Back Image" id="BackImage" name="BackImage">                                             
                             <p>Max Size: 2MB</p>
-                        @endif 
-                    @endif   
+                        @endif
+                    @else
+                        <img class="profile" style="object-fit: contain;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="Back Image" id="BackImage" name="BackImage">                                             
+                        <p>Max Size: 2MB</p>
+                    @endif
 
                     <div class="btn-wrapper">
                         @if($usertype != 2)
@@ -470,8 +415,6 @@
                 </div>
 
             </div>
-
-            
 
         </div>
 
