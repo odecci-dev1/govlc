@@ -62,6 +62,7 @@ Route::get('/getnoticount', [NotificationController::class, 'getnoticount']);
 
 
 Route::get('/test', [NotificationController::class, 'testMe']);
+Route::get('/corectRelation', [NotificationController::class, 'corectRelation']);
 
 
 Route::middleware(['authenticated'])->group(function () {
