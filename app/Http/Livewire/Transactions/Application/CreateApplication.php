@@ -670,8 +670,7 @@ class CreateApplication extends Component
                 session()->flash('errmmessage', 'Member already has an existing loan'); 
                 return false;
             }          
-           
-            //dito
+                      
         }
 
         $comem = CoMaker::where('Fname', $this->comaker['co_Fname'])
@@ -1029,7 +1028,7 @@ class CreateApplication extends Component
             $this->resetValidation();         
             return redirect()->to('/tranactions/application/view/'.$getnaid->NAID)->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
 
-            //dito
+          
                                
                     //             "companyAddress"=> $input['member']['companyAddress'] ??= ''     
                     //             "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
@@ -2301,20 +2300,18 @@ class CreateApplication extends Component
                
         }
         else if($this->type == 'view' || $this->type == 'details'){
-            if($this->type == 'view'){
-                $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
-            }
-            else{
-                $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $this->naID]]);
-            }
+            // if($this->type == 'view'){
+            //     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/ApplicationMemberDetails', ['applicationID' => $this->naID]); 
+            // }
+            // else{
+            //     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $this->naID]]);
+            // }
             
-            
-            $resdata = $value->json();             
-            if(isset($resdata[0])){        
-                $data = $resdata[0];                
+            $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first();              
+            if($res){                              
                 //dd($data);
-                $this->searchedmemId =  $data['memId'];
-                $this->member['statusID'] = $data['applicationStatus'];
+                $this->searchedmemId = $res->MemId;
+                $this->member['statusID'] = $res->Status;
                 if($this->type == 'view'){
                     if( $this->member['statusID'] == 8 ){
                         if(!in_array('Module-09',$this->modules)){
@@ -2346,38 +2343,39 @@ class CreateApplication extends Component
                 //get loan payment and history
                 //dd($data['individualLoan']);
                 
-                if($this->type == 'view'){
-                    $this->loanDetails['loanTypeID'] = $data['individualLoan'][0]['loanTypeID'];
-                    $this->loanDetails['loanTypeName'] = $data['individualLoan'][0]['loanType'];
-                    $this->loanDetails['loantermsID'] = $data['termsOfPayment']; 
-                    $this->loanDetails['loantermsName'] = $data['individualLoan'][0]['nameOfTerms']; 
+                if($this->type == 'view'){       
+          
+                    $this->loanDetails['loanTypeID'] = $res->detail['LoanTypeID'];
+                    $this->loanDetails['loanTypeName'] = $res->loantype['LoanTypeName'];
+                    $this->loanDetails['loantermsID'] = $res->detail['LoanTypeName']; 
+                    $this->loanDetails['loantermsName'] = $res->termsofpayment['NameOfTerms']; 
 
-                    $this->loanDetails['loanType'] = isset($data['individualLoan'][0]['loanType']) ? $data['individualLoan'][0]['loanType'] : '';                  
-                    $this->loanDetails['loanAmount'] = in_array($data['applicationStatus'], [8,9]) ? ($data['individualLoan'][0]['loanAmount'] ??= 0) : $data['individualLoan'][0]['approvedLoanAmount'];
-                    $this->loanDetails['purpose'] = $data['purpose'];
+                    $this->loanDetails['loanType'] = $res->loantype['LoanTypeName'];                  
+                    $this->loanDetails['loanAmount'] = in_array($res->Status, [7,8,9]) ? ($res->detail->LoanAmount ??= 0) : $res->detail->ApprovedLoanAmount;
+                    $this->loanDetails['purpose'] = $res->detail->Purpose;
                     //$this->loanDetails['terms'] = $data['termsOfPayment']; //$data['individualLoan'][0]['terms'];
                                     
                     $this->loanDetails['noofnopayment'] = 0; 
                     $this->loanDetails['noofloans'] = 0; 
                                         
-                    $this->loanDetails['app_ApprovedBy_1'] = $data['individualLoan'][0]['app_ApprovedBy_1'];
-                    $this->loanDetails['app_ApprovalDate_1'] = $data['individualLoan'][0]['app_ApprovalDate_1'];
+                    $this->loanDetails['app_ApprovedBy_1'] = $res->App_ApprovedBy_1;
+                    $this->loanDetails['app_ApprovalDate_1'] = $res->App_ApprovalDate_1;
 
-                    $this->loanDetails['app_ApprovedBy_1_name'] = $this->getUserName($data['individualLoan'][0]['app_ApprovedBy_1']);
-                    $this->loanDetails['app_ApprovalDate_1_timeint'] = $this->calculateTimeDifference($data['individualLoan'][0]['app_ApprovalDate_1'], Carbon::now());
+                    $this->loanDetails['app_ApprovedBy_1_name'] = null; //$this->getUserName($data['individualLoan'][0]['app_ApprovedBy_1']);
+                    $this->loanDetails['app_ApprovalDate_1_timeint'] = null; //$this->calculateTimeDifference($data['individualLoan'][0]['app_ApprovalDate_1'], Carbon::now());
                     
-                    $ciuserid = isset($data['individualLoan'][0]['cI_ApprovedBy']) ? $data['individualLoan'][0]['cI_ApprovedBy'] : '';                
+                    $ciuserid = null; //isset($data['individualLoan'][0]['cI_ApprovedBy']) ? $data['individualLoan'][0]['cI_ApprovedBy'] : '';                
                     $this->loanDetails['approvedBy'] = $this->getUserName($ciuserid);                                                           
-                    $this->loanDetails['notes'] = isset($data['individualLoan'][0]['app_Note']) ? $data['individualLoan'][0]['app_Note'] : ''; 
-                    $this->loanDetails['ldid'] = $data['individualLoan'][0]['ldid'];
-                    $this->loanDetails['topId'] = $data['termsOfPayment'];  
+                    $this->loanDetails['notes'] = $res->App_Note; 
+                    $this->loanDetails['ldid'] = $res->detail->LDID;
+                    $this->loanDetails['topId'] = $res->detail->TermsOfPayment;  
 
-                    $this->loanDetails['modeOfRelease'] = $data['individualLoan'][0]['modeOfRelease'];
-                    $this->loanDetails['denomination'] = $data['individualLoan'][0]['modeOfReleaseReference'];
-                    $this->loanDetails['courier'] = $data['individualLoan'][0]['courerier'];
-                    $this->loanDetails['courieremployee'] = $data['individualLoan'][0]['courerierName'];
-                    $this->loanDetails['courierclient'] = $data['individualLoan'][0]['courerierName'];
-                    $this->loanDetails['couriercno'] = $data['individualLoan'][0]['courierCNo'];
+                    $this->loanDetails['modeOfRelease'] = $res->detail->ModeOfRelease;
+                    $this->loanDetails['denomination'] = $res->detail->Denomination;
+                    $this->loanDetails['courier'] = $res->detail->Courerier;
+                    $this->loanDetails['courieremployee'] = $res->detail->CourerierName;
+                    $this->loanDetails['courierclient'] = $res->detail->CourerierName;
+                    $this->loanDetails['couriercno'] = $res->detail->CourierCNo;
 
                     $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loanDetails['loanTypeID']]);                                    
                     $loanterms = $loanterms->json();
@@ -2401,142 +2399,140 @@ class CreateApplication extends Component
                     $this->loanDetails['total_InterestAmount'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['total_InterestAmount'] :  $this->loansummary['approveedInterest']) : ''; 
                     $this->loanDetails['total_LoanReceivable'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['total_LoanReceivable'] :  $this->loansummary['approvedReleasingAmount']) : ''; 
                     $this->loanDetails['dailyCollectibles'] = isset($getloansummary[0]) ? ((!empty($this->loansummary['approvedDailyAmountDue']) ? $this->loansummary['approvedDailyAmountDue'] : 0) > 0 ? $this->loansummary['approvedDailyAmountDue'] :  $this->loansummary['dailyCollectibles']) : ''; 
-                    $this->loanDetails['totalSavings'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';                    
-                   
-                    $this->loanDetails['remarks'] = $data['individualLoan'][0]['remarks'];
-                    $this->loanDetails['ci_time'] = $this->calculateTimeDifference($data['dateCreated'], Carbon::now());                                       
+                    $this->loanDetails['totalSavings'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';   
+                    
+                    //totalSavingUsed, totalSavingsAmount, notarialFee, advancePayment, total_InterestAmount, total_LoanReceivable, total_LoanReceivable, dailyCollectibles, totalSavings
+                                       
+                    $this->loanDetails['remarks'] = $res->Remarks;
+                    $this->loanDetails['ci_time'] = $this->calculateTimeDifference($res->DateCreated, Carbon::now());                                       
                 }
                 
-                //dd( Carbon::now() );
-                
-                //images and files
-                $files = $data['files'];
                 $this->member['attachments'] = [];
                 $this->member['profile'] = '';
                 $this->member['signature'] = '';
-                if($files){
-                    foreach($files as $mfiles){
-                        if($mfiles['fileType'] == 'Profile'){
-                            $this->member['profile'] = $mfiles['filePath'];
-                        }
-
-                        if($mfiles['fileType'] == 'File'){
-                            $this->member['attachments'][] = [ 'fileName' => $mfiles['filePath'] , 'filePath' => $mfiles['filePath'] ];
-                        }
-
-                        if($mfiles['fileType'] == 'Singature'){
-                            $this->member['signature'] = $mfiles['filePath'];
-                        }
+                $memfiles = $res->member->fileuploads;
+                if($memfiles){
+                    foreach($memfiles as $memfile){
+                        if($memfile->Type == 1){
+                            $this->member['profile'] = $memfile->FilePath;
+                        }  
+                        if($memfile->Type == 2){                            
+                            $this->member['attachments'][] = [ 'fileName' => $memfile->FilePath , 'filePath' => $memfile->FilePath ];
+                        }   
+                        if($memfile->Type == 3){                            
+                            $this->member['signature'] = $memfile->FilePath;
+                        }   
                     }
                     $this->member['old_attachments'] = $this->member['attachments'];
                     $this->member['old_profile'] = $this->member['profile'];                  
                     $this->member['old_signature'] = $this->member['signature'];
-                }
+                }                
+                //images and files
 
-                $cofiles = $data['co_Files'];
+                $comakerdtl = $res->member->comaker;
+                //dito
+                //$cofiles = $data['co_Files'];         
                 $this->comaker['attachments'] = [];
                 $this->comaker['profile'] = '';
                 $this->comaker['signature'] = '';
+                $cofiles = $comakerdtl->fileuploads;              
                 if($cofiles){
-                    
-                    foreach($cofiles as $cfiles){                      
-                        if($cfiles['fileType'] == 'Profile'){
-                            $this->comaker['profile'] = $cfiles['filePath'];
-                            
-                        }
-
-                        if($cfiles['fileType'] == 'File'){
-                            $this->comaker['attachments'][] = [ 'fileName' => $cfiles['filePath'] , 'filePath' => $cfiles['filePath'] ];                
-                        }
-
-                        if($cfiles['fileType'] == 'Singature'){
-                            $this->comaker['signature'] = $cfiles['filePath'];
-                        }
-                    }                   
-
+                    foreach($cofiles as $cofile){
+                        if($cofile->Type == 1){
+                            $this->comaker['profile'] = $cofile->FilePath;
+                        }  
+                        if($cofile->Type == 2){                            
+                            $this->comaker['attachments'][] = [ 'fileName' => $cofile->FilePath , 'filePath' => $cofile->FilePath ];
+                        }   
+                        if($cofile->Type == 3){                            
+                            $this->comaker['signature'] = $cofile->FilePath;
+                        }   
+                    }
                     $this->comaker['old_attachments'] = $this->comaker['attachments'];
-                    $this->comaker['old_profile'] = $this->comaker['profile'];   
+                    $this->comaker['old_profile'] = $this->comaker['profile'];                  
                     $this->comaker['old_signature'] = $this->comaker['signature'];
-                }
+                }                
+                
                 //images and files
             
-                $this->member['fname'] = $data['fname'];  
-                $this->member['lname'] = $data['lname'];
-                $this->member['mname'] = $data['mname'];
-                $this->member['suffix'] = $data['suffix']; 
-                $this->member['age'] = $data['age'];         
-                $this->member['barangay'] = $data['barangay'];  
+                $this->member['fname'] = $res->member->Fname;  
+                $this->member['lname'] = $res->member->Lname;
+                $this->member['mname'] = $res->member->Mname;
+                $this->member['suffix'] = $res->member->Suffix; 
+                $this->member['age'] = $res->member->Age;         
+                $this->member['barangay'] = $res->member->Barangay;  
                 if($this->member['statusID'] != 7){                 
-                    $this->barangays->put(1, ['brgyDesc' => $data['barangay']]);        
+                    $this->barangays->put(1, ['brgyDesc' => $res->member->Barangay]);        
                 }
-                $this->member['city'] = $data['city'];   
+                $this->member['city'] = $res->member->City;   
                 if($this->member['statusID'] != 7){                
-                    $this->cities->put(1, ['citymunDesc' => $data['city']]);          
+                    $this->cities->put(1, ['citymunDesc' => $res->member->City]);          
                 }                           
-                $this->member['civil_Status'] = $data['civil_Status'];  
-                $this->member['cno'] = $data['cno']; 
-                $this->member['country'] = $data['country']; 
-                $this->member['dob'] = date('Y-m-d', strtotime($data['dob']));
-                $this->member['emailAddress'] = $data['emailAddress']; 
-                $this->member['gender'] = $data['gender'];
-                $this->member['houseNo'] = $data['houseNo'];
-                $this->member['house_Stats'] = $data['houseStatusId'];          
-                $this->member['pob'] = $data['pob'];
-                $this->member['province'] = $data['province']; 
+                $this->member['civil_Status'] = $res->member->Civil_Status;  
+                $this->member['cno'] = $res->member->Cno; 
+                $this->member['country'] = $res->member->Country; 
+                $this->member['dob'] = date('Y-m-d', strtotime($res->member->DOB));
+                $this->member['emailAddress'] = $res->member->EmailAddress; 
+                $this->member['gender'] = $res->member->Gender;
+                $this->member['houseNo'] = $res->member->HouseNo;
+                $this->member['house_Stats'] = $res->member->House_Stats;          
+                $this->member['pob'] = $res->member->POB;
+                $this->member['province'] = $res->member->Province; 
                 if($this->member['statusID'] != 7){                   
-                    $this->provinces->put(1, ['provDesc' => $data['province']]);                  
-                } 
-                $this->member['yearsStay'] = $data['yearsStay'];
-                $this->member['zipCode'] = $data['zipCode'];
-                $this->member['status'] = $data['status'];              
-                $this->member['electricBill'] = $data['electricBill']; 
-                $this->member['waterBill'] = $data['waterBill']; 
-                $this->member['otherBills'] = $data['otherBills']; 
-                $this->member['dailyExpenses'] = $data['dailyExpenses']; 
-                $this->member['jobDescription'] = $data['jobDescription']; 
-                $this->member['yos'] = $data['yos']; 
-                $this->member['monthlySalary'] = $data['monthlySalary']; 
-                $this->member['otherSOC'] = $data['otherSOC']; 
-                $this->member['bO_Status'] = $data['bO_Status'] == 'True' ? 1 : 0;               
-                $this->member['companyName'] = $data['companyName'];
-                $this->member['companyAddress'] = $data['companyAddress'];  
-                $this->member['emp_Status'] = $data['emp_Status'];              
-                $this->member['f_Fname'] = $data['f_Fname']; 
-                $this->member['f_Lname'] = $data['f_Lname']; 
-                $this->member['f_Mname'] = $data['f_Mname']; 
-                $this->member['f_Suffix'] = $data['f_Suffix']; 
-                $this->member['f_DOB'] = date('Y-m-d', strtotime($data['f_DOB'])); 
-                $this->member['f_Age'] = $data['f_Age']; 
-                $this->member['f_NOD'] = $data['f_NOD']; 
-                $this->member['f_YOS'] = $data['f_YOS']; 
-                $this->member['f_Emp_Status'] = $data['f_Emp_Status']; 
-                $this->member['f_Job'] = $data['f_Job']; 
-                $this->member['f_CompanyName'] = $data['f_CompanyName']; 
-                $this->member['f_RTTB'] = $data['f_RTTB'];    
-                $this->member['famId'] = $data['famId'];     
+                    $this->provinces->put(1, ['provDesc' => $res->member->Province]);                  
+                }           
+                $memfambackground = $res->member->familybackground;
+                $this->member['yearsStay'] = $res->member->YearsStay;
+                $this->member['zipCode'] = $res->member->ZipCode;
+                $this->member['status'] = $res->member->Status;              
+                $this->member['electricBill'] = $res->member->monthlybills->ElectricBill; 
+                $this->member['waterBill'] = $res->member->monthlybills->WaterBill; 
+                $this->member['otherBills'] = $res->member->monthlybills->OtherBills; 
+                $this->member['dailyExpenses'] = $res->member->monthlybills->DailyExpenses; 
+                $this->member['jobDescription'] = $res->member->jobinfo->JobDescription; 
+                $this->member['yos'] = $res->member->jobinfo->YOS; 
+                $this->member['monthlySalary'] = $res->member->jobinfo->MonthlySalary;
+                $this->member['otherSOC'] = $res->member->jobinfo->OtherSOC;
+                $this->member['bO_Status'] = $res->member->jobinfo->BO_Status;           
+                $this->member['companyName'] = $res->member->jobinfo->CompanyName;
+                $this->member['companyAddress'] = $res->member->jobinfo->CompanyAddress;
+                $this->member['emp_Status'] = $res->member->jobinfo->Emp_Status; 
+                $this->member['f_Fname'] = $memfambackground->Fname; 
+                $this->member['f_Lname'] = $memfambackground->Lname;
+                $this->member['f_Mname'] = $memfambackground->Mname;
+                $this->member['f_Suffix'] = $memfambackground->Suffix;
+                $this->member['f_DOB'] = date('Y-m-d', strtotime($memfambackground->DOB)); 
+                $this->member['f_Age'] = $memfambackground->Age; 
+                $this->member['f_NOD'] = $memfambackground->NOD;
+                $this->member['f_YOS'] = $memfambackground->YOS;
+                $this->member['f_Emp_Status'] = $memfambackground->Emp_Status;
+                $this->member['f_Job'] = $memfambackground->Position;
+                $this->member['f_CompanyName'] = $memfambackground->CmpId;
+                $this->member['f_RTTB'] = $memfambackground->RTTB;
+                $this->member['famId'] = $memfambackground->FamId;               
                 if($this->type == 'view'){
-                    $this->member['loanAmount'] = !empty($data['individualLoan'][0]['loanAmount']) ?$data['individualLoan'][0]['loanAmount'] : 0; //$data['loanAmount'];  cant find in api
-                    $this->member['termsOfPayment'] = $data['individualLoan'][0]['nameOfTerms'];
-                    $this->member['purpose'] = $data['purpose']; 
+                    $this->member['loanAmount'] = $res->detail->LoanAmount; //$data['loanAmount'];  cant find in api
+                    $this->member['termsOfPayment'] = $res->detail->termsofpayment->NameOfTerms;//$data['individualLoan'][0]['nameOfTerms'];
+                    $this->member['purpose'] = $res->detail->Purpose; 
                 }               
-           
-                $this->comaker['co_Fname'] = $data['co_Fname']; 
-                $this->comaker['co_Lname'] = $data['co_Lname']; 
-                $this->comaker['co_Mname'] = $data['co_Mname']; 
-                $this->comaker['co_Suffix'] = $data['co_Suffix']; 
-                $this->comaker['co_Age'] = $data['co_Age']; 
-                $this->comaker['co_Barangay'] = $data['co_Barangay']; 
-                $this->comaker['co_City'] = $data['co_City']; 
-                $this->comaker['co_Civil_Status'] = $data['co_Civil_Status']; 
-                $this->comaker['co_Cno'] = $data['co_Cno']; 
-                $this->comaker['co_Country'] = $data['co_Country']; 
-                $this->comaker['co_DOB'] = $data['co_DOB']; 
-                $this->comaker['co_EmailAddress'] = $data['co_EmailAddress']; 
-                $this->comaker['co_Gender'] = $data['co_Gender']; 
-                $this->comaker['co_HouseNo'] = $data['co_HouseNo'];         
-                $this->comaker['co_House_Stats'] = $data['co_HouseStatusId']; 
-                $this->comaker['co_POB'] = $data['co_POB']; 
-                $this->comaker['co_Province'] = $data['co_Province']; 
+               
+                $this->comaker['co_Fname'] = $comakerdtl->Fname; 
+                $this->comaker['co_Lname'] = $comakerdtl->Lnam;
+                $this->comaker['co_Mname'] = $comakerdtl->Mname;
+                $this->comaker['co_Suffix'] = $comakerdtl->Suffi; 
+                $this->comaker['co_Age'] = $comakerdtl->Age;
+                $this->comaker['co_Barangay'] = $comakerdtl->Fname; 
+                $this->comaker['co_City'] = $comakerdtl->City; 
+                $this->comaker['co_Civil_Status'] = $comakerdtl->CivilStatus;
+                $this->comaker['co_Cno'] = $comakerdtl->Cno;
+                $this->comaker['co_Country'] = $comakerdtl->Country; 
+                $this->comaker['co_DOB'] = $comakerdtl->DOB;
+                $this->comaker['co_EmailAddress'] = $comakerdtl->EmailAddress;
+                $this->comaker['co_Gender'] = $comakerdtl->Gender;
+                $this->comaker['co_HouseNo'] = $comakerdtl->HouseNo;
+                $this->comaker['co_House_Stats'] = $comakerdtl->House_Stats; 
+                $this->comaker['co_POB'] = $comakerdtl->POB;
+                $this->comaker['co_Province'] = $comakerdtl->Province;
                 
                 if($this->member['statusID'] != 7){                  
                     $this->cobarangays->put(1, ['brgyDesc' => $data['co_Barangay']]);        

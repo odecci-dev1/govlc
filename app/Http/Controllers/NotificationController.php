@@ -2,9 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Members;
+use App\Models\LoanDetails;
+use App\Models\CoMaker;
+use App\Models\CoMakerFileUpload;
+use App\Models\FileUpload;
+use App\Models\TermsOfPayment;
+
+use App\Models\JobInfo;
+use App\Models\CoMakerJobInfo;
+use App\Models\Appliances;
+use App\Models\Assets;
+use App\Models\BankAccounts;
+use App\Models\BusinessInformation;
+use App\Models\BusinessFileUpload;
+use App\Models\ChildInfo;
+use App\Models\FamBackground;
+use App\Models\MonthlyBills;
+use App\Models\Properties;
 use DB;
 
 class NotificationController extends Controller
@@ -48,5 +66,74 @@ class NotificationController extends Controller
         return Members::get();
    
         // $users = DB::select('select * from tbl_Application_Model ');
+    }
+
+    public function corectRelation(){
+        DB::beginTransaction();             
+        try {  
+            $memids = [];
+            $members = Members::get();
+            if($members->isNotEmpty()){
+                foreach($members as $mem){
+                    $memids[] = $mem->Id;
+                    Application::where('MemId', $mem->MemId)->update(['MemId' => $mem->Id]);
+                    LoanDetails::where('MemId', $mem->MemId)->update(['MemId' => $mem->Id]);
+                    CoMaker::where('MemId', $mem->MemId)->update(['MemId' => $mem->Id]);
+                    FileUpload::where('MemId', $mem->MemId)->update(['MemId' => $mem->Id]);
+
+                    // use App\Models\JobInfo;
+                    // use App\Models\CoMakerJobInfo;
+                    // use App\Models\Appliances;
+                    // use App\Models\Assets;
+                    // use App\Models\BankAccounts;
+                    // use App\Models\BusinessInformation;
+                    // use App\Models\BusinessFileUpload;
+                    // use App\Models\ChildInfo;
+                    // use App\Models\FamBackground;
+                    // use App\Models\MonthlyBills;
+                    // use App\Models\Properties;
+                }          
+            }
+
+            $appids = [];
+            $applications = Application::get();
+            if($applications->isNotEmpty()){
+                foreach($applications as $app){
+                    $appids[] = $app->Id;                    
+                    LoanDetails::where('NAID', $app->NAID)->update(['NAID' => $app->Id]);
+                }          
+            }
+
+            $topids = [];
+            $terms = TermsOfPayment::get();
+            if($terms){
+                foreach($terms as $trmds){
+                    $topids[] = $trmds->Id;
+                    LoanDetails::where('TermsOfPayment', $trmds->TopId)->update(['TermsOfPayment' => $trmds->Id]);
+                }
+            }
+
+            $coids = [];
+            $comaker = CoMaker::get();
+            if($comaker->isNotEmpty()){
+                foreach($comaker as $com){
+                    $coids[] = $com->Id;                   
+                    CoMakerFileUpload::where('CMID', $com->CMID)->update(['CMID' => $com->Id]);
+                }          
+            }
+
+            Application::whereNotIn('MemId', $memids)->delete();
+            LoanDetails::whereNotIn('NAID', $appids)->delete();
+            //CoMaker::whereNotIn('MemId', $appids)->delete();
+            //CoMakerFileUpload::whereNotIn('CMID', $coids)->delete();
+            DB::commit();
+            return 'done';
+
+            //termsofpayment
+        }
+        catch (\Exception $e) {           
+            DB::rollback();        
+            dd($e);               
+        }
     }
 }

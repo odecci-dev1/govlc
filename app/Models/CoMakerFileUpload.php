@@ -9,7 +9,7 @@ class CoMakerFileUpload extends Model
 {
     use HasFactory;
     protected $table = 'tbl_CoMakerFileUpload_Model';
-    protected $fillable =['CMID'
+    protected $fillable =[  'CMID'
                             ,'FileName'
                             ,'FilePath'
                             ,'Status'
