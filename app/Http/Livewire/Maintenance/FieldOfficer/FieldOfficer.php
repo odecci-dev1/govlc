@@ -53,10 +53,7 @@ class FieldOfficer extends Component
             'officer.PhilHealth' => 'required',
             'officer.ID_Number' => 'required',
             'officer.IDType' => 'required',
-            // 'officer.Profile' => '',
             'officer.Attachments' => 'required',
-            // 'officer.FrontID' => '',
-            // 'officer.BackID' => '',
         ];
 
         if (!isset($this->officer['Profile'])) {
@@ -75,32 +72,33 @@ class FieldOfficer extends Component
     }
     
     public function messages(){
-        $messages = [];
-        $messages['officer.Fname.required'] = 'First name is required';        
-        $messages['officer.Lname.required'] = 'Last name is required';             
-        $messages['officer.Mname.required'] = 'Middle name is required';  
-        $messages['officer.Suffix.required'] = 'Suffix is required';    
-        $messages['officer.Gender.required'] = 'Gender is required';  
-        $messages['officer.DOB.required'] = 'Date of birth is required';  
-        $messages['officer.Age.required'] = 'Age is required';  
-        $messages['officer.POB.required'] = 'Place of birth is required';  
-        $messages['officer.CivilStatus.required'] = 'Civil status is required';
-        $messages['officer.Cno.required'] = 'Contact number is required';  
-        $messages['officer.EemailAddress.required'] = 'Email address is required';  
-        $messages['officer.HouseNo.required'] = 'House no. is required';            
-        $messages['officer.Barangay.required'] = 'Barangay is required';            
-        $messages['officer.City.required'] = 'City is required';            
-        $messages['officer.Region.required'] = 'Region is required';            
-        $messages['officer.Country.required'] = 'Country is required';            
-        $messages['officer.SSS.required'] = 'SSS number is required';            
-        $messages['officer.PagIbig.required'] = 'PagIbig number is required';                        
-        $messages['officer.PhilHealth.required'] = 'PhilHealth number is required';                        
-        $messages['officer.ID_Number.required'] = 'ID number number is required';                        
-        $messages['officer.IDType.required'] = 'Please select ID type';    
-        $messages['officer.Profile.required'] = 'Please include profile image';                        
-        $messages['officer.Attachments.required'] = 'Please attach files'; 
-        $messages['officer.FrontID.required'] = 'Please include image of Front ID';                        
-        $messages['officer.BackID.required'] = 'Please include image of Back ID';  
+        $messages = [
+            'officer.Fname.required' => 'First name is required',
+            'officer.Lname.required' => 'Last name is required',
+            'officer.Mname.required' => 'Middle name is required',
+            'officer.Suffix.required' => 'Suffix is required',
+            'officer.Gender.required' => 'Gender is required',
+            'officer.DOB.required' => 'Date of birth is required',
+            'officer.Age.required' => 'Age is required',
+            'officer.POB.required' => 'Place of birth is required',
+            'officer.CivilStatus.required' => 'Civil status is required',
+            'officer.Cno.required' => 'Contact number is required',
+            'officer.EemailAddress.required' => 'Email address is required',
+            'officer.HouseNo.required' => 'House no. is required',
+            'officer.Barangay.required' => 'Barangay is required',
+            'officer.City.required' => 'City is required',
+            'officer.Region.required' => 'Region is required',
+            'officer.Country.required' => 'Country is required',
+            'officer.SSS.required' => 'SSS number is required',
+            'officer.PagIbig.required' => 'PagIbig number is required',
+            'officer.PhilHealth.required' => 'PhilHealth number is required',
+            'officer.ID_Number.required' => 'ID number number is required',
+            'officer.IDType.required' => 'Please select ID type',
+            'officer.Profile.required' => 'Please include profile image',
+            'officer.Attachments.required' => 'Please attach files',
+            'officer.FrontID.required' => 'Please include image of Front ID',
+            'officer.BackID.required' => 'Please include image of Back ID',
+        ];
         return $messages;        
     }
     
@@ -108,68 +106,6 @@ class FieldOfficer extends Component
         $age = $this->calculateAge($this->officer['DOB']);
         $this->officer['Age'] = $age;           
     }
-
-    // public function storeProfileImage()
-    // {
-    //     $profilename = '';
-
-    //     if ($this->officer['Profile']) {
-    //         if(isset($this->officer['profile'])){
-    //             $deletefiles[] = 'officer_profile/'.$this->officer['profile'];
-    //         }
-
-    //         $time = time();
-    //         $profilename = 'officer_profile_' . $time . '.' . $this->officer['Profile']->getClientOriginalExtension();
-    //         $this->officer['Profile']->storeAs('officer_profile', $profilename, 'public');
-    //     } else {
-    //         $profilename = $this->officer['Profile'];
-    //     }
-    //     // } elseif (is_string($this->officer['Profile'])) {
-    //     //     $profilename = $this->officer['Profile'];
-    //     // }
-
-    //     return $profilename;
-    // }
-
-    // public function storeFrontIdImage()
-    // {
-    //     $frontidname = '';
-    //     if($this->officer['FrontID']){
-    //         $deletefiles = [];
-    //         if(isset($this->officer['FrontID'])){
-    //             $deletefiles[] = 'officer_ids/'.$this->officer['FrontID'];
-    //         }
-    //         Storage::delete($deletefiles);       
-            
-    //         $time = time();          
-    //         $frontidname = 'officer_frontid_'.$time.'.'.$this->officer['FrontID']->getClientOriginalExtension();             
-    //         $this->officer['FrontID']->storeAs('officer_ids', $frontidname, 'public'); 
-    //     }
-    //     else{
-    //         $frontidname = $this->officer['FrontID'];  
-    //     }  
-    //     return $frontidname;
-    // }
-
-    // public function storeBackIdImage()
-    // {
-    //     $backidname = '';
-    //     if($this->officer['BackID']){
-    //         $deletefiles = [];
-    //         if(isset($this->officer['BackID'])){
-    //             $deletefiles[] = 'officer_ids/'.$this->officer['BackID'];
-    //         }
-    //         Storage::delete($deletefiles);       
-                
-    //         $time = time();          
-    //         $backidname = 'officer_backid_'.$time.'.'.$this->officer['BackID']->getClientOriginalExtension();    
-    //         $this->officer['BackID']->storeAs('officer_ids', $backidname, 'public');    
-    //     }
-    //     else{
-    //         $backidname = $this->officer['BackID'];  
-    //     } 
-    //     return $backidname;
-    // }
 
     public function storeProfileImage()
     {

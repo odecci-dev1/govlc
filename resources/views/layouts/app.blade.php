@@ -9,6 +9,7 @@
     <script type="text/javascript">
         var APP_URL = {!! json_encode(url('/')) !!};
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.2.3/dist/cdn.min.js" defer></script>
     @vite(['resources/css/app.css', 'resources/js/app.js']) 
     @livewireStyles
 </head>

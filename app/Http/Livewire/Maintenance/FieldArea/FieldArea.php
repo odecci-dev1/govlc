@@ -8,24 +8,25 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
 use App\Traits\Common;
+use Illuminate\Support\Collection;
 
 class FieldArea extends Component
 {
 
     use Common;
 
-    public $Id = '';
-    public $areaID = '';
+    public $AreaID = '';
     public $keyword = '';
     public $usertype;
         
-    public $areaName;
-    public $foid;
+    public $Area;
+    public $FOID;
     public $fullname;
     public $selectedLocations;
 
     public $keywordunassigned = '';  
     public $unassignedLocations;
+    public $initialSelectedLocations = [];
     
     public $areas;
     public $folist;
@@ -38,107 +39,262 @@ class FieldArea extends Component
     public $paginateUnassigned = [];
     public $paginationPagingUnassigned = [];
 
-    public function rules(){
-        $rules = [];
-        $rules['areaName'] = ['required'];       
-        $rules['foid'] = ['required'];
-        $rules['selectedLocations'] = ['required'];
-        $rules['fullname'] = ['required'];
+    public function rules()
+    {
+        $rules = [
+            'Area' => 'required',
+            'FOID' => 'required',
+            'selectedLocations' => 'required',
+            'fullname' => 'required',
+        ];
+
         return $rules;
     }
 
-    public function messages(){
-        $messages = [];
-        $messages['areaName.required'] = 'Please enter area name';     
-        $messages['selectedLocations.required'] = 'Please select locations from unassigned';     
-        $messages['areaName.foid'] = 'Please field officer';        
+    public function messages()
+    {
+        $messages = [
+            'Area.required' => 'Please enter an area name',
+            'selectedLocations.required' => 'Please select locations from unassigned',
+            'FOID.required' => 'Please select a field officer',
+        ];
+        
         return $messages;
     }
 
-    // public function store(){
-    //     $this->validate();     
-    //     $locations = [];           
-    //     if(count($this->selectedLocations) > 0){
-    //         foreach($this->selectedLocations as $sel){                    
-    //             $locations[] = $sel['location'];
-    //         }
-    //     }     
-    //     $data = [
-    //                 'areaName' => $this->areaName,
-    //                 'location' => $locations,
-    //                 'foid' => $this->foid,
-    //             ];    
-    //     //dd( $data );                   
-    //     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/AssigningFieldArea', $data);                        
-    //     return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved');       
-    // }
-
-    public function store(){
+    public function store()
+    {
         $this->validate();
 
-        // $locations = $this->selectedLocations->map(function($sel) {
-        //     return $sel['location'];
-        // })->toArray();
-
-        $locations = [];           
-        if(count($this->selectedLocations) > 0){
-            foreach($this->selectedLocations as $sel){                    
-                $locations[] = $sel['location'];
+        $locations = [];
+        if (count($this->selectedLocations) > 0) {
+            foreach ($this->selectedLocations as $sel) {
+                $locations[] = $sel['City'];
             }
-        }   
+        }
 
-        // $locationsString = implode(', ', $locations);
+        $locationsString = implode(' | ', $locations);
 
         $area = Area::create([
-            'Area' => $this->areaName,
-            'FOID' => $this->foid,
-            'City' => $locations,
+            'Area' => $this->Area,
+            'FOID' => $this->FOID,
+            'City' => $locationsString,
             'Status' => 1,
+            'DateCreated' => now(),
+            'DateUpdated' => NULL,
         ]);
+
+        foreach ($this->selectedLocations as $sel) {
+            Area::where('City', $sel['City'])->update([
+                'FOID' => $this->FOID,
+                'Status' => 2
+            ]);
+        }
+
+        foreach ($this->selectedLocations as $sel) {
+            Area::where('City', $sel['City'])->delete();
+        }
+
+        $this->removeAssignedLocations();
 
         return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved!');
     }
 
-    // public function update(){
-    //     $this->validate();     
+    // public function update()
+    // {
+    //     $this->validate();
+
     //     $locations = [];           
     //     if(count($this->selectedLocations) > 0){
     //         foreach($this->selectedLocations as $sel){                    
-    //             $locations[] = $sel['location'];
+    //             $locations[] = $sel['City'];
     //         }
-    //     }     
+    //     } 
 
-    //     $area = Area::find($this->Id); 
-    //     dd($area);
+    //     $locationsString = implode(' | ', $locations);
 
+    //     $area = Area::where('AreaID', $this->AreaID);
+        
     //     if ($area) {
     //         $area->update([
-    //             'Area' => $this->areaName,
-    //             'FOID' => $this->foid,
-    //             'City' => $locations, // Store as plain comma-separated string
+    //             'Area' => $this->Area,
+    //             'FOID' => $this->FOID,
+    //             'City' => $locationsString,
     //             'Status' => 1,
     //         ]);
+    //         $this->removeAssignedLocations();
+    //         session()->flash('mmessage', 'Field area successfully updated');
+    //     } else {
+    //         session()->flash('mmessage', 'Area not found');
     //     }
 
-    //     return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully updated');    
+    //     return redirect()->to('/maintenance/fieldarea');
+    // }
+
+    // public function update()
+    // {
+    //     $this->validate();
+
+    //     $locations = [];
+    //     if (count($this->selectedLocations) > 0) {
+    //         foreach ($this->selectedLocations as $sel) {
+    //             $locations[] = $sel['City'];
+    //         }
+    //     }
+
+    //     $locationsString = implode(' | ', $locations);
+
+    //     $area = Area::where('AreaID', $this->AreaID)->first();
+
+    //     if ($area) {
+    //         // Get the current locations for the area
+    //         $currentLocations = explode(' | ', $area->City);
+
+    //         // Find removed locations
+    //         $removedLocations = array_diff($currentLocations, $locations);
+
+    //         // Update the area
+    //         $area->update([
+    //             'Area' => $this->Area,
+    //             'FOID' => $this->FOID,
+    //             'City' => $locationsString,
+    //             'Status' => 1,
+    //         ]);
+
+    //         // Update removed locations to be unassigned
+    //         Area::whereIn('City', $removedLocations)->update(['FOID' => null]);
+
+    //         // Update selected locations
+    //         foreach ($this->selectedLocations as $sel) {
+    //             Area::where('City', $sel['City'])->update(['FOID' => $this->FOID]);
+    //         }
+
+    //         session()->flash('mmessage', 'Field area successfully updated');
+    //     } else {
+    //         session()->flash('mmessage', 'Area not found');
+    //     }
+
+    //     return redirect()->to('/maintenance/fieldarea');
+    // }
+
+    // public function update()
+    // {
+    //     $this->validate();
+
+    //     $locations = [];
+    //     if (count($this->selectedLocations) > 0) {
+    //         foreach ($this->selectedLocations as $sel) {
+    //             $locations[] = $sel['City'];
+    //         }
+    //     }
+
+    //     $locationsString = implode(' | ', $locations);
+
+    //     $area = Area::where('AreaID', $this->AreaID)->first();
+
+    //     if ($area) {
+    //         // Get the current locations for the area
+    //         $currentLocations = explode(' | ', $area->City);
+
+    //         // Find removed locations
+    //         $removedLocations = array_diff($currentLocations, $locations);
+
+    //         // Update the area
+    //         $area->update([
+    //             'Area' => $this->Area,
+    //             'FOID' => $this->FOID,
+    //             'City' => $locationsString,
+    //             'Status' => 1,
+    //         ]);
+
+    //         // Create new unassigned location entries for removed locations if not already existing
+    //         foreach ($removedLocations as $removedCity) {
+    //             $existingUnassigned = Area::where('City', $removedCity)
+    //                 ->whereNull('FOID')
+    //                 ->first();
+
+    //             if (!$existingUnassigned) {
+    //                 Area::create([
+    //                     'Area' => null,
+    //                     'FOID' => null,
+    //                     'City' => $removedCity,
+    //                     'Status' => 1,
+    //                     'DateCreated' => now(),
+    //                     'DateUpdated' => now(),
+    //                 ]);
+    //             }
+    //         }
+
+    //         foreach ($this->selectedLocations as $sel) {
+    //             Area::where('City', $sel['City'])->delete();
+    //         }
+
+    //         session()->flash('mmessage', 'Field area successfully updated');
+    //     } else {
+    //         session()->flash('mmessage', 'Area not found');
+    //     }
+
+    //     return redirect()->to('/maintenance/fieldarea');
     // }
 
     public function update()
     {
         $this->validate();
 
-        $locations = collect($this->selectedLocations)->pluck('location')->toArray();
+        $locations = [];
+        if (count($this->selectedLocations) > 0) {
+            foreach ($this->selectedLocations as $sel) {
+                $locations[] = trim($sel['City']);
+            }
+        }
 
-        $area = Area::find($this->Id);
-        dd($area);
+        $locationsString = implode(' | ', $locations);
+
+        $area = Area::where('AreaID', $this->AreaID)->first();
+
         if ($area) {
-            $area->update([
-                'Id' => $this->Id,
-                'Area' => $this->areaName,
-                'FOID' => $this->foid,
-                'City' => implode(', ', $locations),
+            // Get the current locations for the area
+            $currentLocations = array_map('trim', explode(' | ', $area->City));
+
+            // Find removed locations
+            $removedLocations = array_diff($currentLocations, $locations);
+
+
+            $data = [
+                'Area' => $area->Area,
+                'FOID' => $area->FOID,
+                'City' => $locationsString,
                 'Status' => 1,
-            ]);
+                'DateCreated' => $area->DateCreated,
+                'DateUpdated' => now(),
+            ];
+
+            // dd($data);
+            // Update the area with the remaining locations
+            $area->update($data);
+
+            // Create new unassigned location entries for removed locations if not already existing
+            foreach ($removedLocations as $removedCity) {
+                $existingUnassigned = Area::where('City', $removedCity)
+                    ->whereNull('FOID')
+                    ->first();
+
+                if (!$existingUnassigned) {
+                    Area::create([
+                        'Area' => null,
+                        'FOID' => null,
+                        'City' => $removedCity,
+                        'Status' => 1,
+                        'DateCreated' => now(),
+                        'DateUpdated' => now(),
+                    ]);
+                }
+            }
+
+            // Update selected locations
+            foreach ($this->selectedLocations as $sel) {
+                Area::where('City', $sel['City'])->update(['FOID' => $this->FOID]);
+            }
 
             session()->flash('mmessage', 'Field area successfully updated');
         } else {
@@ -148,179 +304,167 @@ class FieldArea extends Component
         return redirect()->to('/maintenance/fieldarea');
     }
 
-    public function trash($areaID){
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldArea/DeleteAreas', ["areaID" => $areaID]);                              
+    public function trash($AreaID)
+    {
+        $area = Area::where('AreaID', $AreaID);
+        $area->update([
+            'Status' => 2,
+            'DateUpdated' => now(),
+        ]);
+
         return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully trashed');   
     }
 
-    // public function selectArea($AreaID = ''){
-    //     $this->resetFields();
-    //     $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/GetAreaDetails', ['AreaID' => $AreaID]);          
-    //     $data = $data->json();
-    //     //dd( $data );
-    //     if(isset($data[0])){
-    //         $inp = $data[0]; 
-    //         //dd($inp);    
-    //         $this->areaID = $inp['areaID'];
-    //         $this->areaName = $inp['areaName'];            
-    //         $this->foid = $inp['foid'];
-    //         $this->fullname = $inp['fullname'];
-            
-    //         $locations = $inp['location'];
-    //         if($locations){
-    //             foreach($locations as $loc){
-    //                 $this->selectedLocations[$loc['location']] = ['location' => $loc['location'], 'stat' => 1]; 
-    //             }
-    //         }
-    //     }
-    //     else{
-    //         //session
-    //     }
-    // }
 
-    // public function selectArea($Id = null)
-    // {
-    //     $this->resetFields();
-
-    //     if ($Id) {
-    //         // Fetch the area by Id as a string
-    //         $area = Area::where('Id', $Id)->first();
-
-    //         if ($area) {
-    //             // Populate your component properties
-    //             $this->Id = $area->Id; // Adjust this based on your actual model attribute
-    //             $this->areaName = $area->Area; // Adjust based on your model attribute
-    //             $this->foid = $area->FOID; // Adjust based on your model attribute
-    //             $this->fullname = ''; // Adjust based on your model attribute
-
-    //             // Assuming 'City' is stored as a comma-separated string
-    //             $locations = explode(', ', $area->City);
-
-    //             foreach ($locations as $loc) {
-    //                 $this->selectedLocations[] = ['location' => $loc, 'stat' => 1];
-    //             }
-    //         } else {
-    //             session()->flash('mmessage', 'Area not found');
-    //         }
-    //     }
-    // }
-
-    public function selectArea($Id = null)
+    public function selectArea($AreaID)
     {
-        dd($Id);
         $this->resetFields();
 
-        if ($Id) {
-            // Fetch the area by Id as an integer
-            $area = Area::where('Id', $Id)->first();
+        $area = Area::with('fieldOfficer')->where('AreaID', $AreaID)->first();
 
-            if ($area) {
-                // Populate your component properties
-                $this->Id = $area->Id; // Adjust this based on your actual model attribute
-                $this->areaName = $area->Area; // Adjust based on your model attribute
-                $this->foid = $area->FOID; // Adjust based on your model attribute
-                $this->fullname = ''; // Adjust based on your model attribute
+        if ($area) {
+            $this->AreaID = $area->AreaID;
+            $this->Area = $area->Area; 
+            $this->FOID = $area->FOID; 
 
-                // Assuming 'City' is stored as a comma-separated string
-                $locations = explode(', ', $area->City);
-
-                foreach ($locations as $loc) {
-                    $this->selectedLocations[] = ['location' => $loc, 'stat' => 1];
-                }
+            if ($area->fieldOfficer) {
+                $this->fullname = $area->fieldOfficer->Lname . ', ' . $area->fieldOfficer->Fname . ' ' . strtoupper(substr($area->fieldOfficer->Mname , 0, 1)) . '.';
             } else {
-                session()->flash('mmessage', 'Area not found');
+                $this->fullname = 'Field Officer Not Assigned';
             }
+
+            $locations = explode('|', $area->City);
+
+            foreach ($locations as $loc) {
+                $this->selectedLocations[] = ['City' => $loc, 'Status' => 1];
+            }
+
+            $this->initialSelectedLocations = $this->selectedLocations;
+        } else {
+            session()->flash('mmessage', 'Area not found');
         }
     }
 
 
-
-
-    public function openSearchOfficer(){                 
-        $this->emit('openSearchOfficerModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
+    public function openSearchOfficer()
+    {
+        $this->emit('openSearchOfficerModal', [
+            'data' => '',
+            'title' => 'This is the title',
+            'message' => 'This is the message',
+        ]);
     }
 
-    public function selectFO($foid, $name){
-        $this->foid = $foid;
+    public function selectFO($FOID, $name){
+        $this->FOID = $FOID;
         $this->fullname = $name;
         $this->emit('closeSearchFOModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
     }
 
-    public function removeFromSelected($location, $stat){
-        $this->selectedLocations->forget($location);     
-        $this->unassignedLocations[$location] = ['location' => $location, 'stat' => $stat];  
+    public function addToSelected($location, $stat)
+    {
+        $this->selectedLocations = is_array($this->selectedLocations) ? $this->selectedLocations : [];
+        $this->unassignedLocations = is_array($this->unassignedLocations) ? $this->unassignedLocations : [];
+
+        $this->selectedLocations[] = ['City' => $location, 'Status' => $stat];
+
+        $this->unassignedLocations = array_filter($this->unassignedLocations, function($unassigned) use ($location) {
+            return $unassigned['City'] !== $location;
+        });
     }
 
-    public function addToSelected($location, $stat){
-        $this->selectedLocations[$location] = ['location' => $location, 'stat' => $stat]; 
-        $this->unassignedLocations->forget($location);      
+    public function removeFromSelected($location, $stat)
+    {
+        $this->selectedLocations = is_array($this->selectedLocations) ? $this->selectedLocations : [];
+        $this->unassignedLocations = is_array($this->unassignedLocations) ? $this->unassignedLocations : [];
+
+        $this->unassignedLocations[] = ['City' => $location, 'Status' => $stat];
+
+        $this->selectedLocations = array_filter($this->selectedLocations, function($selected) use ($location) {
+            return $selected['City'] !== $location;
+        });
     }
 
-    public function resetFields(){
-        $this->areaID = '';
-        $this->areaName = null;
-        $this->foid = null;
-        $this->fullname = null;    
-        $this->selectedLocations = collect([]);
-
-        if($this->unassignedLocations){
-            foreach ($this->unassignedLocations as $key => $value) {
-                if($value['stat'] == 1){
-                    $this->unassignedLocations->forget($key);   
-                }
-                //dito edit mo
-            }
-        }
-        
-    }
-
-    // public function mount(){
-    //     $this->usertype = session()->get('auth_usertype'); 
-    //     $this->unassignedLocations = collect([]);
+    // public function resetFields(){
+    //     $this->AreaID = '';
+    //     $this->Area = null;
+    //     $this->FOID = null;
+    //     $this->fullname = null;    
     //     $this->selectedLocations = collect([]);
-        // $munassigned = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldArea/UnAssignedLocationListPaginate', ['Areaname' => '', 'page' => 1, 'pageSize' => 10000]);                
-    //     dd($munassigned);
-    //     $unassignedLocations = $munassigned->json();    
-    //     if(isset($unassignedLocations)){
-    //         foreach($unassignedLocations as $unassignedLocations){
-    //             $this->unassignedLocations[$unassignedLocations['location']] = ['location' => $unassignedLocations['location'], 'stat' => 0]; 
+    
+    //     if($this->unassignedLocations){
+    //         foreach ($this->unassignedLocations as $key => $value) {
+    //             if($value['Status'] == 1){
+    //                 unset($this->unassignedLocations[$key]);   
+    //             }
     //         }
-    //     }        
-
-    //     $this->paginate['page'] = 1;
-    //     $this->paginate['pageSize'] = 10;
-    //     $this->paginate['FilterName'] = '';
-    //     $this->paginationPaging['totalPage'] = 0;          
+    //     }
     // }
+
+    public function resetFields()
+    {
+        $this->AreaID = '';
+        $this->Area = null;
+        $this->FOID = null;
+        $this->fullname = null;
+
+
+        $addedLocations = collect($this->selectedLocations)->diff($this->initialSelectedLocations)->all();
+
+        $addedCityNames = array_map(function ($loc) {
+            return $loc['City'];
+        }, $addedLocations);
+
+        $this->unassignedLocations = array_merge($this->unassignedLocations, array_filter($addedLocations, function ($loc) use ($addedCityNames) {
+            return in_array($loc['City'], $addedCityNames) && $loc['Status'] == 1;
+        }));
+
+        $this->selectedLocations = $this->initialSelectedLocations;
+
+        $this->initialSelectedLocations = [];
+    }
+
+    public function removeAssignedLocations()
+    {
+        $this->unassignedLocations = array_filter($this->unassignedLocations, function ($loc) {
+            return !in_array($loc, $this->selectedLocations);
+        });
+    }
+
+    public function setPage($page = 1){
+        $this->paginate['page'] = $page;
+    }
 
     public function mount()
     {
         $this->usertype = session()->get('auth_usertype');
+        $this->selectedLocations = collect([]);
 
-        // Fetch unassigned locations directly from Eloquent if applicable
-        // $this->unassignedLocations = Location::where('assigned', false)->get()->pluck('location', 'id');
+        $unassignedLocations = Area::whereNull('FOID') 
+                ->where('Status', 1)->get();
 
-        // Prepare pagination and initial states
+        $this->unassignedLocations = $unassignedLocations->map(function($location) {
+            return [
+                'City' => $location->City,
+                'Status' => $location->Status
+            ];
+        })->toArray();
+
         $this->paginate['page'] = 1;
         $this->paginate['pageSize'] = 10;
         $this->paginate['FilterName'] = '';
         $this->paginationPaging['totalPage'] = 0;
     }
 
-
-    public function setPage($page = 1){
-        $this->paginate['page'] = $page;
-    }
-
     public function render()
     {                      
-        $areasQuery = Area::query();
+        $areasQuery = Area::whereNotNull('FOID')->where('Status', 1);
+
         if (!empty($this->keyword)) {
             $areasQuery->where('Area', 'like', '%' . $this->keyword . '%');
         }
         
         $areas = $areasQuery->paginate($this->paginate['pageSize'], ['*'], 'page', $this->paginate['page']);
-        // dd($areas);
 
         $this->areas = $areas->items();
         $this->paginationPaging['totalPage'] = $areas->lastPage();
@@ -328,11 +472,12 @@ class FieldArea extends Component
         $this->paginationPaging['nextPage'] = $areas->currentPage() + 1 > $areas->lastPage() ? $areas->lastPage() : $areas->currentPage() + 1;
         $this->paginationPaging['prevPage'] = $areas->currentPage() - 1 < 1 ? 1 : $areas->currentPage() - 1;
 
-
-        $fodata = FieldOfficer::where('Fname', 'like', "%{$this->searchfokeyword}%")
-            ->orWhere('Mname', 'like', "%{$this->searchfokeyword}%")
-            ->orWhere('Lname', 'like', "%{$this->searchfokeyword}%")
-            ->get();
+        $fodata = FieldOfficer::where('Status', 1)
+            ->where(function ($query) {
+            $query->where('Fname', 'like', "%{$this->searchfokeyword}%")
+                    ->orWhere('Mname', 'like', "%{$this->searchfokeyword}%")
+                    ->orWhere('Lname', 'like', "%{$this->searchfokeyword}%");
+        })->get();
 
         $this->folist = $fodata->map(function ($officer) {
             return [

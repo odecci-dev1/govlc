@@ -16,20 +16,26 @@ class Area extends Model
         'City',
         'FOID',
         'Status',
+        'DateCreated',
+        'DateUpdated',
     ];
 
     protected $casts = [
-        'City' => 'array',
+        'City' => 'string',
     ];
 
-    protected $primaryKey = 'Id'; // Ensure 'Id' is specified as the primary key
-    public $incrementing = true; 
+    protected $guarded = [
+        'Id',
+        'AreaID',
+    ];
 
     const CREATED_AT = 'DateCreated';
     const UPDATED_AT = 'DateUpdated';
 
+    public $timestamps = false;
+
     public function fieldOfficer()
     {
-        return $this->belongsTo(FieldOfficer::class, 'FOID', 'foid');
+        return $this->belongsTo(FieldOfficer::class, 'FOID', 'FOID');
     }
 }

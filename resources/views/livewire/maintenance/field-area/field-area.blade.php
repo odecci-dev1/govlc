@@ -25,7 +25,7 @@
             <div class="fa-container-1">
 
                 <!-- * Vertical Container -->
-                <div class="verti-con" style="display: flexs; flex-direction: column; height: fit-content;">
+                <div class="verti-con" style="display: flex; flex-direction: column; height: fit-content;">
 
                     <!-- * Form Header -->
 
@@ -48,8 +48,8 @@
                         <!-- * Area Name -->
                         <div class="input-wrapper">
                             <span>Area Name</span>
-                            <input autocomplete="off" wire:model.lazy="areaName">
-                            @error('areaName') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                            <input autocomplete="off" wire:model.lazy="Area">
+                            @error('Area') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Location -->
@@ -57,13 +57,12 @@
                             <span>Location</span>
                             <div class="locations-container">
                                 <div class="chip-container" id="mLocationContainer">
-                                    <!-- <span class="tb-chip" data-tb-chip=""><span wire:click="removeSelUnassigned('')" class="tb-chips-w-x"></span></span>                                                     -->
                                     @if(isset($selectedLocations))
                                         @foreach($selectedLocations as $key => $value)
-                                            <span class="tb-chip" data-tb-chip="">{{ $value['location'] }}
-                                                @if($usertype != 2)
-                                                <span wire:click="removeFromSelected('{{ $value['location'] }}', {{ $value['stat'] }})" class="tb-chips-w-x"></span>
-                                                @endif
+                                            <span class="tb-chip" data-tb-chip="">{{ $value['City'] }}
+                                            @if($usertype != 2)
+                                                <span wire:click="removeFromSelected('{{ $value['City'] }}', {{ $value['Status'] }})" class="tb-chips-w-x"></span>
+                                            @endif
                                             </span>
                                         @endforeach
                                     @endif
@@ -92,7 +91,7 @@
                     <!-- * Rowspan 3: Save Button -->
                     <div class="rowspan">
                         @if($usertype != 2)
-                        @if($areaID == '')
+                        @if($AreaID == '')
                         <!-- * Save Button -->
                         <div class="input-wrapper">
                             <button type="button" wire:click="store" class="button">Save</button>
@@ -167,30 +166,38 @@
                                         <tr class="tr-font-size-1_2rem">
                                             <!-- * Checkbox Opt -->                                            
                                             <!-- * Data Area Name-->
-                                            <td wire:click="selectArea('{{ $area->Id }}')" class="td-name" data-area-name>
+                                            <td wire:click="selectArea('{{ $area->AreaID }}')" class="td-name" data-area-name>
                                                 {{ $area->Area }}
                                             </td>
                                     
                                             <!-- * Data Locations-->
-                                            <td wire:click="selectArea('{{ $area->Id }}')" class="td-name" data-area-location>
-                                                {{ is_array($area->City) ? implode(', ', $area->City) : $area->City }}
+                                            <td wire:click="selectArea('{{ $area->AreaID }}')" class="td-name" data-area-location x-data="{ showFull: false }" @mouseenter="showFull = true" @mouseleave="showFull = false">
+                                                <div style="position: relative">
+                                                    <span style="position: absolute; z-index: 99; top: 0; left: 0; padding: 1rem; border-radius: 5px; background: #000000c0;" x-show="showFull" x-cloak>
+                                                        {{ implode(' | ', explode('|', $area->City)) }}
+                                                    </span>
+                                                    <span>
+                                                        {{ Str::words(implode(' | ', explode('|', $area->City)), 15) }}
+                                                    </span>
+                                                </div>
                                             </td>
-                                    
+                                            
                                             <!-- * Data Field Officer-->
-                                            <td wire:click="selectArea('{{ $area->Id }}')" class="td-field-off" data-area-field-officer>
+                                            <td wire:click="selectArea('{{ $area->AreaID }}')" class="td-field-off" data-area-field-officer>
                                                 @if($area->fieldOfficer)
                                                     {{ $area->fieldOfficer->Lname . ', ' . $area->fieldOfficer->Fname . ' ' . mb_substr($area->fieldOfficer->Mname, 0, 1) }}
                                                 @else
-                                                    N/A
+                                                    <span style="color: #888888;">N/A</span>
                                                 @endif
                                             </td>
 
                                             <!-- * Table Trash Button -->
                                             <td class="td-btns" data-area-button>
                                                 <div class="td-btn-wrapper">
+
                                                     <!-- <button class="a-btn-view">View</button> -->
                                                     @if($usertype != 2)
-                                                    <button type="button" onclick="showDialog('{{ $area['areaID'] }}')" class="a-btn-trash-2 font-size-1_2rem fw-normal" data-area-trash-btn>Trash</button>
+                                                    <button type="button" onclick="showDialog('{{ $area->AreaID }}')" class="a-btn-trash-2 font-size-1_2rem fw-normal" data-area-trash-btn>Trash</button>
                                                     @endif
                                                 </div>
                                             </td>
@@ -265,25 +272,22 @@
 
                                     </tr>
 
-
                                     <!-- * Un-assigned Locations Data -->
                                     @if(isset($unassignedLocations))
                                         @foreach($unassignedLocations as $unassigned)
-                                        <tr>
-                                            <td>
-                                                <!-- <input wire:model="chkunassigned"   value="{{ $unassigned['location'] }}" type="checkbox" class="checkbox" > -->
-                                                @if($usertype != 2)
-                                                <button type="button" wire:click="addToSelected('{{ $unassigned['location'] }}', {{ $unassigned['stat'] }})" class="btn-add-icon"> + </button>
-                                                @endif
-                                            </td>
-
-                                            <!-- * Data Locations-->
-                                            <td class="td-name">
-                                                {{ $unassigned['location'] }}
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td>
+                                                    @if($usertype != 2)
+                                                        <button type="button" wire:click="addToSelected('{{ $unassigned['City'] }}', '{{ $unassigned['Status'] }}')" class="btn-add-icon"> + </button>
+                                                    @endif
+                                                </td>
+                                                <td class="td-name">
+                                                    {!! $unassigned['City'] !!}
+                                                </td>
+                                            </tr>
                                         @endforeach
-                                    @endif                                   
+                                    @endif
+
                                 </table>                             
                             </div>
 
@@ -329,16 +333,13 @@
                 <h3>Search for field officer</h3>
 
                 <div class="wrapper">
-
                     <!-- * Search Bar -->
                     <div class="search-wrap">
-                        <input type="search" wire:model="searchfokeyword" placeholder="Search field officer">
+                        <input type="search" wire:model.live="searchfokeyword" placeholder="Search field officer">
                         <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                     </div>
 
-
                 </div>
-
 
             </div>
 
@@ -373,13 +374,11 @@
                                 <tr>
                                     <!-- * Officer Name -->
                                     <td>
-
                                         <!-- * Officers' Name-->
                                         <div class="td-wrapper">
                                             <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
                                             <span class="td-name">{{ $fo['Lname'] . ', ' . $fo['Fname'] . ' ' . mb_substr($fo['Mname'], 0, 1) . '.' }}</span>
                                         </div>
-
                                     </td>
 
                                     <!-- * Action -->

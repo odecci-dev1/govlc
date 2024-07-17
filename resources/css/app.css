@@ -51,6 +51,10 @@ main {
   outline: none;
 }
 
+[x-cloak] {
+  display: none;
+}
+
 menu,
 ol,
 ul {
