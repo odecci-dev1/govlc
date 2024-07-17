@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Traits\Common;
 use function PHPUnit\Framework\isNull;
 use App\Models\FieldOfficer as TblFieldOfficer;
+use App\Models\FOFile;
 use App\Models\Status;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 
 class FieldOfficer extends Component
@@ -20,347 +22,366 @@ class FieldOfficer extends Component
 
     public $officer;
     public $selectedFoid;
+    public $officerDetails = null;
     public $usertype;
     public $foid = '';
     public $idtypes = [];
     public $idtypename = '';
-    public $imgprofile;
-    public $imgfrontID;
-    public $imgbackID;
+    public $showDeleteModal = false;
 
-    public function rules(){                
-        $rules = []; 
-        $rules['officer.fname'] = 'required';
-        $rules['officer.mname'] = '';
-        $rules['officer.lname'] = 'required';
-        $rules['officer.suffix'] = '';
-        $rules['officer.gender'] = 'required';
-        $rules['officer.dob'] = 'required';
-        $rules['officer.age'] = 'required';
-        $rules['officer.pob'] = 'required';
-        $rules['officer.civilStatus'] = 'required';
-        $rules['officer.cno'] = 'required';
-        $rules['officer.emailAddress'] = '';
-        $rules['officer.houseNo'] = 'required';
-        $rules['officer.barangay'] = 'required';
-        $rules['officer.city'] = 'required';
-        $rules['officer.region'] = 'required';
-        $rules['officer.country'] = '';
-        $rules['officer.sss'] = 'required';
-        $rules['officer.pagIbig'] = 'required';
-        $rules['officer.philHealth'] = 'required';
-        $rules['officer.idNum'] = 'required';
-        $rules['officer.typeID'] = 'required';
-        $rules['officer.profile'] = '';
-        $rules['imgprofile'] = isset($this->officer['profile']) ? '' : 'required';  
-        $rules['officer.attachments'] = 'required'; 
-        $rules['officer.frontID'] = '';  
-        $rules['imgfrontID'] = isset($this->officer['frontID']) ? '' : 'required';  
-        $rules['officer.backID'] = ''; 
-        $rules['imgbackID'] = isset($this->officer['backID']) ? '' : 'required';  
-        return  $rules;     
+    public function rules()
+    {
+        $rules = [
+            'officer.Fname' => 'required',
+            'officer.Mname' => '',
+            'officer.Lname' => 'required',
+            'officer.Suffix' => '',
+            'officer.Gender' => 'required',
+            'officer.DOB' => 'required',
+            'officer.Age' => 'required',
+            'officer.POB' => 'required',
+            'officer.CivilStatus' => 'required',
+            'officer.Cno' => 'required',
+            'officer.EmailAddress' => '',
+            'officer.HouseNo' => 'required',
+            'officer.Barangay' => 'required',
+            'officer.City' => 'required',
+            'officer.Region' => 'required',
+            'officer.Country' => '',
+            'officer.SSS' => 'required',
+            'officer.PagIbig' => 'required',
+            'officer.PhilHealth' => 'required',
+            'officer.ID_Number' => 'required',
+            'officer.IDType' => 'required',
+            // 'officer.Profile' => '',
+            'officer.Attachments' => 'required',
+            // 'officer.FrontID' => '',
+            // 'officer.BackID' => '',
+        ];
+
+        if (!isset($this->officer['Profile'])) {
+            $rules['officer.Profile'] = 'required';
+        }
+
+        if (!isset($this->officer['FrontID'])) {
+            $rules['officer.FrontID'] = 'required';
+        }
+
+        if (!isset($this->officer['BackID'])) {
+            $rules['officer.BackID'] = 'required';
+        }
+
+        return $rules;
     }
     
     public function messages(){
         $messages = [];
-        $messages['officer.fname.required'] = 'First name is required';        
-        $messages['officer.lname.required'] = 'Last name is required';             
-        $messages['officer.mname.required'] = 'Middle name is required';  
-        $messages['officer.suffix.required'] = 'Suffix is required';    
-        $messages['officer.gender.required'] = 'Gender is required';  
-        $messages['officer.dob.required'] = 'Date of birth is required';  
-        $messages['officer.age.required'] = 'Age is required';  
-        $messages['officer.pob.required'] = 'Place of birth is required';  
-        $messages['officer.civilStatus.required'] = 'Civil status is required';
-        $messages['officer.cno.required'] = 'Contact number is required';  
-        $messages['officer.emailAddress.required'] = 'Email address is required';  
-        $messages['officer.houseNo.required'] = 'House no. is required';            
-        $messages['officer.barangay.required'] = 'Barangay is required';            
-        $messages['officer.city.required'] = 'City is required';            
-        $messages['officer.region.required'] = 'Region is required';            
-        $messages['officer.country.required'] = 'Country is required';            
-        $messages['officer.sss.required'] = 'SSS number is required';            
-        $messages['officer.pagIbig.required'] = 'PagIbig number is required';                        
-        $messages['officer.philHealth.required'] = 'PhilHealth number is required';                        
-        $messages['officer.idNum.required'] = 'ID number number is required';                        
-        $messages['officer.typeID.required'] = 'Please select ID type';    
-        $messages['imgprofile.required'] = 'Please include profile img';                        
-        $messages['officer.attachments.required'] = 'Please attach files'; 
-        $messages['officer.frontID.required'] = 'Please include image of front id';                        
-        $messages['officer.backID.required'] = 'Please include image of back id';  
-        $messages['imgfrontID.required'] = 'Please include image of front id';                        
-        $messages['imgbackID.required'] = 'Please include image of back id';                               
+        $messages['officer.Fname.required'] = 'First name is required';        
+        $messages['officer.Lname.required'] = 'Last name is required';             
+        $messages['officer.Mname.required'] = 'Middle name is required';  
+        $messages['officer.Suffix.required'] = 'Suffix is required';    
+        $messages['officer.Gender.required'] = 'Gender is required';  
+        $messages['officer.DOB.required'] = 'Date of birth is required';  
+        $messages['officer.Age.required'] = 'Age is required';  
+        $messages['officer.POB.required'] = 'Place of birth is required';  
+        $messages['officer.CivilStatus.required'] = 'Civil status is required';
+        $messages['officer.Cno.required'] = 'Contact number is required';  
+        $messages['officer.EemailAddress.required'] = 'Email address is required';  
+        $messages['officer.HouseNo.required'] = 'House no. is required';            
+        $messages['officer.Barangay.required'] = 'Barangay is required';            
+        $messages['officer.City.required'] = 'City is required';            
+        $messages['officer.Region.required'] = 'Region is required';            
+        $messages['officer.Country.required'] = 'Country is required';            
+        $messages['officer.SSS.required'] = 'SSS number is required';            
+        $messages['officer.PagIbig.required'] = 'PagIbig number is required';                        
+        $messages['officer.PhilHealth.required'] = 'PhilHealth number is required';                        
+        $messages['officer.ID_Number.required'] = 'ID number number is required';                        
+        $messages['officer.IDType.required'] = 'Please select ID type';    
+        $messages['officer.Profile.required'] = 'Please include profile image';                        
+        $messages['officer.Attachments.required'] = 'Please attach files'; 
+        $messages['officer.FrontID.required'] = 'Please include image of Front ID';                        
+        $messages['officer.BackID.required'] = 'Please include image of Back ID';  
         return $messages;        
     }
+    
+    public function getofficerAge(){
+        $age = $this->calculateAge($this->officer['DOB']);
+        $this->officer['Age'] = $age;           
+    }
 
-    public function storeProfileImage(){
-        
-        // dd($this->officer['profile']);        
-        $profilename = '';
-        if($this->imgprofile){
-            $deletefiles = [];
-            if(isset($this->officer['profile'])){
-                $deletefiles[] = 'officer_profile/'.$this->officer['profile'];
-            }
-            Storage::delete($deletefiles);       
+    // public function storeProfileImage()
+    // {
+    //     $profilename = '';
+
+    //     if ($this->officer['Profile']) {
+    //         if(isset($this->officer['profile'])){
+    //             $deletefiles[] = 'officer_profile/'.$this->officer['profile'];
+    //         }
+
+    //         $time = time();
+    //         $profilename = 'officer_profile_' . $time . '.' . $this->officer['Profile']->getClientOriginalExtension();
+    //         $this->officer['Profile']->storeAs('officer_profile', $profilename, 'public');
+    //     } else {
+    //         $profilename = $this->officer['Profile'];
+    //     }
+    //     // } elseif (is_string($this->officer['Profile'])) {
+    //     //     $profilename = $this->officer['Profile'];
+    //     // }
+
+    //     return $profilename;
+    // }
+
+    // public function storeFrontIdImage()
+    // {
+    //     $frontidname = '';
+    //     if($this->officer['FrontID']){
+    //         $deletefiles = [];
+    //         if(isset($this->officer['FrontID'])){
+    //             $deletefiles[] = 'officer_ids/'.$this->officer['FrontID'];
+    //         }
+    //         Storage::delete($deletefiles);       
             
-            $time = time();          
-            $profilename = 'officer_profile_'.$time.'.'.$this->imgprofile->getClientOriginalExtension();         
-            $this->imgprofile->storeAs('officer_profile', $profilename);    
+    //         $time = time();          
+    //         $frontidname = 'officer_frontid_'.$time.'.'.$this->officer['FrontID']->getClientOriginalExtension();             
+    //         $this->officer['FrontID']->storeAs('officer_ids', $frontidname, 'public'); 
+    //     }
+    //     else{
+    //         $frontidname = $this->officer['FrontID'];  
+    //     }  
+    //     return $frontidname;
+    // }
+
+    // public function storeBackIdImage()
+    // {
+    //     $backidname = '';
+    //     if($this->officer['BackID']){
+    //         $deletefiles = [];
+    //         if(isset($this->officer['BackID'])){
+    //             $deletefiles[] = 'officer_ids/'.$this->officer['BackID'];
+    //         }
+    //         Storage::delete($deletefiles);       
+                
+    //         $time = time();          
+    //         $backidname = 'officer_backid_'.$time.'.'.$this->officer['BackID']->getClientOriginalExtension();    
+    //         $this->officer['BackID']->storeAs('officer_ids', $backidname, 'public');    
+    //     }
+    //     else{
+    //         $backidname = $this->officer['BackID'];  
+    //     } 
+    //     return $backidname;
+    // }
+
+    public function storeProfileImage()
+    {
+        $profilename = '';
+
+        if ($this->officer['Profile'] instanceof UploadedFile) {
+            $time = time();
+            $profilename = 'officer_profile_' . $time . '.' . $this->officer['Profile']->getClientOriginalExtension();
+            $this->officer['Profile']->storeAs('officer_profile', $profilename, 'public');
+        } else {
+            $profilename = $this->officer['Profile'];
         }
-        else{
-            $profilename = $this->officer['profile'];  
-        }  
+
         return $profilename;
     }
 
-    public function storeFrontIdImage(){
-        
-        // dd($this->officer['profile']);        
+    public function storeFrontIdImage()
+    {
         $frontidname = '';
-        if($this->imgfrontID){
-            $deletefiles = [];
-            if(isset($this->officer['frontID'])){
-                $deletefiles[] = 'officer_ids/'.$this->officer['frontID'];
-            }
-            Storage::delete($deletefiles);       
-            
-            $time = time();          
-            $frontidname = 'officer_frontid_'.$time.'.'.$this->imgfrontID->getClientOriginalExtension();             
-            $this->imgfrontID->storeAs('officer_ids', $frontidname); 
+
+        if ($this->officer['FrontID'] instanceof UploadedFile) {
+            $time = time();
+            $frontidname = 'officer_frontid_' . $time . '.' . $this->officer['FrontID']->getClientOriginalExtension();
+            $this->officer['FrontID']->storeAs('officer_ids', $frontidname, 'public');
+        } else {
+            $frontidname = $this->officer['FrontID'];
         }
-        else{
-            $frontidname = $this->officer['frontID'];  
-        }  
+
         return $frontidname;
     }
 
-    public function storeBackIdImage(){
-        
+    public function storeBackIdImage()
+    {
         $backidname = '';
-        if($this->imgbackID){
-            $deletefiles = [];
-            if(isset($this->officer['backID'])){
-                $deletefiles[] = 'officer_ids/'.$this->officer['backID'];
-            }
-            Storage::delete($deletefiles);       
-                
-            $time = time();          
-            $backidname = 'officer_backid_'.$time.'.'.$this->imgbackID->getClientOriginalExtension();    
-            $this->imgbackID->storeAs('officer_ids', $backidname);    
+
+        if ($this->officer['BackID'] instanceof UploadedFile) {
+            $time = time();
+            $backidname = 'officer_backid_' . $time . '.' . $this->officer['BackID']->getClientOriginalExtension();
+            $this->officer['BackID']->storeAs('officer_ids', $backidname, 'public');
+        } else {
+            $backidname = $this->officer['BackID'];
         }
-        else{
-            $backidname = $this->officer['backID'];  
-        } 
+
         return $backidname;
     }
 
-    public function storeAttachments(){
-        $memattachements = [];      
-        if($this->officer['attachments'] == $this->officer['old_attachments']){
-            $memattachements = $this->officer['attachments'];
-        }
-        else{            
-            if(isset($this->officer['attachments'])){    
-                $deletefiles = [];
-                if(isset($this->officer['old_attachments'])){
-                    foreach($this->officer['old_attachments'] as $oldfiles){
-                        $deletefiles[] = 'officer_attachments/'.$oldfiles['filePath'];
-                    }
+
+    public function storeAttachments($foid)
+    {
+        $newAttachments = [];
+
+        if ($this->officer['Attachments'] == $this->officer['Old_Attachments']) {
+            $newAttachments = $this->officer['Attachments'];
+        } else {
+            if (isset($this->officer['Old_Attachments'])) {
+                foreach ($this->officer['Old_Attachments'] as $oldFile) {
+                    Storage::delete('officer_attachments/' . $oldFile['FilePath']);
                 }
-                Storage::delete($deletefiles);       
-                foreach ($this->officer['attachments'] as $attachments) {
+            }
+
+            if (isset($this->officer['Attachments'])) {
+                foreach ($this->officer['Attachments'] as $attachment) {
                     $time = time();
-                    $filename = 'officer_attachments_'.$time.'_'.$attachments->getClientOriginalName();
-                    $attachments->storeAs('officer_attachments', $filename);   
-                    $memattachements[] = [ 'filePath' => $filename ];
+                    $filename = 'officer_attachments_' . $time . '_' . $attachment->getClientOriginalName();
+
+                    $attachment->storeAs('officer_attachments', $filename, 'public');
+
+                    $newAttachments[] = [
+                        'FOID' => $foid,
+                        'FilePath' => $filename,
+                        'FileType' => $attachment->getClientOriginalExtension(),
+                        'DateCreated' => now(),
+                    ];
                 }
             }
         }
 
-        return $memattachements;
+        return $newAttachments;
     }
 
-    public function store(){   
+    public function store()
+    {   
         try { 
-            $input = $this->validate();        
+            $input = $this->validate();       
 
-            $officer = new TblFieldOfficer();
-            $officer->fill([
-                'Fname' => $input['officer']['fname'] ?? '',
-                'Lname' => $input['officer']['lname'] ?? '',
-                'Mname' => $input['officer']['mname'] ?? '',
-                'Suffix' => $input['officer']['suffix'] ?? '',
-                'Gender' => $input['officer']['gender'] ?? '',
-                'DOB' => $input['officer']['dob'] ?? null,
-                'Age' => $input['officer']['age'] ?? '0',
-                'POB' => $input['officer']['pob'] ?? '',
-                'CivilStatus' => $input['officer']['civilStatus'] ?? '',
-                'Cno' => $input['officer']['cno'] ?? '',
-                'EmailAddress' => $input['officer']['emailAddress'] ?? '',
-                'HouseNo' => $input['officer']['houseNo'] ?? '',
-                'Barangay' => $input['officer']['barangay'] ?? '',
-                'City' => $input['officer']['city'] ?? '',
-                'Region' => $input['officer']['region'] ?? '',
-                'Country' => $input['officer']['country'] ?? '',
-                'SSS' => $input['officer']['sss'] ?? '',
-                'PagIbig' => $input['officer']['pagIbig'] ?? '',
-                'PhilHealth' => $input['officer']['philHealth'] ?? '',
-                'ID_Number' => $input['officer']['id_Num'] ?? null,
-                'IDType' => $input['officer']['typeID'] ?? '',
+            $officer = TblFieldOfficer::create([
+                'Fname' => $input['officer']['Fname'] ?? '',
+                'Mname' => $input['officer']['Mname'] ?? '',
+                'Lname' => $input['officer']['Lname'] ?? '',
+                'Suffix' => $input['officer']['Suffix'] ?? '',
+                'Gender' => $input['officer']['Gender'] ?? '',
+                'DOB' => $input['officer']['DOB'] ?? null,
+                'Age' => $input['officer']['Age'] ?? '0',
+                'POB' => $input['officer']['POB'] ?? '',
+                'CivilStatus' => $input['officer']['CivilStatus'] ?? '',
+                'Cno' => $input['officer']['Cno'] ?? '',
+                'EmailAddress' => $input['officer']['EmailAddress'] ?? '',
+                
+                'HouseNo' => $input['officer']['HouseNo'] ?? '',
+                'Barangay' => $input['officer']['Barangay'] ?? '',
+                'City' => $input['officer']['City'] ?? '',
+                'Region' => $input['officer']['Region'] ?? '',
+                'Country' => $input['officer']['Country'] ?? '',
+
+                'Status' => 1,
+                'DateCreated' => now(),
+                'DateUpdate' => null,
                 'ProfilePath' => $this->storeProfileImage(),
+
                 'FrontID_Path' => $this->storeFrontIdImage(),
                 'BackID_Path' => $this->storeBackIdImage(),
-                'Status' => 1,
+                'ID_Number' => $input['officer']['ID_Number'] ?? null,
+
+                'SSS' => $input['officer']['SSS'] ?? '',
+                'TIN' => $input['officer']['TIN'] ?? null,
+                'PagIbig' => $input['officer']['PagIbig'] ?? '',
+                'PhilHealth' => $input['officer']['PhilHealth'] ?? '',
+                'IDType' => $input['officer']['IDType'] ?? '',
             ]);
-            $officer->DateCreated = now();
-            $officer->save();
+
 
             $latestOfficer = TblFieldOfficer::latest()->first();
             $foid = $latestOfficer->FOID;
+            // $this->uploadAttachments($foid);
+            $attachments = $this->storeAttachments($foid);
+            FOFile::insert($attachments);
             $this->resetValidation();
-            // return redirect()->route('fieldofficer.view'. $foid)
-            // ->with('message', 'Field officer successfully saved');    
-            return redirect()->to('/maintenance/fieldofficer/view/'. $foid)->with('message', 'Field officer successfully saved');    
+
+            return redirect()->to('/maintenance/fieldofficer/view/'. $foid)->with('mmessage', 'Field officer successfully saved');    
         }
         catch (\Exception $e) {           
             throw $e;            
         }
     }
 
-    // public function update()
-    // {
-    //     try {
-    //         $input = $this->validate();
-
-    //         $officer = TblFieldOfficer::where('FOID', $this->foid)->first();
-
-    //         if ($officer) {
-    //             $officer->Fname = $input['officer']['fname'] ?? '';
-    //             $officer->Lname = $input['officer']['lname'] ?? '';
-    //             $officer->Mname = $input['officer']['mname'] ?? '';
-    //             $officer->Suffix = $input['officer']['suffix'] ?? '';
-    //             $officer->Gender = $input['officer']['gender'] ?? '';
-    //             $officer->DOB = $input['officer']['dob'] ?? null;
-    //             $officer->Age = $input['officer']['age'] ?? '0';
-    //             $officer->POB = $input['officer']['pob'] ?? '';
-    //             $officer->CivilStatus = $input['officer']['civilStatus'] ?? '';
-    //             $officer->Cno = $input['officer']['cno'] ?? '';
-    //             $officer->EmailAddress = $input['officer']['emailAddress'] ?? '';
-    //             $officer->HouseNo = $input['officer']['houseNo'] ?? '';
-    //             $officer->Barangay = $input['officer']['barangay'] ?? '';
-    //             $officer->City = $input['officer']['city'] ?? '';
-    //             $officer->Region = $input['officer']['region'] ?? '';
-    //             $officer->Country = $input['officer']['country'] ?? '';
-    //             $officer->SSS = $input['officer']['sss'] ?? '';
-    //             $officer->PagIbig = $input['officer']['pagIbig'] ?? '';
-    //             $officer->PhilHealth = $input['officer']['philHealth'] ?? '';
-    //             $officer->ID_Number = $input['officer']['idNum'] ?? null;
-    //             $officer->IDType = $input['officer']['typeID'] ?? '';
-    //             $officer->ProfilePath = $this->storeProfileImage();
-    //             $officer->FrontID_Path = $this->storeFrontIdImage();
-    //             $officer->BackID_Path = $this->storeBackIdImage();
-    //             // $officer->files = $this->storeAttachments();
-                
-    //             $officer->save();
-
-    //             return redirect()->to('/maintenance/fieldofficer/view/' . $this->foid)->with('message', 'Field officer successfully updated');
-    //         } else {
-    //             // Handle case where officer with given FOID is not found
-    //             Log::error('Failed to find officer with FOID: ' . $this->foid);
-    //             session()->flash('erroraction', 'update');
-    //             session()->flash('errormessage', 'Operation Failed. Maybe Field Officer Already Exist. Retry ?');
-    //             $this->emit('EMIT_ERROR_ASKING_DIALOG');
-    //         }
-    //     } catch (\Exception $e) {
-    //         throw $e;
-    //     }
-    // }
-
     public function update()
     {
         try {
-            $input = $this->validate();
+            $this->validate();
 
-            $officer = TblFieldOfficer::where('FOID', $this->foid)->first();
-            dd( $officer );
+            $officer = TblFieldOfficer::where('FOID', $this->foid);
             if ($officer) {
-                $officer->Fname = $input['officer']['fname'] ?? '';
-                $officer->Lname = $input['officer']['lname'] ?? '';
-                $officer->Mname = $input['officer']['mname'] ?? '';
-                $officer->Suffix = $input['officer']['suffix'] ?? '';
-                $officer->Gender = $input['officer']['gender'] ?? '';
-                $officer->DOB = $input['officer']['dob'] ?? null;
-                $officer->Age = $input['officer']['age'] ?? '0';
-                $officer->POB = $input['officer']['pob'] ?? '';
-                $officer->CivilStatus = $input['officer']['civilStatus'] ?? '';
-                $officer->Cno = $input['officer']['cno'] ?? '';
-                $officer->EmailAddress = $input['officer']['emailAddress'] ?? '';
-                $officer->HouseNo = $input['officer']['houseNo'] ?? '';
-                $officer->Barangay = $input['officer']['barangay'] ?? '';
-                $officer->City = $input['officer']['city'] ?? '';
-                $officer->Region = $input['officer']['region'] ?? '';
-                $officer->Country = $input['officer']['country'] ?? '';
-                $officer->SSS = $input['officer']['sss'] ?? '';
-                $officer->PagIbig = $input['officer']['pagIbig'] ?? '';
-                $officer->PhilHealth = $input['officer']['philHealth'] ?? '';
-                $officer->ID_Number = $input['officer']['idNum'] ?? null;
-                $officer->IDType = $input['officer']['typeID'] ?? '';
-                $officer->ProfilePath = $this->storeProfileImage();
-                $officer->FrontID_Path = $this->storeFrontIdImage();
-                $officer->BackID_Path = $this->storeBackIdImage();
-                $officer->files = $this->storeAttachments();
-                $officer->DateUpdated = now();
-
                 
-                $officer->save();
-                //dd( $input['officer']['lname'] ?? '' );
-                return redirect()->to('/maintenance/fieldofficer/view/' . $this->foid)->with('message', 'Field officer successfully updated');
+                $data = [
+                    'Fname' => $this->officer['Fname'],
+                    'Mname' => $this->officer['Mname'],
+                    'Lname' => $this->officer['Lname'],
+                    'Suffix' => $this->officer['Suffix'],
+                    'Gender' => $this->officer['Gender'],
+                    'DOB' => $this->officer['DOB'] ?? null,
+                    'Age' => $this->officer['Age'] ?? '0',
+                    'POB' => $this->officer['POB'],
+                    'CivilStatus' => $this->officer['CivilStatus'],
+                    'Cno' => $this->officer['Cno'],
+                    'EmailAddress' => $this->officer['EmailAddress'],
+                    
+                    'HouseNo' => $this->officer['HouseNo'],
+                    'Barangay' => $this->officer['Barangay'],
+                    'City' => $this->officer['City'],
+                    'Region' => $this->officer['Region'],
+                    'Country' => $this->officer['Country'],
+    
+                    'Status' => 1,
+                    'DateCreated' => $this->officer['DateCreated'],
+                    'DateUpdated' => now(),
+                    'ProfilePath' => $this->storeProfileImage(),
+                    
+                    'FrontID_Path' => $this->storeFrontIdImage(),
+                    'BackID_Path' => $this->storeBackIdImage(),
+                    'ID_Number' => $this->officer['ID_Number'] ?? null,
+    
+                    'SSS' => $this->officer['SSS'],
+                    'TIN' => $this->officer['TIN'] ?? null,
+                    'PagIbig' => $this->officer['PagIbig'],
+                    'PhilHealth' => $this->officer['PhilHealth'],
+                    'IDType' => $this->officer['IDType'],
+                ];
+
+                $officer->update($data);
+
+                $attachments = $this->storeAttachments($this->foid);
+                FOFile::insert($attachments);
+
+                $this->resetValidation();
+
+                return redirect()->to('/maintenance/fieldofficer/view/' . $this->foid)->with('mmessage', 'Field officer updated successfully!');
+            
             } else {
-                // Handle case where officer with given FOID is not found
-                Log::error('Failed to find officer with FOID: ' . $this->foid);
-                session()->flash('erroraction', 'update');
-                session()->flash('errormessage', 'Operation Failed. Maybe Field Officer Already Exist. Retry ?');
-                $this->emit('EMIT_ERROR_ASKING_DIALOG');
+                Log::warning('No officer found with FOID: ' . $this->foid);
             }
+            
         } catch (\Exception $e) {
+            Log::error('Error updating officer: ' . $e->getMessage(), ['exception' => $e]); 
             throw $e;
         }
     }
 
-    public function getofficerAge(){
-        $age = $this->calculateAge($this->officer['dob']);
-        $this->officer['age'] = $age;           
-    }
-
-    // public function archive()
-    // {
-    //     $officer = TblFieldOfficer::where('FOID', $this->foid)->first();
-    //     $officer->Status = 2;
-    //     $officer->save();
-    // }
-
     public function archive()
     {
-        // Find the officer by FOID
-        $officer = TblFieldOfficer::getFieldOfficerByFOID($this->foid);
+        $officer = TblFieldOfficer::where('FOID', $this->foid);
 
         if ($officer) {
-            // Update the 'Status' attribute to '2' (inactive)
-            $officer->Status = 2; // Assuming 'Status' field is numeric in your database
 
-            // Save the changes
-            $officer->save();
+            $officer->update([
+                'Status' =>  2,
+            ]);
 
-            // Log that archiving was successful
             Log::info('Archived officer with FOID: ' . $this->foid);
 
-            // Optionally, you can also archive related data or perform other actions here
             return redirect()->to('/maintenance/fieldofficer/list')->with('mmessage', 'Field officer was successfully archived!');
             
-            // Redirect or return response as needed
         } else {
-            // Handle case where officer with given FOID is not found
             Log::error('Failed to archive officer. FOID: ' . $this->foid);
         }
     }
@@ -368,37 +389,46 @@ class FieldOfficer extends Component
     public function mount($foid = '') 
     {
         $this->usertype = session()->get('auth_usertype'); 
-        
         $this->officer = [
-            'fname' => '',
-            'mname' => '',
-            'lname' => '',
-            'suffix' => '',
-            'gender' => '',
-            'dob' => '',
-            'age' => '',
-            'pob' => '',
-            'civilStatus' => '',
-            'cno' => '',
-            'emailAddress' => '',
-            'houseNo' => '',
-            'barangay' => '',
-            'city' => '',
-            'region' => '',
-            'country' => '',
-            'sss' => '',
-            'pagIbig' => '',
-            'philHealth' => '',
-            'idNum' => '',
-            'typeID' => '',
-            'profile' => '',
-            'old_profile' => '',
-            'attachments' => [],
-            'old_attachments' => [],
-            'frontID' => '',
-            'old_frontID' => '',
-            'backID' => '',
-            'old_backID' => '',
+            'Id' => '',
+            'Fname' => '',
+            'Mname' => '',
+            'Lname' => '',
+            'Suffix' => '',
+            'Gender' => '',
+            'DOB' => '',
+            'Age' => '',
+            'POB' => '',
+            'CivilStatus' => '',
+            'Cno' => '',
+            'EmailAddress' => '',
+
+            'HouseNo' => '',
+            'Barangay' => '',
+            'City' => '',
+            'Region' => '',
+            'Country' => '',
+
+            'Status' => 1,
+            'DateCreated' => '',
+            'DateUpdated' => '',
+            'FOID' => '',
+            'Profile' => '',
+            'Old_Profile' => '',
+
+            'Attachments' => [],
+            'Old_Attachments' => [],
+            'FrontID' => '',
+            'Old_FrontID' => '',
+            'BackID' => '',
+            'Old_BackID' => '',
+            'ID_Number' => '',
+
+            'SSS' => '',
+            'TIN' => '',
+            'PagIbig' => '',
+            'PhilHealth' => '',
+            'IDType' => '',
         ];
 
         $idtypes = TblFieldOfficer::getIdTypes();  
@@ -412,46 +442,57 @@ class FieldOfficer extends Component
         if($foid != '') {
             $officer = TblFieldOfficer::getFieldOfficerByFOID($this->foid);
 
-            $this->officer['fname'] =  $officer->Fname;
-            $this->officer['mname'] =  $officer->Mname;
-            $this->officer['lname'] =  $officer->Lname;
-            $this->officer['suffix'] =  $officer->Suffix;
-            $this->officer['gender'] =  $officer->Gender;
-            $this->officer['dob'] =  $officer->DOB->format('Y-m-d');
-            $this->officer['age'] =  $officer->Age;
-            $this->officer['pob'] =  $officer->POB;            
-            $this->officer['civilStatus'] =  $officer->CivilStatus;
-            $this->officer['cno'] =  $officer->Cno;
-            $this->officer['emailAddress'] =  $officer->EmailAddress;
+            $this->officer['Id'] =  $officer->Id;
+            $this->officer['Fname'] =  $officer->Fname;
+            $this->officer['Mname'] =  $officer->Mname;
+            $this->officer['Lname'] =  $officer->Lname;
+            $this->officer['Suffix'] =  $officer->Suffix;
+            $this->officer['Gender'] =  $officer->Gender;
+            $this->officer['DOB'] =  $officer->DOB->format('Y-m-d');
+            $this->officer['Age'] =  $officer->Age;
+            $this->officer['POB'] =  $officer->POB;            
+            $this->officer['CivilStatus'] =  $officer->CivilStatus;
+            $this->officer['Cno'] =  $officer->Cno;
+            $this->officer['EmailAddress'] =  $officer->EmailAddress;
 
-            $this->officer['houseNo'] =  $officer->HouseNo;
-            $this->officer['barangay'] =  $officer->Barangay;
-            $this->officer['emailAddress'] =  $officer->EmailAddress;
-            $this->officer['city'] =  $officer->City;
-            $this->officer['region'] =  $officer->Region;
-            $this->officer['country'] =  $officer->Country;
-            $this->officer['status'] =  $officer->Status;
-            $this->officer['sss'] =  $officer->SSS;
-            $this->officer['pagIbig'] =  $officer->PagIbig;
-            $this->officer['philHealth'] =  $officer->PhilHealth;
-            $this->officer['idNum'] =  $officer->ID_Number;
-            $this->officer['typeID'] =  $officer->IDType; 
+            $this->officer['HouseNo'] =  $officer->HouseNo;
+            $this->officer['Barangay'] =  $officer->Barangay;
+            $this->officer['City'] =  $officer->City;
+            $this->officer['Region'] =  $officer->Region;
+            $this->officer['Country'] =  $officer->Country;
 
-            $this->officer['profile'] = $officer->ProfilePath;
-            $this->officer['old_profile'] = $officer->ProfilePath;
-            $this->officer['attachments'] = $officer->files;       
-            $this->officer['old_attachments'] = $officer->files;    
+            $this->officer['Status'] =  $officer->Status;
+            $this->officer['DateCreated'] =  $officer->DateCreated;
+            $this->officer['DateUpdated'] =  $officer->DateUpdated;
+            $this->officer['FOID'] =  $officer->FOID;
+            $this->officer['Profile'] = basename($officer->ProfilePath);
+            $this->officer['Old_Profile'] = basename($officer->ProfilePath);
+            $this->officer['Attachments'] = $officer->files->map(function($file) {
+                return [
+                    'FilePath' => $file->FilePath,
+                    'FileType' => $file->FileType,
+                ];
+            })->toArray();
+            $this->officer['Old_Attachments'] = $this->officer['Attachments'];
             
-            $this->officer['frontID'] = $officer->FrontID_Path;
-            $this->officer['old_frontID'] = $officer->FrontID_Path;
-            $this->officer['backID'] = $officer->BackID_Path;
-            $this->officer['old_backID'] = $officer->BackID_Path;
+            $this->officer['FrontID'] = basename($officer->FrontID_Path);
+            $this->officer['Old_FrontID'] = basename($officer->FrontID_Path);
+            $this->officer['BackID'] = basename($officer->BackID_Path);
+            $this->officer['Old_BackID'] = basename($officer->BackID_Path);
+            $this->officer['ID_Number'] =  $officer->ID_Number;
 
+            $this->officer['SSS'] =  $officer->SSS;
+            $this->officer['TIN'] =  $officer->TIN;
+            $this->officer['PagIbig'] =  $officer->PagIbig;
+            $this->officer['PhilHealth'] =  $officer->PhilHealth;
+            $this->officer['IDType'] =  $officer->IDType; 
+            
 
             $idtypename = isset($this->idtypes[$officer->IDType]) ? $this->idtypes[$officer->IDType] : ''; 
             if($idtypename != ''){   
                 $this->getIdTypeName($idtypename['type']);
             }
+
         }
     }   
 
@@ -461,7 +502,8 @@ class FieldOfficer extends Component
 
     public function render()
     {         
-        //dd( $this->idtypes );
-        return view('livewire.maintenance.field-officer.field-officer');
+        return view('livewire.maintenance.field-officer.field-officer', [
+            'officer' => $this->officer,
+        ]);
     }
 }
