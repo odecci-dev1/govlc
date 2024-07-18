@@ -28,6 +28,7 @@ use App\Models\FileUpload;
 use App\Models\CoMaker;
 use App\Models\CoMakerFileUpload;
 use App\Models\CoMakerJobInfo;
+use App\Models\LoanType;
 
 class CreateApplication extends Component
 {
@@ -774,7 +775,7 @@ class CreateApplication extends Component
             $famback->DateCreated = Carbon::now();
             $famback->DateUpdated = Carbon::now();          
             $famback->save();
-
+         
             if(count( $this->businfo) > 0){
                 foreach($this->businfo as $key => $value){
                     $businfo = new BusinessInformation();
@@ -793,13 +794,18 @@ class CreateApplication extends Component
                     $businfo->MemId = $mem->id;
                     $businfo->save();
 
-                    $busfile = new BusinessFileUpload();
-                    $busfile->BIID = $businfo->id;
-                    $busfile->FileName = $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] );
-                    $busfile->FilePath = $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] );
-                    $busfile->Status = 1;
-                    $busfile->DateCreated = Carbon::now();
-                    $busfile->save();                             
+                    $busattach = $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments']);                   
+                    if(count($busattach) > 0){
+                        foreach($busattach as $mbusattach){
+                            $busfile = new BusinessFileUpload();
+                            $busfile->BIID = $businfo->id;
+                            $busfile->FileName = $mbusattach['fileName'];
+                            $busfile->FilePath = $mbusattach['fileName'];
+                            $busfile->Status = 1;                                     
+                            $busfile->DateCreated = Carbon::now();                   
+                            $busfile->save();             
+                        }
+                    }                                 
                 }
             }
           
@@ -993,22 +999,7 @@ class CreateApplication extends Component
             //$app->DateApproval = null;
             $app->Remarks = '';           
             $app->Status = $type == 1 ? 7 : 8;
-            // $app->CI_ApprovedBy = null;            
-            // $app->CI_ApprovalDate = null;
-            // $app->ReleasingDate = null;
-            // $app->DeclineDate = null;
-            // $app->DeclinedBy = null;
-            // $app->App_ApprovedBy_1 = null;
-            // $app->App_ApprovalDate_1 = null;
-            // $app->App_ApprovedBy_2 = null;
-            // $app->App_ApprovalDate_2 = null;
-            // $app->App_Note = null;
-            // $app->App_Notedby = null;
-            // $app->App_NotedDate = null;
             $app->CreatedBy = session()->get('auth_userid');
-            // $app->SubmittedBy = null;
-            // $app->DateSubmitted = null;
-            // $app->ReleasedBy = null;
             $app->save();
 
             $loand = new LoanDetails();
@@ -1025,6 +1016,7 @@ class CreateApplication extends Component
             DB::commit();   
 
             $getnaid = Application::where('id', $app->id)->select('NAID')->first();
+            //dd($getnaid);
             $this->resetValidation();         
             return redirect()->to('/tranactions/application/view/'.$getnaid->NAID)->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
 
@@ -1969,7 +1961,10 @@ class CreateApplication extends Component
         $this->member['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';  
         $this->renderProvince();    
         if($this->type == 'create'){       
-                               
+                $getloantype = LoanType::where('LoanTypeID', $request->loanTypeID)->first(); 
+                if($getloantype){
+                    $this->loanDetails['loanTypeID'] = $getloantype->Id; 
+                }
                 $this->loanDetails['loanTypeID'] = $request->loanTypeID;  
                 $this->loanDetails['loanTypeName'] = $request->loanTypeName;    
                 $this->loanDetails['loantermsID'] = $request->loantermsID; 
@@ -2344,15 +2339,17 @@ class CreateApplication extends Component
                 //dd($data['individualLoan']);
                 
                 if($this->type == 'view'){       
-          
-                    $this->loanDetails['loanTypeID'] = $res->detail['LoanTypeID'];
-                    $this->loanDetails['loanTypeName'] = $res->loantype['LoanTypeName'];
-                    $this->loanDetails['loantermsID'] = $res->detail['LoanTypeName']; 
-                    $this->loanDetails['loantermsName'] = $res->termsofpayment['NameOfTerms']; 
+                    $details = $res->detail;
+                    $loantype = $res->loantype;
+                    $termsofpayment = $res->termsofpayment;
+                    $this->loanDetails['loanTypeID'] = $details['LoanTypeID'];
+                    $this->loanDetails['loanTypeName'] = $loantype['LoanTypeName'];
+                    $this->loanDetails['loantermsID'] = $details['LoanTypeName']; 
+                    $this->loanDetails['loantermsName'] = $termsofpayment['NameOfTerms']; 
 
-                    $this->loanDetails['loanType'] = $res->loantype['LoanTypeName'];                  
-                    $this->loanDetails['loanAmount'] = in_array($res->Status, [7,8,9]) ? ($res->detail->LoanAmount ??= 0) : $res->detail->ApprovedLoanAmount;
-                    $this->loanDetails['purpose'] = $res->detail->Purpose;
+                    $this->loanDetails['loanType'] = $loantype['LoanTypeName'];                  
+                    $this->loanDetails['loanAmount'] = in_array($res->Status, [7,8,9]) ? ($details->LoanAmount ??= 0) : $details->ApprovedLoanAmount;
+                    $this->loanDetails['purpose'] = $details->Purpose;
                     //$this->loanDetails['terms'] = $data['termsOfPayment']; //$data['individualLoan'][0]['terms'];
                                     
                     $this->loanDetails['noofnopayment'] = 0; 
@@ -2367,15 +2364,15 @@ class CreateApplication extends Component
                     $ciuserid = null; //isset($data['individualLoan'][0]['cI_ApprovedBy']) ? $data['individualLoan'][0]['cI_ApprovedBy'] : '';                
                     $this->loanDetails['approvedBy'] = $this->getUserName($ciuserid);                                                           
                     $this->loanDetails['notes'] = $res->App_Note; 
-                    $this->loanDetails['ldid'] = $res->detail->LDID;
-                    $this->loanDetails['topId'] = $res->detail->TermsOfPayment;  
+                    $this->loanDetails['ldid'] = $details->LDID;
+                    $this->loanDetails['topId'] = $details->TermsOfPayment;  
 
-                    $this->loanDetails['modeOfRelease'] = $res->detail->ModeOfRelease;
-                    $this->loanDetails['denomination'] = $res->detail->Denomination;
-                    $this->loanDetails['courier'] = $res->detail->Courerier;
-                    $this->loanDetails['courieremployee'] = $res->detail->CourerierName;
-                    $this->loanDetails['courierclient'] = $res->detail->CourerierName;
-                    $this->loanDetails['couriercno'] = $res->detail->CourierCNo;
+                    $this->loanDetails['modeOfRelease'] = $details->ModeOfRelease;
+                    $this->loanDetails['denomination'] = $details->Denomination;
+                    $this->loanDetails['courier'] = $details->Courerier;
+                    $this->loanDetails['courieremployee'] = $details->CourerierName;
+                    $this->loanDetails['courierclient'] = $details->CourerierName;
+                    $this->loanDetails['couriercno'] = $details->CourierCNo;
 
                     $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loanDetails['loanTypeID']]);                                    
                     $loanterms = $loanterms->json();
@@ -2406,11 +2403,11 @@ class CreateApplication extends Component
                     $this->loanDetails['remarks'] = $res->Remarks;
                     $this->loanDetails['ci_time'] = $this->calculateTimeDifference($res->DateCreated, Carbon::now());                                       
                 }
-                
+                $member = $res->member;
                 $this->member['attachments'] = [];
                 $this->member['profile'] = '';
                 $this->member['signature'] = '';
-                $memfiles = $res->member->fileuploads;
+                $memfiles = $member->fileuploads;
                 if($memfiles){
                     foreach($memfiles as $memfile){
                         if($memfile->Type == 1){
@@ -2429,13 +2426,13 @@ class CreateApplication extends Component
                 }                
                 //images and files
 
-                $comakerdtl = $res->member->comaker;
+                $comaker = $member->comaker;
                 //dito
                 //$cofiles = $data['co_Files'];         
                 $this->comaker['attachments'] = [];
                 $this->comaker['profile'] = '';
                 $this->comaker['signature'] = '';
-                $cofiles = $comakerdtl->fileuploads;              
+                $cofiles = $comaker->fileuploads;              
                 if($cofiles){
                     foreach($cofiles as $cofile){
                         if($cofile->Type == 1){
@@ -2455,48 +2452,50 @@ class CreateApplication extends Component
                 
                 //images and files
             
-                $this->member['fname'] = $res->member->Fname;  
-                $this->member['lname'] = $res->member->Lname;
-                $this->member['mname'] = $res->member->Mname;
-                $this->member['suffix'] = $res->member->Suffix; 
-                $this->member['age'] = $res->member->Age;         
-                $this->member['barangay'] = $res->member->Barangay;  
+                $this->member['fname'] = $member->Fname;  
+                $this->member['lname'] = $member->Lname;
+                $this->member['mname'] = $member->Mname;
+                $this->member['suffix'] = $member->Suffix; 
+                $this->member['age'] = $member->Age;         
+                $this->member['barangay'] = $member->Barangay;  
                 if($this->member['statusID'] != 7){                 
-                    $this->barangays->put(1, ['brgyDesc' => $res->member->Barangay]);        
+                    $this->barangays->put(1, ['brgyDesc' => $member->Barangay]);        
                 }
-                $this->member['city'] = $res->member->City;   
+                $this->member['city'] = $member->City;   
                 if($this->member['statusID'] != 7){                
-                    $this->cities->put(1, ['citymunDesc' => $res->member->City]);          
+                    $this->cities->put(1, ['citymunDesc' => $member->City]);          
                 }                           
-                $this->member['civil_Status'] = $res->member->Civil_Status;  
-                $this->member['cno'] = $res->member->Cno; 
-                $this->member['country'] = $res->member->Country; 
-                $this->member['dob'] = date('Y-m-d', strtotime($res->member->DOB));
-                $this->member['emailAddress'] = $res->member->EmailAddress; 
-                $this->member['gender'] = $res->member->Gender;
-                $this->member['houseNo'] = $res->member->HouseNo;
-                $this->member['house_Stats'] = $res->member->House_Stats;          
-                $this->member['pob'] = $res->member->POB;
-                $this->member['province'] = $res->member->Province; 
+                $this->member['civil_Status'] = $member->Civil_Status;  
+                $this->member['cno'] = $member->Cno; 
+                $this->member['country'] = $member->Country; 
+                $this->member['dob'] = date('Y-m-d', strtotime($member->DOB));
+                $this->member['emailAddress'] = $member->EmailAddress; 
+                $this->member['gender'] = $member->Gender;
+                $this->member['houseNo'] = $member->HouseNo;
+                $this->member['house_Stats'] = $member->House_Stats;          
+                $this->member['pob'] = $member->POB;
+                $this->member['province'] = $member->Province; 
                 if($this->member['statusID'] != 7){                   
-                    $this->provinces->put(1, ['provDesc' => $res->member->Province]);                  
+                    $this->provinces->put(1, ['provDesc' => $member->Province]);                  
                 }           
-                $memfambackground = $res->member->familybackground;
-                $this->member['yearsStay'] = $res->member->YearsStay;
-                $this->member['zipCode'] = $res->member->ZipCode;
-                $this->member['status'] = $res->member->Status;              
-                $this->member['electricBill'] = $res->member->monthlybills->ElectricBill; 
-                $this->member['waterBill'] = $res->member->monthlybills->WaterBill; 
-                $this->member['otherBills'] = $res->member->monthlybills->OtherBills; 
-                $this->member['dailyExpenses'] = $res->member->monthlybills->DailyExpenses; 
-                $this->member['jobDescription'] = $res->member->jobinfo->JobDescription; 
-                $this->member['yos'] = $res->member->jobinfo->YOS; 
-                $this->member['monthlySalary'] = $res->member->jobinfo->MonthlySalary;
-                $this->member['otherSOC'] = $res->member->jobinfo->OtherSOC;
-                $this->member['bO_Status'] = $res->member->jobinfo->BO_Status;           
-                $this->member['companyName'] = $res->member->jobinfo->CompanyName;
-                $this->member['companyAddress'] = $res->member->jobinfo->CompanyAddress;
-                $this->member['emp_Status'] = $res->member->jobinfo->Emp_Status; 
+                $memfambackground = $member->familybackground;
+                $monthlybills = $member->monthlybills;
+                $jobinfo = $member->jobinfo;
+                $this->member['yearsStay'] = $member->YearsStay;
+                $this->member['zipCode'] = $member->ZipCode;
+                $this->member['status'] = $member->Status;              
+                $this->member['electricBill'] = $monthlybills->ElectricBill; 
+                $this->member['waterBill'] = $monthlybills->WaterBill; 
+                $this->member['otherBills'] = $monthlybills->OtherBills; 
+                $this->member['dailyExpenses'] = $monthlybills->DailyExpenses; 
+                $this->member['jobDescription'] = $jobinfo->JobDescription; 
+                $this->member['yos'] = $jobinfo->YOS; 
+                $this->member['monthlySalary'] = $jobinfo->MonthlySalary;
+                $this->member['otherSOC'] = $jobinfo->OtherSOC;
+                $this->member['bO_Status'] = $jobinfo->BO_Status;           
+                $this->member['companyName'] = $jobinfo->CompanyName;
+                $this->member['companyAddress'] = $jobinfo->CompanyAddress;
+                $this->member['emp_Status'] = $jobinfo->Emp_Status; 
                 $this->member['f_Fname'] = $memfambackground->Fname; 
                 $this->member['f_Lname'] = $memfambackground->Lname;
                 $this->member['f_Mname'] = $memfambackground->Mname;
@@ -2511,147 +2510,148 @@ class CreateApplication extends Component
                 $this->member['f_RTTB'] = $memfambackground->RTTB;
                 $this->member['famId'] = $memfambackground->FamId;               
                 if($this->type == 'view'){
-                    $this->member['loanAmount'] = $res->detail->LoanAmount; //$data['loanAmount'];  cant find in api
-                    $this->member['termsOfPayment'] = $res->detail->termsofpayment->NameOfTerms;//$data['individualLoan'][0]['nameOfTerms'];
-                    $this->member['purpose'] = $res->detail->Purpose; 
+                    $this->member['loanAmount'] = $details->LoanAmount; //$data['loanAmount'];  cant find in api
+                    $this->member['termsOfPayment'] = $details->termsofpayment->NameOfTerms;//$data['individualLoan'][0]['nameOfTerms'];
+                    $this->member['purpose'] = $details->Purpose; 
                 }               
                
-                $this->comaker['co_Fname'] = $comakerdtl->Fname; 
-                $this->comaker['co_Lname'] = $comakerdtl->Lnam;
-                $this->comaker['co_Mname'] = $comakerdtl->Mname;
-                $this->comaker['co_Suffix'] = $comakerdtl->Suffi; 
-                $this->comaker['co_Age'] = $comakerdtl->Age;
-                $this->comaker['co_Barangay'] = $comakerdtl->Fname; 
-                $this->comaker['co_City'] = $comakerdtl->City; 
-                $this->comaker['co_Civil_Status'] = $comakerdtl->CivilStatus;
-                $this->comaker['co_Cno'] = $comakerdtl->Cno;
-                $this->comaker['co_Country'] = $comakerdtl->Country; 
-                $this->comaker['co_DOB'] = $comakerdtl->DOB;
-                $this->comaker['co_EmailAddress'] = $comakerdtl->EmailAddress;
-                $this->comaker['co_Gender'] = $comakerdtl->Gender;
-                $this->comaker['co_HouseNo'] = $comakerdtl->HouseNo;
-                $this->comaker['co_House_Stats'] = $comakerdtl->House_Stats; 
-                $this->comaker['co_POB'] = $comakerdtl->POB;
-                $this->comaker['co_Province'] = $comakerdtl->Province;
+                $this->comaker['co_Fname'] = $comaker->Fname; 
+                $this->comaker['co_Lname'] = $comaker->Lnam;
+                $this->comaker['co_Mname'] = $comaker->Mname;
+                $this->comaker['co_Suffix'] = $comaker->Suffi; 
+                $this->comaker['co_Age'] = $comaker->Age;
+                $this->comaker['co_Barangay'] = $comaker->Barangay; 
+                $this->comaker['co_City'] = $comaker->City; 
+                $this->comaker['co_Civil_Status'] = $comaker->CivilStatus;
+                $this->comaker['co_Cno'] = $comaker->Cno;
+                $this->comaker['co_Country'] = $comaker->Country; 
+                $this->comaker['co_DOB'] = $comaker->DOB;
+                $this->comaker['co_EmailAddress'] = $comaker->EmailAddress;
+                $this->comaker['co_Gender'] = $comaker->Gender;
+                $this->comaker['co_HouseNo'] = $comaker->HouseNo;
+                $this->comaker['co_House_Stats'] = $comaker->House_Stats; 
+                $this->comaker['co_POB'] = $comaker->POB;
+                $this->comaker['co_Province'] = $comaker->Province;
                 
                 if($this->member['statusID'] != 7){                  
-                    $this->cobarangays->put(1, ['brgyDesc' => $data['co_Barangay']]);        
+                    $this->cobarangays->put(1, ['brgyDesc' => $comaker->Barangay]);        
                 }
-                $this->member['city'] = $data['city'];   
+               
                 if($this->member['statusID'] != 7){                 
-                    $this->cocities->put(1, ['citymunDesc' => $data['co_City']]);    
+                    $this->cocities->put(1, ['citymunDesc' => $comaker->City]);    
                 }            
                 if($this->member['statusID'] != 7){                   
-                    $this->coprovinces->put(1, ['provDesc' => $data['co_Province']]);    
+                    $this->coprovinces->put(1, ['provDesc' => $comaker->Province]);    
                 } 
-                $this->comaker['co_YearsStay'] = $data['co_YearsStay']; 
-                $this->comaker['co_ZipCode'] = $data['co_ZipCode']; 
-                $this->comaker['co_RTTB'] = $data['co_RTTB']; 
-                $this->comaker['co_Status'] = ''; 
-                $this->comaker['co_JobDescription'] = $data['co_JobDescription']; 
-                $this->comaker['co_YOS'] = $data['coj_YOS'];  
-                $this->comaker['co_MonthlySalary'] = $data['co_MonthlySalary']; 
-                $this->comaker['co_OtherSOC'] = $data['co_OtherSOC']; 
-                $this->comaker['co_BO_Status'] = $data['co_BO_Status'] == "True" ? 1 : 0; 
-                $this->comaker['co_CompanyName'] = $data['co_CompanyName']; 
-                $this->comaker['co_CompanyID'] = $data['co_CompanyAddress']; 
-                $this->comaker['co_Emp_Status'] = $data['co_Emp_Status'];                
+                $this->comaker['co_YearsStay'] = $comaker->YearsStay; 
+                $this->comaker['co_ZipCode'] = $comaker->ZipCode; 
+                $this->comaker['co_RTTB'] = $comaker->RTTB; 
+                $this->comaker['co_Status'] = $comaker->Status; 
+
+                $cojobinfo = $comaker->jobinfo;               
+                $this->comaker['co_JobDescription'] = $cojobinfo->JobDescription; 
+                $this->comaker['co_YOS'] = $cojobinfo->YOS;  
+                $this->comaker['co_MonthlySalary'] = $cojobinfo->MonthlySalary; 
+                $this->comaker['co_OtherSOC'] = $cojobinfo->OtherSOC; 
+                $this->comaker['co_BO_Status'] = $cojobinfo->BO_Status; 
+                $this->comaker['co_CompanyName'] = $cojobinfo->CompanyName; 
+                $this->comaker['co_CompanyID'] = $cojobinfo->CompanyAddress; 
+                $this->comaker['co_Emp_Status'] = $cojobinfo->Emp_Status;                
                 //dd($data);
                 // $this->cntmemchild
                 
-                $child = $data['child'];              
-                if(count($child) > 0){
-                    $this->cntmemchild = [];
-                    $cntchild = 0;
-                    foreach($child as $mchild){     
-                        $cntchild = $cntchild + 1;               
-                        $this->cntmemchild[] = $cntchild;
-                        $this->inpchild['fname'.$cntchild] = $mchild['fname'];   
-                        $this->inpchild['mname'.$cntchild] = $mchild['mname'];                             
-                        $this->inpchild['lname'.$cntchild] = $mchild['lname'];  
-                        $this->inpchild['age'.$cntchild] = $mchild['age'];    
-                        $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
-                    }                   
-                }                                   
+                // $child = $data['child'];              
+                // if(count($child) > 0){
+                //     $this->cntmemchild = [];
+                //     $cntchild = 0;
+                //     foreach($child as $mchild){     
+                //         $cntchild = $cntchild + 1;               
+                //         $this->cntmemchild[] = $cntchild;
+                //         $this->inpchild['fname'.$cntchild] = $mchild['fname'];   
+                //         $this->inpchild['mname'.$cntchild] = $mchild['mname'];                             
+                //         $this->inpchild['lname'.$cntchild] = $mchild['lname'];  
+                //         $this->inpchild['age'.$cntchild] = $mchild['age'];    
+                //         $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
+                //     }                   
+                // }                                   
 
-                $businessInfo = $data['business'];   
-                //dd($businessInfo);
-                if(count($businessInfo)>0){
-                    $cntbusinfo = 0;                  
-                    foreach($businessInfo as $businfo){
-                        $cntbusinfo = $cntbusinfo + 1;
-                        $this->businfo[$cntbusinfo] = [ 
-                                                        'businessName' => $businfo['businessName'],
-                                                        'businessType' => $businfo['businessType'],
-                                                        'businessAddress' => $businfo['businessAddress'],                                   
-                                                        'b_status' => $businfo['b_statusID'],
-                                                        'yob' => $businfo['yob'],
-                                                        'noe' => $businfo['noe'],
-                                                        'salary' => $businfo['salary'],
-                                                        'vos' => $businfo['vos'],
-                                                        'aos' => $businfo['aos'],
-                                                        'attachments' => $businfo['businessFiles'],
-                                                        'old_attachments' => $businfo['businessFiles'],
-                                                      ];    
-                    }
-                }
+                // $businessInfo = $data['business'];   
+                // //dd($businessInfo);
+                // if(count($businessInfo)>0){
+                //     $cntbusinfo = 0;                  
+                //     foreach($businessInfo as $businfo){
+                //         $cntbusinfo = $cntbusinfo + 1;
+                //         $this->businfo[$cntbusinfo] = [ 
+                //                                         'businessName' => $businfo['businessName'],
+                //                                         'businessType' => $businfo['businessType'],
+                //                                         'businessAddress' => $businfo['businessAddress'],                                   
+                //                                         'b_status' => $businfo['b_statusID'],
+                //                                         'yob' => $businfo['yob'],
+                //                                         'noe' => $businfo['noe'],
+                //                                         'salary' => $businfo['salary'],
+                //                                         'vos' => $businfo['vos'],
+                //                                         'aos' => $businfo['aos'],
+                //                                         'attachments' => $businfo['businessFiles'],
+                //                                         'old_attachments' => $businfo['businessFiles'],
+                //                                       ];    
+                //     }
+                // }
               
-                $motors= $data['assets'];
-                if(count($motors) > 0){
-                    $this->hasvehicle = 1;
-                    $motorscnt = 0;
-                    foreach($motors as $mmotors){
-                        $motorscnt = $motorscnt + 1;
-                        $this->vehicle[$motorscnt] = [ 'vehicle' => $mmotors['motorVehicles'] ];  
-                        $this->inpvehicle['vehicle'.$motorscnt] = $mmotors['motorVehicles'];                       
-                    }
-                }
-                else{
-                    $this->hasvehicle = 0;
-                }
+                // $motors= $data['assets'];
+                // if(count($motors) > 0){
+                //     $this->hasvehicle = 1;
+                //     $motorscnt = 0;
+                //     foreach($motors as $mmotors){
+                //         $motorscnt = $motorscnt + 1;
+                //         $this->vehicle[$motorscnt] = [ 'vehicle' => $mmotors['motorVehicles'] ];  
+                //         $this->inpvehicle['vehicle'.$motorscnt] = $mmotors['motorVehicles'];                       
+                //     }
+                // }
+                // else{
+                //     $this->hasvehicle = 0;
+                // }
                  
-                $properties= $data['property'];
-                if(count($properties) > 0){
-                    $this->hasproperties = 1;
-                    $propertiescnt = 0;
-                    foreach($properties as $mproperties){
-                        $propertiescnt = $propertiescnt + 1;
-                        $this->properties[$propertiescnt] = [ 'property' => $mproperties['property'] ];  
-                        $this->inpproperties['property'.$propertiescnt] = $mproperties['property'];                       
-                    }
-                }       
-                else{
-                    $this->hasproperties = 0;
-                }           
+                // $properties= $data['property'];
+                // if(count($properties) > 0){
+                //     $this->hasproperties = 1;
+                //     $propertiescnt = 0;
+                //     foreach($properties as $mproperties){
+                //         $propertiescnt = $propertiescnt + 1;
+                //         $this->properties[$propertiescnt] = [ 'property' => $mproperties['property'] ];  
+                //         $this->inpproperties['property'.$propertiescnt] = $mproperties['property'];                       
+                //     }
+                // }       
+                // else{
+                //     $this->hasproperties = 0;
+                // }           
 
-                $appliances= $data['appliances'];
-                //dd($appliances);
-                if(count($appliances) > 0){                   
-                    $appliancescnt = 0;
-                    foreach($appliances as $mappliances){
-                        $appliancescnt = $appliancescnt + 1;
-                        $this->appliances[$appliancescnt] = [ 'appliance' => $mappliances['appliances'], 'brand' => $mappliances['brand'] ];  
-                        $this->inpappliances['appliance'.$appliancescnt] = $mappliances['appliances'];   
-                        $this->inpappliances['brand'.$appliancescnt] = $mappliances['brand'];                        
-                    }
-                }   
+                // $appliances= $data['appliances'];               
+                // if(count($appliances) > 0){                   
+                //     $appliancescnt = 0;
+                //     foreach($appliances as $mappliances){
+                //         $appliancescnt = $appliancescnt + 1;
+                //         $this->appliances[$appliancescnt] = [ 'appliance' => $mappliances['appliances'], 'brand' => $mappliances['brand'] ];  
+                //         $this->inpappliances['appliance'.$appliancescnt] = $mappliances['appliances'];   
+                //         $this->inpappliances['brand'.$appliancescnt] = $mappliances['brand'];                        
+                //     }
+                // }   
 
-                $bank= $data['bank'];
-                if(count($bank) > 0){                   
-                    $bankcnt = 0;
-                    foreach($bank as $mbank){
-                        $bankcnt = $bankcnt + 1;
-                        $this->bank[$bankcnt] = [ 'account' => $mbank['bankName'], 'address' => $mbank['address'] ];  
-                        $this->inpbank['account'.$bankcnt] = $mbank['bankName'];   
-                        $this->inpbank['address'.$bankcnt] = $mbank['address'];                        
-                    }
-                }   
-                if($this->member['statusID'] == 7){
-                    $this->renderCity();
-                    $this->renderBarangay();
-                    $this->renderCoCity();
-                    $this->renderCoBarangay();
-                }
+                // $bank= $data['bank'];
+                // if(count($bank) > 0){                   
+                //     $bankcnt = 0;
+                //     foreach($bank as $mbank){
+                //         $bankcnt = $bankcnt + 1;
+                //         $this->bank[$bankcnt] = [ 'account' => $mbank['bankName'], 'address' => $mbank['address'] ];  
+                //         $this->inpbank['account'.$bankcnt] = $mbank['bankName'];   
+                //         $this->inpbank['address'.$bankcnt] = $mbank['address'];                        
+                //     }
+                // }   
+                // if($this->member['statusID'] == 7){
+                //     $this->renderCity();
+                //     $this->renderBarangay();
+                //     $this->renderCoCity();
+                //     $this->renderCoBarangay();
+                // }
               
             }
         }
@@ -2758,8 +2758,7 @@ class CreateApplication extends Component
                 // $this->comaker['co_Emp_Status'] = '1'; 
                 // $this->comaker['remarks'] = ''; 
             //}
-            $sessloandetails = session('sessloandetails') !==null ? session('sessloandetails') : null; 
-            //dd(  $sessloandetails);
+            $sessloandetails = session('sessloandetails') !==null ? session('sessloandetails') : null;            
             $this->member['loanAmount'] = isset($sessloandetails['loamamount']) ? $sessloandetails['loamamount'] : '';
             $this->member['termsOfPayment'] = isset($sessloandetails['paymentterms']) ? $sessloandetails['paymentterms'] : '';
             $this->member['purpose'] = isset($sessloandetails['purpose']) ? $sessloandetails['purpose'] : '';
