@@ -2,6 +2,8 @@
 
 namespace App\Http\Livewire\Maintenance\LoanTypes;
 
+use App\Models\LoanType;
+use App\Models\TermsOfPayment;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
@@ -20,132 +22,137 @@ class LoanTypes extends Component
     public $formulaList = [];
     public $collectionType = [];
 
-    public function rules(){                
-        $rules = [];   
-        $rules['loantype.loanTypeName'] = ['required'];    
-        $rules['terms'] = ['required'];      
-        $rules['loantype.savings'] = '';  
-        $rules['loantype.loanAmount_Min'] = !empty($this->loantype['loanAmount_Max']) ? ['required'] : '';   
-        $rules['loantype.loanAmount_Max'] = !empty($this->loantype['loanAmount_Min']) ? ['required', 'gte:loantype.loanAmount_Min'] : '';
+    public function rules()
+    {                
+        $rules = [
+            'loantype.loanTypeName' => 'required',
+            'terms' => 'required',
+            'loantype.savings' => '',
+            'loantype.loanAmount_Min' => !empty($this->loantype['loanAmount_Max']) ? ['required'] : '',
+            'loantype.loanAmount_Max' => !empty($this->loantype['loanAmount_Min']) ? ['required', 'gte:loantype.loanAmount_Min'] : '',
+        ];   
         return $rules;
     }
 
 
-    public function messages(){
-        $messages = [];
-        $messages['loantype.loan_amount_Lessthan.required'] = 'Please enter amount';  
-        $messages['loantype.loan_amount_GreaterEqual.required'] = 'Please enter amount';  
-        $messages['loantype.savings.required'] = 'Please enter amount';  
-        $messages['loantype.loanAmount_Min.required'] = 'Please enter amount';  
-        $messages['loantype.loanAmount_Max.required'] = 'Please enter amount';  
-        $messages['loantype.loanAmount_Max.gte'] = 'Max amt must be greter than min amt';  
-        $messages['loantype.loanTypeName.required'] = 'Please enter loan type name';  
-        $messages['loantype.loan_amount_Lessthan_Amount.required'] = 'Please enter amount';  
-        $messages['loantype.lalV_Type.required'] = 'Please enter amount';  
-        $messages['loantype.loan_amount_GreaterEqual_Amount.required'] = 'Please enter amount';    
-        $messages['loantype.lageF_Type.required'] = 'Please enter amount';   
-        $messages['loantype.loanInsurance.required'] = 'Please enter amount';   
-        $messages['loantype.loanI_Type.required'] = 'Please enter amount';    
-        $messages['loantype.lifeInsurance.required'] = 'Please enter amount';  
-        $messages['loantype.lifeI_Type.required'] = 'Please enter amount';  
-        $messages['terms.required'] = 'Please add terms of payment';  
+    public function messages()
+    {
+        $messages = [
+            'loantype.loan_amount_Lessthan.required' => 'Please enter amount',  
+            'loantype.loan_amount_GreaterEqual.required' => 'Please enter amount',  
+            'loantype.savings.required' => 'Please enter amount',  
+            'loantype.loanAmount_Min.required' => 'Please enter amount',  
+            'loantype.loanAmount_Max.required' => 'Please enter amount',  
+            'loantype.loanAmount_Max.gte' => 'Max amt must be greter than min amt',  
+            'loantype.loanTypeName.required' => 'Please enter loan type name',  
+            'loantype.loan_amount_Lessthan_Amount.required' => 'Please enter amount',  
+            'loantype.lalV_Type.required' => 'Please enter amount',  
+            'loantype.loan_amount_GreaterEqual_Amount.required' => 'Please enter amount',    
+            'loantype.lageF_Type.required' => 'Please enter amount',   
+            'loantype.loanInsurance.required' => 'Please enter amount',   
+            'loantype.loanI_Type.required' => 'Please enter amount',    
+            'loantype.lifeInsurance.required' => 'Please enter amount',  
+            'loantype.lifeI_Type.required' => 'Please enter amount',
 
-        $messages['inpterms.nameOfTerms.required'] = 'Name of terms is required.';        
-        $messages['inpterms.terms.required'] = 'Terms is required.';  
-        $messages['inpterms.terms.numeric'] = 'Terms should be a number.';                      
-        $messages['inpterms.interestRate.required'] = 'Interest rate is required.';  
-        $messages['inpterms.interestRate.numeric'] = 'Interest rate should be a number.';  
-        $messages['inpterms.interestType.required'] = 'Interest type is required.';    
-        $messages['inpterms.formula.required'] = 'Select formula from the list.';    
-        $messages['inpterms.collectionTypeId.required'] = 'Select collection type';   
-        $messages['inpterms.interestApplied.required'] = 'Interest applied is required.';    
-        $messages['inpterms.noAdvancePayment.required'] = 'Please select one.';    
-        $messages['inpterms.oldFormula.required'] = 'Please select one.';    
-        $messages['inpterms.notarialFeeOrigin.required'] = 'Notarial fee origin is required.';   
-        $messages['inpterms.lessThanAmountTYpe.required'] = 'Please select one.';   
-        $messages['inpterms.lessThanNotarialAmount.required'] = 'Please enter amount.';  
-        $messages['inpterms.lessThanNotarialAmount.numeric'] = 'Please enter a number.';  
-        $messages['inpterms.greaterThanEqualAmountType.required'] = 'Please select one.';   
-        $messages['inpterms.greaterThanEqualNotarialAmount.required'] = 'Please enter amount.';  
-        $messages['inpterms.greaterThanEqualNotarialAmount.numeric'] = 'Please enter a number.';          
-        $messages['inpterms.loanInsuranceAmountType.required'] = 'Please select one.';   
-        $messages['inpterms.loanInsuranceAmount.required'] = 'Please enter amount.';  
-        $messages['inpterms.loanInsuranceAmount.numeric'] = 'Please enter a number.';          
-        $messages['inpterms.lifeInsuranceAmountType.required'] = 'Please select one.';   
-        $messages['inpterms.lifeInsuranceAmount.required'] = 'Please enter amount.';  
-        $messages['inpterms.lifeInsuranceAmount.numeric'] = 'Please enter a number.'; 
-        $messages['inpterms.deductInterest.required'] = 'Please select one.'; 
+            'terms.required' => 'Please add terms of payment', 
 
+            'inpterms.nameOfTerms.required' => 'Name of terms is required.',        
+            'inpterms.terms.required' => 'Terms is required.',  
+            'inpterms.terms.numeric' => 'Terms should be a number.',                      
+            'inpterms.interestRate.required' => 'Interest rate is required.',  
+            'inpterms.interestRate.numeric' => 'Interest rate should be a number.',  
+            'inpterms.interestType.required' => 'Interest type is required.',    
+            'inpterms.formula.required' => 'Select formula from the list.',    
+            'inpterms.collectionTypeId.required' => 'Select collection type',   
+            'inpterms.interestApplied.required' => 'Interest applied is required.',    
+            'inpterms.noAdvancePayment.required' => 'Please select one.',    
+            'inpterms.oldFormula.required' => 'Please select one.',    
+            'inpterms.notarialFeeOrigin.required' => 'Notarial fee origin is required.',   
+            'inpterms.lessThanAmountTYpe.required' => 'Please select one.',   
+            'inpterms.lessThanNotarialAmount.required' => 'Please enter amount.',  
+            'inpterms.lessThanNotarialAmount.numeric' => 'Please enter a number.',  
+            'inpterms.greaterThanEqualAmountType.required' => 'Please select one.',   
+            'inpterms.greaterThanEqualNotarialAmount.required' => 'Please enter amount.',  
+            'inpterms.greaterThanEqualNotarialAmount.numeric' => 'Please enter a number.',          
+            'inpterms.loanInsuranceAmountType.required' => 'Please select one.',   
+            'inpterms.loanInsuranceAmount.required' => 'Please enter amount.',  
+            'inpterms.loanInsuranceAmount.numeric' => 'Please enter a number.',          
+            'inpterms.lifeInsuranceAmountType.required' => 'Please select one.',   
+            'inpterms.lifeInsuranceAmount.required' => 'Please enter amount.',  
+            'inpterms.lifeInsuranceAmount.numeric' => 'Please enter a number.', 
+            'inpterms.deductInterest.required' => 'Please select one.', 
+        ];
+        
         return $messages;        
     }
 
-    public function save(){   
+    public function save()
+    {   
         $inputs = $this->validate();
-        //dd($this->terms);
+        dd($this->terms);
         $terms = [];
-        if(count( $this->terms) > 0){
-            foreach($this->terms as $key => $value){ 
+        if(count( $this->terms) > 0) {
+            foreach($this->terms as $key => $value) { 
 
-                if($this->loantypeID == ''){
-                    $terms[] =  [   'nameOfTerms' => $value['nameOfTerms'], 
-                                    'interestRate' => $value['interestRate'],
-                                    'interestType' => $value['interestType'],
-                                    'loanTypeID' => $this->loantypeID,   
-                                    'formula' => $value['formula'],  
-                                    'interestApplied' => $value['interestApplied'],  
-                                    'terms' => $value['terms'], 
-                                    'oldFormula' => $value['oldFormula'], 
-                                    'noAdvancePayment' => $value['noAdvancePayment'],  
-                                    'notarialFeeOrigin' => $value['notarialFeeOrigin'],  
-                                    'lessThanNotarialAmount' => $value['lessThanNotarialAmount'],  
-                                    'lessThanAmountTYpe' => $value['lessThanAmountTYpe'],  
-                                    'greaterThanEqualNotarialAmount' => $value['greaterThanEqualNotarialAmount'],  
-                                    'greaterThanEqualAmountType' => $value['greaterThanEqualAmountType'],  
-                                    'loanInsuranceAmount' => $value['loanInsuranceAmount'], 
-                                    'loanInsuranceAmountType' => $value['loanInsuranceAmountType'],       
-                                    'lifeInsuranceAmount' => $value['lifeInsuranceAmount'],       
-                                    'lifeInsuranceAmountType' => $value['lifeInsuranceAmountType'],       
-                                    'deductInterest' => $value['deductInterest'], 
-                                    'collectionTypeId' => $value['collectionTypeId'],                                          
-                                ];
-                }
-                else
-                {
-                    $terms[] =  [
-                                'topId' => $value['topId'],          
-                                'nameOfTerms' => $value['nameOfTerms'], 
-                                'interestRate' => $value['interestRate'],
-                                'interestType' => $value['interestType'],
-                                'loanTypeID' => $this->loantypeID,   
-                                'formula' => $value['formula'],  
-                                'interestApplied' => $value['interestApplied'],  
-                                'terms' => $value['terms'], 
-                                'oldFormula' => $value['oldFormula'], 
-                                'noAdvancePayment' => $value['noAdvancePayment'],  
-                                'notarialFeeOrigin' => $value['notarialFeeOrigin'],  
-                                'lessThanNotarialAmount' => $value['lessThanNotarialAmount'],  
-                                'lessThanAmountTYpe' => $value['lessThanAmountTYpe'],  
-                                'greaterThanEqualNotarialAmount' => $value['greaterThanEqualNotarialAmount'],  
-                                'greaterThanEqualAmountType' => $value['greaterThanEqualAmountType'],  
-                                'loanInsuranceAmount' => $value['loanInsuranceAmount'], 
-                                'loanInsuranceAmountType' => $value['loanInsuranceAmountType'],       
-                                'lifeInsuranceAmount' => $value['lifeInsuranceAmount'],       
-                                'lifeInsuranceAmountType' => $value['lifeInsuranceAmountType'],       
-                                'deductInterest' => $value['deductInterest'], 
-                                'collectionTypeId' => $value['collectionTypeId'],                                                                     
-                            ];
+                if($this->loantypeID == '') {
+                    $terms[] = [   
+                        'nameOfTerms' => $value['nameOfTerms'], 
+                        'interestRate' => $value['interestRate'],
+                        'interestType' => $value['interestType'],
+                        'loanTypeID' => $this->loantypeID,   
+                        'formula' => $value['formula'],  
+                        'interestApplied' => $value['interestApplied'],  
+                        'terms' => $value['terms'], 
+                        'oldFormula' => $value['oldFormula'], 
+                        'noAdvancePayment' => $value['noAdvancePayment'],  
+                        'notarialFeeOrigin' => $value['notarialFeeOrigin'],  
+                        'lessThanNotarialAmount' => $value['lessThanNotarialAmount'],  
+                        'lessThanAmountTYpe' => $value['lessThanAmountTYpe'],  
+                        'greaterThanEqualNotarialAmount' => $value['greaterThanEqualNotarialAmount'],  
+                        'greaterThanEqualAmountType' => $value['greaterThanEqualAmountType'],  
+                        'loanInsuranceAmount' => $value['loanInsuranceAmount'], 
+                        'loanInsuranceAmountType' => $value['loanInsuranceAmountType'],       
+                        'lifeInsuranceAmount' => $value['lifeInsuranceAmount'],       
+                        'lifeInsuranceAmountType' => $value['lifeInsuranceAmountType'],       
+                        'deductInterest' => $value['deductInterest'], 
+                        'collectionTypeId' => $value['collectionTypeId'],                                          
+                    ];
+                } else {
+                    $terms[] = [
+                        'topId' => $value['topId'],          
+                        'nameOfTerms' => $value['nameOfTerms'], 
+                        'interestRate' => $value['interestRate'],
+                        'interestType' => $value['interestType'],
+                        'loanTypeID' => $this->loantypeID,   
+                        'formula' => $value['formula'],  
+                        'interestApplied' => $value['interestApplied'],  
+                        'terms' => $value['terms'], 
+                        'oldFormula' => $value['oldFormula'], 
+                        'noAdvancePayment' => $value['noAdvancePayment'],  
+                        'notarialFeeOrigin' => $value['notarialFeeOrigin'],  
+                        'lessThanNotarialAmount' => $value['lessThanNotarialAmount'],  
+                        'lessThanAmountTYpe' => $value['lessThanAmountTYpe'],  
+                        'greaterThanEqualNotarialAmount' => $value['greaterThanEqualNotarialAmount'],  
+                        'greaterThanEqualAmountType' => $value['greaterThanEqualAmountType'],  
+                        'loanInsuranceAmount' => $value['loanInsuranceAmount'], 
+                        'loanInsuranceAmountType' => $value['loanInsuranceAmountType'],       
+                        'lifeInsuranceAmount' => $value['lifeInsuranceAmount'],       
+                        'lifeInsuranceAmountType' => $value['lifeInsuranceAmountType'],       
+                        'deductInterest' => $value['deductInterest'], 
+                        'collectionTypeId' => $value['collectionTypeId'],                                                                     
+                    ];
                 }            
             }
         }
        
         $data = [
-                    'loanTypeName' =>  $inputs['loantype']['loanTypeName'],
-                    'loanTypeID' => $this->loantypeID,
-                    'savings' =>  isset($inputs['loantype']['savings']) ? $inputs['loantype']['savings'] : 0,
-                    'loanAmount_Min' =>  isset($inputs['loantype']['loanAmount_Min']) ? $inputs['loantype']['loanAmount_Min'] : 0,
-                    'loanAmount_Max' =>  isset($inputs['loantype']['loanAmount_Max']) ? $inputs['loantype']['loanAmount_Max'] : 0,
-                    'terms' => $terms
-                ];
+            'loanTypeName' =>  $inputs['loantype']['loanTypeName'],
+            'loanTypeID' => $this->loantypeID,
+            'savings' =>  isset($inputs['loantype']['savings']) ? $inputs['loantype']['savings'] : 0,
+            'loanAmount_Min' =>  isset($inputs['loantype']['loanAmount_Min']) ? $inputs['loantype']['loanAmount_Min'] : 0,
+            'loanAmount_Max' =>  isset($inputs['loantype']['loanAmount_Max']) ? $inputs['loantype']['loanAmount_Max'] : 0,
+            'terms' => $terms
+        ];
               
         $savemsg = '';
         if($this->loantypeID == ''){
@@ -166,7 +173,8 @@ class LoanTypes extends Component
         return redirect()->to('/maintenance/loantypes/view/' . $this->loantypeID)->with('mmessage', $savemsg);     
     }
     
-    public function addTerms(){
+    public function addTerms()
+    {
         if(isset($this->inpterms['termsKey'])){
             if($this->inpterms['termsKey'] > 0){             
                 $lastcnt = $this->inpterms['termsKey'];
@@ -180,59 +188,60 @@ class LoanTypes extends Component
         }
       
         $data = $this->validate([                                    
-                                    'inpterms.nameOfTerms' => ['required'],
-                                    'inpterms.interestRate' => ['required', 'numeric'],
-                                    'inpterms.interestType' => ['required'],  
-                                    'inpterms.formula' => ['required'],
-                                    'inpterms.interestApplied' => isset($this->inpterms['interestType']) ? ($this->inpterms['interestType'] == 'Custom' ? ['required'] : '') : '',                                                                
-                                    'inpterms.terms' => ['required', 'numeric'],  
-                                    'inpterms.oldFormula' => ['required'],    
-                                    'inpterms.noAdvancePayment' => ['required'],                                      
-                                    'inpterms.collectionTypeId' => ['required'],    
-                                    'inpterms.notarialFeeOrigin' => ['required'],    
-                                    'inpterms.lessThanNotarialAmount' => ['required', 'numeric'],    
-                                    'inpterms.lessThanAmountTYpe' => ['required'], 
-                                    'inpterms.greaterThanEqualNotarialAmount' => ['required', 'numeric'],  
-                                    'inpterms.greaterThanEqualAmountType' => ['required'],  
-                                    'inpterms.loanInsuranceAmount' => ['required', 'numeric'],  
-                                    'inpterms.loanInsuranceAmountType' => ['required'],  
-                                    'inpterms.lifeInsuranceAmount' => ['required', 'numeric'],  
-                                    'inpterms.lifeInsuranceAmountType' => ['required'],
-                                    'inpterms.deductInterest' => ['required'],                                              
-                                ]);
+            'inpterms.nameOfTerms' => ['required'],
+            'inpterms.interestRate' => ['required', 'numeric'],
+            'inpterms.interestType' => ['required'],  
+            'inpterms.formula' => ['required'],
+            'inpterms.interestApplied' => isset($this->inpterms['interestType']) ? ($this->inpterms['interestType'] == 'Custom' ? ['required'] : '') : '',                                                                
+            'inpterms.terms' => ['required', 'numeric'],  
+            'inpterms.oldFormula' => ['required'],    
+            'inpterms.noAdvancePayment' => ['required'],                                      
+            'inpterms.collectionTypeId' => ['required'],    
+            'inpterms.notarialFeeOrigin' => ['required'],    
+            'inpterms.lessThanNotarialAmount' => ['required', 'numeric'],    
+            'inpterms.lessThanAmountTYpe' => ['required'], 
+            'inpterms.greaterThanEqualNotarialAmount' => ['required', 'numeric'],  
+            'inpterms.greaterThanEqualAmountType' => ['required'],  
+            'inpterms.loanInsuranceAmount' => ['required', 'numeric'],  
+            'inpterms.loanInsuranceAmountType' => ['required'],  
+            'inpterms.lifeInsuranceAmount' => ['required', 'numeric'],  
+            'inpterms.lifeInsuranceAmountType' => ['required'],
+            'inpterms.deductInterest' => ['required'],                                              
+        ]);
 
-                               
-
-        $this->terms[$lastcnt] = [  'nameOfTerms' => $data['inpterms']['nameOfTerms'],
-                                    'interestRate' => $data['inpterms']['interestRate'],
-                                    'interestType' => $data['inpterms']['interestType'],                                         
-                                    'formula' => $data['inpterms']['formula'], 
-                                    'interestApplied' => isset($data['inpterms']['interestApplied']) ? $data['inpterms']['interestApplied'] : 0,   
-                                    'terms' => $data['inpterms']['terms'], 
-                                    'oldFormula' => $data['inpterms']['oldFormula'], 
-                                    'noAdvancePayment' => $data['inpterms']['noAdvancePayment'], 
-                                    'notarialFeeOrigin' => isset($data['inpterms']['notarialFeeOrigin']) ? $data['inpterms']['notarialFeeOrigin'] : '', 
-                                    'lessThanNotarialAmount' => isset($data['inpterms']['lessThanNotarialAmount']) ? $data['inpterms']['lessThanNotarialAmount'] : 0, 
-                                    'lessThanAmountTYpe' => isset($data['inpterms']['lessThanAmountTYpe']) ? $data['inpterms']['lessThanAmountTYpe'] : '', 
-                                    'greaterThanEqualNotarialAmount' => isset($data['inpterms']['greaterThanEqualNotarialAmount']) ? $data['inpterms']['greaterThanEqualNotarialAmount'] : 0, 
-                                    'greaterThanEqualAmountType' => isset($data['inpterms']['greaterThanEqualAmountType']) ? $data['inpterms']['greaterThanEqualAmountType'] : '', 
-                                    'loanInsuranceAmount' => isset($data['inpterms']['loanInsuranceAmount']) ? $data['inpterms']['loanInsuranceAmount'] : 0,   
-                                    'loanInsuranceAmountType' => isset($data['inpterms']['loanInsuranceAmountType']) ? $data['inpterms']['loanInsuranceAmountType'] : '',   
-                                    'lifeInsuranceAmount' => isset($data['inpterms']['lifeInsuranceAmount']) ? $data['inpterms']['lifeInsuranceAmount'] : 0, 
-                                    'lifeInsuranceAmountType' => isset($data['inpterms']['lifeInsuranceAmountType']) ? $data['inpterms']['lifeInsuranceAmountType'] : '', 
-                                    'deductInterest' => isset($data['inpterms']['deductInterest']) ? $data['inpterms']['deductInterest'] : 2, 
-                                    'collectionTypeId' => $data['inpterms']['collectionTypeId'],      
-                                    'topId' => isset($this->inpterms['topId']) ? $this->inpterms['topId'] : null,                         
-                                     ];
+        $this->terms[$lastcnt] = [  
+            'nameOfTerms' => $data['inpterms']['nameOfTerms'],
+            'interestRate' => $data['inpterms']['interestRate'],
+            'interestType' => $data['inpterms']['interestType'],                                         
+            'formula' => $data['inpterms']['formula'], 
+            'interestApplied' => isset($data['inpterms']['interestApplied']) ? $data['inpterms']['interestApplied'] : 0,   
+            'terms' => $data['inpterms']['terms'], 
+            'oldFormula' => $data['inpterms']['oldFormula'], 
+            'noAdvancePayment' => $data['inpterms']['noAdvancePayment'], 
+            'notarialFeeOrigin' => isset($data['inpterms']['notarialFeeOrigin']) ? $data['inpterms']['notarialFeeOrigin'] : '', 
+            'lessThanNotarialAmount' => isset($data['inpterms']['lessThanNotarialAmount']) ? $data['inpterms']['lessThanNotarialAmount'] : 0, 
+            'lessThanAmountTYpe' => isset($data['inpterms']['lessThanAmountTYpe']) ? $data['inpterms']['lessThanAmountTYpe'] : '', 
+            'greaterThanEqualNotarialAmount' => isset($data['inpterms']['greaterThanEqualNotarialAmount']) ? $data['inpterms']['greaterThanEqualNotarialAmount'] : 0, 
+            'greaterThanEqualAmountType' => isset($data['inpterms']['greaterThanEqualAmountType']) ? $data['inpterms']['greaterThanEqualAmountType'] : '', 
+            'loanInsuranceAmount' => isset($data['inpterms']['loanInsuranceAmount']) ? $data['inpterms']['loanInsuranceAmount'] : 0,   
+            'loanInsuranceAmountType' => isset($data['inpterms']['loanInsuranceAmountType']) ? $data['inpterms']['loanInsuranceAmountType'] : '',   
+            'lifeInsuranceAmount' => isset($data['inpterms']['lifeInsuranceAmount']) ? $data['inpterms']['lifeInsuranceAmount'] : 0, 
+            'lifeInsuranceAmountType' => isset($data['inpterms']['lifeInsuranceAmountType']) ? $data['inpterms']['lifeInsuranceAmountType'] : '', 
+            'deductInterest' => isset($data['inpterms']['deductInterest']) ? $data['inpterms']['deductInterest'] : 2, 
+            'collectionTypeId' => $data['inpterms']['collectionTypeId'],      
+            'topId' => isset($this->inpterms['topId']) ? $this->inpterms['topId'] : null,                         
+        ];
         //dd($this->terms);                           
         $this->resetterms();                        
     }
 
-    public function removeTerms($key){
+    public function removeTerms($key)
+    {
         unset($this->terms[$key]);
     }
 
-    public function editTerms($key){
+    public function editTerms($key)
+    {
         $inp =  $this->terms[$key];
         $this->inpterms['termsKey'] = $key;
         $this->inpterms['nameOfTerms'] = $inp['nameOfTerms'];
@@ -257,7 +266,8 @@ class LoanTypes extends Component
         $this->inpterms['topId'] = $inp['topId'];
     }
 
-    public function resetterms(){            
+    public function resetterms()
+    {            
         $this->inpterms['termsKey'] = 0;                                                 
         $this->inpterms['nameOfTerms'] = null;
         $this->inpterms['interestRate'] = null;
@@ -281,19 +291,25 @@ class LoanTypes extends Component
         $this->inpterms['topId'] = null;
     }
 
-    public function archive($loantypeID){       
+    public function archive($loantypeID)
+    {       
         $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/DeleteLoanType', [ 'loanTypeID' => $loantypeID ]);                     
         return redirect()->to('/maintenance/loantypes/list')->with('mmessage', 'Loan type has been trashed');    
     }
 
-    public function mount($loanid = ''){
+    public function mount($loanid = '')
+    {
         $this->usertype = session()->get('auth_usertype'); 
         if($loanid != ''){
             $this->loantypeID = $loanid;
+
+            $loantype = LoanType::where('LoanTypeID', $loanid)->first();
+            $termsofPayment = TermsOfPayment::where('LoanTypeId', $loanid)->first();
+            
             $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/LoanTypeFilter', ['loanTypeID' => $this->loantypeID]);            
             $data = $data->json();
             $data = $data[0];
-            // dd($data);
+            dd($loantype, $termsofPayment, $data);
 
             $this->loantype['loan_amount_Lessthan'] = $data['loan_amount_Lessthan'];
             $this->loantype['loan_amount_GreaterEqual'] = $data['loan_amount_GreaterEqual'];
@@ -317,28 +333,29 @@ class LoanTypes extends Component
             if( $termsofPayment ){
                 foreach($termsofPayment as $termsofPayment){
                     $cnt = $cnt + 1;                                                    
-                    $this->terms[$cnt] = [  'nameOfTerms' => $termsofPayment['nameOfTerms'],
-                                            'interestRate' => $termsofPayment['interestRate'],
-                                            'interestType' => $termsofPayment['iR_Type'],                                         
-                                            'loanTypeID' => $this->loantypeID,                                           
-                                            'formula' => $termsofPayment['formulaID'],
-                                            'interestApplied' => $termsofPayment['interestApplied'],
-                                            'terms' => $termsofPayment['terms'],
-                                            'oldFormula' => $termsofPayment['oldFormula'],
-                                            'noAdvancePayment' => $termsofPayment['noAdvancePayment'],
-                                            'notarialFeeOrigin' => $termsofPayment['notarialFeeOrigin'],
-                                            'lessThanNotarialAmount' => $termsofPayment['lessThanNotarialAmount'],
-                                            'lessThanAmountTYpe' => $termsofPayment['lalV_TypeID'],
-                                            'greaterThanEqualNotarialAmount' => $termsofPayment['greaterThanEqualNotarialAmount'],
-                                            'greaterThanEqualAmountType' => $termsofPayment['lageF_TypeID'],
-                                            'loanInsuranceAmount' => $termsofPayment['loanInsuranceAmount'],
-                                            'loanInsuranceAmountType' => $termsofPayment['loanI_TypeID'],
-                                            'lifeInsuranceAmount' => $termsofPayment['lifeInsuranceAmount'],
-                                            'lifeInsuranceAmountType' => $termsofPayment['lifeI_TypeID'],
-                                            'deductInterest' => $termsofPayment['deductInterest'],
-                                            'collectionTypeId' => $termsofPayment['typeOfCollectionID'],
-                                            'topId' => $termsofPayment['topId'],
-                                         ];
+                    $this->terms[$cnt] = [  
+                        'nameOfTerms' => $termsofPayment['nameOfTerms'],
+                        'interestRate' => $termsofPayment['interestRate'],
+                        'interestType' => $termsofPayment['iR_Type'],                                         
+                        'loanTypeID' => $this->loantypeID,                                           
+                        'formula' => $termsofPayment['formulaID'],
+                        'interestApplied' => $termsofPayment['interestApplied'],
+                        'terms' => $termsofPayment['terms'],
+                        'oldFormula' => $termsofPayment['oldFormula'],
+                        'noAdvancePayment' => $termsofPayment['noAdvancePayment'],
+                        'notarialFeeOrigin' => $termsofPayment['notarialFeeOrigin'],
+                        'lessThanNotarialAmount' => $termsofPayment['lessThanNotarialAmount'],
+                        'lessThanAmountTYpe' => $termsofPayment['lalV_TypeID'],
+                        'greaterThanEqualNotarialAmount' => $termsofPayment['greaterThanEqualNotarialAmount'],
+                        'greaterThanEqualAmountType' => $termsofPayment['lageF_TypeID'],
+                        'loanInsuranceAmount' => $termsofPayment['loanInsuranceAmount'],
+                        'loanInsuranceAmountType' => $termsofPayment['loanI_TypeID'],
+                        'lifeInsuranceAmount' => $termsofPayment['lifeInsuranceAmount'],
+                        'lifeInsuranceAmountType' => $termsofPayment['lifeI_TypeID'],
+                        'deductInterest' => $termsofPayment['deductInterest'],
+                        'collectionTypeId' => $termsofPayment['typeOfCollectionID'],
+                        'topId' => $termsofPayment['topId'],
+                    ];
                 }
             }         
         }
