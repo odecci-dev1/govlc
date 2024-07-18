@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 use App\Traits\Common;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class FieldArea extends Component
 {
@@ -22,10 +23,10 @@ class FieldArea extends Component
     public $Area;
     public $FOID;
     public $fullname;
-    public $selectedLocations;
+    public $selectedLocations = [];
 
     public $keywordunassigned = '';  
-    public $unassignedLocations;
+    public $unassignedLocations = [];
     public $initialSelectedLocations = [];
     
     public $areas;
@@ -61,261 +62,7 @@ class FieldArea extends Component
         
         return $messages;
     }
-
-    public function store()
-    {
-        $this->validate();
-
-        $locations = [];
-        if (count($this->selectedLocations) > 0) {
-            foreach ($this->selectedLocations as $sel) {
-                $locations[] = $sel['City'];
-            }
-        }
-
-        $locationsString = implode(' | ', $locations);
-
-        $area = Area::create([
-            'Area' => $this->Area,
-            'FOID' => $this->FOID,
-            'City' => $locationsString,
-            'Status' => 1,
-            'DateCreated' => now(),
-            'DateUpdated' => NULL,
-        ]);
-
-        foreach ($this->selectedLocations as $sel) {
-            Area::where('City', $sel['City'])->update([
-                'FOID' => $this->FOID,
-                'Status' => 2
-            ]);
-        }
-
-        foreach ($this->selectedLocations as $sel) {
-            Area::where('City', $sel['City'])->delete();
-        }
-
-        $this->removeAssignedLocations();
-
-        return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved!');
-    }
-
-    // public function update()
-    // {
-    //     $this->validate();
-
-    //     $locations = [];           
-    //     if(count($this->selectedLocations) > 0){
-    //         foreach($this->selectedLocations as $sel){                    
-    //             $locations[] = $sel['City'];
-    //         }
-    //     } 
-
-    //     $locationsString = implode(' | ', $locations);
-
-    //     $area = Area::where('AreaID', $this->AreaID);
-        
-    //     if ($area) {
-    //         $area->update([
-    //             'Area' => $this->Area,
-    //             'FOID' => $this->FOID,
-    //             'City' => $locationsString,
-    //             'Status' => 1,
-    //         ]);
-    //         $this->removeAssignedLocations();
-    //         session()->flash('mmessage', 'Field area successfully updated');
-    //     } else {
-    //         session()->flash('mmessage', 'Area not found');
-    //     }
-
-    //     return redirect()->to('/maintenance/fieldarea');
-    // }
-
-    // public function update()
-    // {
-    //     $this->validate();
-
-    //     $locations = [];
-    //     if (count($this->selectedLocations) > 0) {
-    //         foreach ($this->selectedLocations as $sel) {
-    //             $locations[] = $sel['City'];
-    //         }
-    //     }
-
-    //     $locationsString = implode(' | ', $locations);
-
-    //     $area = Area::where('AreaID', $this->AreaID)->first();
-
-    //     if ($area) {
-    //         // Get the current locations for the area
-    //         $currentLocations = explode(' | ', $area->City);
-
-    //         // Find removed locations
-    //         $removedLocations = array_diff($currentLocations, $locations);
-
-    //         // Update the area
-    //         $area->update([
-    //             'Area' => $this->Area,
-    //             'FOID' => $this->FOID,
-    //             'City' => $locationsString,
-    //             'Status' => 1,
-    //         ]);
-
-    //         // Update removed locations to be unassigned
-    //         Area::whereIn('City', $removedLocations)->update(['FOID' => null]);
-
-    //         // Update selected locations
-    //         foreach ($this->selectedLocations as $sel) {
-    //             Area::where('City', $sel['City'])->update(['FOID' => $this->FOID]);
-    //         }
-
-    //         session()->flash('mmessage', 'Field area successfully updated');
-    //     } else {
-    //         session()->flash('mmessage', 'Area not found');
-    //     }
-
-    //     return redirect()->to('/maintenance/fieldarea');
-    // }
-
-    // public function update()
-    // {
-    //     $this->validate();
-
-    //     $locations = [];
-    //     if (count($this->selectedLocations) > 0) {
-    //         foreach ($this->selectedLocations as $sel) {
-    //             $locations[] = $sel['City'];
-    //         }
-    //     }
-
-    //     $locationsString = implode(' | ', $locations);
-
-    //     $area = Area::where('AreaID', $this->AreaID)->first();
-
-    //     if ($area) {
-    //         // Get the current locations for the area
-    //         $currentLocations = explode(' | ', $area->City);
-
-    //         // Find removed locations
-    //         $removedLocations = array_diff($currentLocations, $locations);
-
-    //         // Update the area
-    //         $area->update([
-    //             'Area' => $this->Area,
-    //             'FOID' => $this->FOID,
-    //             'City' => $locationsString,
-    //             'Status' => 1,
-    //         ]);
-
-    //         // Create new unassigned location entries for removed locations if not already existing
-    //         foreach ($removedLocations as $removedCity) {
-    //             $existingUnassigned = Area::where('City', $removedCity)
-    //                 ->whereNull('FOID')
-    //                 ->first();
-
-    //             if (!$existingUnassigned) {
-    //                 Area::create([
-    //                     'Area' => null,
-    //                     'FOID' => null,
-    //                     'City' => $removedCity,
-    //                     'Status' => 1,
-    //                     'DateCreated' => now(),
-    //                     'DateUpdated' => now(),
-    //                 ]);
-    //             }
-    //         }
-
-    //         foreach ($this->selectedLocations as $sel) {
-    //             Area::where('City', $sel['City'])->delete();
-    //         }
-
-    //         session()->flash('mmessage', 'Field area successfully updated');
-    //     } else {
-    //         session()->flash('mmessage', 'Area not found');
-    //     }
-
-    //     return redirect()->to('/maintenance/fieldarea');
-    // }
-
-    public function update()
-    {
-        $this->validate();
-
-        $locations = [];
-        if (count($this->selectedLocations) > 0) {
-            foreach ($this->selectedLocations as $sel) {
-                $locations[] = trim($sel['City']);
-            }
-        }
-
-        $locationsString = implode(' | ', $locations);
-
-        $area = Area::where('AreaID', $this->AreaID)->first();
-
-        if ($area) {
-            // Get the current locations for the area
-            $currentLocations = array_map('trim', explode(' | ', $area->City));
-
-            // Find removed locations
-            $removedLocations = array_diff($currentLocations, $locations);
-
-
-            $data = [
-                'Area' => $area->Area,
-                'FOID' => $area->FOID,
-                'City' => $locationsString,
-                'Status' => 1,
-                'DateCreated' => $area->DateCreated,
-                'DateUpdated' => now(),
-            ];
-
-            // dd($data);
-            // Update the area with the remaining locations
-            $area->update($data);
-
-            // Create new unassigned location entries for removed locations if not already existing
-            foreach ($removedLocations as $removedCity) {
-                $existingUnassigned = Area::where('City', $removedCity)
-                    ->whereNull('FOID')
-                    ->first();
-
-                if (!$existingUnassigned) {
-                    Area::create([
-                        'Area' => null,
-                        'FOID' => null,
-                        'City' => $removedCity,
-                        'Status' => 1,
-                        'DateCreated' => now(),
-                        'DateUpdated' => now(),
-                    ]);
-                }
-            }
-
-            // Update selected locations
-            foreach ($this->selectedLocations as $sel) {
-                Area::where('City', $sel['City'])->update(['FOID' => $this->FOID]);
-            }
-
-            session()->flash('mmessage', 'Field area successfully updated');
-        } else {
-            session()->flash('mmessage', 'Area not found');
-        }
-
-        return redirect()->to('/maintenance/fieldarea');
-    }
-
-    public function trash($AreaID)
-    {
-        $area = Area::where('AreaID', $AreaID);
-        $area->update([
-            'Status' => 2,
-            'DateUpdated' => now(),
-        ]);
-
-        return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully trashed');   
-    }
-
-
+    
     public function selectArea($AreaID)
     {
         $this->resetFields();
@@ -340,11 +87,11 @@ class FieldArea extends Component
             }
 
             $this->initialSelectedLocations = $this->selectedLocations;
+
         } else {
             session()->flash('mmessage', 'Area not found');
         }
     }
-
 
     public function openSearchOfficer()
     {
@@ -385,43 +132,13 @@ class FieldArea extends Component
         });
     }
 
-    // public function resetFields(){
-    //     $this->AreaID = '';
-    //     $this->Area = null;
-    //     $this->FOID = null;
-    //     $this->fullname = null;    
-    //     $this->selectedLocations = collect([]);
-    
-    //     if($this->unassignedLocations){
-    //         foreach ($this->unassignedLocations as $key => $value) {
-    //             if($value['Status'] == 1){
-    //                 unset($this->unassignedLocations[$key]);   
-    //             }
-    //         }
-    //     }
-    // }
-
     public function resetFields()
     {
         $this->AreaID = '';
         $this->Area = null;
         $this->FOID = null;
         $this->fullname = null;
-
-
-        $addedLocations = collect($this->selectedLocations)->diff($this->initialSelectedLocations)->all();
-
-        $addedCityNames = array_map(function ($loc) {
-            return $loc['City'];
-        }, $addedLocations);
-
-        $this->unassignedLocations = array_merge($this->unassignedLocations, array_filter($addedLocations, function ($loc) use ($addedCityNames) {
-            return in_array($loc['City'], $addedCityNames) && $loc['Status'] == 1;
-        }));
-
-        $this->selectedLocations = $this->initialSelectedLocations;
-
-        $this->initialSelectedLocations = [];
+        $this->selectedLocations = [];
     }
 
     public function removeAssignedLocations()
@@ -431,7 +148,105 @@ class FieldArea extends Component
         });
     }
 
-    public function setPage($page = 1){
+    public function store()
+    {
+        $this->validate();
+
+        $locations = array_map('trim', array_column($this->selectedLocations, 'City'));
+
+        $locationsString = implode(' | ', $locations);
+
+        $area = Area::create([
+            'Area' => $this->Area,
+            'FOID' => $this->FOID,
+            'City' => $locationsString,
+            'Status' => 1,
+            'DateCreated' => now(),
+            'DateUpdated' => NULL,
+        ]);
+
+        foreach ($this->selectedLocations as $sel) {
+            Area::where('City', $sel['City'])
+                ->whereNull('FOID')
+                ->delete();
+        }
+
+        $this->removeAssignedLocations();
+
+        return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully saved!');
+    }
+
+    public function update()
+    {
+        $this->validate();
+
+        $locations = array_map('trim', array_column($this->selectedLocations, 'City'));
+        $locationsString = implode(' | ', $locations);
+
+        $areaUpdate = Area::where('AreaID', $this->AreaID);
+
+        if ($areaUpdate) {
+            $area = Area::where('AreaID', $this->AreaID)->first();
+
+            $currentLocations = array_map('trim', explode(' | ', $area->City));
+            $removedLocations = array_diff($currentLocations, $locations);
+
+            $data = [
+                'Area' => $this->Area,
+                'FOID' => $this->FOID,
+                'City' => $locationsString,
+                'Status' => 1,
+                'DateCreated' => $area->DateCreated,
+                'DateUpdated' => now(),
+            ];
+
+            $areaUpdate->update($data);
+
+            foreach ($removedLocations as $removedCity) {
+                $existingUnassigned = Area::where('City', $removedCity)
+                    ->whereNull('FOID')
+                    ->first();
+
+                if (!$existingUnassigned) {
+                    Area::create([
+                        'Area' => null,
+                        'FOID' => null,
+                        'City' => $removedCity,
+                        'Status' => 1,
+                        'DateCreated' => now(),
+                        'DateUpdated' => now(),
+                    ]);
+                }
+            }
+
+            foreach ($this->selectedLocations as $sel) {
+                Area::where('City', $sel['City'])
+                    ->whereNull('FOID')
+                    ->delete();
+            }
+
+            $this->resetValidation();
+            session()->flash('mmessage', 'Field area successfully updated');
+        } else {
+            session()->flash('mmessage', 'Area not found');
+        }
+
+        return redirect()->to('/maintenance/fieldarea');
+    }
+
+    public function trash($AreaID)
+    {
+        $area = Area::where('AreaID', $AreaID);
+        $area->update([
+            'Status' => 2,
+            'DateUpdated' => now(),
+        ]);
+
+        return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully trashed');   
+    }
+
+    public function setPage($page = 1)
+    {
         $this->paginate['page'] = $page;
     }
 
@@ -490,6 +305,4 @@ class FieldArea extends Component
 
         return view('livewire.maintenance.field-area.field-area');
     }
-
-
 }

@@ -25,7 +25,7 @@
             <div class="fa-container-1">
 
                 <!-- * Vertical Container -->
-                <div class="verti-con" style="display: flex; flex-direction: column; height: fit-content;">
+                <div class="verti-con" style="display: flex; flex-direction: column; height: 75rem;">
 
                     <!-- * Form Header -->
 
@@ -172,12 +172,29 @@
                                     
                                             <!-- * Data Locations-->
                                             <td wire:click="selectArea('{{ $area->AreaID }}')" class="td-name" data-area-location x-data="{ showFull: false }" @mouseenter="showFull = true" @mouseleave="showFull = false">
-                                                <div style="position: relative">
-                                                    <span style="position: absolute; z-index: 99; top: 0; left: 0; padding: 1rem; border-radius: 5px; background: #000000c0;" x-show="showFull" x-cloak>
-                                                        {{ implode(' | ', explode('|', $area->City)) }}
+                                                
+                                                <div style="position: relative;">
+                                                    <span style="position: absolute; z-index: 999; top: -5px; left: 100%; width: 26rem; padding: 1rem; border-radius: 5px; background: #000000c0;" x-show="showFull" x-cloak>
+                                                        <span style="display: flex; flex-direction: column;">
+                                                            <span>
+                                                                {{ implode(' | ', explode('|', $area->City)) }}
+                                                            </span>
+                                                            <span style="margin-top: 2rem; font-size: 1.4rem; font-weight: 500; color: rgba(255, 255, 255, 0.814)">
+                                                                @if($area->fieldOfficer)
+                                                                    {{ $area->fieldOfficer->Lname . ', ' . $area->fieldOfficer->Fname . ' ' . mb_substr($area->fieldOfficer->Mname, 0, 1) }}.
+                                                                @else
+                                                                    <span style="color: #888888;">N/A</span>
+                                                                @endif
+                                                            </span>
+                                                        </span>
                                                     </span>
-                                                    <span>
-                                                        {{ Str::words(implode(' | ', explode('|', $area->City)), 15) }}
+                                                    <span style="display: flex">
+                                                        <span style="flex: 1">
+                                                            {{ Str::words(implode(' | ', explode('|', $area->City)), 12) }}
+                                                        </span>
+                                                        {{-- <button type="button" style="background: none;">
+                                                            <span style="font-size: 1rem; color: rgb(101, 101, 101)">▼</span>
+                                                        </button> --}}
                                                     </span>
                                                 </div>
                                             </td>
@@ -185,7 +202,7 @@
                                             <!-- * Data Field Officer-->
                                             <td wire:click="selectArea('{{ $area->AreaID }}')" class="td-field-off" data-area-field-officer>
                                                 @if($area->fieldOfficer)
-                                                    {{ $area->fieldOfficer->Lname . ', ' . $area->fieldOfficer->Fname . ' ' . mb_substr($area->fieldOfficer->Mname, 0, 1) }}
+                                                    {{ $area->fieldOfficer->Lname . ', ' . $area->fieldOfficer->Fname . ' ' . mb_substr($area->fieldOfficer->Mname, 0, 1) }}.
                                                 @else
                                                     <span style="color: #888888;">N/A</span>
                                                 @endif

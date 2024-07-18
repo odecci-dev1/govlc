@@ -71,7 +71,8 @@ class FieldOfficer extends Component
         return $rules;
     }
     
-    public function messages(){
+    public function messages()
+    {
         $messages = [
             'officer.Fname.required' => 'First name is required',
             'officer.Lname.required' => 'Last name is required',
@@ -102,7 +103,8 @@ class FieldOfficer extends Component
         return $messages;        
     }
     
-    public function getofficerAge(){
+    public function getofficerAge()
+    {
         $age = $this->calculateAge($this->officer['DOB']);
         $this->officer['Age'] = $age;           
     }
@@ -151,7 +153,6 @@ class FieldOfficer extends Component
 
         return $backidname;
     }
-
 
     public function storeAttachments($foid)
     {
@@ -229,7 +230,7 @@ class FieldOfficer extends Component
 
             $latestOfficer = TblFieldOfficer::latest()->first();
             $foid = $latestOfficer->FOID;
-            // $this->uploadAttachments($foid);
+
             $attachments = $this->storeAttachments($foid);
             FOFile::insert($attachments);
             $this->resetValidation();
@@ -374,7 +375,6 @@ class FieldOfficer extends Component
             }
         }
 
-        // *** Get the Id *** \\
         if($foid != '') {
             $officer = TblFieldOfficer::getFieldOfficerByFOID($this->foid);
 
