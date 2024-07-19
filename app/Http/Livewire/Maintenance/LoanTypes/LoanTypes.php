@@ -147,7 +147,6 @@ class LoanTypes extends Component
        
         $data = [
             'LoanTypeName' =>  $inputs['loantype']['LoanTypeName'],
-            'LoanTypeId' => $this->LoanTypeId,
             'Savings' =>  isset($inputs['loantype']['Savings']) ? $inputs['loantype']['Savings'] : 0,
             'LoanAmount_Min' =>  isset($inputs['loantype']['LoanAmount_Min']) ? $inputs['loantype']['LoanAmount_Min'] : 0,
             'LoanAmount_Max' =>  isset($inputs['loantype']['LoanAmount_Max']) ? $inputs['loantype']['LoanAmount_Max'] : 0,
@@ -169,12 +168,13 @@ class LoanTypes extends Component
             $this->LoanTypeId = $loanType->LoanTypeID;
 
             foreach ($terms as $term) {
-                $term['LoanTypeId'] = $this->LoanTypeId;
+                $term['LoanTypeId'] = $this->LoanTypeID;
                 TermsOfPayment::create($term);
             }
 
             $latestOfficer = LoanType::latest()->first();
-            return redirect()->to('/maintenance/loantypes/view/' . $latestOfficer)->with('mmessage', $savemsg);     
+            dd($latestOfficer);
+            // return redirect()->to('/maintenance/loantypes/view/' . $latestOfficer)->with('mmessage', $savemsg);     
         } else {
             $savemsg = 'Loan type successfully updated!';
             $loanType = LoanType::where('LoanTypeID', $this->LoanTypeId);
@@ -417,16 +417,13 @@ class LoanTypes extends Component
 
     public function mount($loanid = '')
     {
-        
+        $this->usertype = session()->get('auth_usertype'); 
         if ($loanid != '') {
             $this->LoanTypeId = $loanid;
 
             $loantype = LoanType::where('LoanTypeId', $loanid)->first();
+            // dd($loantype);
             $termsofPayment = TermsOfPayment::where('LoanTypeId', $loanid)->first();
-            
-            // $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/LoanTypeFilter', ['LoanTypeId' => $this->LoanTypeId]);            
-            // $data = $data->json();
-            // $data = $data[0];
 
             $this->loantype['Loan_amount_Lessthan'] = $loantype['Loan_amount_Lessthan'];
             $this->loantype['Loan_amount_GreaterEqual'] = $loantype['Loan_amount_GreaterEqual'];
@@ -493,10 +490,8 @@ class LoanTypes extends Component
         $this->inpterms['OldFormula'] = 2;
         $this->inpterms['DeductInterest'] = 2;
 
-        $this->collectionType = TermsTypeOfCollection::all();
-        $this->formulaList = AdvancePaymentFormula::all();
-
-        // dd($this->collectionType);
+        $this->collectionType = TermsTypeOfCollection::all()->pluck('TypeOfCollection', 'Id')->toArray();;
+        $this->formulaList = AdvancePaymentFormula::all()->pluck('Formula', 'Id')->toArray();
     }
 
     public function render()

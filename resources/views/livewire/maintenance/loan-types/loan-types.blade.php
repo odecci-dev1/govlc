@@ -157,8 +157,8 @@
                                         <select wire:model="inpterms.CollectionTypeId" class="select-option">
                                             <option value="">- - select - -</option>                                              
                                             @if($collectionType)
-                                                @foreach($collectionType as $colltypekey => $mcollType)
-                                                    <option value="{{ $colltypekey }}">{{ $mcollType['TypeOfCollection'] }}</option> 
+                                                @foreach($collectionType as $id => $type)
+                                                    <option value="{{ $id }}">{{ $type }}</option>
                                                 @endforeach
                                             @endif                                                                                                        
                                         </select>                                             
@@ -247,8 +247,8 @@
                                         <select  wire:model="inpterms.Formula" class="select-option">
                                             <option value="">- - select - -</option>                                                
                                             @if($formulaList)
-                                                @foreach($formulaList as $formulaListKey => $mformulaList)
-                                                <option value="{{ $formulaListKey }}">{{ $mformulaList['Formula'] }}</option> 
+                                                @foreach($formulaList as $id => $formula)
+                                                <option value="{{ $id }}">{{ $formula }}</option> 
                                                 @endforeach
                                             @endif                                   
                                         </select>    
