@@ -24,7 +24,7 @@
             <div class="wrapper">
                 <!-- * Search Bar -->
                 <div class="search-wrap">
-                    <input type="search"wire:model="keyword" placeholder="Search">
+                    <input type="search" wire:model.live="keyword" placeholder="Search">
                     <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                 </div>
 
@@ -51,14 +51,10 @@
                 <tr class="tr-loan-type">
 
                     <!-- * Checkbox ALl-->
-                    <th>
-                        <!-- <input type="checkbox" class="checkbox" data-select-all-checkbox> -->
-                    </th>
+                    <th><!-- <input type="checkbox" class="checkbox" data-select-all-checkbox> --></th>
 
                     <!-- * Loan type name -->
-                    <th>
-                        <span class="th-name">Loan type name</span>
-                    </th>
+                    <th><span class="th-name">Loan Type Name</span></th>
 
                     <!-- * Notarial fee -->
                     <th>
@@ -67,14 +63,6 @@
                             <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                         </div>
                     </th>
-
-                    <!-- * Interest rate -->
-                    <!-- <th>
-                        <div class="th-wrapper">
-                            <span class="th-name">Interest rate</span>
-                            <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel">
-                        </div>
-                    </th> -->
 
                     <!-- * Terms of payment -->
                     <th>
@@ -89,41 +77,25 @@
                 </tr>
 
                 @if($list)
-                    @foreach($list as $list)
+                    @foreach($list as $item)
                         <!-- * Loan Type Data -->
                         <tr class="tr-loan-type">
 
                             <!-- * Checkbox Opt -->
-                            <td>
-                                <!-- <input type="checkbox" class="checkbox" data-select-checkbox> -->
-                            </td>
+                            <td><!-- <input type="checkbox" class="checkbox" data-select-checkbox> --></td>
 
-                            <!-- * Loan type name Data-->
-                            <td>
-                                {{ $list['loanTypeName'] }}
-                            </td>
+                            <td>{{ $item->LoanTypeName }}</td>
+                            
+                            <td>{{ $item->terms->count() }}</td>
 
-                            <!-- * Notarial fee Data-->
-                            <td>
-                               {{ count($list['termsofPayment']) }}
-                            </td>
-
-                            <!-- * Interest rate Data-->
-                            <!-- <td class="td-curLoan">
-                               
-                            </td> -->
-
-                            <!-- * Terms of payment Data-->
-                            <td class="td-bal">
-                                {{ date('m/d/Y', strtotime($list['dateCreated'])) }}
-                            </td>
+                            <td class="td-bal">{{ date('m/d/Y', strtotime($item->DateCreated)) }}</td>
 
                             <!-- * Table View and Trash Button -->
                             <td class="td-btns">
                                 <div class="td-btn-wrapper">
-                                    <a href="{{ URL::to('/') }}/maintenance/loantypes/view/{{ $list['loanTypeID'] }}" class="a-btn-view-2">View</a>
+                                    <a href="{{ URL::to('/') }}/maintenance/loantypes/view/{{ $item->LoanTypeID }}" class="a-btn-view-2">View</a>
                                     @if($usertype != 2)
-                                    <button class="a-btn-trash-2" type="button" onclick="showDialog('{{ $list['loanTypeID'] }}')">Trash</button>
+                                        <button class="a-btn-trash-2" type="button" onclick="showDialog('{{ $item->LoanTypeID }}')">Trash</button>
                                     @endif
                                 </div>
                             </td>

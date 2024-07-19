@@ -34,6 +34,6 @@ class LoanType extends Model
 
     public function terms()
     {
-        return $this->hasMany(TermsOfPayment::class);
+        return $this->hasMany(TermsOfPayment::class, 'LoanTypeId', 'LoanTypeID');
     }
 }

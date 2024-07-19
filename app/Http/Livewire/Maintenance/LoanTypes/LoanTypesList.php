@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Maintenance\LoanTypes;
 
+use App\Models\LoanType;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use App\Traits\Common;
@@ -16,8 +17,14 @@ class LoanTypesList extends Component
     public $paginationPaging = [];
 
     public function archive($loantypeID){       
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/DeleteLoanType', [ 'loanTypeID' => $loantypeID ]);                     
-        return redirect()->to('/maintenance/loantypes/list')->with('mmessage', 'Loan type has been trashed');    
+        $loantype = LoanType::where('LoanTypeID', $loantypeID)->first();
+
+        $loantype->update([
+            'Status' => 2,
+            'DateUpdated' => now(),
+        ]);
+
+        return redirect()->to('/maintenance/loantypes/list')->with('mmessage', 'Loan type has been trashed!');    
     }
 
     public function setPage($page = 1){
@@ -35,30 +42,30 @@ class LoanTypesList extends Component
 
     public function render()
     {
-        // $pageattr = [ 'Loantypename' => $this->keyword, 'page' => 1, 'pageSize' => '10000'];
-        // $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetailsFilterPaginate', $pageattr);             
-        // $list = $data->json();
-        //dd( $list );
+        $query = LoanType::with('terms');
 
-        $inputs = [
-            'page' => $this->paginate['page'],
-            'pageSize' => $this->paginate['pageSize'],
-            'FilterName' => $this->keyword,
-            'status' => 'Active',
-            'module' => 'LoanType',
-          ];
-
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Pagination/DisplayListPaginate', $inputs);                      
-        $list = $data->json()['items'];  
-     
-        if( $data->json()['totalPage'] ){
-            $this->paginationPaging['totalPage'] = $data->json()['totalPage'];
-            $this->paginationPaging['totalRecord'] = $data->json()['totalRecord'];
-            $this->paginationPaging['currentPage'] = $data->json()['currentPage'];
-            $this->paginationPaging['nextPage'] = $data->json()['nextPage'] < $data->json()['totalPage'] ?  $data->json()['nextPage'] : $data->json()['totalPage'];
-            $this->paginationPaging['prevPage'] = $data->json()['prevPage'] > 0 ? $data->json()['prevPage'] : 1;
+        if ($this->keyword) {
+            $query->where('LoanTypeName', 'like', '%' . $this->keyword . '%');
         }
-     
+
+        $query->where('Status', 1);
+
+        $totalRecord = $query->count();
+        $totalPage = ceil($totalRecord / $this->paginate['pageSize']);
+        $currentPage = $this->paginate['page'];
+        $nextPage = $currentPage < $totalPage ? $currentPage + 1 : $totalPage;
+        $prevPage = $currentPage > 1 ? $currentPage - 1 : 1;
+
+        $list = $query->paginate($this->paginate['pageSize'], ['*'], 'page', $currentPage);
+
+        $this->paginationPaging = [
+            'totalPage' => $totalPage,
+            'totalRecord' => $totalRecord,
+            'currentPage' => $currentPage,
+            'nextPage' => $nextPage,
+            'prevPage' => $prevPage,
+        ];
+
         return view('livewire.maintenance.loan-types.loan-types-list', ['list' => $list]);
     }
 }
