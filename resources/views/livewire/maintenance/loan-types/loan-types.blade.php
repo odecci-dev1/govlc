@@ -40,9 +40,9 @@
                         <div class="btn-wrapper">    
                             @if($usertype != 2)                    
                             <!-- * Save -->
-                            <button type="button" wire:click="save" class="button" data-save>{{ $loantypeID =='' ? 'Save' : 'Update' }}</button>
-                            @if($loantypeID !='')
-                            <button type="button" {{ $loantypeID == 'LT-02' ? 'disabled' : '' }} onclick="showDialog('{{ $loantypeID }}')" class="button" data-save>Trash</button>
+                            <button type="button" wire:click="save" class="button" data-save>{{ $LoanTypeId =='' ? 'Save' : 'Update' }}</button>
+                            @if($LoanTypeId !='')
+                            <button type="button" {{ $LoanTypeId == 'LT-02' ? 'disabled' : '' }} onclick="showDialog('{{ $LoanTypeId }}')" class="button" data-save>Trash</button>
                             @endif
                             @endif
                         </div>
@@ -73,23 +73,23 @@
                         <!-- * Loan Type Name -->
                         <div class="input-wrapper">
                             <span>Loan Type Name</span>
-                            <input autocomplete="off" type="text" wire:model.lazy="loantype.loanTypeName">
-                            @error('loantype.loanTypeName') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                            <input autocomplete="off" type="text" wire:model.lazy="loantype.LoanTypeName">
+                            @error('loantype.LoanTypeName') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                         </div>
 
                     </div>
 
-                    <!-- * Rowspan 4: Notarial Fee -->
+                    <!-- * Rowspan 4: Savings / Loan Amount -->
                     <div style="display: flex;">
                         <div style="width: 25%; padding-right: 40px;">                            
                                 <div style="width:  100%; padding-bottom: 5px;">
                                     <span style="font-size: 1.5rem">Savings</span>
                                 </div>  
                                 <div style="width:  100%; display: flex;">                           
-                                    <div  style="width:  100%;">
+                                    <div style="width: 100%;">
                                         <div class="input-wrapper">                                                                   
-                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.savings">
-                                            @error('loantype.savings') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.Savings">
+                                            @error('loantype.Savings') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                         </div>
                                     </div>                                   
                                 </div>
@@ -101,14 +101,14 @@
                                 <div style="width:  100%; display: flex;">                           
                                     <div  style="width:  50%; padding-right: 5px;">
                                         <div class="input-wrapper">
-                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.loanAmount_Min" placeholder="Min:">    
-                                            @error('loantype.loanAmount_Min') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.LoanAmount_Min" placeholder="Min:">    
+                                            @error('loantype.LoanAmount_Min') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                         </div>
                                     </div>
                                     <div  style="width:  50%; padding-left: 5px;">
                                         <div class="input-wrapper">
-                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.loanAmount_Max" placeholder="Max:">
-                                            @error('loantype.loanAmount_Max') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.LoanAmount_Max" placeholder="Max:">
+                                            @error('loantype.LoanAmount_Max') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                         </div>
                                     </div>
                                 </div>
@@ -138,8 +138,8 @@
                         <div style="width:  100%; display: flex;">                           
                             <div  style="width:  100%;">
                                 <div class="input-wrapper">                                                                   
-                                    <input autocomplete="off" type="text" wire:model.lazy="inpterms.nameOfTerms">
-                                    @error('inpterms.nameOfTerms') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                    <input autocomplete="off" type="text" wire:model.lazy="inpterms.NameOfTerms">
+                                    @error('inpterms.NameOfTerms') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                 </div>
                             </div>                                   
                         </div>
@@ -154,11 +154,11 @@
                             <div  style="width:  100%;">
                                 <div class="input-inner-select-wrapper">
                                     <div class="select-box">
-                                        <select  wire:model="inpterms.collectionTypeId" class="select-option">
+                                        <select wire:model="inpterms.CollectionTypeId" class="select-option">
                                             <option value="">- - select - -</option>                                              
                                             @if($collectionType)
                                                 @foreach($collectionType as $colltypekey => $mcollType)
-                                                    <option value="{{ $colltypekey }}">{{ $mcollType['typeOfCollection'] }}</option> 
+                                                    <option value="{{ $colltypekey }}">{{ $mcollType['TypeOfCollection'] }}</option> 
                                                 @endforeach
                                             @endif                                                                                                        
                                         </select>                                             
@@ -166,7 +166,7 @@
                                 </div>
                             </div>                                                             
                         </div>
-                        @error('inpterms.collectionTypeId') <span class="text-required fw-normal">{{ $message }}</span>@enderror  
+                        @error('inpterms.CollectionTypeId') <span class="text-required fw-normal">{{ $message }}</span>@enderror  
                     </div>     
                     <div style="width: 30%; padding-right: 40px;">                            
                         <div style="width:  100%; padding-bottom: 5px;">
@@ -175,8 +175,8 @@
                         <div style="width:  100%; display: flex;">                           
                             <div  style="width:  100%;">
                                 <div class="input-wrapper">                                                                   
-                                    <input autocomplete="off" type="number" wire:model.lazy="inpterms.terms">
-                                    @error('inpterms.terms') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                    <input autocomplete="off" type="number" wire:model.lazy="inpterms.Terms">
+                                    @error('inpterms.Terms') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                 </div>
                             </div>                                   
                         </div>
@@ -190,8 +190,8 @@
                         <div style="width:  100%; display: flex;">                           
                             <div  style="width:  100%;">
                                 <div class="input-wrapper">                                                                   
-                                    <input autocomplete="off" type="number" wire:model.lazy="inpterms.interestRate">
-                                    @error('inpterms.interestRate') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                    <input autocomplete="off" type="number" wire:model.lazy="inpterms.InterestRate">
+                                    @error('inpterms.InterestRate') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                 </div>
                             </div>                                   
                         </div>
@@ -203,14 +203,14 @@
                         <div style="width:  100%; display: flex;">                           
                             <div  style="width:  100%;">
                                 <div class="input-inner-select-wrapper">
-                                    <div class="select-box {{ isset($inpterms['collectionTypeId']) ? ($inpterms['collectionTypeId'] == 3 ? 'select-disabled' : '') : ''  }}">
-                                        <select  wire:model="inpterms.interestType" {{ isset($inpterms['collectionTypeId']) ? ($inpterms['collectionTypeId'] == 3 ? 'disabled' : '') : ''  }} class="select-option">
+                                    <div class="select-box {{ isset($inpterms['CollectionTypeId']) ? ($inpterms['CollectionTypeId'] == 3 ? 'select-disabled' : '') : ''  }}">
+                                        <select wire:model="inpterms.InterestType" {{ isset($inpterms['CollectionTypeId']) ? ($inpterms['CollectionTypeId'] == 3 ? 'disabled' : '') : ''  }} class="select-option">
                                             <option value="">- - select - -</option>     
                                             <option value="Compound">Compound</option>                                    
                                             <option value="Custom">Custom</option>                                    
                                         </select>                                          
                                     </div>
-                                    @error('inpterms.interestType') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                    @error('inpterms.InterestType') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                 </div>
                             </div>                                   
                         </div>
@@ -223,13 +223,13 @@
                             <div  style="width:  100%;">
                                 <div class="input-inner-select-wrapper">
                                     <div class="select-box">
-                                        <select  wire:model="inpterms.interestApplied"  {{ isset($inpterms['interestType']) ? ($inpterms['interestType'] == 'Compound' ? 'disabled' : '') : ''  }} {{ isset($inpterms['collectionTypeId']) ? ($inpterms['collectionTypeId'] == 3 ? 'disabled' : '') : ''  }} class="select-option">
+                                        <select  wire:model="inpterms.InterestApplied"  {{ isset($inpterms['InterestType']) ? ($inpterms['InterestType'] == 'Compound' ? 'disabled' : '') : ''  }} {{ isset($inpterms['CollectionTypeId']) ? ($inpterms['CollectionTypeId'] == 3 ? 'disabled' : '') : ''  }} class="select-option">
                                             <option value="">- - select - -</option>     
                                             <option value="Monthly">Monthly</option>                                    
                                             <option value="Yearly">Yearly</option>                                    
                                         </select>                                                        
                                     </div>
-                                    @error('inpterms.interestApplied') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                    @error('inpterms.InterestApplied') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                 </div>
                             </div>                                   
                         </div>
@@ -244,11 +244,11 @@
                             <div  style="width:  100%;">
                                 <div class="input-inner-select-wrapper">
                                     <div class="select-box">
-                                        <select  wire:model="inpterms.formula" class="select-option">
+                                        <select  wire:model="inpterms.Formula" class="select-option">
                                             <option value="">- - select - -</option>                                                
                                             @if($formulaList)
                                                 @foreach($formulaList as $formulaListKey => $mformulaList)
-                                                <option value="{{ $formulaListKey }}">{{ $mformulaList['formula'] }}</option> 
+                                                <option value="{{ $formulaListKey }}">{{ $mformulaList['Formula'] }}</option> 
                                                 @endforeach
                                             @endif                                   
                                         </select>    
@@ -256,7 +256,7 @@
                                 </div>
                             </div>                                   
                         </div>
-                        @error('inpterms.formula') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                        @error('inpterms.Formula') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                     </div>     
                     <div style="width: 30%; padding-right: 40px;">                            
                         <div style="width:  100%; padding-bottom: 5px;">
@@ -268,17 +268,17 @@
                                     <!-- radio -->
                                     <div class="box-wrap" style="gap: 1rem;">
                                         <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="1" name="noAdvancePayment" id="noAdvancePayment1">
+                                            <input  wire:model.lazy="inpterms.NoAdvancePayment" autocomplete="off" type="radio" value="1" name="NoAdvancePayment" id="NoAdvancePayment1">
                                             <span>Yes</span>                                            
                                         </div>
 
                                         <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                                            <input  wire:model.lazy="inpterms.noAdvancePayment" autocomplete="off" type="radio" value="2" name="noAdvancePayment" id="noAdvancePayment2">
+                                            <input  wire:model.lazy="inpterms.NoAdvancePayment" autocomplete="off" type="radio" value="2" name="NoAdvancePayment" id="NoAdvancePayment2">
                                             <span>No</span>                                            
                                         </div>
                                     </div>
                                     <!-- radio -->                                   
-                                    @error('inpterms.noAdvancePayment') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                    @error('inpterms.NoAdvancePayment') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                 </div>
                             </div>                                   
                         </div>
@@ -293,17 +293,17 @@
                                     <!-- radio -->
                                     <div class="box-wrap" style="gap: 1rem;">
                                         <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                                            <input  wire:model.lazy="inpterms.oldFormula" autocomplete="off" type="radio" value="1" name="oldFormula" id="oldFormula1">
+                                            <input  wire:model.lazy="inpterms.OldFormula" autocomplete="off" type="radio" value="1" name="OldFormula" id="OldFormula1">
                                             <span>Yes</span>                                            
                                         </div>
 
                                         <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                                            <input  wire:model.lazy="inpterms.oldFormula" autocomplete="off" type="radio" value="2" name="oldFormula" id="oldFormula2">
+                                            <input  wire:model.lazy="inpterms.OldFormula" autocomplete="off" type="radio" value="2" name="OldFormula" id="OldFormula2">
                                             <span>No</span>                                            
                                         </div>
                                     </div>
                                     <!-- radio -->                                   
-                                    @error('inpterms.oldFormula') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                    @error('inpterms.OldFormula') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                 </div>
                             </div>                                   
                         </div>
@@ -325,12 +325,12 @@
                             <div  style="width:  100%;">
                                 <div class="input-inner-select-wrapper">
                                     <div class="select-box">
-                                        <select  wire:model="inpterms.notarialFeeOrigin" class="select-option">
+                                        <select  wire:model="inpterms.NotarialFeeOrigin" class="select-option">
                                             <option value="">- - select - -</option>     
                                             <option value="1">Loan Amount</option>                                    
                                             <option value="2">Principal Amount</option>                                    
                                         </select>      
-                                        @error('inpterms.notarialFeeOrigin') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                        @error('inpterms.NotarialFeeOrigin') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
                             </div>                                   
@@ -346,19 +346,19 @@
                                 <div  style="width:  50%;">
                                     <div class="input-inner-select-wrapper">
                                         <div class="select-box">                                       
-                                            <select  wire:model="inpterms.lessThanAmountTYpe" style="border-top-right-radius: 0;border-bottom-right-radius: 0; font-size: 1.3rem;" class="select-option">
+                                            <select  wire:model="inpterms.LessThanAmountType" style="border-top-right-radius: 0;border-bottom-right-radius: 0; font-size: 1.3rem;" class="select-option">
                                                 <option value="">- - select - -</option>     
                                                 <option value="1">Percent</option>                                    
                                                 <option value="2">Fixed</option>                                    
                                             </select>                                   
                                         </div>
-                                        @error('inpterms.lessThanAmountTYpe') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                        @error('inpterms.LessThanAmountType') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                     </div>
                                 </div>  
                                 <div style="width: 50%;">
                                     <div class="input-wrapper">                                                                   
-                                        <input autocomplete="off" style="border-top-left-radius: 0;border-bottom-left-radius: 0;" type="number" wire:model.lazy="inpterms.lessThanNotarialAmount" placeholder="Amount">
-                                        @error('inpterms.lessThanNotarialAmount') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                        <input autocomplete="off" style="border-top-left-radius: 0;border-bottom-left-radius: 0;" type="number" wire:model.lazy="inpterms.LessThanNotarialAmount" placeholder="Amount">
+                                        @error('inpterms.LessThanNotarialAmount') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                     </div>
                                 </div>            
                                 <!-- dito -->
@@ -373,19 +373,19 @@
                                 <div  style="width:  50%;">
                                     <div class="input-inner-select-wrapper">
                                         <div class="select-box">
-                                            <select  wire:model="inpterms.greaterThanEqualAmountType" style="border-top-right-radius: 0;border-bottom-right-radius: 0; font-size: 1.3rem;" class="select-option">
+                                            <select  wire:model="inpterms.GreaterThanEqualAmountType" style="border-top-right-radius: 0;border-bottom-right-radius: 0; font-size: 1.3rem;" class="select-option">
                                                 <option value="">- - select - -</option>     
                                                 <option value="1">Percent</option>                                    
                                                 <option value="2">Fixed</option>                                    
                                             </select>                  
                                         </div>
-                                        @error('inpterms.greaterThanEqualAmountType') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                        @error('inpterms.GreaterThanEqualAmountType') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                     </div>
                                 </div>  
                                 <div style="width: 50%;">
                                     <div class="input-wrapper">                                                                   
-                                        <input autocomplete="off" style="border-top-left-radius: 0;border-bottom-left-radius: 0;" type="number" wire:model.lazy="inpterms.greaterThanEqualNotarialAmount" placeholder="Amount">
-                                        @error('inpterms.greaterThanEqualNotarialAmount') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                        <input autocomplete="off" style="border-top-left-radius: 0;border-bottom-left-radius: 0;" type="number" wire:model.lazy="inpterms.GreaterThanEqualNotarialAmount" placeholder="Amount">
+                                        @error('inpterms.GreaterThanEqualNotarialAmount') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                     </div>
                                 </div>            
                                 <!-- dito -->
@@ -404,19 +404,19 @@
                                 <div  style="width:  50%;">
                                     <div class="input-inner-select-wrapper">
                                         <div class="select-box">
-                                            <select  wire:model="inpterms.loanInsuranceAmountType" style="border-top-right-radius: 0;border-bottom-right-radius: 0; font-size: 1.3rem;" class="select-option">
+                                            <select  wire:model="inpterms.LoanInsuranceAmountType" style="border-top-right-radius: 0;border-bottom-right-radius: 0; font-size: 1.3rem;" class="select-option">
                                                 <option value="">- - select - -</option>     
                                                 <option value="1">Percent</option>                                    
                                                 <option value="2">Fixed</option>                                    
                                             </select>                                                  
                                         </div>
-                                        @error('inpterms.loanInsuranceAmountType') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                        @error('inpterms.LoanInsuranceAmountType') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                     </div>
                                 </div>  
                                 <div style="width: 50%;">
                                     <div class="input-wrapper">                                                                   
-                                        <input autocomplete="off" style="border-top-left-radius: 0;border-bottom-left-radius: 0;" type="number" wire:model.lazy="inpterms.loanInsuranceAmount" placeholder="Amount">
-                                        @error('inpterms.loanInsuranceAmount') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                        <input autocomplete="off" style="border-top-left-radius: 0;border-bottom-left-radius: 0;" type="number" wire:model.lazy="inpterms.LoanInsuranceAmount" placeholder="Amount">
+                                        @error('inpterms.LoanInsuranceAmount') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                     </div>
                                 </div>                       
                         </div>
@@ -429,19 +429,19 @@
                                 <div  style="width:  50%;">
                                     <div class="input-inner-select-wrapper">
                                         <div class="select-box">
-                                            <select  wire:model="inpterms.lifeInsuranceAmountType" style="border-top-right-radius: 0;border-bottom-right-radius: 0; font-size: 1.3rem;" class="select-option">
+                                            <select  wire:model="inpterms.LifeInsuranceAmountType" style="border-top-right-radius: 0;border-bottom-right-radius: 0; font-size: 1.3rem;" class="select-option">
                                                 <option value="">- - select - -</option>     
                                                 <option value="1">Percent</option>                                    
                                                 <option value="2">Fixed</option>                                    
                                             </select>       
                                         </div>
-                                        @error('inpterms.lifeInsuranceAmountType') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                        @error('inpterms.LifeInsuranceAmountType') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                     </div>
                                 </div>  
                                 <div style="width: 50%;">
                                     <div class="input-wrapper">                                                                   
-                                        <input autocomplete="off" style="border-top-left-radius: 0;border-bottom-left-radius: 0;" type="number" wire:model.lazy="inpterms.lifeInsuranceAmount" placeholder="Amount">
-                                        @error('inpterms.lifeInsuranceAmount') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                        <input autocomplete="off" style="border-top-left-radius: 0;border-bottom-left-radius: 0;" type="number" wire:model.lazy="inpterms.LifeInsuranceAmount" placeholder="Amount">
+                                        @error('inpterms.LifeInsuranceAmount') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                     </div>
                                 </div>                       
                         </div>
@@ -456,28 +456,29 @@
                                     <!-- radio -->
                                     <div class="box-wrap" style="gap: 1rem;">
                                         <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                                            <input  wire:model.lazy="inpterms.deductInterest" autocomplete="off" type="radio" value="1" name="deductInterest" id="deductInterest1">
+                                            <input  wire:model.lazy="inpterms.DeductInterest" autocomplete="off" type="radio" value="1" name="DeductInterest" id="DeductInterest1">
                                             <span>Yes</span>                                            
                                         </div>
 
                                         <div class="radio-btn-wrapper" style="flex-direction: row; gap: 0;">
-                                            <input  wire:model.lazy="inpterms.deductInterest" autocomplete="off" type="radio" value="2" name="deductInterest" id="deductInterest2">
+                                            <input  wire:model.lazy="inpterms.DeductInterest" autocomplete="off" type="radio" value="2" name="DeductInterest" id="DeductInterest2">
                                             <span>No</span>                                            
                                         </div>
                                     </div>
                                     <!-- radio -->                                   
-                                    @error('inpterms.deductInterest') <span class="text-required fw-normal">{{ $message }}</span>@enderror
+                                    @error('inpterms.DeductInterest') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                 </div>
                             </div>                                   
                         </div>
                     </div>                                                               
                 </div>
                 <!-- loan insurance -->
+
                 <!-- table -->
                 <!-- * Rowspan 5: Add to list Button -->
                 <div class="rowspan" style="margin-bottom: 20px;">
 
-                    <div class="btn-wrapper ">
+                    <div class="btn-wrapper">
                         @if($usertype != 2)
                         <button type="button" class="button" wire:click="addTerms">{{ isset($inpterms['termsKey']) ? ($inpterms['termsKey'] > 0 ? 'Update to list' : 'Add to list') : 'Add to list'}}</button>
                         @endif
@@ -490,9 +491,8 @@
 
                 </div>
 
-                    <!-- * Rowspan 6: Terms Of Payment Table -->
-                    <div class="rowspan">
-
+                <!-- * Rowspan 6: Terms Of Payment Table -->
+                <div class="rowspan">
 
                     <!-- * Container 2: Terms Of Payment -->
                     <div class="m-con-2" style="padding: 0;">
@@ -507,9 +507,7 @@
                                 <tr>
 
                                     <!-- * Checkbox ALl-->
-                                    <th>
-                                        
-                                    </th>
+                                    <th></th>
 
                                     <!-- * Name -->
                                     <th>
@@ -522,18 +520,18 @@
                                     </th>
 
                                     <!-- * Days -->
-                                    <th>
+                                    <th style="text-align: center">
                                         <span class="th-name">Terms</span>
                                     </th>
 
                                     <!-- * Advance payment formula -->
-                                    <th>
+                                    <th style="text-align: center">
                                         <span class="th-name">Advance payment formula</span>
                                     </th>
 
                                     <!-- * Action -->
-                                    <th>
-                                        <span class="th-name">Action</span>
+                                    <th style="display: flex">
+                                        <span class="th-name" style="margin: 0 auto;">Action</span>
                                     </th>
                                 </tr>
 
@@ -543,30 +541,23 @@
                                 @if($terms)
                                     @foreach($terms as $key => $value)
                                     <tr>
-
                                         <!-- * Checkbox Opt -->
-                                        <td>
-                                            
-                                        </td>
+                                        <td></td>
 
                                         <!-- * Name of terms -->
-                                        <td>
-                                            {{ $value['nameOfTerms'] }}
-                                        </td>
+                                        <td>{{ $value['NameOfTerms'] }}</td>
 
                                         <!-- * Interest Rate -->
-                                        <td>
-                                            {{ $value['interestRate'] }} %
-                                        </td>
+                                        <td>{{ $value['InterestRate'] }} %</td>
 
                                         <!-- * Days -->
-                                        <td>
-                                            {{ $value['terms'] }}
+                                        <td style="text-align: center">
+                                            {{ $value['Terms'] }}
                                         </td>
 
                                         <!-- * Advance payment formula -->
-                                        <td>
-                                            {!! isset($formulaList[$value['formula']]['formula']) ? $formulaList[$value['formula']]['formula'] : '<span class="text-required">formula not found</span>' !!}
+                                        <td style="text-align: center">
+                                            {{ $value['Formula']}}
                                         </td>
 
                                         <!-- * Action -->
@@ -595,8 +586,7 @@
 
                     </div>
 
-
-                    </div>
+                </div>
                 <!-- table -->
                 <!-- deductions -->
             </div>

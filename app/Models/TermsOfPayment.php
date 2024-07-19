@@ -36,4 +36,14 @@ class TermsOfPayment extends Model
     {
         return $this->belongsTo(LoanType::class, 'LoanTypeId', 'LoanTypeID');
     }
+
+    public function advancePaymentFormula()
+    {
+        return $this->belongsTo(AdvancePaymentFormula::class, 'Formula', 'APFID');
+    }
+
+    public function collectionType()
+    {
+        return $this->belongsTo(TermsTypeOfCollection::class, 'CollectionTypeId', 'Id');
+    }
 }
