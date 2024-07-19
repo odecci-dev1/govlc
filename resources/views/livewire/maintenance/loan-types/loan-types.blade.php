@@ -248,7 +248,7 @@
                                             <option value="">- - select - -</option>                                                
                                             @if($formulaList)
                                                 @foreach($formulaList as $id => $formula)
-                                                <option value="{{ $id }}">{{ $formula }}</option> 
+                                                    <option value="{{ $formula['APFID'] }}">{{ $formula['Formula'] }}</option> 
                                                 @endforeach
                                             @endif                                   
                                         </select>    
@@ -480,7 +480,7 @@
 
                     <div class="btn-wrapper">
                         @if($usertype != 2)
-                        <button type="button" class="button" wire:click="addTerms">{{ isset($inpterms['termsKey']) ? ($inpterms['termsKey'] > 0 ? 'Update to list' : 'Add to list') : 'Add to list'}}</button>
+                            <button type="button" class="button" wire:click="addTerms">{{ isset($inpterms['termsKey']) ? ($inpterms['termsKey'] > 0 ? 'Update to list' : 'Add to list') : 'Add to list'}}</button>
                         @endif
                         @if(isset($inpterms['termsKey']))
                             @if($inpterms['termsKey'] > 0)

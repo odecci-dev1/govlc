@@ -99,6 +99,9 @@ class LoanTypes extends Component
                         'NameOfTerms' => $value['NameOfTerms'], 
                         'InterestRate' => $value['InterestRate'],
                         'InterestType' => $value['InterestType'],
+                        'Status' => 1,
+                        'DateCreated' => now(),
+                        'DateUpdated' => NULL,
                         'LoanTypeId' => $this->LoanTypeId,   
                         'Formula' => $value['Formula'],  
                         'InterestApplied' => $value['InterestApplied'],  
@@ -119,10 +122,11 @@ class LoanTypes extends Component
                     ];
                 } else {
                     $terms[] = [
-                        'TopId' => $value['TopId'],          
                         'NameOfTerms' => $value['NameOfTerms'], 
                         'InterestRate' => $value['InterestRate'],
                         'InterestType' => $value['InterestType'],
+                        'DateCreated' => now(),
+                        'DateUpdated' => now(),
                         'LoanTypeId' => $this->LoanTypeId,   
                         'Formula' => $value['Formula'],  
                         'InterestApplied' => $value['InterestApplied'],  
@@ -150,50 +154,51 @@ class LoanTypes extends Component
             'Savings' =>  isset($inputs['loantype']['Savings']) ? $inputs['loantype']['Savings'] : 0,
             'LoanAmount_Min' =>  isset($inputs['loantype']['LoanAmount_Min']) ? $inputs['loantype']['LoanAmount_Min'] : 0,
             'LoanAmount_Max' =>  isset($inputs['loantype']['LoanAmount_Max']) ? $inputs['loantype']['LoanAmount_Max'] : 0,
-            'Terms' => $terms
         ];
 
         // dd($data, $this->LoanTypeId);
               
         $savemsg = '';
         if($this->LoanTypeId == ''){
-            $savemsg = 'Loan type successfully saved!';
-            $loanType = LoanType::create([
-                $data,
+            $data = array_merge($data, [
                 'Status' => 1,
-                'DataCreated' => now(),
-                'DateUpdated' => NULL,
+                'DateCreated' => now(),
+                'DateUpdated' => null,
             ]);
 
-            $this->LoanTypeId = $loanType->LoanTypeID;
+            $loanType = LoanType::create($data);
+
+            $latestLoanTypeID = LoanType::latest()->first()->LoanTypeID;
 
             foreach ($terms as $term) {
-                $term['LoanTypeId'] = $this->LoanTypeID;
+                $term['LoanTypeId'] = $latestLoanTypeID;
                 TermsOfPayment::create($term);
             }
 
-            $latestOfficer = LoanType::latest()->first();
-            dd($latestOfficer);
-            // return redirect()->to('/maintenance/loantypes/view/' . $latestOfficer)->with('mmessage', $savemsg);     
+            $savemsg = 'Loan type successfully saved!';
+
+            return redirect()->to('/maintenance/loantypes/view/' . $latestLoanTypeID)->with('mmessage', $savemsg);     
         } else {
-            $savemsg = 'Loan type successfully updated!';
-            $loanType = LoanType::where('LoanTypeID', $this->LoanTypeId);
-            $loanType->update([
-                $data,
+            $loanType = LoanType::where('LoanTypeID', $this->LoanTypeId)->first();
+            $loanTypeUpdate = LoanType::where('LoanTypeID', $this->LoanTypeId);
+            
+            $loanTypeUpdate->update([
+                'LoanTypeName' =>  $inputs['loantype']['LoanTypeName'],
+                'Savings' =>  isset($inputs['loantype']['Savings']) ? $inputs['loantype']['Savings'] : 0,
+                'LoanAmount_Min' =>  isset($inputs['loantype']['LoanAmount_Min']) ? $inputs['loantype']['LoanAmount_Min'] : 0,
+                'LoanAmount_Max' =>  isset($inputs['loantype']['LoanAmount_Max']) ? $inputs['loantype']['LoanAmount_Max'] : 0,
                 'Status' => 1,
-                'DataCreated' => $this->DateCreated,
                 'DateUpdated' => now(),
             ]);
+            
+            $savemsg = 'Loan type successfully updated!';
 
             foreach ($terms as $term) {
                 if (isset($term['TopId'])) {
-                    $existingTerm = TermsOfPayment::find($term['TopId']);
+                    $existingTerm = TermsOfPayment::where('TopId', $term['TopId']);
                     if ($existingTerm) {
                         $existingTerm->update($term);
                     }
-                } else {
-                    $term['LoanTypeId'] = $this->LoanTypeId;
-                    TermsOfPayment::create($term);
                 }
             }
 
@@ -203,18 +208,22 @@ class LoanTypes extends Component
     
     public function addTerms()
     {
+        $termsCollection = collect($this->terms);
         if(isset($this->inpterms['termsKey'])){
             if($this->inpterms['termsKey'] > 0){             
                 $lastcnt = $this->inpterms['termsKey'];
             }
-            else{                
-                $lastcnt = array_key_last($this->terms) + 1;   
+            else{      
+                $lastcnt = $termsCollection->keys()->last() + 1;          
+                // $lastcnt = array_key_last($this->terms) + 1;   
             }
         }
         else{           
-            $lastcnt = array_key_last($this->terms) + 1;   
+            $lastcnt = $termsCollection->keys()->last() + 1;          
+
+            // $lastcnt = array_key_last($this->terms) + 1;   
         }
-      
+
         $data = $this->validate([                                    
             'inpterms.NameOfTerms' => ['required'],
             'inpterms.InterestRate' => ['required', 'numeric'],
@@ -259,7 +268,7 @@ class LoanTypes extends Component
             'CollectionTypeId' => $data['inpterms']['CollectionTypeId'],      
             'TopId' => isset($this->inpterms['TopId']) ? $this->inpterms['TopId'] : null,                         
         ];
-        //dd($this->terms);                           
+        // dd($this->terms);                           
         $this->resetterms();                        
     }
 
@@ -270,12 +279,12 @@ class LoanTypes extends Component
 
     public function editTerms($key)
     {
-        $inp =  $this->terms[$key];
+        $inp = $this->terms[$key];
         $this->inpterms['termsKey'] = $key;
         $this->inpterms['NameOfTerms'] = $inp['NameOfTerms'];
         $this->inpterms['InterestRate'] = $inp['InterestRate'];
         $this->inpterms['InterestType'] = $inp['InterestType'];
-        $this->inpterms['Formula'] = $inp['Formula'];;
+        $this->inpterms['Formula'] = $inp['Formula'];
         $this->inpterms['InterestApplied'] = $inp['InterestApplied'];
         $this->inpterms['Terms'] = $inp['Terms'];
         $this->inpterms['OldFormula'] = $inp['OldFormula'];
@@ -331,90 +340,6 @@ class LoanTypes extends Component
         return redirect()->to('/maintenance/loantypes/list')->with('mmessage', 'Loan type has been trashed');    
     }
 
-    // public function mount($loanid = '')
-    // {
-    //     $this->usertype = session()->get('auth_usertype'); 
-    //     if($loanid != ''){
-    //         $this->LoanTypeId = $loanid;
-
-    //         $loantype = LoanType::where('LoanTypeId', $loanid)->first();
-    //         $termsofPayment = TermsOfPayment::where('LoanTypeId', $loanid)->first();
-            
-    //         $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/LoanType/LoanTypeFilter', ['LoanTypeId' => $this->LoanTypeId]);            
-    //         $data = $data->json();
-    //         $data = $data[0];
-
-    //         $this->loantype['Loan_amount_Lessthan'] = $data['Loan_amount_Lessthan'];
-    //         $this->loantype['Loan_amount_GreaterEqual'] = $data['Loan_amount_GreaterEqual'];
-    //         $this->loantype['Savings'] = $data['Savings'];
-    //         $this->loantype['LoanAmount_Min'] = $data['LoanAmount_Min'];
-    //         $this->loantype['LoanAmount_Max'] = $data['LoanAmount_Max'];
-    //         $this->loantype['LoanTypeName'] = $data['LoanTypeName'];
-
-    //         $this->loantype['loan_amount_Lessthan_Amount'] = $data['loan_amount_Lessthan_Amount'];
-    //         $this->loantype['lalV_Type'] = $data['laL_Id'];
-    //         $this->loantype['loan_amount_GreaterEqual_Amount'] = $data['loan_amount_GreaterEqual_Amount'];
-    //         $this->loantype['lageF_Type'] = $data['laG_Id'];
-
-    //         $this->loantype['loanInsurance'] = $data['loanInsurance'];
-    //         $this->loantype['loanI_Type'] = $data['loanI_Id'];
-    //         $this->loantype['lifeInsurance'] = $data['lifeInsurance'];
-    //         $this->loantype['lifeI_Type'] = $data['lifeI_Id'];
-
-    //         $termsofPayment = $data['termsofPayment'];         
-    //         $cnt = 0;
-    //         if( $termsofPayment ){
-    //             foreach($termsofPayment as $termsofPayment){
-    //                 $cnt = $cnt + 1;                                                    
-    //                 $this->terms[$cnt] = [  
-    //                     'NameOfTerms' => $termsofPayment['NameOfTerms'],
-    //                     'InterestRate' => $termsofPayment['InterestRate'],
-    //                     'InterestType' => $termsofPayment['iR_Type'],                                         
-    //                     'LoanTypeId' => $this->LoanTypeId,                                           
-    //                     'Formula' => $termsofPayment['formulaID'],
-    //                     'InterestApplied' => $termsofPayment['InterestApplied'],
-    //                     'terms' => $termsofPayment['terms'],
-    //                     'OldFormula' => $termsofPayment['OldFormula'],
-    //                     'NoAdvancePayment' => $termsofPayment['NoAdvancePayment'],
-    //                     'NotarialFeeOrigin' => $termsofPayment['NotarialFeeOrigin'],
-    //                     'LessThanNotarialAmount' => $termsofPayment['LessThanNotarialAmount'],
-    //                     'LessThanAmountType' => $termsofPayment['lalV_TypeID'],
-    //                     'GreaterThanEqualNotarialAmount' => $termsofPayment['GreaterThanEqualNotarialAmount'],
-    //                     'GreaterThanEqualAmountType' => $termsofPayment['lageF_TypeID'],
-    //                     'LoanInsuranceAmount' => $termsofPayment['LoanInsuranceAmount'],
-    //                     'LoanInsuranceAmountType' => $termsofPayment['loanI_TypeID'],
-    //                     'LifeInsuranceAmount' => $termsofPayment['LifeInsuranceAmount'],
-    //                     'LifeInsuranceAmountType' => $termsofPayment['lifeI_TypeID'],
-    //                     'DeductInterest' => $termsofPayment['DeductInterest'],
-    //                     'CollectionTypeId' => $termsofPayment['typeOfCollectionID'],
-    //                     'TopId' => $termsofPayment['TopId'],
-    //                 ];
-    //             }
-    //         }         
-    //     }
-
-    //     $this->inpterms['NoAdvancePayment'] = 1;
-    //     $this->inpterms['OldFormula'] = 2;
-    //     $this->inpterms['DeductInterest'] = 2;
-
-    //     $collType = $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/GetCollectionType');
-    //     $collType = $collType->json();
-    //     if($collType){
-    //         foreach($collType as $mcollType){
-    //             $this->collectionType[$mcollType['id']] = ['id' => $mcollType['id'], 'typeOfCollection' => $mcollType['typeOfCollection']];
-    //         }
-    //     }
-
-    //     $formulaList = $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/GetLoanFormula');
-    //     $formulaList = $formulaList->json();
-    //     if($formulaList){
-    //         foreach($formulaList as $mformulaList){
-    //             $this->formulaList[$mformulaList['formulaID']] = ['formulaID' => $mformulaList['formulaID'], 'Formula' => $mformulaList['Formula']];
-    //         }
-    //     }
-    //     // $this->inpterms['InterestType'] = 1;
-    // }
-
     public function mount($loanid = '')
     {
         $this->usertype = session()->get('auth_usertype'); 
@@ -422,8 +347,6 @@ class LoanTypes extends Component
             $this->LoanTypeId = $loanid;
 
             $loantype = LoanType::where('LoanTypeId', $loanid)->first();
-            // dd($loantype);
-            $termsofPayment = TermsOfPayment::where('LoanTypeId', $loanid)->first();
 
             $this->loantype['Loan_amount_Lessthan'] = $loantype['Loan_amount_Lessthan'];
             $this->loantype['Loan_amount_GreaterEqual'] = $loantype['Loan_amount_GreaterEqual'];
@@ -442,15 +365,10 @@ class LoanTypes extends Component
             $this->loantype['lifeInsurance'] = $loantype['lifeInsurance'];
             $this->loantype['lifeI_Type'] = $loantype['lifeI_Id'];
 
-            
-            // $test = LoanType::with('terms')->where('LoanTypeId', $loanid);
-            // $this->loantype = LoanType::with(['terms.advancePaymentFormula'])->find($loanid);
             $this->loantype = LoanType::with('terms')->where('LoanTypeId', $loanid)->first();
-            // dd($this->loantype);
 
             if ($this->loantype) {
-                // $this->terms = $this->loantype->terms;
-                // Assign terms and other properties
+
                 $this->terms = $this->loantype->terms->map(function($term) {
                     return [
                         'NameOfTerms' => $term->NameOfTerms,
@@ -478,10 +396,6 @@ class LoanTypes extends Component
                 });
             }
             
-            // dd($this->terms);
-
-            // *** Previous Approach when the was still using API Calls *** //
-            // *** Refactor Below *** ///
             
         } else {
             $this->loantype = new LoanType();
@@ -491,7 +405,11 @@ class LoanTypes extends Component
         $this->inpterms['DeductInterest'] = 2;
 
         $this->collectionType = TermsTypeOfCollection::all()->pluck('TypeOfCollection', 'Id')->toArray();;
-        $this->formulaList = AdvancePaymentFormula::all()->pluck('Formula', 'Id')->toArray();
+        $this->formulaList = AdvancePaymentFormula::all()
+            ->mapWithKeys(function ($item) {
+                return [$item['Id'] => ['Formula' => $item['Formula'], 'APFID' => $item['APFID']]];
+            })
+            ->toArray();
     }
 
     public function render()
