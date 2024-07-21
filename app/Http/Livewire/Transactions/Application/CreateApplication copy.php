@@ -38,11 +38,7 @@ class CreateApplication extends Component
     use WithFileUploads;
 
     public $naID;
-    public $appid;
-    public $appnaid;
     public $searchedmemId;
-    public $searchedfamId;
-    public $searchedcomakerId;
     public $usertype;
     public $modules = [];
     public $type;
@@ -843,8 +839,7 @@ class CreateApplication extends Component
                         $appliances->DateUpdated = Carbon::now();
                         $appliances->NAID = null;
                         $appliances->MemId = $mem->id;
-                        $appliances->Status = 1;      
-                        $appliances->save();                  
+                        $appliances->Status = 1;                        
                     }
                 }               
             }
@@ -976,7 +971,7 @@ class CreateApplication extends Component
             FileUpload::create($fileuploads);
 
              //dd($this->storeCoAttachments());
-             if(count($this->storeCoAttachments()) > 0){
+            if(count($this->storeCoAttachments()) > 0){
                 foreach( $this->storeCoAttachments() as $attc ){
                     $cofileupload = [
                                         'CMID' =>  $comaker->id
@@ -1126,331 +1121,221 @@ class CreateApplication extends Component
         return $memattachements;
     }
 
-    public function update($type = 7){     
-        $input = $this->validate();                
-        try {                                                                    
+    public function update($type = 7){             
+        try {                                  
+            $this->resetValidation();          
+            $input = $this->validate();          
             $childs = [];
             $businesses = [];
             $appliances = [];
             $banks = [];
             $assets = [];
             $properties = [];
-
-            $mem = Members::where('Id', $this->searchedmemId)->update([
-                                                                        'Fname' => $input['member']['fname'] ??= '',
-                                                                        'Lname' => $input['member']['lname'] ??= '',
-                                                                        'Mname' => $input['member']['mname'] ??= '',
-                                                                        'Suffix' => $input['member']['suffix'] ??= '',
-                                                                        'Age' => $input['member']['age'] ??= '0',
-                                                                        'Barangay' => $input['member']['barangay'] ??= '',
-                                                                        'City' => $input['member']['city'] ??= '',
-                                                                        'Civil_Status' => $input['member']['civil_Status'] ??= 'Single',
-                                                                        'Cno' => $input['member']['cno'] ??= '',
-                                                                        'Country' => $input['member']['country'] ??= '',
-                                                                        'DOB' => $input['member']['dob'] ??= null,
-                                                                        'EmailAddress' => $input['member']['emailAddress'] ??= '',
-                                                                        'Gender' => $input['member']['gender'] ??= '',
-                                                                        'HouseNo' => $input['member']['houseNo'] ??= '',
-                                                                        'House_Stats' => $input['member']['house_Stats'] ??= '0',
-                                                                        'POB' => $input['member']['pob'] ??= '',
-                                                                        'Province' => $input['member']['province'] ??= '',
-                                                                        'YearsStay' => $input['member']['yearsStay'] ??= '0',
-                                                                        'ZipCode' => $input['member']['zipCode'] ??= '',
-                                                                        'Status' => 1,
-                                                                        'DateUpdated' => Carbon::now(),
-                                                                        'OwnProperty' => null,
-                                                                        'OwnVehicles' => null
-                                                                    ]);
-
-            $expense = MonthlyBills::where('MemId', $this->searchedmemId)->update([               
-                                                'ElectricBill' => $input['member']['electricBill'] ??= '0',
-                                                'WaterBill' => $input['member']['waterBill'] ??= '0',
-                                                'OtherBills' => $input['member']['otherBills'] ??= '0',
-                                                'DailyExpenses' => $input['member']['dailyExpenses'] ??= '0',
-                                                'Status' => 1,
-                                                'DateUpdated' => Carbon::now()
-                                            ]);  
-                                            
-            $jobinfo = JobInfo::where('MemId', $this->searchedmemId)->update([
-                                                'JobDescription' => $input['member']['jobDescription'] ??= '',
-                                                'YOS' => !empty($input['member']['yos']) ? $input['member']['yos'] : '0',
-                                                'CompanyName' => $input['member']['companyName'] ??= '',
-                                                'MonthlySalary' => !empty($input['member']['monthlySalary']) ? $input['member']['monthlySalary'] : '0',
-                                                'OtherSOC' => $input['member']['otherSOC'] ??= '',
-                                                'Status' => 1,
-                                                'DateUpdated' => Carbon::now(),
-                                                'BO_Status' => $input['member']['bO_Status'] ??= '0',
-                                                'Emp_Status' => $input['member']['emp_Status'] ??= '0',                                        
-                                                'CompanyAddress' => $input['member']['companyAddress'] ??= ''                                     
-                                            ]);
-
-            $famback = FamBackground::where('MemId', $this->searchedmemId)->update([
-                                               'Fname' => $input['member']['f_Fname'] ??= '',
-                                               'Mname' => $input['member']['f_Mname'] ??= '',
-                                               'Lname' => $input['member']['f_Lname'] ??= '',
-                                               'Suffix' => $input['member']['f_Suffix'] ??= '',
-                                               'DOB' => $input['member']['f_DOB'] ??= null,
-                                               'Age' => $input['member']['f_Age'] ??= '0',
-                                               'Emp_Status' => $input['member']['f_Emp_Status'] ??= '0',
-                                               'Position' => $input['member']['f_Job'] ??= '',
-                                               'YOS' => !empty($input['member']['f_YOS']) ? $input['member']['f_YOS'] : '0',
-                                               'CmpId' => $input['member']['f_CompanyName'] ??= '',
-                                               'NOD' => $input['member']['f_NOD'] ??= '0',
-                                               'RTTB' => '',                 
-                                               'Status' => 1,                                       
-                                               'DateUpdated' => Carbon::now()                                                        
-                                            ]);
-
-            $businfoget = BusinessInformation::where('MemId', $this->searchedmemId)->get();
-            if($businfoget->isNotEmpty()){
-                foreach($businfoget as $busget){
-                    BusinessFileUpload::where('BIID', $busget->Id)->delete();
-                }
-            }
-            BusinessInformation::where('MemId', $this->searchedmemId)->delete();
-            if(count( $this->businfo) > 0){
-                foreach($this->businfo as $key => $value){
-                    $businfo = new BusinessInformation();
-                    $businfo->BusinessName = $value['businessName'];
-                    $businfo->BusinessType = $value['businessType'];
-                    $businfo->BusinessAddress = $value['businessAddress'];
-                    $businfo->B_status = $value['b_status'];
-                    $businfo->YOB = $value['yob'];
-                    $businfo->NOE = $value['noe'];
-                    $businfo->Salary = $value['salary'];
-                    $businfo->VOS = $value['vos'];
-                    $businfo->AOS = $value['aos'];
-                    $businfo->Status = 1;
-                    $businfo->DateCreated = Carbon::now();
-                    $businfo->DateUpdated = Carbon::now();
-                    $businfo->MemId = $this->searchedmemId;
-                    $businfo->save();
-
-                    $busattach = $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments']);                   
-                    if(count($busattach) > 0){
-                        foreach($busattach as $mbusattach){                           
-                            $busfile = new BusinessFileUpload();
-                            $busfile->BIID = $businfo->id;
-                            $busfile->FileName = $mbusattach['fileName'];
-                            $busfile->FilePath = $mbusattach['fileName'];
-                            $busfile->Status = 1;                                     
-                            $busfile->DateCreated = Carbon::now();                   
-                            $busfile->save();             
-                        }
-                    }                                 
-                }
-            }         
-            ChildInfo::where('FamId', $this->searchedfamId)->delete();
+         
             if(count($this->cntmemchild) > 0){
                 if((isset($this->inpchild['fname1']) ? $this->inpchild['fname1'] != '' : false)  || (isset($this->inpchild['mname1']) ? $this->inpchild['mname1'] != '' : false) || (isset($this->inpchild['lname1']) ? $this->inpchild['lname1'] != '' : false) || (isset($this->inpchild['age1']) ? $this->inpchild['age1'] != '' : false) || (isset($this->inpchild['school1']) ? $this->inpchild['school1'] != '' : false)){
                     foreach($this->cntmemchild as $cntmemchild){
-                        $childinfo = new ChildInfo();
-                        $childinfo->Fname = $this->inpchild['fname'.$cntmemchild] ??= '';
-                        $childinfo->Mname = $this->inpchild['mname'.$cntmemchild] ??= '';
-                        $childinfo->Lname = $this->inpchild['lname'.$cntmemchild] ??= '';
-                        $childinfo->Age = $this->inpchild['age'.$cntmemchild] ??= '0';
-                        $childinfo->NOS = $this->inpchild['school'.$cntmemchild] ??= '';
-                        $childinfo->FamId = $this->searchedfamId;
-                        $childinfo->Status = 1;
-                        $childinfo->DateCreated = Carbon::now();
-                        $childinfo->DateUpdated = Carbon::now();
-                        $childinfo->save();
+                        $childs[] = [   'fname' => $this->inpchild['fname'.$cntmemchild] ??= '', 
+                                        'mname' => $this->inpchild['mname'.$cntmemchild] ??= '',
+                                        'lname' => $this->inpchild['lname'.$cntmemchild] ??= '',
+                                        'age' => $this->inpchild['age'.$cntmemchild] ??= '0',
+                                        'nos' => $this->inpchild['school'.$cntmemchild] ??= '',
+                                        'famId' => null,    ];
                     }
                 }
             }
+           
+           
+            if(count( $this->businfo) > 0){          
+                foreach($this->businfo as $key => $value){
+                    
+                    $businesses[] = [   
+                                        'businessName' => $value['businessName'], 
+                                        'businessType' => $value['businessType'],
+                                        'businessAddress' => $value['businessAddress'],
+                                        'b_status' => $value['b_status'], //error
+                                        'yob' => $value['yob'],
+                                        'noe' => $value['noe'],
+                                        'salary' => $value['salary'],
+                                        'vos' => $value['vos'],
+                                        'aos' => $value['aos'],   
+                                        'businessFiles' => $this->storeBusinessInfoAttachments( $value['old_attachments'], $value['attachments'] )
+                                    ];
+                }
+            }  
 
-            Appliances::where('MemId', $this->searchedmemId)->delete();
             if(count( $this->appliances) > 0){
                 if((isset($this->inpappliances['appliance1']) ? $this->inpappliances['appliance1'] != '' : false)  || (isset($this->inpappliances['brand1']) ? $this->inpappliances['brand1'] != '' : false)){
                     foreach($this->appliances as $key => $value){
-                        $appliances = new Appliances();
-                        $appliances->Brand = $this->inpappliances['brand'.$key];
-                        $appliances->Description = $this->inpappliances['appliance'.$key];
-                        $appliances->DateCreated = Carbon::now();
-                        $appliances->DateUpdated = Carbon::now();
-                        $appliances->NAID = null;
-                        $appliances->MemId = $this->searchedmemId;
-                        $appliances->Status = 1;    
-                        $appliances->save();                                
+                        $appliances[] = [   'brand' => $this->inpappliances['brand'.$key], 
+                                            'appliances' => $this->inpappliances['appliance'.$key],
+                                            'naid' => ''   ];
                     }
                 }               
             }
 
-            Properties::where('MemId', $this->searchedmemId)->delete();
-            if($this->hasproperties == 1){
-                if(count($this->properties) > 0){
-                    foreach($this->properties as $key => $value){      
-                        $property = new Properties();             
-                        $property->Property = $this->inpproperties['property'.$key];
-                        $property->DateCreated = Carbon::now();
-                        $property->DateUpdated = Carbon::now();
-                        $property->Status = 1;
-                        $property->MemId = $this->searchedmemId;
-                        $property->save();                                   
-                    }            
-                }
-            } 
-
-            Assets::where('MemId', $this->searchedmemId)->delete();
-            if($this->hasvehicle == 1){
-                if(count($this->vehicle) > 0){
-                    foreach($this->vehicle as $key => $value){                   
-                        $vehicle = new Assets();
-                        $vehicle->MotorVehicles = $this->inpvehicle['vehicle'.$key];
-                        $vehicle->DateCreated = Carbon::now();
-                        $vehicle->DateUpdated = Carbon::now();
-                        $vehicle->Status = 1;
-                        $vehicle->MemId = $this->searchedmemId;
-                        $vehicle->save();
-                        $assets[] = [ 'motorVehicles' => $this->inpvehicle['vehicle'.$key] ];  
-                    }            
-                }
-            }
-
-            BankAccounts::where('MemId', $this->searchedmemId)->delete();
             if(count( $this->bank) > 0){
                 if((isset($this->inpbank['account1']) ? $this->inpbank['account1'] != '' : false)  || (isset($this->inpbank['address1']) ? $this->inpbank['address1'] != '' : false)){
                     foreach($this->bank as $key => $value){
-                        $bank = new BankAccounts();    
-                        $bank->BankName = $this->inpbank['account'.$key];
-                        $bank->Address = $this->inpbank['address'.$key];
-                        $bank->DateCreated = Carbon::now();
-                        $bank->DateUpdated = Carbon::now();                       
-                        $bank->Status = 1;
-                        $bank->MemId = $this->searchedmemId;
-                        $bank->save();
+                        $banks[] = [   'bankName' => $this->inpbank['account'.$key], 
+                                    'address' => $this->inpbank['address'.$key]   ];
                     }
                 }
             }
 
-            $comaker = CoMaker::where('MemId', $this->searchedmemId)->update([
-                            'Fname' => $input['comaker']['co_Fname'] ??= '',
-                            'Mname' => $input['comaker']['co_Mname'] ??= '',
-                            'Lnam' => $input['comaker']['co_Lname'] ??= '',
-                            'Suffi' => $input['comaker']['co_Suffix'] ??= '',
-                            'Gender' => $input['comaker']['co_Gender'] ??= '',
-                            'DOB' => $input['comaker']['co_DOB'] ??= null,
-                            'Age' => $input['comaker']['co_Age'] ??= '0',
-                            'POB' => $input['comaker']['co_POB'] ??= '',
-                            'CivilStatus' => $input['comaker']['co_Civil_Status'] ??= '',
-                            'Cno' => $input['comaker']['co_Cno'] ??= '',
-                            'EmailAddress' => $input['comaker']['co_EmailAddress'] ??= '',
-                            'House_Stats' => $input['comaker']['co_House_Stats'] ??= '0',
-                            'HouseNo' => $input['comaker']['co_HouseNo'] ??= '',
-                            'Barangay' => $input['comaker']['co_Barangay'] ??= '',
-                            'City' => $input['comaker']['co_City'] ??= '',
-                            'Region' => $input['comaker']['co_Province'] ??= '',
-                            'Country' => $input['comaker']['co_Country'] ??= '',
-                            'ZipCode' => $input['comaker']['co_ZipCode'] ??= '',
-                            'YearsStay' => $input['comaker']['co_YearsStay'] ??= '0',
-                            'RTTB' => $input['comaker']['co_RTTB'] ??= '', 
-                            'Status' => 1,
-                            'DateUpdated' => Carbon::now()                      
-                        ]);
-           
-            $comakerjob = CoMakerJobInfo::where('CMID', $this->searchedcomakerId)->update([
-                                'JobDescription' => $input['comaker']['co_JobDescription'] ??= '',
-                                'YOS' => !empty($input['comaker']['co_YOS'] ??= '0') ? $input['comaker']['co_YOS'] ??= '0' : '0',
-                                'CompanyName' => $input['comaker']['co_CompanyName'] ??= '',
-                                'MonthlySalary' => !empty($input['comaker']['co_MonthlySalary']) ? $input['comaker']['co_MonthlySalary'] : '0',
-                                'OtherSOC' => $input['comaker']['co_OtherSOC'] ??= '',
-                                'Status' => 1,
-                                'DateUpdated' => Carbon::now(),
-                                'BO_Status' => $input['comaker']['co_BO_Status'] ??= '0',
-                                'Emp_Status' => $input['comaker']['co_Emp_Status'] ??= '0',
-                                'CMID' => $this->searchedcomakerId,
-                                'companyAddress' => $input['comaker']['co_CompanyID'] ??= ''
-                            ]);
-          
-            //BankAccounts::where('MemId', $this->searchedmemId)->delete();                
-   
-            FileUpload::where('MemId',  $this->searchedmemId)->where('Type', 1)->update([                            
-                                'FileName' => $this->storeProfileImage() 
-                                ,'FilePath' => $this->storeProfileImage()
-                                ,'Status' => 1
-                                ,'DateCreated' => Carbon::now()
-                                ,'DateUpdated' => Carbon::now()                               
-            ]); 
+            /////////////////////////
+            if($this->hasvehicle == 1){
+                if(count($this->vehicle) > 0){
+                    foreach($this->vehicle as $key => $value){                   
+                        $assets[] = [ 'motorVehicles' => $this->inpvehicle['vehicle'.$key] ];  
+                    }            
+                }
+            }
     
-            CoMakerFileUpload::where('CMID',  $this->searchedcomakerId)->where('Status', 1)->update([                            
-                                    'FileName' => $this->storeCoProfileImage()
-                                    ,'FilePath' => $this->storeCoProfileImage()
-                                    ,'Status' => 1
-                                    ,'DateCreated' => Carbon::now()                         
-                            ]); 
-
-            FileUpload::where('MemId', $this->searchedmemId)->where('Type', 2)->delete();          
-            if(count($this->storeAttachments()) > 0){
-                foreach( $this->storeAttachments() as $attc ){
-                    $fileuploads = [   'MemId' => $this->searchedmemId
-                                        ,'FileName' => $attc['fileName'] 
-                                        ,'FilePath' => $attc['fileName']
-                                        ,'Status' => 1
-                                        ,'DateCreated' => Carbon::now()
-                                        ,'DateUpdated' => Carbon::now()
-                                        ,'Type' => 2 ];
-                    FileUpload::create($fileuploads);
+            if($this->hasproperties == 1){
+                if(count($this->properties) > 0){
+                    foreach($this->properties as $key => $value){                    
+                        $properties[] = [ 'property' => $this->inpproperties['property'.$key] ];                
+                    }            
                 }
-            }
+            }                      
+            /////////////////////////
 
-            FileUpload::where('MemId',  $this->searchedmemId)->where('Type', 3)->update([                            
-                'FileName' => $this->storeSignature() 
-                ,'FilePath' => $this->storeSignature()
-                ,'Status' => 1
-                ,'DateCreated' => Carbon::now()
-                ,'DateUpdated' => Carbon::now()                               
-            ]); 
-
-            //      
-            CoMakerFileUpload::where('CMID', $this->searchedcomakerId)->where('Status', 2)->delete();       
-            if(count($this->storeCoAttachments()) > 0){
-                foreach( $this->storeCoAttachments() as $attc ){
-                    $cofileupload = [
-                                        'CMID' =>  $this->searchedcomakerId
-                                        ,'FileName' => $attc['fileName'] 
-                                        ,'FilePath' => $attc['fileName'] 
-                                        ,'Status' => 2
-                                        ,'DateCreated' => Carbon::now()
-                                    ];
-                    CoMakerFileUpload::create($cofileupload);
-                }
-            }
-
-            //
-            CoMakerFileUpload::where('CMID',  $this->searchedcomakerId)->where('Status', 3)->update([                            
-                'FileName' => $this->storeCoSignature() 
-                ,'FilePath' => $this->storeCoSignature()
-                ,'Status' => 3
-                ,'DateCreated' => Carbon::now()                                
-            ]);         
-            
-            $loandetl = LoanDetails::where('NAID', $this->appid)->update([
-                'LoanAmount' => $input['member']['loanAmount'] ??= '0',
-                'Purpose' => $input['member']['purpose'] ??= ''
-            ]);
-          
-            //dito
+            $bdate = date('Y-m-d', strtotime($input['member']['dob']));            
+            $data = [
+                        [
+                            "fname"=> $input['member']['fname'] ??= '',
+                            "lname"=> $input['member']['lname'] ??= '',
+                            "mname"=> $input['member']['mname'] ??= '',
+                            "suffix"=> $input['member']['suffix'] ??= '',
+                            "age"=> $input['member']['age'] ??= '0',
+                            "barangay"=> $input['member']['barangay'] ??= '',
+                            "city"=> $input['member']['city'] ??= '',
+                            "civil_Status"=> $input['member']['civil_Status'] ??= 'Single',
+                            "cno"=> $input['member']['cno'] ??= '',
+                            "country"=> $input['member']['country'] ??= '',
+                            "dob"=>  $bdate ??= null, //not saving if null or blank
+                            "emailAddress"=> $input['member']['emailAddress'] ??= '',
+                            "gender"=> $input['member']['gender'] ??= '',
+                            "houseNo"=> $input['member']['houseNo'] ??= '',
+                            "house_Stats"=> $input['member']['house_Stats'] ??= '0',
+                            "pob"=> $input['member']['pob'] ??= '',
+                            "province"=> $input['member']['province'] ??= '',
+                            "yearsStay"=> $input['member']['yearsStay'] ??= '0',
+                            "zipCode"=> $input['member']['zipCode'] ??= '',
+                            "status"=> '1',
+                            "dateCreated"=> null,
+                            "dateUpdated"=> null,
+                            "memId"=> $this->searchedmemId,
+                            "electricBill"=> $input['member']['electricBill'] ??= '0',
+                            "waterBill"=> $input['member']['waterBill'] ??= '0',
+                            "otherBills"=> $input['member']['otherBills'] ??= '0',
+                            "dailyExpenses"=> $input['member']['dailyExpenses'] ??= '0',
+                            "jobDescription"=> $input['member']['jobDescription'] ??= '',
+                            "yos"=> !empty($input['member']['yos']) ? $input['member']['yos'] : '0',
+                            "monthlySalary"=> !empty($input['member']['monthlySalary']) ? $input['member']['monthlySalary'] : '0',
+                            "otherSOC"=> $input['member']['otherSOC'] ??= '',
+                            "bO_Status"=> $input['member']['bO_Status'] ??= '0', //mali
+                            "companyName"=> $input['member']['companyName'] ??= '',
+                            "companyAddress"=> $input['member']['companyAddress'] ??= '',
+                            "emp_Status"=> $input['member']['emp_Status'] ??= '0',
+                            "f_Fname"=> $input['member']['f_Fname'] ??= '',
+                            "f_Lname"=> $input['member']['f_Lname'] ??= '',
+                            "f_Mname"=> $input['member']['f_Mname'] ??= '',
+                            "f_Suffix"=> $input['member']['f_Suffix'] ??= '',
+                            "f_DOB"=>  $input['member']['f_DOB'] ??= null,
+                            "f_Age"=> $input['member']['f_Age'] ??= '0',
+                            "f_NOD"=> $input['member']['f_NOD'] ??= '0',
+                            "f_YOS"=> !empty($input['member']['f_YOS']) ? $input['member']['f_YOS'] : '0',
+                            "f_Emp_Status"=> $input['member']['f_Emp_Status'] ??= '0',
+                            "f_Job"=> $input['member']['f_Job'] ??= '',
+                            "f_CompanyName"=> $input['member']['f_CompanyName'] ??= '',
+                            "f_RTTB"=> '',
+                            "famId"=> $this->member['famId'], 
+                            "business"=> $businesses,
+                            "loanAmount"=> $input['member']['loanAmount'] ??= '0',
+                            'loanTypeId' => $this->loanDetails['loanTypeID'],
+                            "termsOfPayment"=>  $this->loanDetails['loantermsID'] ??= '',
+                            "purpose"=> $input['member']['purpose'] ??= '',
+                            "child"=> $childs,
+                            "appliances"=> $appliances,                           
+                            "assets"=> $assets,
+                            "property"=> $properties,
+                            "bank"=> $banks,
+                            "co_Fname"=> $input['comaker']['co_Fname'] ??= '',
+                            "co_Lname"=> $input['comaker']['co_Lname'] ??= '',
+                            "co_Mname"=> $input['comaker']['co_Mname'] ??= '',
+                            "co_Suffix"=> $input['comaker']['co_Suffix'] ??= '',
+                            "co_Age"=> $input['comaker']['co_Age'] ??= '0',
+                            "co_Barangay"=> $input['comaker']['co_Barangay'] ??= '',
+                            "co_City"=> $input['comaker']['co_City'] ??= '',
+                            "co_Civil_Status"=> $input['comaker']['co_Civil_Status'] ??= '',
+                            "co_Cno"=> $input['comaker']['co_Cno'] ??= '',
+                            "co_Country"=> $input['comaker']['co_Country'] ??= '',
+                            "co_DOB"=>  $input['comaker']['co_DOB'] ??= null,
+                            "co_EmailAddress"=> $input['comaker']['co_EmailAddress'] ??= '',
+                            "co_Gender"=> $input['comaker']['co_Gender'] ??= '',
+                            "co_HouseNo"=> $input['comaker']['co_HouseNo'] ??= '',
+                            "co_House_Stats"=> $input['comaker']['co_House_Stats'] ??= '0',
+                            "co_POB"=> $input['comaker']['co_POB'] ??= '',
+                            "co_Province"=> $input['comaker']['co_Province'] ??= '',
+                            "co_YearsStay"=> $input['comaker']['co_YearsStay'] ??= '0',
+                            "co_ZipCode"=> $input['comaker']['co_ZipCode'] ??= '',
+                            "co_RTTB"=> $input['comaker']['co_RTTB'] ??= '',
+                            "co_Status"=> '1',
+                            "co_JobDescription"=> $input['comaker']['co_JobDescription'] ??= '',
+                            "co_YOS"=> !empty($input['comaker']['co_YOS']) ? $input['comaker']['co_YOS'] : '0',
+                            "co_MonthlySalary"=> !empty($input['comaker']['co_MonthlySalary']) ? $input['comaker']['co_MonthlySalary'] : '0',
+                            "co_OtherSOC"=> $input['comaker']['co_OtherSOC'] ??= '',
+                            "co_BO_Status"=> $input['comaker']['co_BO_Status'] ??= '0',
+                            "co_CompanyName"=> $input['comaker']['co_CompanyName'] ??= '',
+                            "co_CompanyAddress" => $input['comaker']['co_CompanyID'] ??= '',
+                            "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '', //mali
+                            "co_Emp_Status"=> $input['comaker']['co_Emp_Status'] ??= '0',
+                            "remarks"=> '',
+                            "applicationStatus" => $type,
+                            "profileName"=> $this->storeProfileImage(),
+                            "profileFilePath"=> $this->storeProfileImage(),                            
+                            "co_ProfileName"=>  $this->storeCoProfileImage(),
+                            "co_ProfileFilePath"=>  $this->storeCoProfileImage(),
+                            "requirementsFile"=> $this->storeAttachments(),    
+                            "signatureUpload"=> [
+                                    [
+                                        "fileName"=> $this->storeSignature(),
+                                        "filePath"=> $this->storeSignature()
+                                    ]
+                                ],                                    
+                            "co_RequirementsFile"=> $this->storeCoAttachments(),
+                            "co_SignatureUpload"=> [
+                                    [
+                                        "fileName"=> $this->storeCoSignature(),
+                                        "filePath"=> $this->storeCoSignature()
+                                    ]
+                                ],
+                            "userId"=> session()->get('auth_userid'),
+                            "naid"=> $this->naID
+                            //                          
+                            //
+                        ]
+                    ];                                                   
                     // $extension = $request->file('filename')->getClientOriginalExtension();                    
                     //dd( json_encode($data));
-                    //dd( $data );   
-                    $this->resetValidation();         
-                    return redirect()->to('/tranactions/application/view/'.$this->appnaid)->with(['mmessage'=> 'Application successfully updated', 'mword'=> 'Success']);    
-
-                    // $this->resetValidation();  
-                    // $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                                                          
-                    // $apiresp = $crt->getStatusCode();             
-                    // if($apiresp == 200){    
-                    //     if(in_array($type, [7,8])){ 
-                    //         return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> $type == 8 ? 'Application successfully updated' : 'Application successfully submited for CI', 'mword'=> 'Success']);
-                    //     }
-                    //     else{
-                    //         return redirect()->to('/members/details/'.$this->naID)->with(['mmessage'=> 'Application successfully updated', 'mword'=> 'Success']);
-                    //     }
-                    // }
-                    // else{
-                    //     session()->flash('erroraction', 'update('. $type.')');
-                    //     $this->emit('EMIT_ERROR_ASKING_DIALOG');
-                    // }
+                    //dd( $data );       
+                    $this->resetValidation();  
+                    $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/UpdateMemberInfo', $data);                                                          
+                    $apiresp = $crt->getStatusCode();             
+                    if($apiresp == 200){    
+                        if(in_array($type, [7,8])){ 
+                            return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> $type == 8 ? 'Application successfully updated' : 'Application successfully submited for CI', 'mword'=> 'Success']);
+                        }
+                        else{
+                            return redirect()->to('/members/details/'.$this->naID)->with(['mmessage'=> 'Application successfully updated', 'mword'=> 'Success']);
+                        }
+                    }
+                    else{
+                        session()->flash('erroraction', 'update('. $type.')');
+                        $this->emit('EMIT_ERROR_ASKING_DIALOG');
+                    }
         }
         catch (\Exception $e) {           
             throw $e;            
@@ -2470,8 +2355,6 @@ class CreateApplication extends Component
                     $details = $res->detail;
                     $loantype = $res->loantype;
                     $termsofpayment = $res->termsofpayment;
-                    $this->appid = $res->Id;
-                    $this->appnaid = $res->NAID;
                     $this->loanDetails['loanTypeID'] = $details['LoanTypeID'];
                     $this->loanDetails['loanTypeName'] = $loantype['LoanTypeName'];
                     $this->loanDetails['loantermsID'] = $details['LoanTypeName']; 
@@ -2554,24 +2437,23 @@ class CreateApplication extends Component
                     $this->member['old_profile'] = $this->member['profile'];                  
                     $this->member['old_signature'] = $this->member['signature'];
                 }                
-                //images and files              
-                $comaker = $member->comaker;  
-                $this->searchedcomakerId =  $comaker->Id;            
+                //images and files
+
+                $comaker = $member->comaker;              
                 //$cofiles = $data['co_Files'];         
                 $this->comaker['attachments'] = [];
                 $this->comaker['profile'] = '';
                 $this->comaker['signature'] = '';
-                $cofiles = $comaker->fileuploads;     
-                        
+                $cofiles = $comaker->fileuploads;              
                 if($cofiles){
                     foreach($cofiles as $cofile){
-                        if($cofile->Status == 1){
+                        if($cofile->Type == 1){
                             $this->comaker['profile'] = $cofile->FilePath;
                         }  
-                        if($cofile->Status == 2){                            
+                        if($cofile->Type == 2){                            
                             $this->comaker['attachments'][] = [ 'fileName' => $cofile->FilePath , 'filePath' => $cofile->FilePath ];
                         }   
-                        if($cofile->Status == 3){                            
+                        if($cofile->Type == 3){                            
                             $this->comaker['signature'] = $cofile->FilePath;
                         }   
                     }
@@ -2609,7 +2491,6 @@ class CreateApplication extends Component
                     $this->provinces->put(1, ['provDesc' => $member->Province]);                  
                 }           
                 $memfambackground = $member->familybackground;
-                $this->searchedfamId =  $memfambackground->Id;
                 $monthlybills = $member->monthlybills;
                 $jobinfo = $member->jobinfo;
                 $this->member['yearsStay'] = $member->YearsStay;
@@ -2663,7 +2544,7 @@ class CreateApplication extends Component
                 $this->comaker['co_HouseNo'] = $comaker->HouseNo;
                 $this->comaker['co_House_Stats'] = $comaker->House_Stats; 
                 $this->comaker['co_POB'] = $comaker->POB;
-                $this->comaker['co_Province'] = $comaker->Region;
+                $this->comaker['co_Province'] = $comaker->Province;
                 
                 if($this->member['statusID'] != 7){                  
                     $this->cobarangays->put(1, ['brgyDesc' => $comaker->Barangay]);        
@@ -2692,102 +2573,92 @@ class CreateApplication extends Component
                 //dd($data);
                 // $this->cntmemchild
                 
-                $child = $memfambackground->childs;                     
-                if(count($child) > 0){
-                    $this->cntmemchild = [];
-                    $cntchild = 0;
-                    foreach($child as $mchild){     
-                        $cntchild = $cntchild + 1;               
-                        $this->cntmemchild[] = $cntchild;
-                        $this->inpchild['fname'.$cntchild] = $mchild['Fname'];   
-                        $this->inpchild['mname'.$cntchild] = $mchild['Mname'];                             
-                        $this->inpchild['lname'.$cntchild] = $mchild['Lname'];  
-                        $this->inpchild['age'.$cntchild] = $mchild['Age'];    
-                        $this->inpchild['school'.$cntchild] = $mchild['NOS'];                           
-                    }                   
-                }                                   
+                // $child = $data['child'];              
+                // if(count($child) > 0){
+                //     $this->cntmemchild = [];
+                //     $cntchild = 0;
+                //     foreach($child as $mchild){     
+                //         $cntchild = $cntchild + 1;               
+                //         $this->cntmemchild[] = $cntchild;
+                //         $this->inpchild['fname'.$cntchild] = $mchild['fname'];   
+                //         $this->inpchild['mname'.$cntchild] = $mchild['mname'];                             
+                //         $this->inpchild['lname'.$cntchild] = $mchild['lname'];  
+                //         $this->inpchild['age'.$cntchild] = $mchild['age'];    
+                //         $this->inpchild['school'.$cntchild] = $mchild['nos'];                           
+                //     }                   
+                // }                                   
 
-                $businessInfo = $res->member->businessinfo;               
+                $businessInfo = $res->member->businessinfo;
+                dd($businessInfo);
                 if(count($businessInfo)>0){
                     $cntbusinfo = 0;                  
                     foreach($businessInfo as $businfo){
                         $cntbusinfo = $cntbusinfo + 1;
-                        $busfiles = $businfo->businessfiles;
-                        $busattachs = [];
-                        if($busfiles){
-                            foreach($busfiles as $bfiles){
-                                $busattachs[] = [ 'fileName' => $bfiles->FilePath , 'filePath' => $bfiles->FilePath ];
-                            }
-                            $this->comaker['old_attachments'] = $this->comaker['attachments'];
-                            $this->comaker['old_profile'] = $this->comaker['profile'];                  
-                            $this->comaker['old_signature'] = $this->comaker['signature'];
-                        }        
-
                         $this->businfo[$cntbusinfo] = [ 
-                                                        'businessName' => $businfo['BusinessName'],
-                                                        'businessType' => $businfo['BusinessType'],
-                                                        'businessAddress' => $businfo['BusinessAddress'],                                   
-                                                        'b_status' => $businfo['B_status'],
-                                                        'yob' => $businfo['YOB'],
-                                                        'noe' => $businfo['NOE'],
-                                                        'salary' => $businfo['Salary'],
-                                                        'vos' => $businfo['VOS'],
-                                                        'aos' => $businfo['AOS'],
-                                                        'attachments' => $busattachs,
-                                                        'old_attachments' => $busattachs,
+                                                        'businessName' => $businfo['businessName'],
+                                                        'businessType' => $businfo['businessType'],
+                                                        'businessAddress' => $businfo['businessAddress'],                                   
+                                                        'b_status' => $businfo['b_statusID'],
+                                                        'yob' => $businfo['yob'],
+                                                        'noe' => $businfo['noe'],
+                                                        'salary' => $businfo['salary'],
+                                                        'vos' => $businfo['vos'],
+                                                        'aos' => $businfo['aos'],
+                                                        'attachments' => $businfo['businessFiles'],
+                                                        'old_attachments' => $businfo['businessFiles'],
                                                       ];    
                     }
                 }
               
-                $motors= $member->assets;
-                if(count($motors) > 0){
-                    $this->hasvehicle = 1;
-                    $motorscnt = 0;
-                    foreach($motors as $mmotors){
-                        $motorscnt = $motorscnt + 1;
-                        $this->vehicle[$motorscnt] = [ 'vehicle' => $mmotors['MotorVehicles'] ];  
-                        $this->inpvehicle['vehicle'.$motorscnt] = $mmotors['MotorVehicles'];                       
-                    }
-                }
-                else{
-                    $this->hasvehicle = 0;
-                }
+                // $motors= $data['assets'];
+                // if(count($motors) > 0){
+                //     $this->hasvehicle = 1;
+                //     $motorscnt = 0;
+                //     foreach($motors as $mmotors){
+                //         $motorscnt = $motorscnt + 1;
+                //         $this->vehicle[$motorscnt] = [ 'vehicle' => $mmotors['motorVehicles'] ];  
+                //         $this->inpvehicle['vehicle'.$motorscnt] = $mmotors['motorVehicles'];                       
+                //     }
+                // }
+                // else{
+                //     $this->hasvehicle = 0;
+                // }
                  
-                $properties= $member->properties;               
-                if(count($properties) > 0){
-                    $this->hasproperties = 1;
-                    $propertiescnt = 0;
-                    foreach($properties as $mproperties){
-                        $propertiescnt = $propertiescnt + 1;
-                        $this->properties[$propertiescnt] = [ 'property' => $mproperties['Property'] ];  
-                        $this->inpproperties['property'.$propertiescnt] = $mproperties['Property'];                       
-                    }
-                }       
-                else{
-                    $this->hasproperties = 0;
-                }           
+                // $properties= $data['property'];
+                // if(count($properties) > 0){
+                //     $this->hasproperties = 1;
+                //     $propertiescnt = 0;
+                //     foreach($properties as $mproperties){
+                //         $propertiescnt = $propertiescnt + 1;
+                //         $this->properties[$propertiescnt] = [ 'property' => $mproperties['property'] ];  
+                //         $this->inpproperties['property'.$propertiescnt] = $mproperties['property'];                       
+                //     }
+                // }       
+                // else{
+                //     $this->hasproperties = 0;
+                // }           
 
-                $appliances= $member->appliances;               
-                if(count($appliances) > 0){                   
-                    $appliancescnt = 0;
-                    foreach($appliances as $mappliances){
-                        $appliancescnt = $appliancescnt + 1;
-                        $this->appliances[$appliancescnt] = [ 'appliance' => $mappliances['Description'], 'brand' => $mappliances['Brand'] ];  
-                        $this->inpappliances['appliance'.$appliancescnt] = $mappliances['Description'];   
-                        $this->inpappliances['brand'.$appliancescnt] = $mappliances['Brand'];                        
-                    }
-                }   
+                // $appliances= $data['appliances'];               
+                // if(count($appliances) > 0){                   
+                //     $appliancescnt = 0;
+                //     foreach($appliances as $mappliances){
+                //         $appliancescnt = $appliancescnt + 1;
+                //         $this->appliances[$appliancescnt] = [ 'appliance' => $mappliances['appliances'], 'brand' => $mappliances['brand'] ];  
+                //         $this->inpappliances['appliance'.$appliancescnt] = $mappliances['appliances'];   
+                //         $this->inpappliances['brand'.$appliancescnt] = $mappliances['brand'];                        
+                //     }
+                // }   
 
-                $bank= $member->bankaccounts;      
-                if(count($bank) > 0){                   
-                    $bankcnt = 0;
-                    foreach($bank as $mbank){
-                        $bankcnt = $bankcnt + 1;
-                        $this->bank[$bankcnt] = [ 'account' => $mbank['BankName'], 'address' => $mbank['Address'] ];  
-                        $this->inpbank['account'.$bankcnt] = $mbank['BankName'];   
-                        $this->inpbank['address'.$bankcnt] = $mbank['Address'];                        
-                    }
-                }   
+                // $bank= $data['bank'];
+                // if(count($bank) > 0){                   
+                //     $bankcnt = 0;
+                //     foreach($bank as $mbank){
+                //         $bankcnt = $bankcnt + 1;
+                //         $this->bank[$bankcnt] = [ 'account' => $mbank['bankName'], 'address' => $mbank['address'] ];  
+                //         $this->inpbank['account'.$bankcnt] = $mbank['bankName'];   
+                //         $this->inpbank['address'.$bankcnt] = $mbank['address'];                        
+                //     }
+                // }   
                 if($this->member['statusID'] == 7){
                     $this->renderCity();
                     $this->renderBarangay();
