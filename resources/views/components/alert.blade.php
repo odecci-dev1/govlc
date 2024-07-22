@@ -12,7 +12,7 @@
         <!-- * Modal Body -->
         <div class="rowspan">
             <img src="{{ URL::to('/') }}/assets/icons/modal-icon/status-success.svg" alt="Updated Successfully">
-            <span>{{ isset($words) ? $words : '' }}</span>
+            <span style="text-align: center">{{ isset($words) ? $words : '' }}</span>
             <p>{{ $message }}</p>
         </div>
 

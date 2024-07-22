@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Maintenance\Holiday;
 
+use App\Models\Holiday;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
@@ -16,16 +17,32 @@ class HolidayList extends Component
     public $paginate = [];
     public $paginationPaging = [];
 
-    public function archive($holid){       
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Holiday/DeleteHoliday', [ 'holidayID' => $holid ]);              
-        return redirect()->to('/maintenance/holiday/list')->with(['mmessage'=> 'Holiday has been archived', 'mword'=> 'Success']);    
+    public function archive($holid)
+    {
+        $holiday = Holiday::where('HolidayID', $holid);
+        
+        if ($holiday) {
+            $holiday->update([
+                'Status' => 2,
+            ]);
+
+            session()->flash('mmessage', 'Holiday has been successfully archived!');
+            session()->flash('mword', 'Success');
+        } else {
+            session()->flash('mmessage', 'Holiday not found');
+            session()->flash('mword', 'Error');
+        }
+
+        return redirect()->to('/maintenance/holiday/list');
     }
     
-    public function setPage($page = 1){
+    public function setPage($page = 1)
+    {
         $this->paginate['page'] = $page;
     }
 
-    public function mount(){
+    public function mount()
+    {
         $this->paginate['page'] = 1;
         $this->paginate['pageSize'] = 25;
         $this->paginate['FilterName'] = '';        
@@ -36,27 +53,37 @@ class HolidayList extends Component
 
     public function render()
     {
-        // $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Holiday/HolidayList');  
-        // $this->list = $data->json();      
+        $query = Holiday::query()->where('Status', 1);
 
-        $inputs = [
-            'page' => $this->paginate['page'],
-            'pageSize' => $this->paginate['pageSize'],
-            'FilterName' => $this->keyword,
-            'status' => 'Active',
-            'module' => 'Holiday',
-          ];
-
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Pagination/DisplayListPaginate', $inputs);                 
-        $this->list = $data->json()['items'];  
-        if( $data->json()['totalPage'] ){
-            $this->paginationPaging['totalPage'] = $data->json()['totalPage'];
-            $this->paginationPaging['totalRecord'] = $data->json()['totalRecord'];
-            $this->paginationPaging['currentPage'] = $data->json()['currentPage'];
-            $this->paginationPaging['nextPage'] = $data->json()['nextPage'] < $data->json()['totalPage'] ?  $data->json()['nextPage'] : $data->json()['totalPage'];
-            $this->paginationPaging['prevPage'] = $data->json()['prevPage'] > 0 ? $data->json()['prevPage'] : 1;
+        if ($this->keyword) {
+            $query->where('HolidayName', 'like', '%' . $this->keyword . '%');
         }
 
+        $totalRecord = $query->count();
+
+        $holidays = $query->orderBy('DateCreated', 'desc')
+            ->skip(($this->paginate['page'] - 1) * $this->paginate['pageSize'])
+            ->take($this->paginate['pageSize'])
+            ->get();
+
+        $this->list = $holidays;
+
+        $this->paginationPaging['totalPage'] = ceil($totalRecord / $this->paginate['pageSize']);
+        $this->paginationPaging['totalRecord'] = $totalRecord;
+        $this->paginationPaging['currentPage'] = $this->paginate['page'];
+        $this->paginationPaging['nextPage'] = $this->paginate['page'] < $this->paginationPaging['totalPage'] ? $this->paginate['page'] + 1 : $this->paginationPaging['totalPage'];
+        $this->paginationPaging['prevPage'] = $this->paginate['page'] > 1 ? $this->paginate['page'] - 1 : 1;
+
         return view('livewire.maintenance.holiday.holiday-list');
+    }
+}
+
+// Helper Function
+if (! function_exists('format_date_with_ordinal')) {
+    function format_date_with_ordinal($date) {
+        $day = (int) date('j', strtotime($date));
+        $dayWithOrdinal = $day . date('S', mktime(0, 0, 0, 1, $day));
+        $weekday = date('l', strtotime($date));
+        return "{$dayWithOrdinal} ({$weekday})";
     }
 }

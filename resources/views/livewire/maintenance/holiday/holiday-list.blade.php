@@ -117,35 +117,35 @@
 
                     <!-- * Holiday Name Data -->
                     <td id="holidayName">
-                        {{ $l['holidayName'] }}
+                        {{ $l['HolidayName'] }}
                     </td>
 
                     <!-- * Month Data -->
                     <td id="holidayMonth">
-                        {{  date('F', strtotime($l['date'])) }}
+                        {{  date('F', strtotime($l['Date'])) }}
                     </td>
 
                     <!-- * Day Data -->
                     <td id="holiDay">
-                        {{ date('dS (l)', strtotime($l['date'])) }}
+                        {{ format_date_with_ordinal($l['Date']) }}
                     </td>
 
                     <!-- * Year Data-->
                     <td id="holidayYear">
-                        {{ date('Y', strtotime($l['date'])) }}
+                        {{ date('Y', strtotime($l['Date'])) }}
                     </td>
 
                     <!-- * Location/Area -->
                     <td id="holidayLocation">
-                        {{ $l['location'] }}
+                        {{ $l['Location'] }}
                     </td>
 
                     <!-- * Table View and Trash Button -->
                     <td class="td-btns">
                         <div class="td-btn-wrapper">
-                            <a href="{{ URL::to('/') }}/maintenance/holiday/view/{{ $l['holidayID'] }}" class="a-btn-view-2" data-maintenance-view-holiday>View</a>
+                            <a href="{{ URL::to('/') }}/maintenance/holiday/view/{{ $l['HolidayID'] }}" class="a-btn-view-2" data-maintenance-view-holiday>View</a>
                             @if($usertype != 2)
-                            <button onclick="showDialog('{{ $l['holidayID'] }}')" type="button" class="a-btn-trash-2">Trash</button>
+                            <button onclick="showDialog('{{ $l['HolidayID'] }}')" type="button" class="a-btn-trash-2">Trash</button>
                             @endif
                         </div>
                     </td>

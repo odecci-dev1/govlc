@@ -84,8 +84,8 @@
                         <!-- * Holiday Name -->
                         <div class="input-wrapper">
                             <span>Holiday Name</span>
-                            <input wire:model.lazy="name" autocomplete="off" type="text">
-                            @error('name') <span class="text-required">{{ $message }}</span>@enderror
+                            <input wire:model.lazy="HolidayName" autocomplete="off" type="text">
+                            @error('HolidayName') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                     </div>
@@ -95,7 +95,7 @@
 
                         <!-- * Pick a date -->
                         <div class="input-wrapper" wire:ignore>
-                            <input type="hidden" wire:model="date" id="mdate" >
+                            <input type="hidden" wire:model="Date" id="mdate" >
                             <span>Pick a date</span>
                                 <input type="button" class="datepicker-toggle" id="datepicker">                                
                             </input>
@@ -104,24 +104,24 @@
                         <!-- * Month -->
                         <div class="input-wrapper">
                             <span>Month:</span>
-                            <input autocomplete="off" disabled wire:model.lazy="month"  type="text" class="calendarSelect" id="formHolidayMonth" name="formHolidayMonth"  >
-                            @error('month') <span class="text-required">{{ $message }}</span>@enderror
+                            <input autocomplete="off" disabled wire:model.lazy="Month"  type="text" class="calendarSelect" id="formHolidayMonth" name="formHolidayMonth"  >
+                            @error('Month') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Day -->
                         <div class="input-wrapper">
                             <span>Day:</span>
-                            <input autocomplete="off" disabled wire:model.lazy="day"  type="text" class="calendarSelect" id="formHolidayDay" name="formHolidayDay" >
-                            @error('day') <span class="text-required">{{ $message }}</span>@enderror
+                            <input autocomplete="off" disabled wire:model.lazy="Day"  type="text" class="calendarSelect" id="formHolidayDay" name="formHolidayDay" >
+                            @error('Day') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Year -->
                         <div class="input-wrapper">
                             <span>Year:</span>
-                            <input autocomplete="off" disabled wire:model.lazy="year"  type="text" class="calendarSelect" id="formHolidayYear" name="formHolidayYear" >
-                            @error('year') <span class="text-required">{{ $message }}</span>@enderror
+                            <input autocomplete="off" disabled wire:model.lazy="Year"  type="text" class="calendarSelect" id="formHolidayYear" name="formHolidayYear" >
+                            @error('Year') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
-                        @error('date') <span class="text-required" style="font-size: 1.8rem;">{{ $message }}</span>@enderror
+                        @error('Date') <span class="text-required" style="font-size: 1.8rem;">{{ $message }}</span>@enderror
                     </div>
                     
                     <!-- * Rowspan 5: Location / Area -->
@@ -130,8 +130,8 @@
                         <!-- * Location / Area -->
                         <div class="input-wrapper">
                             <span>Location / Area</span>
-                            <input autocomplete="off" type="text" wire:model.lazy="location">
-                            @error('location') <span class="text-required">{{ $message }}</span>@enderror
+                            <input autocomplete="off" type="text" wire:model.lazy="Location">
+                            @error('Location') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                     </div>
@@ -149,17 +149,17 @@
                                 <!-- * Yes -->
                                 <div class="radio-btn-wrapper">
                                     <span>Yes</span>
-                                    <input  wire:model.lazy="repeat" autocomplete="off" type="radio" name="repeat" value="1">
+                                    <input  wire:model.lazy="Repeat" autocomplete="off" type="radio" name="Repeat" value="1">
                                 </div>
 
                                 <!-- * No -->
                                 <div class="radio-btn-wrapper">
                                     <span>No</span>
-                                    <input  wire:model.lazy="repeat" autocomplete="off" type="radio" name="repeat" value="0">
+                                    <input  wire:model.lazy="Repeat" autocomplete="off" type="radio" name="Repeat" value="0">
                                 </div>
 
                             </div>
-                            @error('repeat') <span class="text-required">{{ $message }}</span>@enderror
+                            @error('Repeat') <span class="text-required">{{ $message }}</span>@enderror
 
                         </div>
 
