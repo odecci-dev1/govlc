@@ -90,122 +90,79 @@ class LoanTypes extends Component
     }
 
     public function save()
-    {   
+    {
         $inputs = $this->validate();
-        $terms = [];
-        if(count( $this->terms) > 0) {
-            foreach($this->terms as $key => $value) { 
-
-                if($this->LoanTypeId == '') {
-                    $terms[] = [   
-                        'NameOfTerms' => $value['NameOfTerms'], 
-                        'InterestRate' => $value['InterestRate'],
-                        'InterestType' => $value['InterestType'],
-                        'Status' => 1,
-                        'DateCreated' => now(),
-                        'DateUpdated' => NULL,
-                        'LoanTypeId' => $this->LoanTypeId,   
-                        'Formula' => $value['Formula'],  
-                        'InterestApplied' => $value['InterestApplied'],  
-                        'Terms' => $value['Terms'], 
-                        'OldFormula' => $value['OldFormula'], 
-                        'NoAdvancePayment' => $value['NoAdvancePayment'],  
-                        'NotarialFeeOrigin' => $value['NotarialFeeOrigin'],  
-                        'LessThanNotarialAmount' => $value['LessThanNotarialAmount'],  
-                        'LessThanAmountType' => $value['LessThanAmountType'],  
-                        'GreaterThanEqualNotarialAmount' => $value['GreaterThanEqualNotarialAmount'],  
-                        'GreaterThanEqualAmountType' => $value['GreaterThanEqualAmountType'],  
-                        'LoanInsuranceAmount' => $value['LoanInsuranceAmount'], 
-                        'LoanInsuranceAmountType' => $value['LoanInsuranceAmountType'],       
-                        'LifeInsuranceAmount' => $value['LifeInsuranceAmount'],       
-                        'LifeInsuranceAmountType' => $value['LifeInsuranceAmountType'],       
-                        'DeductInterest' => $value['DeductInterest'], 
-                        'CollectionTypeId' => $value['CollectionTypeId'],                                          
-                    ];
-                } else {
-                    $terms[] = [
-                        'NameOfTerms' => $value['NameOfTerms'], 
-                        'InterestRate' => $value['InterestRate'],
-                        'InterestType' => $value['InterestType'],
-                        'DateCreated' => now(),
-                        'DateUpdated' => now(),
-                        'LoanTypeId' => $this->LoanTypeId,   
-                        'Formula' => $value['Formula'],  
-                        'InterestApplied' => $value['InterestApplied'],  
-                        'Terms' => $value['Terms'], 
-                        'OldFormula' => $value['OldFormula'], 
-                        'NoAdvancePayment' => $value['NoAdvancePayment'],  
-                        'NotarialFeeOrigin' => $value['NotarialFeeOrigin'],  
-                        'LessThanNotarialAmount' => $value['LessThanNotarialAmount'],  
-                        'LessThanAmountType' => $value['LessThanAmountType'],  
-                        'GreaterThanEqualNotarialAmount' => $value['GreaterThanEqualNotarialAmount'],  
-                        'GreaterThanEqualAmountType' => $value['GreaterThanEqualAmountType'],  
-                        'LoanInsuranceAmount' => $value['LoanInsuranceAmount'], 
-                        'LoanInsuranceAmountType' => $value['LoanInsuranceAmountType'],       
-                        'LifeInsuranceAmount' => $value['LifeInsuranceAmount'],       
-                        'LifeInsuranceAmountType' => $value['LifeInsuranceAmountType'],       
-                        'DeductInterest' => $value['DeductInterest'], 
-                        'CollectionTypeId' => $value['CollectionTypeId'],                                                                     
-                    ];
-                }            
-            }
-        }
-       
+        $terms = collect($this->terms);
         $data = [
-            'LoanTypeName' =>  $inputs['loantype']['LoanTypeName'],
-            'Savings' =>  isset($inputs['loantype']['Savings']) ? $inputs['loantype']['Savings'] : 0,
-            'LoanAmount_Min' =>  isset($inputs['loantype']['LoanAmount_Min']) ? $inputs['loantype']['LoanAmount_Min'] : 0,
-            'LoanAmount_Max' =>  isset($inputs['loantype']['LoanAmount_Max']) ? $inputs['loantype']['LoanAmount_Max'] : 0,
+            'LoanTypeName' => $inputs['loantype']['LoanTypeName'],
+            'Savings' => isset($inputs['loantype']['Savings']) ? $inputs['loantype']['Savings'] : 0,
+            'LoanAmount_Min' => isset($inputs['loantype']['LoanAmount_Min']) ? $inputs['loantype']['LoanAmount_Min'] : 0,
+            'LoanAmount_Max' => isset($inputs['loantype']['LoanAmount_Max']) ? $inputs['loantype']['LoanAmount_Max'] : 0,
         ];
-
-        // dd($data, $this->LoanTypeId);
-              
-        $savemsg = '';
-        if($this->LoanTypeId == ''){
+    
+        if ($this->LoanTypeId == '') {
+            
             $data = array_merge($data, [
                 'Status' => 1,
                 'DateCreated' => now(),
                 'DateUpdated' => null,
             ]);
-
+    
             $loanType = LoanType::create($data);
-
-            $latestLoanTypeID = LoanType::latest()->first()->LoanTypeID;
-
+            $latestLoanTypeID = $loanType->LoanTypeID;
+    
             foreach ($terms as $term) {
                 $term['LoanTypeId'] = $latestLoanTypeID;
-                TermsOfPayment::create($term);
+                TermsOfPayment::create(array_merge($term, [
+                    'Status' => 1,
+                    'DateCreated' => now(),
+                ]));
             }
-
+    
             $savemsg = 'Loan type successfully saved!';
-
-            return redirect()->to('/maintenance/loantypes/view/' . $latestLoanTypeID)->with('mmessage', $savemsg);     
         } else {
-            $loanType = LoanType::where('LoanTypeID', $this->LoanTypeId)->first();
-            $loanTypeUpdate = LoanType::where('LoanTypeID', $this->LoanTypeId);
-            
-            $loanTypeUpdate->update([
-                'LoanTypeName' =>  $inputs['loantype']['LoanTypeName'],
-                'Savings' =>  isset($inputs['loantype']['Savings']) ? $inputs['loantype']['Savings'] : 0,
-                'LoanAmount_Min' =>  isset($inputs['loantype']['LoanAmount_Min']) ? $inputs['loantype']['LoanAmount_Min'] : 0,
-                'LoanAmount_Max' =>  isset($inputs['loantype']['LoanAmount_Max']) ? $inputs['loantype']['LoanAmount_Max'] : 0,
+
+            // Update existing loan type
+            $loanType = LoanType::where('LoanTypeID', $this->LoanTypeId);
+            $loanType->update(array_merge($data, [
                 'Status' => 1,
                 'DateUpdated' => now(),
-            ]);
-            
-            $savemsg = 'Loan type successfully updated!';
+            ]));
+    
+            $existingTerms = TermsOfPayment::where('LoanTypeId', $this->LoanTypeId)->get()->keyBy('TopId');
+            $incomingTerms = $terms->keyBy('TopId');
+    
+            foreach ($existingTerms as $id => $term) {
+                if ($incomingTerms->has($id)) {
 
-            foreach ($terms as $term) {
-                if (isset($term['TopId'])) {
-                    $existingTerm = TermsOfPayment::where('TopId', $term['TopId']);
-                    if ($existingTerm) {
-                        $existingTerm->update($term);
-                    }
+                    $updatedTerm = $incomingTerms->get($id);
+    
+                    $term->update(
+                        array_merge(array_diff_key($updatedTerm, ['TopId' => '']), [
+                            'Status' => $term->Status,
+                            'DateCreated' => $term->DateCreated, 
+                            'DateUpdated' => now(),
+                        ])
+                    );
+                } else {
+                    $term->delete();
                 }
             }
-
-            return redirect()->to('/maintenance/loantypes/view/' . $this->LoanTypeId)->with('mmessage', $savemsg);     
-        }               
+    
+            foreach ($incomingTerms as $id => $term) {
+                if (!$existingTerms->has($id)) {
+                    TermsOfPayment::create(array_merge($term, [
+                        'LoanTypeId' => $this->LoanTypeId,
+                        'Status' => 1,
+                        'DateCreated' => now(),
+                    ]));
+                }
+            }
+    
+            $savemsg = 'Loan type successfully updated!';
+        }
+    
+        return redirect()->to('/maintenance/loantypes/view/' . ($this->LoanTypeId ?: $latestLoanTypeID))->with('mmessage', $savemsg);
     }
     
     public function addTerms()
@@ -217,13 +174,10 @@ class LoanTypes extends Component
             }
             else{      
                 $lastcnt = $termsCollection->keys()->last() + 1;          
-                // $lastcnt = array_key_last($this->terms) + 1;   
             }
         }
         else{           
             $lastcnt = $termsCollection->keys()->last() + 1;          
-
-            // $lastcnt = array_key_last($this->terms) + 1;   
         }
 
         $data = $this->validate([                                    

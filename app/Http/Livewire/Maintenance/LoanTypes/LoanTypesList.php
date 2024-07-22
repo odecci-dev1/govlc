@@ -17,7 +17,7 @@ class LoanTypesList extends Component
     public $paginationPaging = [];
 
     public function archive($loantypeID){       
-        $loantype = LoanType::where('LoanTypeID', $loantypeID)->first();
+        $loantype = LoanType::where('LoanTypeID', $loantypeID);
 
         $loantype->update([
             'Status' => 2,
