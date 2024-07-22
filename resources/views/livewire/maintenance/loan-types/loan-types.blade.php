@@ -480,12 +480,15 @@
 
                     <div class="btn-wrapper">
                         @if($usertype != 2)
-                            <button type="button" class="button" wire:click="addTerms">{{ isset($inpterms['termsKey']) ? ($inpterms['termsKey'] > 0 ? 'Update to list' : 'Add to list') : 'Add to list'}}</button>
+                            <button type="button" class="button" wire:click="addTerms">
+                                {{ isset($inpterms['termsKey']) ? 'Update to list' : 'Add to list' }}
+                                {{-- {{ isset($inpterms['termsKey']) ? ($inpterms['termsKey'] > 0 ? 'Update to list' : 'Add to list') : 'Add to list'}} --}}
+                            </button>
                         @endif
                         @if(isset($inpterms['termsKey']))
-                            @if($inpterms['termsKey'] > 0)
+                            {{-- @if($inpterms['termsKey'] > 0) --}}
                                 <button type="button" class="button" wire:click="resetterms">Cancel</button>
-                            @endif
+                            {{-- @endif --}}
                         @endif
                     </div>
 
@@ -557,13 +560,15 @@
 
                                         <!-- * Advance payment formula -->
                                         <td style="text-align: center">
-                                            {{ $value['Formula']}}
+                                            {{ $formulaLookup[$value['Formula']] ?? $value['Formula'] }}
                                         </td>
 
                                         <!-- * Action -->
                                         <td class="td-btns">
                                             <div class="td-btn-wrapper">
-                                                <button type="button" wire:click="editTerms('{{ $key }}')" class="a-btn-view">Edit</button>
+                                                <button type="button" wire:click="editTerms('{{ $key }}')" class="a-btn-view-2">
+                                                    {{ $currentEditingKey === (string)$key ? 'Editing...' : 'Edit' }}
+                                                </button>
                                                 @if($usertype != 2)
                                                 <button type="button" wire:click="removeTerms('{{ $key }}')" class="a-btn-trash-2">Remove</button>
                                                 @endif

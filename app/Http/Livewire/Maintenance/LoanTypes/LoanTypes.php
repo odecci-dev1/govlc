@@ -20,9 +20,11 @@ class LoanTypes extends Component
     public $usertype;
     
     public $terms = [];
+    public $currentEditingKey = null;
     public $inpterms;
     public $collectionType = [];
     public $formulaList = [];
+    public $formulaLookup = [];
 
     public function rules()
     {                
@@ -279,53 +281,37 @@ class LoanTypes extends Component
 
     public function editTerms($key)
     {
+        $this->currentEditingKey = (string)$key;
         $inp = $this->terms[$key];
-        $this->inpterms['termsKey'] = $key;
-        $this->inpterms['NameOfTerms'] = $inp['NameOfTerms'];
-        $this->inpterms['InterestRate'] = $inp['InterestRate'];
-        $this->inpterms['InterestType'] = $inp['InterestType'];
-        $this->inpterms['Formula'] = $inp['Formula'];
-        $this->inpterms['InterestApplied'] = $inp['InterestApplied'];
-        $this->inpterms['Terms'] = $inp['Terms'];
-        $this->inpterms['OldFormula'] = $inp['OldFormula'];
-        $this->inpterms['NoAdvancePayment'] = $inp['NoAdvancePayment'];
-        $this->inpterms['NotarialFeeOrigin'] = $inp['NotarialFeeOrigin'];
-        $this->inpterms['LessThanNotarialAmount'] = $inp['LessThanNotarialAmount'];    
-        $this->inpterms['LessThanAmountType'] = $inp['LessThanAmountType'];
-        $this->inpterms['GreaterThanEqualNotarialAmount'] = $inp['GreaterThanEqualNotarialAmount'];
-        $this->inpterms['GreaterThanEqualAmountType'] = $inp['GreaterThanEqualAmountType'];
-        $this->inpterms['LoanInsuranceAmount'] = $inp['LoanInsuranceAmount'];
-        $this->inpterms['LoanInsuranceAmountType'] = $inp['LoanInsuranceAmountType'];
-        $this->inpterms['LifeInsuranceAmount'] = $inp['LifeInsuranceAmount'];
-        $this->inpterms['LifeInsuranceAmountType'] = $inp['LifeInsuranceAmountType'];
-        $this->inpterms['DeductInterest'] = $inp['DeductInterest'];
-        $this->inpterms['CollectionTypeId'] = $inp['CollectionTypeId'];
-        $this->inpterms['TopId'] = $inp['TopId'];
+        $this->inpterms = array_merge(['termsKey' => $key], $inp);
     }
 
     public function resetterms()
     {            
-        $this->inpterms['termsKey'] = 0;                                                 
-        $this->inpterms['NameOfTerms'] = null;
-        $this->inpterms['InterestRate'] = null;
-        $this->inpterms['InterestType'] = null;
-        $this->inpterms['Formula'] = null;
-        $this->inpterms['InterestApplied'] = null;  
-        $this->inpterms['Terms'] = null;
-        $this->inpterms['OldFormula'] = 2;
-        $this->inpterms['NoAdvancePayment'] = 2;
-        $this->inpterms['NotarialFeeOrigin'] = null;
-        $this->inpterms['LessThanNotarialAmount'] = null;    
-        $this->inpterms['LessThanAmountType'] = null;
-        $this->inpterms['GreaterThanEqualNotarialAmount'] = null;
-        $this->inpterms['GreaterThanEqualAmountType'] = null;
-        $this->inpterms['LoanInsuranceAmount'] = null;
-        $this->inpterms['LoanInsuranceAmountType'] = null;
-        $this->inpterms['LifeInsuranceAmount'] = null;
-        $this->inpterms['LifeInsuranceAmountType'] = null;
-        $this->inpterms['DeductInterest'] = 2;
-        $this->inpterms['CollectionTypeId'] = null;
-        $this->inpterms['TopId'] = null;
+        $this->currentEditingKey = null;
+        $this->inpterms = [
+            'termsKey' => null,
+            'NameOfTerms' => null,
+            'InterestRate' => null,
+            'InterestType' => null,
+            'Formula' => null,
+            'InterestApplied' => null,
+            'Terms' => null,
+            'OldFormula' => 2,
+            'NoAdvancePayment' => 2,
+            'NotarialFeeOrigin' => null,
+            'LessThanNotarialAmount' => null,
+            'LessThanAmountType' => null,
+            'GreaterThanEqualNotarialAmount' => null,
+            'GreaterThanEqualAmountType' => null,
+            'LoanInsuranceAmount' => null,
+            'LoanInsuranceAmountType' => null,
+            'LifeInsuranceAmount' => null,
+            'LifeInsuranceAmountType' => null,
+            'DeductInterest' => 2,
+            'CollectionTypeId' => null,
+            'TopId' => null,
+        ];
     }
 
     public function archive($LoanTypeId)
@@ -375,7 +361,7 @@ class LoanTypes extends Component
                         'InterestRate' => $term->InterestRate,
                         'InterestType' => $term->InterestType,
                         'LoanTypeId' => $this->LoanTypeId,
-                        'Formula' => $term->advancePaymentFormula ? $term->advancePaymentFormula->Formula : null,
+                        'Formula' => $term->Formula,
                         'InterestApplied' => $term->InterestApplied,
                         'Terms' => $term->Terms,
                         'OldFormula' => $term->OldFormula,
@@ -410,6 +396,8 @@ class LoanTypes extends Component
                 return [$item['Id'] => ['Formula' => $item['Formula'], 'APFID' => $item['APFID']]];
             })
             ->toArray();
+
+        $this->formulaLookup = array_column($this->formulaList, 'Formula', 'APFID');
     }
 
     public function render()
