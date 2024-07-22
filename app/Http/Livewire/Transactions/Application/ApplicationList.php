@@ -46,10 +46,10 @@ class ApplicationList extends Component
         // $this->list = $data->json();          
 
         $list = Application::with('member')->with('comaker')->with('detail')->with('loantype')->whereHas('member', function (Builder $query) {
-                    $query->where('Fname', 'like', '%'.$this->keyword.'%');
+                    $query->where('Fname', 'like', '%'.$this->keyword.'%')->orWhere('Lname', 'like', '%'.$this->keyword.'%')->orWhere('Mname', 'like', '%'.$this->keyword.'%');
                 })                
                 ->where('Status', 7)->paginate(50);       
-        //dd($list[0]->loantype);        
+                       
         return view('livewire.transactions.application.application-list', ['list' => $list]);
     }
 }

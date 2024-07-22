@@ -818,7 +818,7 @@
                                     <img type="image" class="profile" src="{{ asset('storage/members_profile/'.$member['profile']) }}" alt="upload-image" />                                                                     
                                 @else
                                     <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />  
-                                    <p style="position: absolute">Max Size: 2MB</p>                                                 
+                                    <p style="position: absolute"></p>                                                 
                                 @endif 
                             @endif      
                         </div>
@@ -2355,7 +2355,7 @@
                                             <img type="image" class="profile" src="{{ asset('storage/comakers_profile/'.$comaker['profile']) }}" alt="upload-image" />                                                                     
                                         @else
                                             <img type="image" class="profile" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
-                                            <p style="position: absolute">Max Size: 2MB</p>
+                                            <p style="position: absolute"></p>
                                         @endif 
                                     @endif             
                                 </div>
@@ -2627,7 +2627,7 @@
                                     <img type="image" src="{{ asset('storage/members_signature/'.$member['signature']) }}" alt="upload-image" />                                                                     
                                 @else
                                     <img id="applicantSig">
-                                    <p style="position: absolute">Max Size: 2MB</p>                                              
+                                    <p style="position: absolute"></p>                                              
                                 @endif 
                             @endif       
                             <span>Applicant’s Signature</span>
@@ -2670,7 +2670,7 @@
                                     <img type="image"  src="{{ asset('storage/comakers_signature/'.$comaker['signature']) }}" alt="upload-image" />                                                                     
                                 @else
                                     <img id="comSig">  
-                                    <p style="position: absolute">Max Size: 2MB</p>                                     
+                                    <p style="position: absolute"></p>                                     
                                 @endif 
                             @endif       
                             <span>Co-Maker Signature</span>
