@@ -38,4 +38,9 @@ class Area extends Model
     {
         return $this->belongsTo(FieldOfficer::class, 'FOID', 'FOID');
     }
+
+    public function collectionAreas()
+    {
+        return $this->hasMany(CollectionArea::class, 'AreaId', 'AreaId');
+    }
 }

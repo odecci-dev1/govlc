@@ -66,6 +66,11 @@ class FieldOfficer extends Model
     {
         return $value ? Storage::url($value) : null;
     }
+    
+    public function getFullNameAttribute()
+    {
+        return trim("{$this->Fname} {$this->Mname} {$this->Lname}");
+    }
 
     // * Mutators
     public function setDobAttribute($value)

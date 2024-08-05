@@ -105,50 +105,50 @@
 
                     <!-- * Table Data -->
                     @if($list)
-                        @foreach($list->sortBy('dateCreated') as $l)
+                        @foreach($list->sortBy('DateCreated') as $collection)
                         <tr>
                             @php
-                                $dateCreated = new DateTime($l['dateCreated']);
+                                $DateCreated = new DateTime($collection['DateCreated']);
                             @endphp
                             <!-- * Date -->
                             <td>
                                 <div class="td-wrapper">                                  
                                     <div class="td-inner-wrapper">
-                                        <span class="td-name">{{ $dateCreated->format('F d, Y') }}</span>
-                                        <span>{{ $l['collection_RefNo'] }}</span>
+                                        <span class="td-name">{{ $DateCreated->format('F d, Y') }}</span>
+                                        <span>{{ $collection['RefNo'] }}</span>
                                     </div>
                                 </div>
                             </td>
 
                             <!-- * Total Collectible -->
                             <td>
-                                {{ number_format($l['totalCollectible'], 2) }}
+                                {{ number_format($collection->totals['totalCollectible'], 2) }}
                             </td>
 
                             <!-- * Total Balance -->
                             <td>
-                                {{ number_format($l['total_Balance'], 2) }}
+                                {{ number_format($collection->totals['total_Balance'], 2) }}
                             </td>
 
                             <!-- * Total Savings -->
                             <td>
-                                {{ number_format($l['total_savings'], 2) }}
+                                {{ number_format($collection->totals['total_savings'], 2) }}
                             </td>
 
                             <!-- * Total Advance -->
                             <td>
-                                {{ number_format($l['total_advance'], 2) }}
+                                {{ number_format($collection->totals['total_advance'], 2) }}
                             </td>
 
                             <!-- * Total Lapses -->
                             <td style="padding-left: 5rem;">
-                                {{ number_format($l['total_lapses'], 2) }}
+                                {{ number_format($collection->totals['total_lapses'], 2) }}
                             </td>
 
                             <!-- * Table View Button -->
                             <td class="td-btns">
                                 <div class="td-btn-wrapper">
-                                    <a href="{{ URL::to('/') }}/collection/view/{{ $l['collection_RefNo'] }}" class="a-btn-view-3" data-view-collection>View</a>
+                                    <a href="{{ URL::to('/') }}/collection/view/{{ $collection['RefNo'] }}" class="a-btn-view-3" data-view-collection>View</a>
                                 </div>
                             </td>
 
