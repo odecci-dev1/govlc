@@ -68,6 +68,12 @@ class Members extends Model
     {
         return $this->hasMany(BankAccounts::class, 'MemId', 'Id')->select('id', '*');
     }
+
+    public function memberSavings(): HasMany
+    {
+        return $this->hasMany(MembersSavings::class, 'MemId', 'MemId');
+    }
+
     public function getFullNameAttribute()
     {
         return $this->Lname.', '.$this->Fname.(!empty($this->Suffix) ? ' '.$this->Suffix : '').' '.mb_substr($this->Mname, 0, 1).'.';

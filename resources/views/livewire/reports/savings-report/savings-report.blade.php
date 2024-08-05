@@ -71,14 +71,18 @@
                             <tr>
 
                                 <!-- * Member Name -->
-                                <td><span class="td-name">{{ $d['borrower'] }}</span></td>
+                                <td><span class="td-name">{{ $d->fullname }}</span></td>
 
                                 <!-- * Area -->
-                                <td style="text-align: left;"><span class="td-name">{{ $d['areaName'] }}</span></td>
+                                <td style="text-align: left;"><span class="td-name">{{ $d->Area ?? 'N/A' }}</span></td>
 
                                 <!-- * Total Savings -->
                                 <td style="text-align: right;">
-                                    <span class="td-name">{{ !empty($d['totalSavings']) ? number_format($d['totalSavings'], 2) : '0.00' }}</span>
+                                    <span class="td-name">
+                                    {{ 
+                                        number_format($d->memberSavings->sum('TotalSavingsAmount'), 2) ?? '0.00'
+                                    }}
+                                    </span>
                                 </td>
 
                             </tr>
@@ -89,11 +93,11 @@
                 
                 </div>
 
-                <!-- * Total Collection Footer -->
+                <!-- * Total Savings Footer -->
                 <div class="total-collection-footer">
                     <div class="footer-wrapper">
-                        <p>Total Collection:</p> 
-                        <span id="">{{ number_format($data->sum('totalSavings'), 2) }}</span>
+                        <p>Total Savings:</p> 
+                        <span>{{ number_format($totalSavings, 2) }}</span>
                     </div>
                 </div>
 
@@ -176,12 +180,12 @@
                                 <td>
 
                                     <!-- * Data Name-->
-                                    <span class="td-name">{{ $list['fullname'] }}</span>
+                                    <span class="td-name">{{ $list->Lname }}</span>
 
                                 </td>
                                 <td>
                                     <!-- * Data Member ID-->
-                                    <span class="td-name">{{ $list['memId'] }}</span>
+                                    <span class="td-name">{{ $list->MemId }}</span>
                                 </td>
                             </tr>
                             @endforeach
