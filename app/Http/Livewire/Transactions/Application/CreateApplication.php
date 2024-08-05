@@ -1428,11 +1428,17 @@ class CreateApplication extends Component
                 'LoanAmount' => $input['member']['loanAmount'] ??= '0',
                 'Purpose' => $input['member']['purpose'] ??= ''
             ]);
+
+            $applicationDtl = Application::where('NAID',$this->appid)->update([
+                'status'=>$type,
+                'dateSubmitted'=>Carbon::now(),
+                
+            ]);
           
             //dito
                     // $extension = $request->file('filename')->getClientOriginalExtension();                    
                     //dd( json_encode($data));
-                    //dd( $data );   
+              
                     $this->resetValidation();         
                     return redirect()->to('/tranactions/application/view/'.$this->appnaid)->with(['mmessage'=> 'Application successfully updated', 'mword'=> 'Success']);    
 
@@ -1470,8 +1476,13 @@ class CreateApplication extends Component
                  
                     //amount
                     //add loan amount here
-                  
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Credit/CreditSubmitforApproval', $data);  
+            LoanDetails::where('LDID',$this->naID)->update([
+                'loanAmount' =>$this->member['loanAmount'] ??= 0,
+            ]);
+            Application::where('NAID',$this->naID)->update([
+                'remarks' => $this->loanDetails['remarks'] ??= '',
+            ]);
+            // $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Credit/CreditSubmitforApproval', $data);  
             //dd($crt);
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully submited', 'mword'=> 'Success']);
         }

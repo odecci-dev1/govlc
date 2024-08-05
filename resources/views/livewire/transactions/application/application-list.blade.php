@@ -233,7 +233,7 @@
 
                     <!-- * Loan type -->
                     <td>
-                        {{ $l->loantype->LoanTypeName }}
+                        {{ $l->detail->LoanTypeName }}
                     </td>
 
                     <!-- * Date Created -->
