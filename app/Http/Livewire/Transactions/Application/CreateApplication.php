@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Livewire\Transactions\Application;
+use App\Traits\Calculator;
 use Illuminate\Support\Facades\Http;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
@@ -30,12 +31,15 @@ use App\Models\CoMakerFileUpload;
 use App\Models\CoMakerJobInfo;
 use App\Models\LoanType;
 use App\Models\TermsOfPayment;
+use App\Models\AdvancePaymentFormula;
+use App\Models\CollectionAreaMember;
 
 class CreateApplication extends Component
 {
 
     use Common;
     use WithFileUploads;
+    use Calculator;
 
     public $naID;
     public $appid;
@@ -1466,21 +1470,25 @@ class CreateApplication extends Component
     public function submitForApproval(){
         try{
             $this->validate(['member.loanAmount' => ['required', 'numeric', 'min:0']]);
-            $data = [
-                        'naid' => $this->naID,
-                        'remarks' => $this->loanDetails['remarks'] ??= '',
-                        'loanAmount'=> $this->member['loanAmount'] ??= 0,
-                        'userId' => session()->get('auth_userid'),                        
-                    ];
+            // $data = [
+            //             'naid' => $this->naID,
+            //             'remarks' => $this->loanDetails['remarks'] ??= '',
+            //             'loanAmount'=> $this->member['loanAmount'] ??= 0,
+            //             'userId' => session()->get('auth_userid'),                        
+            //         ];
 
                  
                     //amount
                     //add loan amount here
             LoanDetails::where('LDID',$this->naID)->update([
                 'loanAmount' =>$this->member['loanAmount'] ??= 0,
+                'dateUpdated' =>Carbon::now(),
             ]);
             Application::where('NAID',$this->naID)->update([
                 'remarks' => $this->loanDetails['remarks'] ??= '',
+                'CI_ApprovedBy' => session()->get('auth_userid'),
+                'CI_ApprovalDate' => Carbon::now(),
+                'status' => 9,
             ]);
             // $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Credit/CreditSubmitforApproval', $data);  
             //dd($crt);
@@ -2441,7 +2449,8 @@ class CreateApplication extends Component
             //     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $this->naID]]);
             // }
             
-            $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first();              
+            $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first(); 
+                 
             if($res){                              
                 //dd($data);
                 $this->searchedmemId = $res->MemId;
@@ -2479,6 +2488,7 @@ class CreateApplication extends Component
                 
                 if($this->type == 'view'){       
                     $details = $res->detail;
+                
                     $loantype = $res->loantype;
                     $termsofpayment = $res->termsofpayment;
                     $this->appid = $res->Id;
@@ -2491,10 +2501,14 @@ class CreateApplication extends Component
                     $this->loanDetails['loanType'] = $loantype['LoanTypeName'];                  
                     $this->loanDetails['loanAmount'] = in_array($res->Status, [7,8,9]) ? ($details->LoanAmount ??= 0) : $details->ApprovedLoanAmount;
                     $this->loanDetails['purpose'] = $details->Purpose;
+           
+                   // dd($termsOfPayment);
                     //$this->loanDetails['terms'] = $data['termsOfPayment']; //$data['individualLoan'][0]['terms'];
+                    $this->loanDetails['terms'] = $res->TermsOfpayment;
                                     
                     $this->loanDetails['noofnopayment'] = 0; 
-                    $this->loanDetails['noofloans'] = 0; 
+                    $numberOfLoans = Application::where('MemId', $res->MemId)->count();
+                    $this->loanDetails['noofloans'] = $numberOfLoans;
                                         
                     $this->loanDetails['app_ApprovedBy_1'] = $res->App_ApprovedBy_1;
                     $this->loanDetails['app_ApprovalDate_1'] = $res->App_ApprovalDate_1;
@@ -2515,13 +2529,16 @@ class CreateApplication extends Component
                     $this->loanDetails['courierclient'] = $details->CourerierName;
                     $this->loanDetails['couriercno'] = $details->CourierCNo;
 
-                    $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loanDetails['loanTypeID']]);                                    
-                    $loanterms = $loanterms->json();
-                    //dd($loanterms);
+                   // $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loanDetails['loanTypeID']]);                                    
+                   //$loanterms = $loanterms->json();
+                   $loanterms = TermsOfPayment::where('LoanTypeId',$this->loanDetails['loanTypeID'])->get();
+                   // dd($loanterms);
+                    //dd($this->loanDetails['loanTypeID']);
                    
                     if( $loanterms ){
-                        foreach( $loanterms  as  $loanterms ){
-                            $this->termsOfPaymentList[$loanterms['topId']] = ['topId' => $loanterms['topId'],'termsofPayment' => $loanterms['termsofPayment'],'loanTypeId' => $loanterms['loanTypeId']];   
+                        foreach( $loanterms  as  $loanterm ){
+                       
+                            $this->termsOfPaymentList[$loanterm['Id']] = ['Id' => $loanterm['Id'],'NameOfTerms' => $loanterm['NameOfTerms'],'loanTypeId' => $loanterm['loanTypeId']];   
                         }
                     }
 
@@ -2529,14 +2546,57 @@ class CreateApplication extends Component
                     $getloansummary = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanSummary/GetLoanSummary', [ 'naid' => $this->naID ]);                  
                     $this->loansummary = isset($getloansummary[0]) ? $getloansummary[0] : [];   
                     //dd($this->loansummary);                              
+                   
+                    //--Formula--//
                     
+                    $formulas = AdvancePaymentFormula::where('APFID',$res->TermsOfpayment->Formula)->first();
+                    $advancePayment = 0;
+                    $collectible = 0;
+                    $interestAmount = 0;
+                 
+                    
+                    $interestRate = $res->TermsOfpayment->InterestRate;
+                    $loanPrincipal = in_array($res->Status, [7,8,9]) ? ($details->LoanAmount ??= 0) : $details->ApprovedLoanAmount;
+                    $terms =  $res->TermsOfpayment->Terms;
+                    $loanAmount = ($loanPrincipal * $interestRate) + $loanPrincipal;
+                
+                    $calculatedResult = $this->calculateLoan($formulas->Id,$interestRate,$loanPrincipal,$terms,$res->TermsOfpayment->OldFormula );
+                    $notarialFee = $this->calculateNotarialFee($res->TermsOfpayment->NotarialFeeOrigin,$loanPrincipal,$loanAmount,$res->TermsOfpayment->LessThanAmount,$res->TermsOfpayment->LessThanAmountTYpe,$res->TermsOfpayment->LessThanNotarialAmount,$res->TermsOfpayment->GreaterThanEqualAmountTYpe,$res->TermsOfpayment->GreaterThanEqualNotarialAmount);
+
+                    $getMemberLoanApplications = Application::select('NAID')->where('MemId', $res->member->id)->get();
+                    
+                    if($getMemberLoanApplications){
+                        foreach($getMemberLoanApplications as $memberLoan){
+                            $naIDs[] = $memberLoan->NAID;
+                        }
+                    }
+                    
+                    $getTotalSavings = CollectionAreaMember::whereIn('NAID', $naIDs)->get();
+                    $totalSavings=0;
+                    if($getTotalSavings){
+                        foreach($getTotalSavings as $savings){
+                           
+                            $totalSavings+=$savings->Savings;
+                        }
+                    }
+
+
+
+               
+                   //----Formula---//
+
                     $this->loanDetails['totalSavingUsed'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingUsed'] : '';
-                    $this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
-                    $this->loanDetails['notarialFee'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['notarialFee'] :  $this->loansummary['approvedNotarialFee']) : ''; 
-                    $this->loanDetails['advancePayment'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['advancePayment'] :  $this->loansummary['approvedAdvancePayment']) : ''; 
-                    $this->loanDetails['total_InterestAmount'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['total_InterestAmount'] :  $this->loansummary['approveedInterest']) : ''; 
+                    //$this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
+                    $this->loanDetails['totalSavingsAmount'] = number_format($totalSavings,2);
+                    //$this->loanDetails['notarialFee'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['notarialFee'] :  $this->loansummary['approvedNotarialFee']) : ''; 
+                    $this->loanDetails['notarialFee'] = number_format($notarialFee,2);
+                    $this->loanDetails['advancePayment'] = $res->TermsOfpayment->NoAdvancePayment == 1 ? number_format($calculatedResult['advancePayment'],2):0;
+                    //$this->loanDetails['advancePayment'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['advancePayment'] :  $this->loansummary['approvedAdvancePayment']) : ''; 
+                    //$this->loanDetails['total_InterestAmount'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['total_InterestAmount'] :  $this->loansummary['approveedInterest']) : ''; 
+                    $this->loanDetails['total_InterestAmount'] =  number_format($calculatedResult['interestAmount'],2);
                     $this->loanDetails['total_LoanReceivable'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['total_LoanReceivable'] :  $this->loansummary['approvedReleasingAmount']) : ''; 
-                    $this->loanDetails['dailyCollectibles'] = isset($getloansummary[0]) ? ((!empty($this->loansummary['approvedDailyAmountDue']) ? $this->loansummary['approvedDailyAmountDue'] : 0) > 0 ? $this->loansummary['approvedDailyAmountDue'] :  $this->loansummary['dailyCollectibles']) : ''; 
+                    $this->loanDetails['dailyCollectibles'] = number_format($calculatedResult['collectible'],2);
+                    //$this->loanDetails['dailyCollectibles'] = isset($getloansummary[0]) ? ((!empty($this->loansummary['approvedDailyAmountDue']) ? $this->loansummary['approvedDailyAmountDue'] : 0) > 0 ? $this->loansummary['approvedDailyAmountDue'] :  $this->loansummary['dailyCollectibles']) : ''; 
                     $this->loanDetails['totalSavings'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';   
                     
                     //totalSavingUsed, totalSavingsAmount, notarialFee, advancePayment, total_InterestAmount, total_LoanReceivable, total_LoanReceivable, dailyCollectibles, totalSavings
@@ -2545,6 +2605,7 @@ class CreateApplication extends Component
                     $this->loanDetails['ci_time'] = $this->calculateTimeDifference($res->DateCreated, Carbon::now());                                       
                 }
                 $member = $res->member;
+               
                 $this->member['attachments'] = [];
                 $this->member['profile'] = '';
                 $this->member['signature'] = '';

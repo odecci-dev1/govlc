@@ -177,12 +177,12 @@
                         <option value="">- - select - -</option>     
                         @if(isset($termsOfPaymentList))
                             @foreach($termsOfPaymentList as $topList)
-                                <option value="{{ $topList['topId'] }}">{{ $topList['termsofPayment'] }}</option>
+                                <option value="{{ $topList['Id'] }}">{{ $topList['NameOfTerms'] }}</option>
                             @endforeach
                         @endif                      
                     </select>      
                 </div>
-                @error('loanDetails.topId') <span class="text-required">{{ $message }}</span> @enderror
+                @error('loanDetails.Id') <span class="text-required">{{ $message }}</span> @enderror
             </div>
                        
             @if($member['statusID'] == 9)   
@@ -252,7 +252,7 @@
              <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Total Savings</span>
-                <input wire:model.lazy="loanDetails.totalSavingsAmount" disabled type="number">
+                <input wire:model.lazy="loanDetails.totalSavingsAmount" disabled type="text">
                 @error('loanDetails.totalSavingsAmount') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
@@ -306,13 +306,13 @@
             <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Interest</span>
-                <input wire:model.lazy="loanDetails.total_InterestAmount" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="number">
+                <input wire:model.lazy="loanDetails.total_InterestAmount" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="text">
                 @error('loanDetails.total_InterestAmount') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper" style="padding-bottom: 0;">
-                <span>Releasing Amount</span>
+                <span>Estimated Loan Receivable</span>
                 <input wire:model.lazy="loanDetails.total_LoanReceivable" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="number">
                 @error('loanDetails.total_LoanReceivable') <span class="text-required">{{ $message }}</span> @enderror
             </div>
