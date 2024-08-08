@@ -3,7 +3,10 @@
 namespace App\Traits;
 
 
+use App\Models\Application;
+use App\Models\CollectionAreaMember;
 use App\Models\Holiday;
+use Carbon\Carbon;
 trait Calculator{
 
     public function calculateLoan($formula,$interestRate,$loanPrincipal,$terms,$oldFormula){
@@ -64,8 +67,59 @@ trait Calculator{
     }
 
 
-    public function calculateReceivable($loanAmount,$notarialfee,$advancepayment,$insurance,$terms){
+    public function calculateReceivable($loanPrincipal,$notarialFee,$loanInsurance,$calculatedResult,$terms){
+ 
+        $loanStart = date_create(Carbon::now()->format('Y-m-d'));
+        $loanEnd = date_create(date_format(date_add(date_create(Carbon::now()->format('Y-m-d')), date_interval_create_from_date_string($terms." Days")),'Y-m-d'));
+     
+        $days = $loanStart->diff($loanEnd, true)->days;
+        $sundays = intval($days / 7) + ($loanStart->format('N') + $days % 7 >= 7);
+        $loanEndWithSundays = date_create(date_format(date_add( $loanEnd, date_interval_create_from_date_string($sundays." Days")),'Y-m-d'));
+       
+        $getHolidays = Holiday::whereBetween('Date',[$loanStart,$loanEndWithSundays])->count();
+        $loanEndWithHolidays = date_create(date_format(date_add( $loanEndWithSundays, date_interval_create_from_date_string($getHolidays." Days")),'Y-m-d'));
+        
+        $holidayPayment = $getHolidays * $calculatedResult['collectible'];
+        
+        $deductions = $notarialFee + $holidayPayment + $loanInsurance + $calculatedResult['advancePayment'];
+      
+        $receivables = $loanPrincipal - $deductions;
 
+        return $receivables;
+    }
+
+    public function getCollectionData($mmeberID,){
+        $collectionData=[];
+        $getMemberLoanApplications = Application::select('NAID')->where('MemId', $mmeberID)->get();
+        if($getMemberLoanApplications){
+            foreach($getMemberLoanApplications as $memberLoan){
+                $naIDs[] = $memberLoan->NAID;
+            }
+        }
+        
+        $getMemberCollections = CollectionAreaMember::whereIn('NAID', $naIDs)->get();
+        $totalSavings=0;
+        $noPayments=0;
+        if($getMemberCollections){
+            foreach($getMemberCollections as $collection){
+                $totalSavings+=$collection->Savings;
+                if($collection->Payment_Method == 'No Payment'){
+                    $noPayments+=1;
+                }
+            }
+        }
+        $collectionData['noPayments'] =  $noPayments;
+        $collectionData['totalSavings'] = $totalSavings;
+        return $collectionData;
+    }
+
+    public function calculateLoanInsurance($LoanInsuranceAmountType,$LoanInsuranceAmount,$loanPrincipal){
+        if($LoanInsuranceAmountType == 1){
+            $LoanInsurance = $loanPrincipal * $LoanInsuranceAmount;
+        }else{
+            $LoanInsurance= $LoanInsuranceAmount;
+        }
+        return $LoanInsurance;
     }
 
 } 
