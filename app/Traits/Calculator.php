@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+
+use App\Models\Holiday;
 trait Calculator{
 
     public function calculateLoan($formula,$interestRate,$loanPrincipal,$terms,$oldFormula){
@@ -62,8 +64,8 @@ trait Calculator{
     }
 
 
-    public function calculateReceivable($loanAmount,$notarialfee,$advancepayment,$insurance){
-        
+    public function calculateReceivable($loanAmount,$notarialfee,$advancepayment,$insurance,$terms){
+
     }
 
 } 

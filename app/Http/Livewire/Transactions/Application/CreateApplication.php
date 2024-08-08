@@ -13,6 +13,7 @@ use Livewire\Component;
 use DB;
 
 use App\Models\Application;
+use App\Models\Holiday;
 use App\Models\Members;
 use App\Models\MonthlyBills;
 use App\Models\JobInfo;
@@ -102,6 +103,11 @@ class CreateApplication extends Component
     public $coprovinces;
     public $cocities;
     public $cobarangays;
+
+    private   $interestRate;
+    private $loanPrincipal;
+    private $terms;
+    private $loanAmount;
     
     
     public function rules(){                
@@ -2555,13 +2561,13 @@ class CreateApplication extends Component
                     $interestAmount = 0;
                  
                     
-                    $interestRate = $res->TermsOfpayment->InterestRate;
-                    $loanPrincipal = in_array($res->Status, [7,8,9]) ? ($details->LoanAmount ??= 0) : $details->ApprovedLoanAmount;
-                    $terms =  $res->TermsOfpayment->Terms;
-                    $loanAmount = ($loanPrincipal * $interestRate) + $loanPrincipal;
+                    $this->interestRate = $res->TermsOfpayment->InterestRate;
+                    $this->loanPrincipal = in_array($res->Status, [7,8,9]) ? ($details->LoanAmount ??= 0) : $details->ApprovedLoanAmount;
+                    $this->terms =  $res->TermsOfpayment->Terms;
+                    $this->loanAmount = ($this->loanPrincipal * $this->interestRate) + $this->loanPrincipal;
                 
-                    $calculatedResult = $this->calculateLoan($formulas->Id,$interestRate,$loanPrincipal,$terms,$res->TermsOfpayment->OldFormula );
-                    $notarialFee = $this->calculateNotarialFee($res->TermsOfpayment->NotarialFeeOrigin,$loanPrincipal,$loanAmount,$res->TermsOfpayment->LessThanAmount,$res->TermsOfpayment->LessThanAmountTYpe,$res->TermsOfpayment->LessThanNotarialAmount,$res->TermsOfpayment->GreaterThanEqualAmountTYpe,$res->TermsOfpayment->GreaterThanEqualNotarialAmount);
+                    $calculatedResult = $this->calculateLoan($formulas->Id,$this->interestRate,$this->loanPrincipal,$this->terms,$res->TermsOfpayment->OldFormula );
+                    $notarialFee = $this->calculateNotarialFee($res->TermsOfpayment->NotarialFeeOrigin,$this->loanPrincipal,$this->loanAmount,$res->TermsOfpayment->LessThanAmount,$res->TermsOfpayment->LessThanAmountTYpe,$res->TermsOfpayment->LessThanNotarialAmount,$res->TermsOfpayment->GreaterThanEqualAmountTYpe,$res->TermsOfpayment->GreaterThanEqualNotarialAmount);
 
                     $getMemberLoanApplications = Application::select('NAID')->where('MemId', $res->member->id)->get();
                     
@@ -2575,11 +2581,21 @@ class CreateApplication extends Component
                     $totalSavings=0;
                     if($getTotalSavings){
                         foreach($getTotalSavings as $savings){
-                           
                             $totalSavings+=$savings->Savings;
                         }
                     }
+                    $loanStart = date_create(Carbon::now()->format('Y-m-d'));
+                    $loanEnd = date_create(date_format(date_add(date_create(Carbon::now()->format('Y-m-d')), date_interval_create_from_date_string($this->terms." Days")),'Y-m-d'));
+                 
+                    $days = $loanStart->diff($loanEnd, true)->days;
+                    $sundays = intval($days / 7) + ($loanStart->format('N') + $days % 7 >= 7);
+                    $loanEndWithSundays = date_create(date_format(date_add( $loanEnd, date_interval_create_from_date_string($sundays." Days")),'Y-m-d'));
+                   
+                    $getHolidays = Holiday::whereBetween('Date',[$loanStart,$loanEndWithSundays])->count();
+                    $loanEndWithHolidays = date_create(date_format(date_add( $loanEndWithSundays, date_interval_create_from_date_string($getHolidays." Days")),'Y-m-d'));
+                    
 
+                    
 
 
                
