@@ -19,7 +19,8 @@ class PastDueReport extends Component
 
     public function mount(){
         $this->dateend = date('Y-m-d');      
-        $this->datestart = date('Y-m-d', strtotime("-6 days"));
+        $this->datestart = date('Y-m-d', strtotime("-3 months"));
+        // $this->datestart = date('Y-m-d', strtotime("-6 days"));
     }
 
     public function searchMembers(){

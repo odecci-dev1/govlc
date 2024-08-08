@@ -35,7 +35,7 @@
                             <thead>
                                 <tr>
                                     <th colspan="2">
-                                        <h3>SAVINGS REPORT For {{ $member }}</h4>                                        
+                                        <h3>SAVINGS REPORT</h4>                                        
                                     </th>
                                     <th colspan="1" style="text-align: right;">                                      
                                         <h4>From {{ $datestart }} To {{ $dateend }}</h4>
@@ -51,14 +51,17 @@
                             @if($data)
                                 @foreach($data as $data)
                                 <tr>
-
                                     <!-- * Application Reference -->
-                                    <td><span class="td-name">{{ $data['borrower'] }}</span></td>
+                                    <td><span class="td-name">{{ $data['Fullname'] }}</span></td>
 
                                     <!-- * Member Name -->
                                     <td><span class="td-name">{{ $data['areaName'] }}</span></td>
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalSavings']) ? number_format($data['totalSavings'], 2) : '0.00' }}</span> 
+                                        <span class="td-name">
+                                            {{ 
+                                                number_format($data->memberSavings->sum('TotalSavingsAmount'), 2) ?? '0.00'
+                                            }}
+                                        </span>
                                     </td>
                                 </tr>
                                 @endforeach

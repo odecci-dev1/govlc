@@ -21,12 +21,10 @@
                     <div class="input-wrapper">
                         <span style="color: #d6a330; font-size: 1.4rem; font-weight: bold;">Date Start</span>
                         <input type="date" wire:model.lazy="datestart" class="">
-                        @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror              
                     </div>
                     <div class="input-wrapper">
                         <span style="color: #d6a330; font-size: 1.4rem; font-weight: bold;">Date End</span>
                         <input type="date" wire:model.lazy="dateend" class="">
-                        @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror              
                     </div>                                     
                 </div>              
             </div>

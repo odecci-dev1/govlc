@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -74,9 +75,18 @@ class Members extends Model
         return $this->hasMany(MembersSavings::class, 'MemId', 'MemId');
     }
 
+    public function memberArea(): HasMany
+    {
+        return $this->hasMany(Area::class, 'City', 'City');
+    }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(Status::class, 'Status');
+    }
+
     public function getFullNameAttribute()
     {
         return $this->Lname.', '.$this->Fname.(!empty($this->Suffix) ? ' '.$this->Suffix : '').' '.mb_substr($this->Mname, 0, 1).'.';
     }
-
 }

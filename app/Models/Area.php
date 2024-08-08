@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Area extends Model
 {
@@ -34,13 +36,23 @@ class Area extends Model
 
     public $timestamps = false;
 
-    public function fieldOfficer()
+    public function fieldOfficer(): BelongsTo
     {
         return $this->belongsTo(FieldOfficer::class, 'FOID', 'FOID');
     }
 
-    public function collectionAreas()
+    public function collectionAreas(): HasMany
     {
         return $this->hasMany(CollectionArea::class, 'AreaId', 'AreaId');
+    }
+
+    public function members(): HasMany
+    {
+        return $this->hasMany(Members::class, 'City', 'City');
+    }
+
+    public function getCityListAttribute(): array
+    {
+        return explode(' | ', $this->City);
     }
 }

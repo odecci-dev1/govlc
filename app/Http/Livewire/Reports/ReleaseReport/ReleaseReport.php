@@ -15,7 +15,8 @@ class ReleaseReport extends Component
 
     public function mount(){
         $this->dateend = date('Y-m-d');      
-        $this->datestart = date('Y-m-d', strtotime("-6 days"));
+        $this->datestart = date('Y-m-d', strtotime("-3 months"));
+        // $this->datestart = date('Y-m-d', strtotime("-6 days"));
     }
 
     public function render()
@@ -27,7 +28,8 @@ class ReleaseReport extends Component
                     'dateto' => $this->dateend,
                  ];
         $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Reports/Reports_ReleasingList', $input);  
-        $this->data = $data->json();     
+        $data = $this->data = $data->json();     
+        // dd($data);
         return view('livewire.reports.release-report.release-report');
     }
 

@@ -21,15 +21,13 @@ class SavingsExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        $data = collect([]); 
-        $cnt = 0;
-        if($this->mdata){
-             foreach($this->mdata as $dt){
-                 $cnt = $cnt + 1;
-                 $data->put($cnt, [ 'borrower' => $dt['borrower'], 'areaName' => $dt['areaName'], 'totalSavings' => $dt['totalSavings'] ]);
-             }
-        }
-        return collect($data);
+        return $this->mdata->map(function ($dt) {
+            return [
+                'MEMBER NAME' => $dt['borrower'],
+                'AREA' => $dt['areaName'],
+                'TOTAL SAVINGS' => $dt['totalSavings'],
+            ];
+        });
     }
 
     public function headings(): array
