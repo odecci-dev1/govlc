@@ -2630,7 +2630,7 @@ class CreateApplication extends Component
 
                
                    //----Formula---//
-                   $this->loanDetails['noofnopayment'] = $collectionData['noPayments']; 
+                    $this->loanDetails['noofnopayment'] = $collectionData['noPayments']; 
                     $this->loanDetails['totalSavingUsed'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingUsed'] : '';
                     //$this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
                     $this->loanDetails['totalSavingsAmount'] = number_format($collectionData['totalSavings'],2,'.','');

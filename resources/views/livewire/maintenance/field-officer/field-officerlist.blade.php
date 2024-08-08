@@ -160,18 +160,19 @@
                     </table>
 
                 </div>
+            </div>
+            
+            <!-- * Pagination Container -->
+            @if($paginationPaging['totalPage'])
+                <div class="pagination-container" style="overflow-x: auto;">
+                    <!-- * Pagination Links -->
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
+                    @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
+                    <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
+                    @endfor
+                    <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
                 </div>
-                <!-- * Pagination Container -->
-                @if($paginationPaging['totalPage'])
-                    <div class="pagination-container" style="overflow-x: auto;">
-                        <!-- * Pagination Links -->
-                        <a href="#" wire:click="setPage({{ $this->paginationPaging['prevPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left"></a>
-                        @for($x = 1; $x <= $paginationPaging['totalPage']; $x++)
-                        <a href="#" wire:click="setPage({{ $x }})" class="{{ $paginationPaging['currentPage'] == $x ? 'font-size-1_4em color-app' : '' }}">{{ $x }}</a>
-                        @endfor
-                        <a href="#" wire:click="setPage({{ $this->paginationPaging['nextPage'] }})"><img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right"></a>
-                    </div>
-                @endif
+            @endif
 
 </div>
 <script>
