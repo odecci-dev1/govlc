@@ -164,7 +164,7 @@
             <!-- * Loan Amount -->
             <div class="input-wrapper">
                 <span>Loan Principal</span>
-                <input wire:model.lazy="loanDetails.loanAmount" wire:blur="computeLoanAmount" {{ in_array($member['statusID'], [10, 14, 15]) ? 'disabled' : '' }} class="{{ in_array($member['statusID'], [7,8,9]) ? 'inpt-editable' : '' }}" {{ $type != 'details' ? '' : 'disabled' }} type="text" >
+                <input wire:model.lazy="loanDetails.loanAmount" wire:blur="computeLoanAmount" {{ in_array($member['statusID'], [10, 14, 15]) ? 'disabled' : '' }} class="{{ in_array($member['statusID'], [7,8,9]) ? 'inpt-editable' : '' }}" {{ $type != 'details' ? '' : 'disabled' }} {{ $loanDetails['app_ApprovedBy_1'] != '' ? 'disabled':'' }} type="text" >
                 @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror              
             </div>
 
@@ -197,7 +197,8 @@
                                     @if($loanDetails['app_ApprovalDate_1_timeint']['months'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['months'] }} Months</span> @endif
                                     @if($loanDetails['app_ApprovalDate_1_timeint']['days'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['days'] }} Days</span> @endif
                                     @if($loanDetails['app_ApprovalDate_1_timeint']['hours'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['hours'] }} Hours</span> @endif
-                                    @if($loanDetails['app_ApprovalDate_1_timeint']['hours'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['minutes'] }} Minutes</span> @endif                                    
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['minutes'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['minutes'] }} Minutes</span> @endif                                    
+                                    <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['seconds'] }} Seconds</span>                                   
                                     ago
                                 </p>
                             @else
@@ -207,7 +208,8 @@
                                     @if($loanDetails['app_ApprovalDate_1_timeint']['months'] > 0) <span id="ciTimeWeek">{{ $loanDetails['app_ApprovalDate_1_timeint']['months'] }} Months</span> @endif
                                     @if($loanDetails['app_ApprovalDate_1_timeint']['days'] > 0) <span id="ciTimeDay">{{ $loanDetails['app_ApprovalDate_1_timeint']['days'] }} Days</span> @endif
                                     @if($loanDetails['app_ApprovalDate_1_timeint']['hours'] > 0) <span id="ciTimeHour">{{ $loanDetails['app_ApprovalDate_1_timeint']['hours'] }} Hours</span> @endif
-                                    @if($loanDetails['app_ApprovalDate_1_timeint']['hours'] > 0) <span id="ciTimeHour">{{ $loanDetails['app_ApprovalDate_1_timeint']['minutes'] }} Minutes</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['Minutes'] > 0) <span id="ciTimeHour">{{ $loanDetails['app_ApprovalDate_1_timeint']['minutes'] }} Minutes</span> @endif
+                                    <span id="ciTimeHour">{{ $loanDetails['app_ApprovalDate_1_timeint']['seconds'] }} Seconds</span>
                                     ago
                                 </p>  <!-- this will show to another approving officer-->                                                            
                             @endif          
@@ -252,14 +254,14 @@
              <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Total Savings</span>
-                <input wire:model.lazy="loanDetails.totalSavingsAmount" disabled type="text">
+                <input wire:model.lazy="loanDetails.totalSavingsAmount" readonly type="text">
                 @error('loanDetails.totalSavingsAmount') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper">
                 <span>Notarial Fee</span>
-                <input wire:model.lazy="loanDetails.notarialFee" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="number">
+                <input wire:model.lazy="loanDetails.notarialFee" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}"  readonly type="number">
                 @error('loanDetails.notarialFee') <span class="text-required">{{ $message }}</span> @enderror
             </div>
             @endif
@@ -268,7 +270,7 @@
              <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Total Savings</span>
-                <input wire:model.lazy="loanDetails.totalSavings" disabled type="number">
+                <input wire:model.lazy="loanDetails.totalSavings" readonly type="number">
                 @error('loanDetails.totalSavings') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
@@ -276,7 +278,7 @@
             <div class="input-wrapper">
                 @if($member['statusID'] == 10)   
                 <span>Savings To Be Use</span>
-                <input wire:model.lazy="loanDetails.savingsToUse" {{ isset($loanDetails['totalSavings']) ? ($loanDetails['totalSavings'] != '' ? '' : 'disabled') : 'disabled' }} class="{{ $member['statusID'] == 10 ? (isset($loanDetails['totalSavings']) ? ($loanDetails['totalSavings'] != '' ? 'inpt-editable' : '') : '') : '' }}" type="number">
+                <input wire:model.lazy="loanDetails.savingsToUse" {{ isset($loanDetails['totalSavings']) ? ($loanDetails['totalSavings'] != '' ? '' : 'disabled') : 'disabled' }} class="{{ $member['statusID'] == 10 ? (isset($loanDetails['totalSavings']) ? ($loanDetails['totalSavings'] != '' ? 'inpt-editable' : '') : '') : '' }}" readonly type="number">
                 @error('loanDetails.savingsToUse') <span class="text-required">{{ $message }}</span> @enderror
                 @endif
             </div>
@@ -299,21 +301,21 @@
 
             <div class="input-wrapper">
                 <span>Advance Payment</span>
-                <input wire:model.lazy="loanDetails.advancePayment" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="number" >
+                <input wire:model.lazy="loanDetails.advancePayment" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" readonly type="number" >
                 @error('loanDetails.advancePayment') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Interest</span>
-                <input wire:model.lazy="loanDetails.total_InterestAmount" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="text">
+                <input wire:model.lazy="loanDetails.total_InterestAmount" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" readonly type="number">
                 @error('loanDetails.total_InterestAmount') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper" style="padding-bottom: 0;">
                 <span>Estimated Loan Receivable</span>
-                <input wire:model.lazy="loanDetails.total_LoanReceivable" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="number">
+                <input wire:model.lazy="loanDetails.total_LoanReceivable" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}"  readonly type="number">
                 @error('loanDetails.total_LoanReceivable') <span class="text-required">{{ $message }}</span> @enderror
             </div>
              <!-- * Decline Button -->
@@ -334,7 +336,7 @@
             @if($member['statusID'] == 9)   
             <div class="input-wrapper">
                 <span>Collectible</span>
-                <input wire:model.lazy="loanDetails.dailyCollectibles" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" type="number" >
+                <input wire:model.lazy="loanDetails.dailyCollectibles" class="{{ $member['statusID'] == 9 ? 'inpt-editable' : '' }}" readonly type="number" >
                 @error('loanDetails.dailyCollectibles') <span class="text-required">{{ $message }}</span> @enderror
             </div>
             @endif
@@ -342,13 +344,13 @@
             <!-- * Number of No Payment -->
             <div class="input-wrapper">
                 <span>Number of No Payment</span>
-                <input disabled wire:model.lazy="loanDetails.noofnopayment" type="number">
+                <input disabled wire:model.lazy="loanDetails.noofnopayment" readonly type="number">
             </div>
 
             <!-- * Number of Loans -->
             <div class="input-wrapper">
                 <span>Number of Loans</span>
-                <input disabled wire:model.lazy="loanDetails.noofloans" type="number">
+                <input disabled wire:model.lazy="loanDetails.noofloans" readonly type="number">
             </div>
             @if(in_array($member['statusID'],[10,15]))
             <div class="input-wrapper">
