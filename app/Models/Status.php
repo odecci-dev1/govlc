@@ -15,4 +15,9 @@ class Status extends Model
     {
         return $this->hasMany(FieldOfficer::class, 'Status');
     }
+
+    public function members()
+    {
+        return $this->hasMany(Members::class, 'Status');
+    }
 }
