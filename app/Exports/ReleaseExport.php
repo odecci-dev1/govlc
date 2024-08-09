@@ -21,15 +21,20 @@ class ReleaseExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-       $data = collect([]); 
-       $cnt = 0;
-       if($this->mdata){
-            foreach($this->mdata as $dt){
-                $cnt = $cnt + 1;
-                $data->put($cnt, [ 'naid' => $dt['naid'], 'borrower' => $dt['borrower'], 'co_Borrower' => $dt['co_Borrower'], 'area' => $dt['area'], 'loanType' => $dt['loanType'], 'loanAmount' => $dt['loanAmount'], 'advancePayment' => $dt['advancePayment'], 'terms' => (!empty($dt['termofPayment']) ? $dt['termofPayment'] : ''), 'dueDate' =>  date('Y-m-d', strtotime($dt['dueDate'])), 'releasingDate' =>  date('Y-m-d', strtotime($dt['releasingDate'])) ]);
-            }
-       }
-       return collect($data);
+       return $this->mdata->map(function ($dt) {
+            return [ 
+                'APPLICATION REFERENCE' => $dt['naid'],
+                'MEMBER NAME' => $dt['borrower'],
+                'CO BORROWER' => $dt['co_Borrower'],
+                'AREA' => $dt['area'],
+                'LOAN TYPE' => $dt['loanType'],
+                'LOAN AMOUNT' => $dt['loanAmount'],
+                'ADVANCE PAYMENT' => $dt['advancePayment'],
+                'TERMS' => $dt['terms'],
+                'DUE DATE' => $dt['dueDate'],
+                'DATE RELEASED' => $dt['releasingDate'],
+            ];
+        });
     }
 
     public function headings(): array

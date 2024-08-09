@@ -10,6 +10,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
 use App\Traits\Common;
+use NumberFormatter;
 
 class LoanTypes extends Component
 {
@@ -20,6 +21,7 @@ class LoanTypes extends Component
     public $usertype;
     
     public $terms = [];
+    public $removedTermIds = [];
     public $currentEditingKey = null;
     public $inpterms;
     public $collectionType = [];
@@ -131,12 +133,19 @@ class LoanTypes extends Component
     
             $existingTerms = TermsOfPayment::where('LoanTypeId', $this->LoanTypeId)->get()->keyBy('TopId');
             $incomingTerms = $terms->keyBy('TopId');
-    
+
+            foreach ($this->removedTermIds as $id => $term) {
+                if (isset($existingTerms[$id])) {
+                    $existingTerms[$id]->update([
+                        'Status' => 2,
+                        'DateUpdated' => now(),
+                    ]);
+                }
+            }
+
             foreach ($existingTerms as $id => $term) {
                 if ($incomingTerms->has($id)) {
-
                     $updatedTerm = $incomingTerms->get($id);
-    
                     $term->update(
                         array_merge(array_diff_key($updatedTerm, ['TopId' => '']), [
                             'Status' => $term->Status,
@@ -144,12 +153,12 @@ class LoanTypes extends Component
                             'DateUpdated' => now(),
                         ])
                     );
-                } else {
-                    $term->delete();
-                }
+                } 
             }
     
             foreach ($incomingTerms as $id => $term) {
+                dd($id);
+
                 if (!$existingTerms->has($id)) {
                     TermsOfPayment::create(array_merge($term, [
                         'LoanTypeId' => $this->LoanTypeId,
@@ -224,12 +233,36 @@ class LoanTypes extends Component
             'CollectionTypeId' => $data['inpterms']['CollectionTypeId'],      
             'TopId' => isset($this->inpterms['TopId']) ? $this->inpterms['TopId'] : null,                         
         ];
-        // dd($this->terms);                           
         $this->resetterms();                        
     }
 
     public function removeTerms($key)
     {
+        // $data = [
+        //     'LoanTypeId' => NULL,
+        //     'Status' => 2,
+        //     'DateUpdated' => now(),
+        // ];
+        // // // unset($this->terms[$key]);
+        // // // $prevData = unset($this->terms[$key]);
+        // $this->terms[$key] = [
+        //     array_merge($this->terms[$key], $data)
+        // ];
+        // $prevData = $this->terms[$key] = [];
+        // $data = [
+        //     'LoanTypeId' => null,
+        //     'Status' => 2,
+        //     'DateUpdated' => now(),
+        // ];
+    
+        // // if (isset($this->terms[$key])) {
+        //     // Merge the existing term data with the update data
+        //     $this->terms[$key] = array_merge($prevData, $data);
+        //     dd($this->terms[$key]);
+        // // }
+        $data = $this->terms[$key];
+        // dd($data['TopId']);
+        $this->removedTermIds[] = $data['TopId'];
         unset($this->terms[$key]);
     }
 
@@ -238,6 +271,59 @@ class LoanTypes extends Component
         $this->currentEditingKey = (string)$key;
         $inp = $this->terms[$key];
         $this->inpterms = array_merge(['termsKey' => $key], $inp);
+    }
+
+    public function updateTerms()
+    {
+        $this->validate([
+            'inpterms.NameOfTerms' => ['required'],
+            'inpterms.InterestRate' => ['required', 'numeric'],
+            'inpterms.InterestType' => ['required'],
+            'inpterms.Formula' => ['required'],
+            'inpterms.InterestApplied' => isset($this->inpterms['InterestType']) ? ($this->inpterms['InterestType'] == 'Custom' ? ['required'] : '') : '',
+            'inpterms.Terms' => ['required', 'numeric'],
+            'inpterms.OldFormula' => ['required'],
+            'inpterms.NoAdvancePayment' => ['required'],
+            'inpterms.CollectionTypeId' => ['required'],
+            'inpterms.NotarialFeeOrigin' => ['required'],
+            'inpterms.LessThanNotarialAmount' => ['required', 'numeric'],
+            'inpterms.LessThanAmountType' => ['required'],
+            'inpterms.GreaterThanEqualNotarialAmount' => ['required', 'numeric'],
+            'inpterms.GreaterThanEqualAmountType' => ['required'],
+            'inpterms.LoanInsuranceAmount' => ['required', 'numeric'],
+            'inpterms.LoanInsuranceAmountType' => ['required'],
+            'inpterms.LifeInsuranceAmount' => ['required', 'numeric'],
+            'inpterms.LifeInsuranceAmountType' => ['required'],
+            'inpterms.DeductInterest' => ['required'],
+        ]);
+
+        if (isset($this->inpterms['termsKey'])) {
+            $key = $this->inpterms['termsKey'];
+
+            $this->terms[$key] = [
+                'NameOfTerms' => $this->inpterms['NameOfTerms'],
+                'InterestRate' => $this->inpterms['InterestRate'],
+                'InterestType' => $this->inpterms['InterestType'],
+                'Formula' => $this->inpterms['Formula'],
+                'InterestApplied' => isset($this->inpterms['InterestApplied']) ? $this->inpterms['InterestApplied'] : 0,
+                'Terms' => $this->inpterms['Terms'],
+                'OldFormula' => $this->inpterms['OldFormula'],
+                'NoAdvancePayment' => $this->inpterms['NoAdvancePayment'],
+                'CollectionTypeId' => $this->inpterms['CollectionTypeId'],
+                'NotarialFeeOrigin' => $this->inpterms['NotarialFeeOrigin'],
+                'LessThanNotarialAmount' => $this->inpterms['LessThanNotarialAmount'],
+                'LessThanAmountType' => $this->inpterms['LessThanAmountType'],
+                'GreaterThanEqualNotarialAmount' => $this->inpterms['GreaterThanEqualNotarialAmount'],
+                'GreaterThanEqualAmountType' => $this->inpterms['GreaterThanEqualAmountType'],
+                'LoanInsuranceAmount' => $this->inpterms['LoanInsuranceAmount'],
+                'LoanInsuranceAmountType' => $this->inpterms['LoanInsuranceAmountType'],
+                'LifeInsuranceAmount' => $this->inpterms['LifeInsuranceAmount'],
+                'LifeInsuranceAmountType' => $this->inpterms['LifeInsuranceAmountType'],
+                'DeductInterest' => $this->inpterms['DeductInterest'],
+            ];
+
+            $this->resetterms();
+        }
     }
 
     public function resetterms()
@@ -287,12 +373,23 @@ class LoanTypes extends Component
             $this->LoanTypeId = $loanid;
 
             $loantype = LoanType::where('LoanTypeId', $loanid)->first();
-
+            logger()->info('Original Savings: ' . $loantype->Savings);
             $this->loantype['Loan_amount_Lessthan'] = $loantype['Loan_amount_Lessthan'];
             $this->loantype['Loan_amount_GreaterEqual'] = $loantype['Loan_amount_GreaterEqual'];
-            $this->loantype['Savings'] = $loantype->Savings;
-            $this->loantype['LoanAmount_Min'] = $loantype['LoanAmount_Min'];
-            $this->loantype['LoanAmount_Max'] = $loantype['LoanAmount_Max'];
+            // $this->loantype['Savings'] = $loantype->Savings;
+            // $this->loantype['LoanAmount_Min'] = $loantype['LoanAmount_Min'];
+            // $this->loantype['LoanAmount_Max'] = $loantype['LoanAmount_Max'];
+            // numfmt_parse($fmt, $fildOfDataBase);
+            $s = $this->convertToWholeNumber($loantype->Savings);
+            // $this->loantype['Savings'] = $this->convertToWholeNumber($loantype->Savings);
+            $this->loantype['Savings'] = $s;
+            // dd($this->loantype['Savings']);
+            $this->loantype['LoanAmount_Min'] = $this->convertToWholeNumber($loantype->LoanAmount_Min);
+            $this->loantype['LoanAmount_Max'] = $this->convertToWholeNumber($loantype->LoanAmount_Max);
+
+            logger()->info('Converted Savings: ' . $this->loantype['Savings']);
+            logger()->info('Converted LoanAmount_Min: ' . $this->loantype['LoanAmount_Min']);
+            logger()->info('Converted LoanAmount_Max: ' . $this->loantype['LoanAmount_Max']);
             $this->loantype['LoanTypeName'] = $loantype->LoanTypeName;
 
             $this->loantype['loan_amount_Lessthan_Amount'] = $loantype['loan_amount_Lessthan_Amount'];
@@ -312,7 +409,7 @@ class LoanTypes extends Component
                 $this->terms = $this->loantype->terms->map(function($term) {
                     return [
                         'NameOfTerms' => $term->NameOfTerms,
-                        'InterestRate' => $term->InterestRate,
+                        'InterestRate' => $this->convertToWholeNumberPercentage($term->InterestRate ),
                         'InterestType' => $term->InterestType,
                         'LoanTypeId' => $this->LoanTypeId,
                         'Formula' => $term->Formula,
@@ -369,4 +466,32 @@ class LoanTypes extends Component
         }
         return view('livewire.maintenance.loan-types.loan-types');
     }
+
+    public function updated($propertyName)
+    {
+        logger()->info('Updated property: ' . $propertyName . ' - New value: ' . $this->loantype[$propertyName]);
+    }
+
+    private function convertToWholeNumber($value)
+    {
+        // Remove any non-numeric characters
+        $value = str_replace('/[^\d.]/', '', $value);
+    
+        // Convert to float and then to integer
+        $wholeNumber = is_numeric($value) ? intval(floatval($value)) : 0;
+    
+        logger()->info('Converted value: ' . $wholeNumber);
+        return $wholeNumber;
+    }
+    
+    private function convertToWholeNumberPercentage($value)
+    {
+        if (is_numeric($value)) {
+            $percentage = round(floatval($value) * 100);
+            return $percentage;
+        } else {
+            return 0;
+        }
+    }
+
 }

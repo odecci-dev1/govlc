@@ -28,7 +28,7 @@
                     </div>                                     
                 </div>              
             </div>
-            <div class="body-wrapper">
+            <div class="body-wrapper" style="gap: 0; height:clamp(100% - 21rem, 40rem, 80vh); overflow-y: auto;">
                 <!-- * Container: Reports Table -->
                 <div class="reports-table-container" id="reports-table-container">
 
@@ -93,73 +93,129 @@
                             </tr>
 
                             <!-- * Release Data -->
-                            @if($data)
-                                @foreach($data as $data)
+                            @forelse ($members as $member)
                                 <tr>
 
                                     <!-- * Application Reference -->
-                                    <td><span class="td-name">{{ $data['naid'] }}</span></td>
+                                    <td><span class="td-name">{{ $member->NAID }}</span></td>
 
                                     <!-- * Member Name -->
-                                    <td><span class="td-name">{{ $data['borrower'] }}</span></td>
+                                    <td><span class="td-name">{{ $member->member->full_name }}</span></td>
 
                                     <!-- * Co Borrower -->
                                     <td>
-                                        <span class="td-name">{{ $data['co_Borrower'] }}</span>
+                                        <span class="td-name">{{ $member->comaker->Lnam . $member->comaker->full_name }}</span>
                                     </td>
 
                                     <!-- * Area -->
                                     <td>
-                                        <span class="td-name">{{ $data['area'] }}</span>
+                                        <span class="td-name">{{ !empty($member->areaName) ? $member->areaName : 'N/A' }}</span> 
                                     </td>
 
                                     <!-- * Loan Type -->
                                     <td>
-                                        <span class="td-name">{{ $data['loanType'] }}</span> 
+                                        <span class="td-name">{{ $member->loantype->LoanTypeName }}</span> 
                                     </td>
 
                                     <!-- * Loan Amount -->
                                     <td>
-                                        <span class="td-name">{{ number_format($data['loanAmount'], 2) }}</span> 
+                                        <span class="td-name">{{ number_format($member->detail->LoanAmount, 2) }}</span> 
                                     </td>
 
                                     <!-- * Advance Payment -->
                                     <td>
-                                        <span class="td-name">{{ !empty($data['advancePayment']) ? number_format($data['advancePayment'], 2) : 0.00 }}</span> 
+                                        <span class="td-name">{{ !empty($member->collectionareamember->AdvancePayment) ? number_format($member->collectionareamember->AdvancePayment, 2) : 0.00 }}</span> 
                                     </td>
 
                                     <!-- * Terms -->
                                     <td>
-                                        <span class="td-name">{{ !empty($data['termofPayment']) ? $data['termofPayment'] : 'No terms' }}</span> 
+                                        <span class="td-name">{{ !empty($member->termsofpayments->NameOfTerms) ? $member->termsofpayments->NameOfTerms : 'No terms' }}</span> 
                                     </td>
 
                                     <!-- * Due Date -->
                                     <td>
-                                        <span class="td-name">{{ !empty($data['dueDate']) ? date('Y-m-d', strtotime($data['dueDate'])) : 'Empty date' }}</span> 
+                                        <span class="td-name">{{ !empty($member->loanHistory->DueDate) ? date('Y-m-d', strtotime($member->loanHistory->DueDate)) : 'Empty date' }}</span> 
                                     </td>
 
                                     <!-- * Date Released -->
                                     <td>
-                                        <span class="td-name">{{ $data['releasingDate'] }}</span> 
+                                        <span class="td-name">{{ !empty($member->loanHistory->DateReleased) ? date('Y-m-d', strtotime($member->loanHistory->DateReleased)) : 'Empty date' }}</span> 
                                     </td>
 
                                 </tr>
-                                @endforeach
-                            @endif
-                            
-
+                            @endforeach
                         </table>
                     
                     </div>
 
-                    <!-- * Total Collection Footer -->
-                    <!-- <div class="total-collection-footer">
-                        <div class="footer-wrapper">
-                            <p>Total Collection:</p> 
-                            <span id="">1,231.00</span>
+                    <!-- * Total Release Footer -->
+                    <div class="total-collection-footer" style="display: flex; justify-content: space-between;">
+                        <div style="margin: auto 0 auto 4rem;">
+                            <p style="font-size: 1.4rem">
+                                {{$paginationPaging['startItem']}}-{{ $paginationPaging['endItem'] }} of <span style="font-weight: 700;">{{ $paginationPaging['totalRecord'] }}</span> Results 
+                            </p>
                         </div>
-                    </div> -->
+                        <div class="footer-wrapper">
+                            {{-- <p>Total Savings:</p> 
+                            <span>{{ number_format($totalSavings, 2) }}</span> --}}
+                        </div>
+                    </div>
 
+                </div>
+
+                <div style="display: flex; flex-direction: column">
+                    @if($paginationPaging['totalPage'])
+                        <div class="pagination-container">
+    
+                            <a href="#" wire:click.prevent="goToFirstPage">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L12.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M4.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L6.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                            <!-- Previous Button -->
+                            @if($paginationPaging['prevPage'])
+                                <a href="#" wire:click.prevent="setPage({{ $paginationPaging['prevPage'] }})">
+                                    <img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left">
+                                </a>
+                            @endif
+                    
+                            <!-- Pagination Buttons -->
+                            @php
+                                $startPage = max(1, $paginationPaging['currentPage'] - 2);
+                                $endPage = min($paginationPaging['totalPage'], $paginationPaging['currentPage'] + 2);
+                    
+                                if ($endPage - $startPage < 4) {
+                                    if ($startPage > 1) {
+                                        $startPage = max(1, $endPage - 4);
+                                    } else {
+                                        $endPage = min($paginationPaging['totalPage'], $startPage + 4);
+                                    }
+                                }
+                            @endphp
+                    
+                            @for ($i = $startPage; $i <= $endPage; $i++)
+                                <a href="#" wire:click.prevent="setPage({{ $i }})" class="{{ $paginationPaging['currentPage'] == $i ? 'font-size-1_4em color-app' : '' }}">{{ $i }}</a>
+                            @endfor
+                    
+                            <!-- Next Button -->
+                            @if($paginationPaging['nextPage'])
+                                <a href="#" wire:click.prevent="setPage({{ $paginationPaging['nextPage'] }})">
+                                    <img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right">
+                                </a>
+                            @endif
+    
+                            <a href="#" wire:click.prevent="goToLastPage">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M13.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M19.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06L17.69 12l-6.97-6.97a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </div>
+                    @endif
+                    <p style="text-align: center; font-size: 1.2rem; opacity: 0.7;">
+                        Page <span style="font-weight: 700;">{{$paginationPaging['currentPage']}}</span> of {{$paginationPaging['totalPage']}}
+                    </p>
                 </div>
             </div>
         </div>

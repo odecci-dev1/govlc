@@ -49,8 +49,8 @@ class PastDueReport extends Component
                     'pageSize' => 1000,
                     'borrower' => $this->member,                 
                  ];
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Reports/Reports_PastDueList', $input);  
-        $this->data = collect($data->json());              
+        // $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Reports/Reports_PastDueList', $input);  
+        // $this->data = collect($data->json());              
         // $this->data->put(1, ['Borrower' => 'Borrower, Borrower, Borrower','LoanAmount' => 50000,'DateReleased' => '2023-12-26','DueDate' => '2023-12-27','TotalNP' => 10, 'TotalPastDueDay' => 9, 'TotalCollection' => 10000]);              
         return view('livewire.reports.past-due-report.past-due-report');
     }

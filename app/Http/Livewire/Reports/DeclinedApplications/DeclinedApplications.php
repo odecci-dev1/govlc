@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Reports\DeclinedApplications;
 
+use App\Models\Application;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
@@ -11,7 +12,7 @@ class DeclinedApplications extends Component
     public $paginate = [];
     public $paginationPaging = [];
 
-    public $data = [];
+    public $data;
 
     
     public function setPage($page = 1){
@@ -29,26 +30,37 @@ class DeclinedApplications extends Component
 
     public function render()
     {
-
-        $inputs = [
-                        'page' => $this->paginate['page'],
-                        'pageSize' => $this->paginate['pageSize'],
-                        'FilterName' => $this->keyword,
-                        'status' => '',
-                        'module' => $this->paginate['module'],
-                  ];
-
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Pagination/DisplayListPaginate', $inputs);                 
-        $this->data = $data->json()['items'];  
-        //dd($data->json());          
-        if( $data->json()['totalPage'] ){
-            $this->paginationPaging['totalPage'] = $data->json()['totalPage'];
-            $this->paginationPaging['totalRecord'] = $data->json()['totalRecord'];
-            $this->paginationPaging['currentPage'] = $data->json()['currentPage'];
-            $this->paginationPaging['nextPage'] = $data->json()['nextPage'] < $data->json()['totalPage'] ?  $data->json()['nextPage'] : $data->json()['totalPage'];
-            $this->paginationPaging['prevPage'] = $data->json()['prevPage'] > 0 ? $data->json()['prevPage'] : 1;
-        }
+        $this->data = $this->getMembers();
         
         return view('livewire.reports.declined-applications.declined-applications');
+    }
+
+    private function getMembers($paginate = true)
+    {
+        $applications = Application::with(['member', 'detail', 'loantype', 'loanhistory'])
+            ->where('Status', 11)
+            ->get();
+
+        if ($paginate) {
+            $totalItems = $applications->count();
+    
+            $this->paginationPaging['totalPage'] = ceil($applications->count() / $this->paginate['pageSize']);
+            $this->paginationPaging['totalRecord'] = $totalItems;
+            $this->paginationPaging['currentPage'] = $this->paginate['page'];
+            $this->paginationPaging['nextPage'] = $this->paginate['page'] < $this->paginationPaging['totalPage'] ? $this->paginate['page'] + 1 : $this->paginationPaging['totalPage'];
+            $this->paginationPaging['prevPage'] = $this->paginate['page'] > 1 ? $this->paginate['page'] - 1 : 1;
+    
+            $startItem = ($this->paginate['page'] - 1) * $this->paginate['pageSize'] + 1;
+            $endItem = min($this->paginate['page'] * $this->paginate['pageSize'], $totalItems);
+    
+            $this->paginationPaging['startItem'] = $startItem;
+            $this->paginationPaging['endItem'] = $endItem;
+    
+            $paginatedMembers = $applications->slice(($this->paginate['page'] - 1) * $this->paginate['pageSize'], $this->paginate['pageSize']);
+    
+            return $paginatedMembers;
+        }
+
+        return $applications;
     }
 }

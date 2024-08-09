@@ -12,11 +12,6 @@ class CoMaker extends Model
     protected $table = 'tbl_CoMaker_Model';
     public $timestamps = false;
 
-    public function getFullNameAttribute()
-    {      
-        return $this->Lname.', '.$this->Fname.(!empty($this->Suffi) ? ' '.$this->Suffi : '').' '.mb_substr($this->Mname, 0, 1).'.';
-    }
-
     public function jobinfo(): HasOne
     {
         return $this->HasOne(CoMakerJobInfo::class, 'CMID', 'Id')->select('id', '*')->withDefault();
@@ -26,5 +21,9 @@ class CoMaker extends Model
     {
         return $this->hasMany(CoMakerFileUpload::class, 'CMID', 'Id')->select('id', '*');
     }
-
+    
+    public function getFullNameAttribute()
+    {      
+        return $this->Lnam.', '.$this->Fname.(!empty($this->Suffi) ? ' '.$this->Suffi : '').' '.mb_substr($this->Mname, 0, 1).'.';
+    }
 }
