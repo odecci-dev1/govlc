@@ -167,27 +167,27 @@
                         <!-- * Borrower -->
                         <td>
                             <!-- <span class="td-num"></span> -->
-                            {{ $mlist['borrower'] }}
+                            {{ $mlist->member->fullname  }}
                         </td>
         
                         <!-- * Borrower Contact Number -->
                         <td>
-                            {{ $mlist['cno'] }}
+                            {{ $mlist->member->Cno  }}
                         </td>
 
                         <!-- * Loan Amount -->
                         <td>
-                            {{ $mlist['loanAmount'] }}
+                            {{ $mlist->detail->LoanAmount }}
                         </td>
         
                         <!-- * Terms of Payment -->
                         <td>
-                            {{ $mlist['termsOfPayment'] }}
+                            {{ $mlist->loantype->termsOfPayment }}
                         </td>
         
                         <!-- * Interest -->
                         <td style="text-align: end;">
-                            {{ $mlist['interest'] }}
+                            {{ $mlist->loantype->interest }}
                         </td>
         
                         <!-- * Table View and Trash Button -->
@@ -196,7 +196,7 @@
                                 @if($mlist['loanTypeID'] == 'LT-02')
                                 <a href="{{ URL::to('/') }}/tranactions/group/application/view/{{ $mlist['groupId'] }}" class="a-btn-view-3" data-view-ci>Review</a>                                
                                 @else
-                                <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $mlist['naid'] }}" class="a-btn-view-3" data-view-ci>Review</a>                                
+                                <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $mlist->detail->NAID }}" class="a-btn-view-3" data-view-ci>Review</a>                                
                                 @endif
                             </div>
                         </td>
