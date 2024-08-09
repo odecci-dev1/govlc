@@ -4,8 +4,11 @@ namespace App\Http\Livewire\Transactions\Application;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
+use App\Models\Application;
 
 use App\Traits\Common;
+use Illuminate\Database\Eloquent\Builder;
+
 class ApplicationReleasingList extends Component
 {
     
@@ -33,11 +36,16 @@ class ApplicationReleasingList extends Component
     
     public function render()
     {
-        $filter = ['loanType' => $this->loantype, 'fullname' => $this->keyword, 'statusid' => [[ 'status' => 10 ],[ 'status' => 15 ]], 'page' => 1, 'pageSize' => 10000,  'from' => ($this->loanAmountFrom == '' ? '0' : strval($this->loanAmountFrom)), 'to' => ($this->loanAmountTo == '' ? '0' : strval($this->loanAmountTo))];
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/GlobalFilter/FilterSearch', $filter);   $list = $data->json();           
-        //dd( $filter);
-        $list = $data->json();     
-        //dd($list);   
+
+        $list = Application::with('member')->with('comaker')->with('detail')->with('loantype')->whereHas('member', function (Builder $query) {
+            $query->where('Fname', 'like', '%'.$this->keyword.'%')->orWhere('Lname', 'like', '%'.$this->keyword.'%')->orWhere('Mname', 'like', '%'.$this->keyword.'%');
+        })                
+        ->where('Status', 10)->paginate(50);
+        // $filter = ['loanType' => $this->loantype, 'fullname' => $this->keyword, 'statusid' => [[ 'status' => 10 ],[ 'status' => 15 ]], 'page' => 1, 'pageSize' => 10000,  'from' => ($this->loanAmountFrom == '' ? '0' : strval($this->loanAmountFrom)), 'to' => ($this->loanAmountTo == '' ? '0' : strval($this->loanAmountTo))];
+        // $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/GlobalFilter/FilterSearch', $filter);   $list = $data->json();           
+        // //dd( $filter);
+        // $list = $data->json();     
+  
         return view('livewire.transactions.application.application-releasing-list', ['list' => $list]);
     }
 }

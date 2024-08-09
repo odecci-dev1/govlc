@@ -32,11 +32,11 @@
                     <div class="box-inner">
                         <div class="box-inner-wrapper">
                             <p>DATE:</p> 
-                            <span id="printDate">{{ isset($loansummary['date']) ? date('F j, Y', strtotime($loansummary['date'])) : 'not found' }}</span>
+                            <span id="printDate">{{ date_format($currentDate,'m/d/Y') }}</span>
                         </div>
                         <div class="box-inner-wrapper">
                             <p>DUE-DATE:</p> 
-                            <span id="printDueDate">{{ isset($loansummary['dueDate']) ? date('F j, Y', strtotime($loansummary['dueDate'])) : 'not found' }}</span>
+                            <span id="printDueDate">{{  date_format($dueDate,'m/d/Y')  }}</span>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="box-inner-wrapper p-red-text">
                             <p class="p-red-text">FIRST PAYMENT:</p>
-                            <span id="">{{ !empty($loansummary['advancePayment']) ? number_format($loansummary['advancePayment'], 2) : 'not found' }}</span>
+                            <span id="">{{ number_format($advancePayment, 2) }}</span>
                         </div>
                         <div class="box-inner-wrapper">
                             <p>HOLIDAYS:</p>
@@ -93,8 +93,8 @@
                         <p>&nbsp;</p>
                         <p>{{ number_format($holidayPayment,2)}}</p>
                         <p>{{ !empty($loansummary['totalSavingUsed']) ? number_format($loansummary['totalSavingUsed'], 2) : '0.00' }}</p>
-                        <p>{{ isset($loansummary['lifeInsurance']) ? number_format($loansummary['lifeInsurance'], 2) : '' }}</p>                                
-                        <p>{{ !empty($loansummary['deductInterest']) ? ($loansummary['deductInterest'] == 2 ? '0.00' : ( number_format($loansummary['total_InterestAmount'] ??= 0.00, 2)))  : '0.00' }}</p>
+                        <p>{{ number_format($lifeInsurance,2) }}</p>                                
+                        <p>{{ number_format($deductInterest,2) }}</p>
                     </div>
                 </div>
                 <!-- * Box-3 -->
@@ -106,11 +106,11 @@
                     <div class="box-inner">
                         <div class="box-inner-wrapper">
                             <p>PREPARED BY:</p>
-                            <span id="">{{ isset($loansummary['createdBy']) ? $loansummary['createdBy'] : 'not found' }}</span>
+                            <span id="">{{ $loanDetails['prepearedBy'] }}</span>
                         </div>
                         <div class="box-inner-wrapper">
                             <p>APPROVED BY:</p>
-                            <span id="">{{ isset($loansummary['releasedBy']) ? $loansummary['releasedBy'] : 'not found' }}</span>
+                            <span id="">{{ $loanDetails['approvedBy'] }}</span>
                         </div>
                         <div class="box-inner-wrapper">
                             <p>RELEASED THRU {{ isset($loansummary['modeOfRelease']) ? strtoupper($loansummary['modeOfRelease']) : 'NOT SET' }} {!! ($loansummary['modeOfRelease'] ??='') == 'Check' ? '<br>Check Reference : ' . ($loansummary['modeOfReleaseReference'] ??='') : '' !!}</p>

@@ -173,30 +173,30 @@
                         <!-- * Borrower -->
                         <td>
                             <!-- <span class="td-num"></span> -->
-                            {{ $mlist['borrower'] }}
+                            {{ $mlist->member->fullname  }}
                         </td>
         
                         <!-- * Borrower Contact Number -->
                         <td>
-                            {{ $mlist['cno'] }}
+                            {{ $mlist->member->Cno  }}
                         </td>
 
                         <!-- * Loan Amount -->
                         <td>
-                            {{ $mlist['loanAmount'] }}
+                            {{ $mlist->detail->LoanAmount }}
                         </td>
         
                         <!-- * Terms of Payment -->
                         <td>
-                            {{ $mlist['termsOfPayment'] }}
+                            {{ $mlist->loantype->termsOfPayment }}
                         </td>
         
                         <!-- * Interest -->
                         <td style="text-align: end;">
-                            {{ $mlist['interest'] }}
+                            {{ $mlist->loantype->interest}}
                         </td>
                         <td align="center">
-                            @if($mlist['statusId'] == 15)
+                            @if($mlist->detail->status == 15)
                             <img src="{{ URL::to('/') }}/assets/icons/check.svg" alt="funnel">
                             @endif
                         </td>
