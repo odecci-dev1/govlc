@@ -188,12 +188,12 @@
         
                         <!-- * Terms of Payment -->
                         <td>
-                            {{ $mlist->loantype->termsOfPayment }}
+                            {{ $mlist->termsofpayment->NameOfTerms }}
                         </td>
         
                         <!-- * Interest -->
                         <td style="text-align: end;">
-                            {{ $mlist->loantype->interest}}
+                            {{ ($mlist->termsofpayment->InterestRate * 100).'%'}}
                         </td>
                         <td align="center">
                             @if($mlist->detail->status == 15)
@@ -203,7 +203,7 @@
                         <!-- * Table View and Trash Button -->
                         <td class="td-btns">
                             <div class="td-btn-wrapper">
-                                <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $mlist['naid'] }}" class="a-btn-view-3" data-view-ci>Review</a>                                
+                                <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $mlist->Id }}" class="a-btn-view-3" data-view-ci>Review</a>                                
                             </div>
                         </td>
                     

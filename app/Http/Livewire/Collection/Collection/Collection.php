@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Collection\Collection;
 
 use Carbon\Carbon;
+use App\Models\Area;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
@@ -187,9 +188,10 @@ class Collection extends Component
             $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  
         }
         else{
-            $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');             
+           // $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');             
+            $areas = Area::where('Status',1)->get();         
         }     
-        $areas = $areas->json();        
+     //   $areas = $areas->json();        
         if( $areas ){
             $this->areas = collect($areas);            
         }
