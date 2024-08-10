@@ -42,7 +42,8 @@ class CoMaker extends Model
     public function getFullNameAttribute()
     {      
        
-       
+        return $this->Lnam.', '.$this->Fname.(!empty($this->Suffi) ? ' '.($this->Suffix == 'N/A' ? '':$this->Suffix) : '').' '.mb_substr($this->Mname, 0, 1).'.';
+    }
 
     public function jobinfo(): HasOne
     {
@@ -53,9 +54,5 @@ class CoMaker extends Model
     {
         return $this->hasMany(CoMakerFileUpload::class, 'CMID', 'Id')->select('id', '*');
     }
-    
-    public function getFullNameAttribute()
-    {      
-        return $this->Lnam.', '.$this->Fname.(!empty($this->Suffi) ? ' '.$this->Suffi : '').' '.mb_substr($this->Mname, 0, 1).'.';
-    }
+
 }
