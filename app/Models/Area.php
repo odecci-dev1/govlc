@@ -38,7 +38,7 @@ class Area extends Model
 
     public function fieldOfficer(): BelongsTo
     {
-        return $this->belongsTo(FieldOfficer::class, 'FOID', 'FOID');
+        return $this->belongsTo(FieldOfficer::class, 'Id', 'FOID');
     }
 
     public function collectionAreas(): HasMany
@@ -53,6 +53,6 @@ class Area extends Model
 
     public function getCityListAttribute(): array
     {
-        return explode(' | ', $this->City);
+        return explode('|', $this->City);
     }
 }

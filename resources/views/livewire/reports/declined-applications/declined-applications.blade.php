@@ -64,18 +64,18 @@
                                 <tr>
 
                                     <!-- * Application Reference -->
-                                    <td><span class="td-name">{{ $data['naid'] }}</span></td>
+                                    <td><span class="td-name">{{ $data->NAID }}</span></td>
 
                                     <!-- * Member Name -->
-                                    <td><span class="td-name">{{ $data['borrower'] }}</span></td>
+                                    <td><span class="td-name">{{ $data->member->full_name }}</span></td>
                                    
                                     <!-- * Loan Amount -->
                                     <td>
-                                        <span class="td-name">{{ number_format($data['loanAmount'], 2) }}</span> 
+                                        <span class="td-name">{{ number_format($data->detail->LoanAmount, 2) }}</span> 
                                     </td>
 
                                     <td>
-                                        <span class="td-name">{{ $data['remarks'] }}</span> 
+                                        <span class="td-name">{!! $data->Remarks !!}</span> 
                                     </td>
 
                                 </tr>

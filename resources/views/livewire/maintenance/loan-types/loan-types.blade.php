@@ -88,7 +88,7 @@
                                 <div style="width:  100%; display: flex;">                           
                                     <div style="width: 100%;">
                                         <div class="input-wrapper">                                                                   
-                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.Savings">
+                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.Savings" step="1" min="0">
                                             @error('loantype.Savings') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                         </div>
                                     </div>                                   
@@ -101,13 +101,13 @@
                                 <div style="width:  100%; display: flex;">                           
                                     <div  style="width:  50%; padding-right: 5px;">
                                         <div class="input-wrapper">
-                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.LoanAmount_Min" placeholder="Min:">    
+                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.LoanAmount_Min" placeholder="Min:" step="1" min="0">    
                                             @error('loantype.LoanAmount_Min') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                         </div>
                                     </div>
                                     <div  style="width:  50%; padding-left: 5px;">
                                         <div class="input-wrapper">
-                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.LoanAmount_Max" placeholder="Max:">
+                                            <input autocomplete="off" type="number" wire:model.lazy="loantype.LoanAmount_Max" placeholder="Max:" step="1" min="0">
                                             @error('loantype.LoanAmount_Max') <span class="text-required fw-normal">{{ $message }}</span>@enderror
                                         </div>
                                     </div>
@@ -136,7 +136,7 @@
                             <span style="font-size: 1.5rem">Name</span>
                         </div>  
                         <div style="width:  100%; display: flex;">                           
-                            <div  style="width:  100%;">
+                            <div style="width:  100%;">
                                 <div class="input-wrapper">                                                                   
                                     <input autocomplete="off" type="text" wire:model.lazy="inpterms.NameOfTerms">
                                     @error('inpterms.NameOfTerms') <span class="text-required fw-normal">{{ $message }}</span>@enderror
@@ -480,9 +480,10 @@
 
                     <div class="btn-wrapper">
                         @if($usertype != 2)
-                            <button type="button" class="button" wire:click="addTerms">
+                            <button type="button" class="button"
+                                    wire:click="{{ isset($inpterms['termsKey']) ? 'updateTerms' : 'addTerms' }}"
+                            >
                                 {{ isset($inpterms['termsKey']) ? 'Update to list' : 'Add to list' }}
-                                {{-- {{ isset($inpterms['termsKey']) ? ($inpterms['termsKey'] > 0 ? 'Update to list' : 'Add to list') : 'Add to list'}} --}}
                             </button>
                         @endif
                         @if(isset($inpterms['termsKey']))
@@ -551,7 +552,8 @@
                                         <td>{{ $value['NameOfTerms'] }}</td>
 
                                         <!-- * Interest Rate -->
-                                        <td>{{ $value['InterestRate'] }} %</td>
+                                        {{-- <td>{{ ($value['InterestRate'] * 100) }}%</td> --}}
+                                        <td>{{ $value['InterestRate'] }}%</td>
 
                                         <!-- * Days -->
                                         <td style="text-align: center">

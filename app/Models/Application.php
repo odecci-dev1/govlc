@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
@@ -21,6 +22,16 @@ class Application extends Model
     public function detail(): HasOne
     {
         return $this->hasOne(LoanDetails::class, 'NAID', 'Id')->select('id', '*')->withDefault();
+    }
+
+    public function loanhistory(): HasOne
+    {
+        return $this->hasOne(LoanHistory::class, 'NAID', 'Id')->select('id', '*')->withDefault();
+    }
+
+    public function collectionareamember(): HasOne
+    {
+        return $this->hasOne(CollectionAreaMember::class, 'NAID', 'NAID')->select('id', '*')->withDefault();
     }
 
     public function comaker(): HasOneThrough

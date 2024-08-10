@@ -55,52 +55,54 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @if($data)
-                                @foreach($data as $data)
+                            @if($members)
+                                @foreach($members as $member)
                                 <tr>
 
                                     <!-- * Application Reference -->
-                                    <td><span class="td-name">{{ $data['naid'] }}</span></td>
+                                    <td><span class="td-name">{{ $member->NAID }}</span></td>
 
                                     <!-- * Member Name -->
-                                    <td><span class="td-name">{{ $data['borrower'] }}</span></td>
+                                    <td><span class="td-name">{{ $member->member->full_name }}</span></td>
 
                                     <!-- * Co Borrower -->
                                     <td>
-                                        <span class="td-name">{{ $data['co_Borrower'] }}</th>    </td>
+                                        <span class="td-name">{{ $member->comaker->Lnam . $member->comaker->full_name }}</span>
+                                    </td>
 
                                     <!-- * Area -->
                                     <td>
-                                        <span class="td-name">{{ $data['area'] }}</th>    </td>
+                                        <span class="td-name">{{ !empty($member->areaName) ? $member->areaName : 'N/A' }}</span> 
+                                    </td>
 
                                     <!-- * Loan Type -->
                                     <td>
-                                        <span class="td-name">{{ $data['loanType'] }}</span> 
+                                        <span class="td-name">{{ $member->loantype->LoanTypeName }}</span> 
                                     </td>
 
                                     <!-- * Loan Amount -->
                                     <td>
-                                        <span class="td-name">{{ number_format($data['loanAmount'], 2) }}</span> 
+                                        <span class="td-name">{{ number_format($member->detail->LoanAmount, 2) }}</span> 
                                     </td>
 
                                     <!-- * Advance Payment -->
                                     <td>
-                                        <span class="td-name">{{ !empty($data['advancePayment']) ? number_format($data['advancePayment'], 2) : 0.00 }}</span> 
+                                        <span class="td-name">{{ !empty($member->collectionareamember->AdvancePayment) ? number_format($member->collectionareamember->AdvancePayment, 2) : 0.00 }}</span> 
                                     </td>
 
                                     <!-- * Terms -->
                                     <td>
-                                        <span class="td-name">{{ !empty($data['termofPayment']) ? $data['termofPayment'] : 'No terms' }}</span> 
+                                        <span class="td-name">{{ !empty($member->termsofpayments->NameOfTerms) ? $member->termsofpayments->NameOfTerms : 'No terms' }}</span> 
                                     </td>
 
                                     <!-- * Due Date -->
                                     <td>
-                                        <span class="td-name">{{ !empty($data['dueDate']) ? date('Y-m-d', strtotime($data['dueDate'])) : 'Empty date' }}</span> 
+                                        <span class="td-name">{{ !empty($member->loanHistory->DueDate) ? date('Y-m-d', strtotime($member->loanHistory->DueDate)) : 'Empty date' }}</span> 
                                     </td>
 
                                     <!-- * Date Released -->
                                     <td>
-                                        <span class="td-name">{{ $data['releasingDate'] }}</span> 
+                                        <span class="td-name">{{ !empty($member->loanHistory->DateReleased) ? date('Y-m-d', strtotime($member->loanHistory->DateReleased)) : 'Empty date' }}</span> 
                                     </td>
 
                                 </tr>

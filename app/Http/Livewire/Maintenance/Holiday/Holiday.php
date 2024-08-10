@@ -62,8 +62,8 @@ class Holiday extends Component
 
         $holiday = HolidayModel::create($data);
 
-        $latestHoliday = HolidayModel::latest();
-        return redirect()->to('/maintenance/holiday/view/' . $latestHoliday)
+        $latestHoliday = HolidayModel::latest()->first();
+        return redirect()->to('/maintenance/holiday/view/' . $latestHoliday->HolidayID)
                          ->with(['mmessage' => 'Holiday has been saved', 'mword' => 'Success']);
     }
 

@@ -89,4 +89,16 @@ class Members extends Model
     {
         return $this->Lname.', '.$this->Fname.(!empty($this->Suffix) ? ' '.($this->Suffix == 'N/A' ? '':$this->Suffix) : '').' '.mb_substr($this->Mname == 'N/A' ? '':$this->Mname, 0, 1).'';
     }
+
+    public function getAreaNameAttribute()
+    {
+        $memberFullLocation = "{$this->Barangay}, {$this->City}";
+        $areas = Area::all();
+        
+        $matchingArea = $areas->first(function (Area $area) use ($memberFullLocation) {
+            return in_array($memberFullLocation, $area->city_list);
+        });
+
+        return $matchingArea ? $matchingArea->Area : 'N/A';
+    }
 }
