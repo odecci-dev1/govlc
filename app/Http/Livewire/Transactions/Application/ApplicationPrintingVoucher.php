@@ -6,24 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use App\Models\Application;
 use App\Models\Holiday;
-use App\Models\Members;
-use App\Models\MonthlyBills;
-use App\Models\JobInfo;
-use App\Models\FamBackground;
-use App\Models\BusinessInformation;
-use App\Models\BusinessFileUpload;
-use App\Models\LoanDetails;
-use App\Models\ChildInfo;
-use App\Models\Appliances;
-use App\Models\Assets;
-use App\Models\Properties;
-use App\Models\BankAccounts;
-use App\Models\FileUpload;
-use App\Models\CoMaker;
-use App\Models\CoMakerFileUpload;
-use App\Models\CoMakerJobInfo;
-use App\Models\LoanType;
-use App\Models\TermsOfPayment;
+
 use App\Models\AdvancePaymentFormula;
 use App\Models\LoanHistory;
 use App\Traits\Calculator;
@@ -85,11 +68,9 @@ class ApplicationPrintingVoucher extends Component
         $this->loansummary['cno'] = $res->member->Cno;
         $this->loansummary['createdBy'] = $this->getUserName($res->CreatedBy);
         $this->loansummary['releasedBy'] = $this->getUserName($res->ReleasedBy);
-        $this->loansummary['modeOfRelease'] = $this->getUserName($res->detail->ModeOfRelease);
+        $this->loansummary['modeOfRelease'] = $res->detail->ModeOfRelease;
 
-        // $getloansummary = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanSummary/GetLoanSummary', [ 'naid' => $this->naID ]);                  
-        // $this->loansummary = isset($getloansummary[0]) ? $getloansummary[0] : [];     
-        //dd($res);
+
         return view('livewire.transactions.application.application-printing-voucher');
     }
 }

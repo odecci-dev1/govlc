@@ -55,10 +55,12 @@
 
                 <div class="input-wrapper-modal">
                     <span>Applied Loan Amount</span>
+                    <p>From:</p>
                     <input autocomplete="off" wire:model="loanAmountFrom" type="number" placeholder="From">
                 </div>
 
                 <div class="input-wrapper-modal">
+                    <p>To:</p>
                     <input autocomplete="off" wire:model="loanAmountTo" type="number" placeholder="To">
                 </div>
 
@@ -218,7 +220,7 @@
                         
                     <!-- * Co-Borrower -->
                     <td>
-                        {{ $l->comaker->fullname }} 
+                        {{ $l->comaker->Lnam.', '.$l->comaker->Fname.' '.(!empty($l->comaker->Suffi) ? ' '.$l->comaker->Suffix : '').' '.mb_substr($l->comaker->Mname, 0, 1).'.' }} 
                     </td>
 
                     <!-- * Co-Borrower Contact Number -->
@@ -233,7 +235,7 @@
 
                     <!-- * Loan type -->
                     <td>
-                        {{ $l->detail->LoanTypeName }}
+                        {{ $l->loantype->LoanTypeName }}
                     </td>
 
                     <!-- * Date Created -->
@@ -249,7 +251,7 @@
                             @else
                                 <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $l->NAID }}" class="a-btn-view-3" data-view-application>View</a>
                             @endif
-                            <button  onclick="showDialog('{{ $l['naid'] }}')"  type="button" class="a-btn-trash-5">Trash</button>
+                            <button  onclick="showDialog('{{ $l->Id }}')"  type="button" class="a-btn-trash-5">Trash</button>
                         </div>
                     </td>
                 

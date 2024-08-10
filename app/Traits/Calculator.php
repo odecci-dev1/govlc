@@ -6,6 +6,7 @@ namespace App\Traits;
 use App\Models\Application;
 use App\Models\CollectionAreaMember;
 use App\Models\Holiday;
+use App\Models\AdvancePaymentFormula;
 use Carbon\Carbon;
 trait Calculator{
 
@@ -65,8 +66,25 @@ trait Calculator{
     }
 
 
-    public function calculateReceivable($loanPrincipal,$deductions,$calculatedResult,$terms){
- 
+    public function calculateReceivable($loanPrincipal, $naID){
+
+        $res = Application::where('NAID', $naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first(); 
+        $details = $res->detail;
+        $interestRate = $res->TermsOfpayment->InterestRate;
+      
+        $terms =  $res->TermsOfpayment->Terms;
+        $loanAmount = ($loanPrincipal * $interestRate) + $loanPrincipal;
+        $formulas = AdvancePaymentFormula::where('APFID',$res->TermsOfpayment->Formula)->first();
+        $calculatedResult = $this->calculateLoan($formulas->Id,$interestRate,$loanPrincipal,$terms,$res->TermsOfpayment->OldFormula );
+        $notarialFee = $this->calculateNotarialFee($res->TermsOfpayment->NotarialFeeOrigin,$loanPrincipal,$loanAmount,$res->TermsOfpayment->LessThanAmount,$res->TermsOfpayment->LessThanAmountTYpe,$res->TermsOfpayment->LessThanNotarialAmount,$res->TermsOfpayment->GreaterThanEqualAmountTYpe,$res->TermsOfpayment->GreaterThanEqualNotarialAmount);
+        $loanInsurance = $this->calculateLoanInsurance($res->TermsOfpayment->LoanInsuranceAmountType,$res->TermsOfpayment->LoanInsuranceAmount,$loanPrincipal);
+        $lifeInsurance = $this->calculateLifeInsurance($res->TermsOfpayment->LifeInsuranceAmountType,$res->TermsOfpayment->LifeInsuranceAmount,$loanPrincipal);
+        $interestAmount = $this->calculatedResult['interestAmount'];
+        $isDeductInterest = $res->TermsOfpayment->DeductInterest;
+        $deductInterest=0;
+        if($isDeductInterest == 1){
+            $deductInterest = $interestAmount;
+        }
         $loanStart = date_create(Carbon::now()->format('Y-m-d'));
         $loanEnd = date_create(date_format(date_add(date_create(Carbon::now()->format('Y-m-d')), date_interval_create_from_date_string($terms." Days")),'Y-m-d'));
      
@@ -75,14 +93,12 @@ trait Calculator{
         $loanEndWithSundays = date_create(date_format(date_add( $loanEnd, date_interval_create_from_date_string($sundays." Days")),'Y-m-d'));
        
         $getHolidays = Holiday::whereBetween('Date',[$loanStart,$loanEndWithSundays])->count();
-        $loanEndWithHolidays = date_create(date_format(date_add( $loanEndWithSundays, date_interval_create_from_date_string($getHolidays." Days")),'Y-m-d'));
         
         $holidayPayment = $getHolidays * $calculatedResult['collectible'];
         
-        $deductions =  $holidayPayment  + $calculatedResult['advancePayment'] + $deductions;
-      
-        $receivables = $loanPrincipal - $deductions;
-
+        $deductionsAmount =  $notarialFee + $holidayPayment + $loanInsurance + $calculatedResult['advancePayment'] + $lifeInsurance +  $deductInterest ;
+        $receivables = $loanPrincipal - $deductionsAmount;
+;
         return $receivables;
     }
 

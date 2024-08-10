@@ -14,6 +14,21 @@ class CollectionAreaMember extends Model
     protected $guarded = [
         'Id',
     ];
+    public $timestamps = false;
+
+    protected $fillable = [
+        'NAID',
+        'AdvancePayment',
+        'LapsePayment',
+        'CollectedAmount',
+        'Savings',
+        'Payment_Status',
+        'Payment_Method',
+        'DateCollected',
+        'Area_RefNo',
+        'AdvanceStatus',
+        'UsedAdvancePayment'
+    ];
 
     public function collectionArea()
     {

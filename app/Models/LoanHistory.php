@@ -20,7 +20,7 @@ class LoanHistory extends Model
         'OutstandingBalance',
         'DateReleased',
         'DueDate',
-        'DueCreated',
+        'DateCreated',
         'DateOfFullPayment',
         'MemId',
         'UsedSavings',

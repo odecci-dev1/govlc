@@ -278,7 +278,7 @@
             <div class="input-wrapper">
                 @if($member['statusID'] == 10)   
                 <span>Savings To Be Use</span>
-                <input wire:model.lazy="loanDetails.savingsToUse" {{ isset($loanDetails['totalSavings']) ? ($loanDetails['totalSavings'] != '' ? '' : 'disabled') : 'disabled' }} class="{{ $member['statusID'] == 10 ? (isset($loanDetails['totalSavings']) ? ($loanDetails['totalSavings'] != '' ? 'inpt-editable' : '') : '') : '' }}"  type="number">
+                <input wire:model.lazy="loanDetails.totalSavingUsed" {{ isset($loanDetails['totalSavingUsed']) ? ($loanDetails['totalSavingUsed'] != '' ? '' : 'disabled') : 'disabled' }} class="{{ $member['statusID'] == 10 ? (isset($loanDetails['totalSavingUsed']) ? ($loanDetails['totalSavingUsed'] != '' ? 'inpt-editable' : '') : '') : '' }}"  type="number">
                 @error('loanDetails.savingsToUse') <span class="text-required">{{ $message }}</span> @enderror
                 @endif
             </div>
