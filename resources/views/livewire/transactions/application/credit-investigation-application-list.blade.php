@@ -137,7 +137,7 @@
                     <!-- * Loan Amount -->
                     <th>
                         <div class="th-wrapper">
-                            <span class="th-name">Loan Amount</span>
+                            <span class="th-name">Principal Amount</span>
                             <!-- <img src="{{ URL::to('/') }}/assets/icons/funnel-simple.svg" alt="funnel"> -->
                         </div>
                     </th>
@@ -180,12 +180,12 @@
         
                         <!-- * Terms of Payment -->
                         <td>
-                           {{ $mlist->loantype->termsOfPayment }}
+                           {{ $mlist->termsofpayment->NameOfTerms }}
                         </td>
         
                         <!-- * Interest -->
                         <td style="text-align: end;">
-                            {{ $mlist->loantype->interest }}
+                            {{ ($mlist->termsofpayment->InterestRate * 100).'%' }}
                         </td>
         
                         <!-- * Table View and Trash Button -->

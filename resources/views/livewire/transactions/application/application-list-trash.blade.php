@@ -130,48 +130,43 @@
                         
                     <!-- * Borrower -->
                     <td>
-                       {{ $l['borrower'] }}
+                       {{ $l->member->fullname }}
                     </td>
 
                     <!-- * Borrower Contact Number -->
                     <td>
-                        {{ $l['cno'] }}
+                        {{ $l->member->Cno }}
                     </td>
                         
                     <!-- * Co-Borrower -->
                     <td>
-                        {{ $l['coBorrower'] }}
+                        {{ $l->comaker->Lnam.', '.$l->comaker->Fname.' '.(!empty($l->comaker->Suffi) ? ' '.$l->comaker->Suffix : '').' '.mb_substr($l->comaker->Mname, 0, 1).'.' }} 
                     </td>
 
                     <!-- * Co-Borrower Contact Number -->
                     <td>
-                         {{ $l['co_Cno'] }}
+                        {{ $l->comaker->Cno }}
                     </td>
 
                     <!-- * Applied Loan Amount -->
                     <td class="td-num">
-                        {{ $l['loanAmount'] }}
+                        {{ $l->detail->LoanAmount }}
                     </td>
 
                     <!-- * Loan type -->
                     <td>
-                        {{ $l['loanType'] }}
+                        {{ $l->loantype->LoanTypeName }}
                     </td>
 
                     <!-- * Date Created -->
                     <td>
-                        {{ date('m/d/Y', strtotime($l['dateCreated'])) }}
+                        {{ date('m/d/Y', strtotime($l->DateCreated)) }}
                     </td>
 
                     <!-- * Table View and Trash Button -->
                     <td class="td-btns">
                         <div class="td-btn-wrapper">
-                            @if($l['loanTypeID'] == 'LT-02')
-                                <a href="{{ URL::to('/') }}/tranactions/group/application/view/{{ $l['groupId'] }}" class="a-btn-view-3" data-view-application>View</a>
-                            @else
-                                <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $l['naid'] }}" class="a-btn-view-3" data-view-application>View</a>
-                            @endif
-                            <button  onclick="showDialog('{{ $l['naid'] }}')"  type="button" class="a-btn-trash-5">Restore</button>
+                            <button  onclick="showDialog('{{ $l->Id }}')"  type="button" class="a-btn-trash-5">Restore</button>
                         </div>
                     </td>
                 

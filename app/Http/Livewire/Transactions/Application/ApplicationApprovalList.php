@@ -39,7 +39,7 @@ class ApplicationApprovalList extends Component
         // //dd( $filter);
         // $list = $data->json();     
         //dd($list);
-        $list = Application::with('member')->with('comaker')->with('detail')->with('loantype')->whereHas('member', function (Builder $query) {
+        $list = Application::with('member')->with('comaker')->with('detail')->with('loantype')->with('termsofpayment')->whereHas('member', function (Builder $query) {
             $query->where('Fname', 'like', '%'.$this->keyword.'%')->orWhere('Lname', 'like', '%'.$this->keyword.'%')->orWhere('Mname', 'like', '%'.$this->keyword.'%');
         })                
         ->where('Status', 9)->paginate(50);   

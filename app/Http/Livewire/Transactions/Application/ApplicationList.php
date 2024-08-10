@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\Common;
 use App\Models\Application;
+use App\Models\LoanType;
+use Carbon\Carbon;
 
 class ApplicationList extends Component
 {    
@@ -20,13 +22,13 @@ class ApplicationList extends Component
 
     public function mount(){
         $this->usertype = session()->get('auth_usertype'); 
-        $getloans = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetails');  
+        $getloans = LoanType::where('Status',1)->get();
        
-        $getloans = $getloans->json();       
+         
         $loantypeList = collect([]);
         if(count($getloans) > 0){
             foreach($getloans as $getloans){
-                $loantypeList[$getloans['loanTypeID']] = ['loanTypeName' => $getloans['loanTypeName'], 'loanTypeID' => $getloans['loanTypeID']];
+                $loantypeList[$getloans['Id']] = ['loanTypeName' => $getloans['LoanTypeName'], 'loanTypeID' => $getloans['Id']];
             }
         }
        
@@ -35,7 +37,11 @@ class ApplicationList extends Component
     }
 
     public function archive($naID){        
-        $delete = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Application/DeleteApplication', ['naid' => $naID]);                                               
+        Application::where('NAID',$naID)->update([
+            'Status' => 2,
+            'DeclineDate'=>Carbon::now(),
+             'DeclinedBy'=>session()->get('auth_usertype'),
+        ]) ;                                           
         return redirect()->to('/tranactions/application/list')->with('mmessage', 'Application has been deleted');  
     }
     
@@ -49,7 +55,7 @@ class ApplicationList extends Component
                     $query->where('Fname', 'like', '%'.$this->keyword.'%')->orWhere('Lname', 'like', '%'.$this->keyword.'%')->orWhere('Mname', 'like', '%'.$this->keyword.'%');
                 })                
                 ->where('Status', 7)->paginate(50);       
-                       
+
         return view('livewire.transactions.application.application-list', ['list' => $list]);
     }
 }

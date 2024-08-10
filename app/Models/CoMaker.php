@@ -12,6 +12,38 @@ class CoMaker extends Model
     protected $table = 'tbl_CoMaker_Model';
     public $timestamps = false;
 
+    protected $fillable = [
+        'Fname',
+        'Mname',
+        'Lnam',
+        'Suffi',
+        'Gender',
+        'DOB',
+        'Age',
+        'POB',
+        'CivilStatus',
+        'Cno',
+        'EmailAddress',
+        'House_Stats',
+        'HouseNo',
+        'Barangay',
+        'City',
+        'Region',
+        'Country',
+        'ZipCode',
+        'YearsStay',
+        'RTTB',
+        'CMID',
+        'Status',
+        'DateCreated',
+        'DateUpdated',
+        'MemId',
+    ];
+    public function getFullNameAttribute()
+    {      
+       
+       
+
     public function jobinfo(): HasOne
     {
         return $this->HasOne(CoMakerJobInfo::class, 'CMID', 'Id')->select('id', '*')->withDefault();

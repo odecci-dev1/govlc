@@ -278,7 +278,7 @@
             <div class="input-wrapper">
                 @if($member['statusID'] == 10)   
                 <span>Savings To Be Use</span>
-                <input wire:model.lazy="loanDetails.savingsToUse" {{ isset($loanDetails['totalSavings']) ? ($loanDetails['totalSavings'] != '' ? '' : 'disabled') : 'disabled' }} class="{{ $member['statusID'] == 10 ? (isset($loanDetails['totalSavings']) ? ($loanDetails['totalSavings'] != '' ? 'inpt-editable' : '') : '') : '' }}" readonly type="number">
+                <input wire:model.lazy="loanDetails.totalSavingUsed" {{ isset($loanDetails['totalSavingUsed']) ? ($loanDetails['totalSavingUsed'] != '' ? '' : 'disabled') : 'disabled' }} class="{{ $member['statusID'] == 10 ? (isset($loanDetails['totalSavingUsed']) ? ($loanDetails['totalSavingUsed'] != '' ? 'inpt-editable' : '') : '') : '' }}"  type="number">
                 @error('loanDetails.savingsToUse') <span class="text-required">{{ $message }}</span> @enderror
                 @endif
             </div>
@@ -354,7 +354,10 @@
             </div>
             @if(in_array($member['statusID'],[10,15]))
             <div class="input-wrapper">
-                
+                <div class="input-wrapper">
+                    <span>Outstanding Balance (From Previous Loan)</span>
+                    <input disabled wire:model.lazy="loanDetails.outstandingBalance" readonly type="number">
+                </div>
             </div>
             @endif
             <div class="input-wrapper input-wrapper-decline" style="align-items: center;">

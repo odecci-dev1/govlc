@@ -182,12 +182,12 @@
         
                         <!-- * Terms of Payment -->
                         <td>
-                            {{ $mlist->loantype->termsOfPayment }}
+                            {{ $mlist->termsofpayment->NameOfTerms }}
                         </td>
         
                         <!-- * Interest -->
                         <td style="text-align: end;">
-                            {{ $mlist->loantype->interest }}
+                            {{ ($mlist->termsofpayment->InterestRate * 100).'%' }}
                         </td>
         
                         <!-- * Table View and Trash Button -->

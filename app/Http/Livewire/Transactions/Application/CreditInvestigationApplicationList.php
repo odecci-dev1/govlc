@@ -38,10 +38,11 @@ class CreditInvestigationApplicationList extends Component
        // $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/GlobalFilter/FilterSearch', $filter);   $list = $data->json();           
         //dd( $filter);
        // $list = $data->json();
-        $list = Application::with('member')->with('comaker')->with('detail')->with('loantype')->whereHas('member', function (Builder $query) {
+        $list = Application::with('member')->with('comaker')->with('detail')->with('loantype')->with('termsofpayment')->whereHas('member', function (Builder $query) {
             $query->where('Fname', 'like', '%'.$this->keyword.'%')->orWhere('Lname', 'like', '%'.$this->keyword.'%')->orWhere('Mname', 'like', '%'.$this->keyword.'%');
         })                
-        ->where('Status', 8)->paginate(50);   
+        ->where('Status', 8)->get();
+   
  
         return view('livewire.transactions.application.credit-investigation-application-list', ['list' => $list]);
     }
