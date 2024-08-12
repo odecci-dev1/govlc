@@ -21,15 +21,16 @@ class PastDueExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        $data = collect([]); 
-        $cnt = 0;
-        if($this->mdata){
-             foreach($this->mdata as $dt){
-                 $cnt = $cnt + 1;
-                 $data->put($cnt, [ 'Borrower' => $dt['Borrower'], 'LoanAmount' => $dt['LoanAmount'], 'DateReleased' => date('Y-m-d', strtotime($dt['DateReleased'])), 'DueDate' => date('Y-m-d', strtotime($dt['DueDate'])), 'TotalNP' => $dt['TotalNP'], 'TotalPastDueDay' => $dt['TotalPastDueDay'] ]);
-             }
-        }
-        return collect($data);
+        return $this->mdata->map(function ($dt) {
+            return [ 
+                'MEMBER NAME' => $dt['memberName'],
+                'LOAN AMOUNT' => $dt['loanAmount'],
+                'DATE RELEASED' => $dt['dateReleased'],
+                'DUE DATE' => $dt['dueDate'],
+                'TOTAL NP' => $dt['totalNP'],
+                'TOTAL PAST DUE DAY(S)' => $dt['totalPastDueDays'],
+            ];
+        });
     }
 
     public function headings(): array

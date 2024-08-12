@@ -26,7 +26,7 @@ class ReleaseReport extends Component
         $this->paginate['pageSize'] = 15;
     }
 
-    public function exportReleaseReport()
+    public function exportReport()
     {
         $data = $this->getMembers(false, false);
         $exportData = $data->map(function ($member) {
@@ -78,13 +78,6 @@ class ReleaseReport extends Component
     {      
         $members = $this->getMembers();
 
-        $input = [
-            'page' => 1,
-            'pageSize' => 1000,
-            'datefrom' => $this->datestart,
-            'dateto' => $this->dateend,
-        ];
-       
         return view('livewire.reports.release-report.release-report', [
             'members' => $members
         ]);
@@ -95,6 +88,9 @@ class ReleaseReport extends Component
         $members = Application::with(['member', 'detail', 'loantype', 'loanhistory', 'termsofpayment'])
             ->when(!$includeInactive, function ($query) {
                 $query->where('Status', '!=', 2);
+            })
+            ->whereHas('loanhistory', function ($query) {
+                $query->whereBetween('DateCreated', [$this->datestart, $this->dateend]);
             })
             ->get();
         

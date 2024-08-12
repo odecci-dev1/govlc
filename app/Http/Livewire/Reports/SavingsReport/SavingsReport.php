@@ -39,7 +39,7 @@ class SavingsReport extends Component
         $this->member = $memId ;
     }
 
-    public function exportReleaseReport()
+    public function exportReport()
     {
         $data = $this->getMembers(false, false);
         $exportData = $data->map(function ($member) {

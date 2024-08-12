@@ -79,6 +79,16 @@ class Members extends Model
     {
         return $this->hasMany(Area::class, 'City', 'City');
     }
+    
+    // public function loanhistory(): HasMany
+    // {
+    //     return $this->hasMany(LoanHistory::class, 'MemId', 'MemId');
+    // }
+
+    public function loanhistory(): HasOne
+    {
+        return $this->hasOne(LoanHistory::class, 'MemId', 'Id')->select('id', '*')->withDefault();
+    }
 
     public function status(): BelongsTo
     {
@@ -87,7 +97,7 @@ class Members extends Model
 
     public function getFullNameAttribute()
     {
-        return $this->Lname.', '.$this->Fname.(!empty($this->Suffix) ? ' '.($this->Suffix == 'N/A' ? '':$this->Suffix) : '').' '.mb_substr($this->Mname == 'N/A' ? '':$this->Mname, 0, 1).'';
+        return $this->Lname.', '.$this->Fname.(!empty($this->Suffix) ? ' '.($this->Suffix == 'N/A' ? '':$this->Suffix) : '').' '.mb_substr($this->Mname == 'N/A' ? '':$this->Mname, 0, 1).'.';
     }
 
     public function getAreaNameAttribute()
