@@ -52,9 +52,9 @@
                             //$checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();                 
                             $checkIfPrinted = in_array($area['area_RefNo'], ['PENDING', '']) ? false : true;
                         @endphp
-                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['foid'] }}', '{{ in_array($area['area_RefNo'], ['PENDING', '']) ? '' : $area['area_RefNo'] }}', 0)" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
+                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['Id'] }}', '{{ $area['FOID'] }}', '{{ in_array($area['area_RefNo'], ['PENDING', '']) ? '' : $area['area_RefNo'] }}', 0)" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
                             <div class="box-1">
-                                <h4 id="collectionAreaNum">{{ $area['areaName'] }}</h4>
+                                <h4 id="collectionAreaNum">{{ $area['Area'] }}</h4>
                             </div>
                             <div class="box-2" style="position: relative;">
                                 <div class="inner-box-1">
@@ -100,7 +100,7 @@
                             <select wire:model.lazy="foid" class="select-option-menu" style="width: 40rem;{{ $areaID != '' ? '' : 'visibility: hidden;' }}">                                
                                 @if($folist)
                                     @foreach($folist as $fo)
-                                        <option value="{{ $fo['foid'] }}">{{ $fo['lname'] }}, {{ $fo['fname'] }} {{ substr($fo['mname'], 0, 1) }}.</option>           
+                                        <option value="{{ $fo['Id'] }}">{{ $fo['LName'] }}, {{ $fo['FName'] }} {{ substr($fo['MName'], 0, 1) }}.</option>           
                                     @endforeach
                                 @endif                                  
                             </select>      

@@ -89,7 +89,7 @@
                                                         <div class="fill-wrap">
                                                             <p class="p-fill p-bold">Type of loan:</p>
                                                             <!-- TODO: Remove the placeholder attribute in the input element -->
-                                                            <input class="fill-out-line" type="text" value="{{ $member['individualLoan'][0]['loanType'] }}" disabled="true" aria-disabled="true" >
+                                                            <input class="fill-out-line" type="text" value="{{ $loansummary['LoanTypeName'] }}" disabled="true" aria-disabled="true" >
                                                         </div>
                                                         <div class="fill-wrap">
                                                             <p class="p-fill p-bold">Group Name:</p>
@@ -99,12 +99,12 @@
                                                         <div class="fill-wrap">
                                                             <p class="p-fill p-bold">Terms:</p>
                                                             <!-- TODO: Remove the placeholder attribute in the input element -->
-                                                            <input class="fill-out-line" type="text" value="{{ $member['individualLoan'][0]['terms'] }}" name="" id="" disabled="true" aria-disabled="true" >
+                                                            <input class="fill-out-line" type="text" value="{{ $loansummary['Terms'] }}" name="" id="" disabled="true" aria-disabled="true" >
                                                         </div>
                                                         <div class="fill-wrap">
                                                             <p class="p-fill p-bold">Loan amount:</p>
                                                             <!-- TODO: Remove the placeholder attribute in the input element -->
-                                                            <input class="fill-out-line" type="text" value="{{ number_format($loansummary['loanAmount'],2) }}" name="" id="" disabled="true" aria-disabled="true" >
+                                                            <input class="fill-out-line" type="text" value="{{ number_format($loansummary['LoanAmount'],2) }}" name="" id="" disabled="true" aria-disabled="true" >
                                                         </div>
                                                     </div>
                                                     <div class="wrapper">
@@ -142,7 +142,7 @@
                                                 <!-- * Body -->
                                                     <tr>
                                                         <td>1</td>
-                                                        <td>{{ $loansummary['advancePayment'] > 0 ? date('m/d/Y') : '' }}</td>
+                                                        <td>{{ $loansummary['advancePayment'] > 0 ? date_format($loansummary['ReleasedDate'],'m/d/Y') : '' }}</td>
                                                         <td>{{ $loansummary['advancePayment'] > 0 ? number_format($loansummary['advancePayment'], 2) : '' }}</td>
                                                         <td></td>
                                                         <td></td>

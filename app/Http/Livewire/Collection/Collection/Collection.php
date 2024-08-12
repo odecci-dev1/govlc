@@ -2,7 +2,11 @@
 
 namespace App\Http\Livewire\Collection\Collection;
 
+use App\Models\Application;
 use Carbon\Carbon;
+use App\Models\Area;
+use App\Models\Members;
+use App\Models\FieldOfficer;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\URL;
@@ -147,11 +151,34 @@ class Collection extends Component
         //dd($areaRefNo); 
         $this->areaRefNo = $this->areaRefNo == 'PENDING' ? '' : $this->areaRefNo;
         if($this->areaID != ''){
-            
-                $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $this->areaRefNo ]);  
-                $details = $details->json();   
+                
+               // $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $this->areaRefNo ]);  
+                //$details = $details->json();   
                 //dd($details[0]);    
 
+                $area =  Area::where('Id',$this->areaID)->first();
+                $locations = explode("|",$area->City);
+                $persons=[];
+                foreach($locations as $location){
+                    $address = explode(",",$location);
+                    $barangay = $address[0];
+                    $city = $address[1];
+                   
+                    $members =  Members::where('Barangay','LIKE','%'.$barangay.'%')->orWhere('City','LIKE','%'.$city.'%')->get();
+                    foreach($members as $member){
+                        $persons[$member->Id] = $member;
+                       
+                    }
+                }
+              
+                 $details=[];
+                 foreach($persons as $person){
+                    $applications = Application::where('MemId',$person->MemId)->get();
+                    foreach($applications as $application){ 
+                        $details[$application->Id] = $application->NAID;
+                    }
+                 }
+                 dd($details);
                 if(isset($details[0])){
                     $collections = null;
                     $details = $details[0];                                       
@@ -184,28 +211,23 @@ class Collection extends Component
         $this->areaDetailsFooter = collect([]);
         // $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/AreasCollectionList');  
         if($this->colrefNo != ''){
-            $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  
+            $this->areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  
         }
         else{
-            $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');             
+           // $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');             
+            $this->areas = Area::whereNotNull('FOID')->where('Status',1)->get();         
         }     
-        $areas = $areas->json();        
-        if( $areas ){
-            $this->areas = collect($areas);            
-        }
 
-        $mfolist = collect([]);
-        $folist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerList');  
-        $folist = $folist->json();
-        if($folist){
-            $mfolist = collect($folist);
-        }
-        $this->folist = $mfolist->sortBy('lname');
+
+        //$mfolist = collect([]);
+        // $folist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerList');  
+        // $folist = $folist->json();
+        $this->folist = FieldOfficer::where('Status',1)->get()->sortBy('Lname');
         if($this->areaID != ''){
            
             $refno =  $this->areas->where('areaID', $this->areaID)->first();
             if($refno){                                      
-                $this->getCollectionDetails($this->areaID, $refno['foid'], $refno['area_RefNo'], 1);
+                $this->getCollectionDetails($this->areaID,$this->folist['id'], $refno['area_RefNo'], 1);
             }            
         }
         //dd($this->folist);

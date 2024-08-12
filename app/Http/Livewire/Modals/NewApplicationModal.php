@@ -6,7 +6,8 @@ use App\Http\Livewire\Transactions\Application\CreateApplication;
 use App\Http\Livewire\Transactions\Application\CreateApplicationGroup;
 
 use Livewire\Component;
-
+use App\Models\LoanType;
+use App\Models\TermsOfPayment;
 class NewApplicationModal extends Component
 {
     public $memberlist;
@@ -58,16 +59,18 @@ class NewApplicationModal extends Component
 
     public function mount(){
       
-        $getloans = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetails');  
-        $getloans = $getloans->json();       
+        // $getloans = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetails');  
+        // $getloans = $getloans->json();       
+        $getloans = LoanType::where('Status',1)->get();
         $loantypeList = collect([]);
         if(count($getloans) > 0){
             foreach($getloans as $getloans){
-                $loantypeList[$getloans['loanTypeID']] = ['loanTypeName' => $getloans['loanTypeName'], 'loanTypeID' => $getloans['loanTypeID']];
+                $loantypeList[$getloans['Id']] = ['loanTypeName' => $getloans['LoanTypeName'], 'loanTypeID' => $getloans['Id']];
             }
         }
-        $this->loantype = 'LT-01';
+        $this->loantype = 1;
         $this->loantypeList = $loantypeList;
+        
         $this->changeLoanType();
         //dd($this->loantypeList);
         $this->getmemberList();
@@ -91,12 +94,14 @@ class NewApplicationModal extends Component
     }
 
     public function getLoanTerms(){
-        $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loantype]);                  
-        $loanterms = $loanterms->json();         
+        // $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loantype]);                  
+        // $loanterms = $loanterms->json();      
+        $loanterms = TermsOfPayment::where('LoanTypeId',$this->loantype)->get();
+ 
         if( $loanterms ){
             $this->termsOfPaymentList = [];
             foreach( $loanterms  as  $loanterms ){
-                $this->termsOfPaymentList[$loanterms['topId']] = ['topId' => $loanterms['topId'],'termsofPayment' => $loanterms['termsofPayment'],'loanTypeId' => $loanterms['loanTypeId']];   
+                $this->termsOfPaymentList[$loanterms['Id']] = ['topId' => $loanterms['Id'],'termsofPayment' => $loanterms['NameOfTerms'],'loanTypeId' => $loanterms['Id']];   
             }
         }
         // dd($this->termsOfPaymentList);

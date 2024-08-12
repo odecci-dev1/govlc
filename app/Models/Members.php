@@ -87,7 +87,7 @@ class Members extends Model
 
     public function getFullNameAttribute()
     {
-        return $this->Lname.', '.$this->Fname.(!empty($this->Suffix) ? ' '.$this->Suffix : '').' '.mb_substr($this->Mname, 0, 1).'.';
+        return $this->Lname.', '.$this->Fname.(!empty($this->Suffix) ? ' '.($this->Suffix == 'N/A' ? '':$this->Suffix) : '').' '.mb_substr($this->Mname == 'N/A' ? '':$this->Mname, 0, 1).'';
     }
 
     public function getAreaNameAttribute()
