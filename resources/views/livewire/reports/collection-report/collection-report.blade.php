@@ -83,37 +83,37 @@
                         </tr>
 
                         <!-- * All Members Data -->
-                            @if($res)
-                                @foreach($res as $data)
+                            @if($data)
+                                @foreach($data as $d)
                                 <tr>
 
                                     <!-- * Application Reference -->
-                                    <td><span class="td-name">{{ $data['areaName'] }}</span></td>
+                                    <td><span class="td-name">{{ $d->Area }}</span></td>
 
-                                    <td><span class="td-name">{{ $data['fieldOfficer'] }}</span></td>
+                                    <td><span class="td-name">{{ $d->fieldOfficer->full_name }}</span></td>
                                 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalCollection']) ? number_format($data['totalCollection'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($d->collectionAreas->sum('collectionAreaMembers.total_collection')) ? number_format($d->collectionAreas->sum('collectionAreaMembers.total_collection'), 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalSavings']) ? number_format($data['totalSavings'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($d->collectionAreas->sum('collectionAreaMembers.total_savings')) ? number_format($d->collectionAreas->sum('collectionAreaMembers.total_savings'), 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalLapses']) ? number_format($data['totalLapses'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($d->collectionAreas->sum('collectionAreaMembers.total_lapses')) ? number_format($d->collectionAreas->sum('collectionAreaMembers.total_lapses'), 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalAdvance']) ? number_format($data['totalAdvance'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($d->collectionAreas->sum('collectionAreaMembers.total_advance')) ? number_format($d->collectionAreas->sum('collectionAreaMembers.total_advance'), 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['cashRemit']) ? number_format($data['cashRemit'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($d->collectionAreas->sum('collectionAreaMembers.cash_remit')) ? number_format($d->collectionAreas->sum('collectionAreaMembers.cash_remit'), 2) : '0.00' }}</span>
                                     </td>
 
                                     <td  style="text-align: center;">
-                                        <span class="td-name">{{ !empty($data['totalNP']) ? $data['totalNP'] : 0 }}</span>
+                                        <span class="td-name">{{ !empty($d['totalNP']) ? $d['totalNP'] : 0 }}</span>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -127,7 +127,7 @@
                 <div class="total-collection-footer">
                     <div class="footer-wrapper">
                         <p>Total Collection:</p> 
-                        <span id="">{{ number_format($res->sum('totalCollection'), 2) }}</span>
+                        <span id="">{{ number_format($data->sum('totalCollection'), 2) }}</span>
                     </div>
                 </div>
 

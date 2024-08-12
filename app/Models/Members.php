@@ -79,11 +79,6 @@ class Members extends Model
     {
         return $this->hasMany(Area::class, 'City', 'City');
     }
-    
-    // public function loanhistory(): HasMany
-    // {
-    //     return $this->hasMany(LoanHistory::class, 'MemId', 'MemId');
-    // }
 
     public function loanhistory(): HasOne
     {

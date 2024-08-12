@@ -49,7 +49,7 @@ class SavingsReport extends Component
                 'totalSavings' => $member->memberSavings->sum('TotalSavingsAmount'),
             ];
         });
-        return Excel::download(new SavingsExport( $exportData ), 'Savings_Report_'. $this->datestart . '_' . $this->dateend .'.xlsx');
+        return Excel::download(new SavingsExport( $exportData ), 'Savings_Report_'. $this->datestart . '_' . 'to' . '_' .  $this->dateend .'.xlsx');
     }
 
     public function print()

@@ -43,7 +43,7 @@ class ReleaseReport extends Component
                 'releasingDate' => !empty($member->loanHistory->DateReleased) ? date('Y-m-d', strtotime($member->loanHistory->DateReleased)) : 'Empty date',
             ];
         });
-        return Excel::download(new ReleaseExport( $exportData ), 'Release_Report_'. $this->datestart . '_' . $this->dateend .'.xlsx');
+        return Excel::download(new ReleaseExport( $exportData ), 'Release_Report_'. $this->datestart . '_' . 'to' . '_' .  $this->dateend .'.xlsx');
     }
 
     public function print()

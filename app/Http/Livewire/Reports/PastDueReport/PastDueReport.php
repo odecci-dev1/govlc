@@ -25,7 +25,7 @@ class PastDueReport extends Component
     public function mount()
     {
         $this->dateend = date('Y-m-d');      
-        $this->datestart = date('Y-m-d', strtotime("-1 months"));
+        $this->datestart = date('Y-m-d', strtotime("-1 month"));
         $this->paginate['page'] = 1;
         $this->paginate['pageSize'] = 15;
     }
@@ -84,7 +84,6 @@ class PastDueReport extends Component
     public function render()
     {
         $this->data = $this->getMembers();
-        // $this->data->put(1, ['Borrower' => 'Borrower, Borrower, Borrower','LoanAmount' => 50000,'DateReleased' => '2023-12-26','DueDate' => '2023-12-27','TotalNP' => 10, 'TotalPastDueDay' => 9, 'TotalCollection' => 10000]);              
         return view('livewire.reports.past-due-report.past-due-report');
     }
 
