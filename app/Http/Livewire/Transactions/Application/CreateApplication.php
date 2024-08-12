@@ -2201,6 +2201,7 @@ class CreateApplication extends Component
         $this->member['termsOfPayment'] = isset($loandetails['paymentterms']) ? $loandetails['paymentterms'] : '';
         $this->member['purpose'] = isset($loandetails['purpose']) ? $loandetails['purpose'] : '';  
         $this->renderProvince();    
+
         if($this->type == 'create'){       
                 $getloantype = LoanType::where('LoanTypeID', $request->loanTypeID)->first();              
                 $getloanterms = TermsOfPayment::where('TopId', $request->loantermsID)->first(); 
