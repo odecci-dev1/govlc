@@ -22,15 +22,18 @@ class CollectedExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        $data = collect([]); 
-        $cnt = 0;
-        if($this->mdata){
-                foreach($this->mdata as $dt){
-                    $cnt = $cnt + 1;
-                    $data->put($cnt, [ 'areaName' => $dt['areaName'], 'fieldOfficer' => $dt['fieldOfficer'], 'totalCollection' => $dt['totalCollection'], 'totalSavings' => $dt['totalSavings'], 'totalLapses' => $dt['totalLapses'], 'totalAdvance' => $dt['totalAdvance'], 'cashRemit' => $dt['cashRemit'], 'totalNP' => (!empty($dt['totalNP']) ? $dt['totalNP'] : '') ]);
-                }
-        }
-        return collect($data);
+        return $this->mdata->map(function ($dt) {
+            return [ 
+                'AREA' => $dt['area'],
+                'FIELD OFFICER' => $dt['fieldOffice'],
+                'TOTAL COLLECTIONS' => $dt['totalCollections'],
+                'TOTAL SAVINGS' => $dt['totalSavings'],
+                'TOTAL LAPSES' => $dt['totalLapses'],
+                'TOTAL ADVANCES' => $dt['totalAdvances'],
+                'CASH REMITTED' => $dt['cashRemitted'],
+                'TOTAL NP' => $dt['totalNP'],
+            ];
+        });
     }
 
     public function headings(): array
