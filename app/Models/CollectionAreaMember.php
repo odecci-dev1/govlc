@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CollectionAreaMember extends Model
 {
@@ -30,7 +31,7 @@ class CollectionAreaMember extends Model
         'UsedAdvancePayment'
     ];
 
-    public function collectionArea()
+    public function collectionArea(): BelongsTo
     {
         return $this->belongsTo(CollectionArea::class, 'Area_RefNo', 'Area_RefNo');
     }

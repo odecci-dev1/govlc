@@ -28,6 +28,7 @@ class Dashboard extends Component
         
         $topcollectibles =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/TopCollectibles');      
         $this->topcollectibles = $topcollectibles->json();  
+        dd($topcollectibles->json());
         
         $toplapses =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/TotalLapsesAreas');      
         $this->toplapses = $toplapses->json();  

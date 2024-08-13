@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Area extends Model
 {
@@ -38,17 +39,22 @@ class Area extends Model
 
     public function fieldOfficer(): BelongsTo
     {
-        return $this->belongsTo(FieldOfficer::class, 'Id', 'FOID');
+        return $this->belongsTo(FieldOfficer::class, 'FOID', 'Id');
     }
 
     public function collectionAreas(): HasMany
     {
-        return $this->hasMany(CollectionArea::class, 'AreaId', 'AreaId');
+        return $this->hasMany(CollectionArea::class, 'AreaId', 'AreaID');
     }
 
     public function members(): HasMany
     {
         return $this->hasMany(Members::class, 'City', 'City');
+    }
+
+    public function loanhistory(): HasOne
+    {
+        return $this->hasOne(LoanHistory::class, 'MemId', 'Id')->select('id', '*')->withDefault();
     }
 
     public function getCityListAttribute(): array

@@ -35,13 +35,14 @@
                             <thead>
                                 <tr>
                                     <th colspan="2">
-                                        <h3>PAST DUE REPORT For {{ $member }}</h4>                                        
+                                        <h3>PAST DUE REPORT</h4>                                        
                                     </th>
-                                    <th colspan="1" style="text-align: right;">                                      
-                                        <h4>From {{ $datestart }} To {{ $dateend }}</h4>
+                                    <th colspan="6" style="text-align: right;">                                      
+                                        <h4>From {{ $datestart == NUll ? '____' : $datestart }} To {{ $dateend }}</h4>
                                     </th>
                                 </tr>
                                 <tr style=" border-bottom: 1px solid #000000;">                                                                                 
+                                    <th style="text-align: left;">Member Name</th>      
                                     <th style="text-align: left;">Loan Amount</th>      
                                     <th>Date Released</th>                                   
                                     <th>Due Date</th>                           
@@ -51,18 +52,25 @@
                             </thead>
                             <tbody>
                             @if($data)
-                                @foreach($data as $data)
+                                @foreach($data as $d)
                                 <tr>
+                                    <td><span class="td-name">{{ $d->member->full_name }}</span></td>
                                     <td style="text-align: left;">
-                                        <span class="td-name">{{ !empty($data['LoanAmount']) ? number_format($data['LoanAmount'], 2) : '0.00' }}</span> 
+                                        <span class="td-name">{{ !empty($d->LoanAmount) ? number_format($d->LoanAmount, 2) : '0.00' }}</span>
                                     </td>
-                                    <!-- * Application Reference -->
-                                    <td><span class="td-name">{{ !empty($data['DateReleased']) ? date('Y-m-d', strtotime($data['DateReleased'])) : '' }}</span></td>
-
-                                    <!-- * Member Name -->
-                                    <td><span class="td-name">{{ !empty($data['DueDate']) ? date('Y-m-d', strtotime($data['DueDate'])) : '' }}</span></td>
-                                    <td style="text-align: center;"><span class="td-name">{{ $data['TotalNP'] }}</span></td>
-                                    <td style="text-align: center;"><span class="td-name">{{ $data['TotalPastDueDay'] }}</span></td>
+                                    <td style="text-align: left;"><span class="td-name">{{ !empty($d->DateReleased) ? date('Y-m-d', strtotime($d->DateReleased)) : '' }}</span></td>
+                                    <td style="text-align: left;"><span class="td-name">{{ !empty($d->DueDate) ? date('Y-m-d', strtotime($d->DueDate)) : '' }}</span></td>
+                                    <td style="text-align: center;">
+                                        <span class="td-name">
+                                            {{ optional($d->collectionareamember)->CollectedAmount == 0.00 
+                                                ? '0.00' 
+                                                : optional($d->collectionareamember)->CollectedAmount }}
+                                        </span>
+                                    </td>
+                                    
+                                    <td style="text-align: center;">
+                                        <span class="td-name">{{ $d->pastDueDays() }}</span>
+                                    </td>
                                 </tr>
                                 @endforeach
                             @endif
