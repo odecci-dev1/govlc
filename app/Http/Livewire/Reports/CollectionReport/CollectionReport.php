@@ -12,61 +12,138 @@ class CollectionReport extends Component
 {
     public $datestart;
     public $dateend;
-    public $res;
+    public $data;
+    public $keyword = '';
+    public $totals = [];
+    public $paginate = [];
+    public $paginationPaging = [];
 
-    public function mount(){
+    public function mount()
+    {
         $this->dateend = date('Y-m-d');      
-        $this->datestart = date('Y-m-d', strtotime("-6 days"));
-    }
-
-    
-    public function exportCollectionReport(){
-        return Excel::download(new CollectedExport( $this->res ), 'Collection_Report_'. $this->datestart . '_' . $this->dateend .'.xlsx');
+        $this->datestart = date('Y-m-d', strtotime("-1 month"));
+        $this->paginate['page'] = 1;
+        $this->paginate['pageSize'] = 15;
     }
     
-    public function print(){
-        $printhtml = view('livewire.reports.collection-report.collection-report-print', [ 'data' => $this->res, 'datestart' => $this->datestart, 'dateend' => $this->dateend ])->render();    
+    public function exportReport()
+    {
+        $data = $this->getAreas(false, false);
+        $exportData = $data->map(function ($d) {
+            return [ 
+                'area' =>  $d->Area,
+                'fieldOffice' =>  $d->fieldOfficer->full_name,
+                'totalCollections' =>  isset($totals[$d->id]['totalCollection']) ? number_format($totals[$d->id]['totalCollection'], 2) : '0.00',
+                'totalSavings' =>  isset($totals[$d->id]['totalSavings']) ? number_format($totals[$d->id]['totalSavings'], 2) : '0.00',
+                'totalLapses' =>  isset($totals[$d->id]['totalLapses']) ? number_format($totals[$d->id]['totalLapses'], 2) : '0.00',
+                'totalAdvances' =>  isset($totals[$d->id]['totalAdvances']) ? number_format($totals[$d->id]['totalAdvances'], 2) : '0.00',
+                'cashRemitted' =>  isset($totals[$d->id]['totalCollection']) ? number_format($totals[$d->id]['totalCollection'], 2) : '0.00',
+                'totalNP' =>  $totals[$d->id]['totalNP'] ?? '0',
+            ];
+        });
+        return Excel::download(new CollectedExport( $exportData ), 'Collection_Report_'. $this->datestart . '_' . 'to' . '_' .  $this->dateend .'.xlsx');
+    }
+    
+    public function print()
+    {
+        $data = $this->getAreas(false, false);
+        $printhtml = view('livewire.reports.collection-report.collection-report-print', [ 
+            'data' => $data, 
+            'datestart' => $this->datestart, 
+            'dateend' => $this->dateend 
+        ])->render();    
         $this->emit('printReport', ['data' => $printhtml]);
     }
 
-    // public function render()
-    // {
-    //     $areasQuery = Area::whereNotNull('FOID')->where('Status', 1);
-    //     // dd($areasQuery->get());
-        
-    //     $input = [
-    //         'page' => 1,
-    //         'pageSize' => 1000,
-    //         'datefrom' => $this->datestart,
-    //         'dateto' => $this->dateend,
-    //      ];
-    //     $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Reports/Reports_CollectionList', $input);  
-    //     $this->res = collect($data->json());        
-    //     return view('livewire.reports.collection-report.collection-report');
-    // }
+    public function setPage($page = 1)
+    {
+        $this->paginate['page'] = $page;
+    }
+
+    public function goToFirstPage()
+    {
+        $this->paginate['page'] = 1;
+    }
+
+    public function goToLastPage()
+    {
+        $this->paginate['page'] = $this->paginationPaging['totalPage'];
+    }
 
     public function render()
     {
-        $areas = Area::with(['collectionAreas.collectionAreaMembers'])
-            ->whereNotNull('FOID')
-            ->where('Status', 1)
-            ->get();
-
-        $this->res = $areas->map(function ($area) {
-            return [
-                'areaName' => $area->Area,
-                'fieldOfficer' => $area->fieldOfficer->full_name,
-                'totalCollection' => $area->collectionAreas->sum('collectionAreaMembers.total_collection'),
-                'totalSavings' => $area->collectionAreas->sum('collectionAreaMembers.total_savings'),
-                'totalLapses' => $area->collectionAreas->sum('collectionAreaMembers.total_lapses'),
-                'totalAdvance' => $area->collectionAreas->sum('collectionAreaMembers.total_advance'),
-                'cashRemit' => $area->collectionAreas->sum('collectionAreaMembers.cash_remit'),
-                'totalNP' => $area->collectionAreas->sum('collectionAreaMembers.total_np'),
-            ];
-        });
+        $this->data = $this->getAreas();
 
         return view('livewire.reports.collection-report.collection-report', [
-            'res' => $this->res,
+            'totals' => $this->totals,
         ]);
+    }
+
+    public function getAreas($paginate = true, $includeInactive = true)
+    {
+        $areas = Area::with(['fieldOfficer', 'collectionAreas.collectionAreaMembers', 'loanhistory'])
+            ->whereHas('fieldOfficer', function ($query) {
+                $query->where('Fname', 'like', '%' . $this->keyword . '%')
+                    ->orWhere('Lname', 'like', '%' . $this->keyword . '%');
+            })
+            ->get();
+        
+        $grandTotalCollection = 0;
+
+        foreach ($areas as $area) {
+            $totalCollection = $area->collectionAreas->sum(function ($collectionArea) {
+                return $collectionArea->collectionAreaMembers->sum('CollectedAmount');
+            });
+        
+            $totalSavings = $area->collectionAreas->sum(function ($collectionArea) {
+                return $collectionArea->collectionAreaMembers->sum('Savings');
+            });
+        
+            $totalLapses = $area->collectionAreas->sum(function ($collectionArea) {
+                return $collectionArea->collectionAreaMembers->sum('LapsePayment');
+            });
+        
+            $totalAdvances = $area->collectionAreas->sum(function ($collectionArea) {
+                return $collectionArea->collectionAreaMembers->sum('AdvancePayment');
+            });
+
+            $totalNP = $area->collectionAreas->sum(function ($collectionArea) {
+                return $collectionArea->collectionAreaMembers->where('CollectedAmount', 0.00)->count();
+            });
+
+            $this->totals[$area->id] = [
+                'totalCollection' => $totalCollection,
+                'totalSavings' => $totalSavings,
+                'totalLapses' => $totalLapses,
+                'totalAdvances' => $totalAdvances,
+                'totalNP' => $totalNP,
+            ];
+
+            $grandTotalCollection += $totalCollection;
+        }
+
+        $this->totals['grandTotalCollection'] = $grandTotalCollection;
+
+        if ($paginate) {
+            $totalItems = $areas->count();
+    
+            $this->paginationPaging['totalPage'] = ceil($areas->count() / $this->paginate['pageSize']);
+            $this->paginationPaging['totalRecord'] = $totalItems;
+            $this->paginationPaging['currentPage'] = $this->paginate['page'];
+            $this->paginationPaging['nextPage'] = $this->paginate['page'] < $this->paginationPaging['totalPage'] ? $this->paginate['page'] + 1 : $this->paginationPaging['totalPage'];
+            $this->paginationPaging['prevPage'] = $this->paginate['page'] > 1 ? $this->paginate['page'] - 1 : 1;
+    
+            $startItem = ($this->paginate['page'] - 1) * $this->paginate['pageSize'] + 1;
+            $endItem = min($this->paginate['page'] * $this->paginate['pageSize'], $totalItems);
+    
+            $this->paginationPaging['startItem'] = $startItem;
+            $this->paginationPaging['endItem'] = $endItem;
+    
+            $paginatedData = $areas->slice(($this->paginate['page'] - 1) * $this->paginate['pageSize'], $this->paginate['pageSize']);
+    
+            return $paginatedData;
+        }
+
+        return $areas;
     }
 }

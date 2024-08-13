@@ -54,36 +54,36 @@
                             </thead>
                             <tbody>
                             @if($data)
-                                @foreach($data as $data)
+                                @foreach($data as $d)
                                 <tr>
 
                                     <!-- * Application Reference -->
-                                    <td><span class="td-name">{{ $data['areaName'] }}</span></td>
+                                    <td><span class="td-name">{{ $d->Area }}</span></td>
 
-                                    <td><span class="td-name">{{ $data['fieldOfficer'] }}</span></td>
+                                    <td><span class="td-name">{{ $d->fieldOfficer->full_name }}</span></td>
                                 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalCollection']) ? number_format($data['totalCollection'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($d['totalCollection']) ? number_format($d['totalCollection'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalSavings']) ? number_format($data['totalSavings'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($d['totalSavings']) ? number_format($d['totalSavings'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalLapses']) ? number_format($data['totalLapses'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($d['totalLapses']) ? number_format($d['totalLapses'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalAdvance']) ? number_format($data['totalAdvance'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($d['totalAdvance']) ? number_format($d['totalAdvance'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['cashRemit']) ? number_format($data['cashRemit'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($d['cashRemit']) ? number_format($d['cashRemit'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td  style="text-align: center;">
-                                        <span class="td-name">{{ !empty($data['totalNP']) ? $data['totalNP'] : 0 }}</span>
+                                        <span class="td-name">{{ !empty($d['totalNP']) ? $d['totalNP'] : 0 }}</span>
                                     </td>
 
                                 </tr>

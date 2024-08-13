@@ -11,7 +11,7 @@
                 <!-- * Print and Export Buttons -->
                 <div class="inner-wrapper">
                     <button class="button-2" wire:click="print" type="button" data-print-button>Print</button>
-                    <button wire:click="exportCollectionReport" type="button" class="button-2" data-export-button>Export</button>
+                    <button wire:click="exportReport" type="button" class="button-2" data-export-button>Export</button>
                 </div>
             </div>
             <div class="header-wrapper" style="padding-top: 3rem;">
@@ -28,7 +28,7 @@
                     </div>                                     
                 </div>              
             </div>
-        <div class="body-wrapper">
+        <div class="body-wrapper" style="gap: 0; height:clamp(100% - 21rem, 40rem, 80vh); overflow-y: auto;">
             <!-- * Container: Reports Table -->
             <div class="reports-table-container">
 
@@ -83,37 +83,37 @@
                         </tr>
 
                         <!-- * All Members Data -->
-                            @if($res)
-                                @foreach($res as $data)
+                            @if($data)
+                                @foreach($data as $d)
                                 <tr>
 
-                                    <!-- * Application Reference -->
-                                    <td><span class="td-name">{{ $data['areaName'] }}</span></td>
+                                    <!-- * Area  -->
+                                    <td><span class="td-name">{{ $d->Area }}</span></td>
 
-                                    <td><span class="td-name">{{ $data['fieldOfficer'] }}</span></td>
-                                
+                                    <td><span class="td-name">{{ $d->fieldOfficer->full_name }}</span></td>
+                                    
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalCollection']) ? number_format($data['totalCollection'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ isset($totals[$d->id]['totalCollection']) ? number_format($totals[$d->id]['totalCollection'], 2) : '0.00' }}</span>
+                                    </td>
+                            
+                                    <td style="text-align: right;">
+                                        <span class="td-name">{{ isset($totals[$d->id]['totalSavings']) ? number_format($totals[$d->id]['totalSavings'], 2) : '0.00' }}</span>
+                                    </td>
+                            
+                                    <td style="text-align: right;">
+                                        <span class="td-name">{{ isset($totals[$d->id]['totalLapses']) ? number_format($totals[$d->id]['totalLapses'], 2) : '0.00' }}</span>
+                                    </td>
+                            
+                                    <td style="text-align: right;">
+                                        <span class="td-name">{{ isset($totals[$d->id]['totalAdvances']) ? number_format($totals[$d->id]['totalAdvances'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalSavings']) ? number_format($data['totalSavings'], 2) : '0.00' }}</span>
-                                    </td>
-
-                                    <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalLapses']) ? number_format($data['totalLapses'], 2) : '0.00' }}</span>
-                                    </td>
-
-                                    <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['totalAdvance']) ? number_format($data['totalAdvance'], 2) : '0.00' }}</span>
-                                    </td>
-
-                                    <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($data['cashRemit']) ? number_format($data['cashRemit'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ isset($totals[$d->id]['totalCollection']) ? number_format($totals[$d->id]['totalCollection'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td  style="text-align: center;">
-                                        <span class="td-name">{{ !empty($data['totalNP']) ? $data['totalNP'] : 0 }}</span>
+                                        <span class="td-name">{{ $totals[$d->id]['totalNP'] ?? 0 }}</span>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -124,13 +124,73 @@
                 </div>
 
                 <!-- * Total Collection Footer -->
-                <div class="total-collection-footer">
+                <div class="total-collection-footer" style="display: flex; justify-content: space-between;">
+                    <div style="margin: auto 0 auto 4rem;">
+                        <p style="font-size: 1.4rem">
+                            {{$paginationPaging['startItem']}}-{{ $paginationPaging['endItem'] }} of <span style="font-weight: 700;">{{ $paginationPaging['totalRecord'] }}</span> Results 
+                        </p>
+                    </div>
                     <div class="footer-wrapper">
                         <p>Total Collection:</p> 
-                        <span id="">{{ number_format($res->sum('totalCollection'), 2) }}</span>
+                        <span>{{ number_format($totals['grandTotalCollection'], 2) }}</span>
                     </div>
                 </div>
 
+            </div>
+
+            <div style="display: flex; flex-direction: column">
+                @if($paginationPaging['totalPage'])
+                    <div class="pagination-container">
+
+                        <a href="#" wire:click.prevent="goToFirstPage">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L12.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                                <path fill-rule="evenodd" d="M4.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L6.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        <!-- Previous Button -->
+                        @if($paginationPaging['prevPage'])
+                            <a href="#" wire:click.prevent="setPage({{ $paginationPaging['prevPage'] }})">
+                                <img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left">
+                            </a>
+                        @endif
+                
+                        <!-- Pagination Buttons -->
+                        @php
+                            $startPage = max(1, $paginationPaging['currentPage'] - 2);
+                            $endPage = min($paginationPaging['totalPage'], $paginationPaging['currentPage'] + 2);
+                
+                            if ($endPage - $startPage < 4) {
+                                if ($startPage > 1) {
+                                    $startPage = max(1, $endPage - 4);
+                                } else {
+                                    $endPage = min($paginationPaging['totalPage'], $startPage + 4);
+                                }
+                            }
+                        @endphp
+                
+                        @for ($i = $startPage; $i <= $endPage; $i++)
+                            <a href="#" wire:click.prevent="setPage({{ $i }})" class="{{ $paginationPaging['currentPage'] == $i ? 'font-size-1_4em color-app' : '' }}">{{ $i }}</a>
+                        @endfor
+                
+                        <!-- Next Button -->
+                        @if($paginationPaging['nextPage'])
+                            <a href="#" wire:click.prevent="setPage({{ $paginationPaging['nextPage'] }})">
+                                <img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right">
+                            </a>
+                        @endif
+
+                        <a href="#" wire:click.prevent="goToLastPage">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path fill-rule="evenodd" d="M13.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                                <path fill-rule="evenodd" d="M19.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06L17.69 12l-6.97-6.97a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                @endif
+                <p style="text-align: center; font-size: 1.2rem; opacity: 0.7;">
+                    Page <span style="font-weight: 700;">{{$paginationPaging['currentPage']}}</span> of {{$paginationPaging['totalPage']}}
+                </p>
             </div>
         </div>
     </div>

@@ -13,7 +13,7 @@
                 <!-- * Print and Export Buttons -->
                 <div class="inner-wrapper">
                     <button class="button-2" wire:click="print" type="button"  data-print-button>Print</button>                
-                    <button wire:click="exportReleaseReport" type="button" class="button-2" data-print-button>Export</button>
+                    <button wire:click="exportReport" type="button" class="button-2" data-print-button>Export</button>
                 </div>
             </div>
             <div class="header-wrapper" style="padding-top: 3rem;">

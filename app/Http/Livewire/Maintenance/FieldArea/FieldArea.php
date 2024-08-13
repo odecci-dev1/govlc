@@ -102,7 +102,8 @@ class FieldArea extends Component
         ]);
     }
 
-    public function selectFO($FOID, $name){
+    public function selectFO($FOID, $name)
+    {
         $this->FOID = $FOID;
         $this->fullname = $name;
         $this->emit('closeSearchFOModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
@@ -154,7 +155,7 @@ class FieldArea extends Component
 
         $locations = array_map('trim', array_column($this->selectedLocations, 'City'));
 
-        $locationsString = implode(' | ', $locations);
+        $locationsString = implode('|', $locations);
 
         $area = Area::create([
             'Area' => $this->Area,
@@ -181,14 +182,14 @@ class FieldArea extends Component
         $this->validate();
 
         $locations = array_map('trim', array_column($this->selectedLocations, 'City'));
-        $locationsString = implode(' | ', $locations);
+        $locationsString = implode('|', $locations);
 
         $areaUpdate = Area::where('AreaID', $this->AreaID);
 
         if ($areaUpdate) {
             $area = Area::where('AreaID', $this->AreaID)->first();
 
-            $currentLocations = array_map('trim', explode(' | ', $area->City));
+            $currentLocations = array_map('trim', explode('|', $area->City));
             $removedLocations = array_diff($currentLocations, $locations);
 
             $data = [
