@@ -39,12 +39,12 @@ class Area extends Model
 
     public function fieldOfficer(): BelongsTo
     {
-        return $this->belongsTo(FieldOfficer::class, 'Id', 'FOID');
+        return $this->belongsTo(FieldOfficer::class, 'FOID', 'Id');
     }
 
     public function collectionAreas(): HasMany
     {
-        return $this->hasMany(CollectionArea::class, 'AreaId', 'AreaId');
+        return $this->hasMany(CollectionArea::class, 'AreaId', 'AreaID');
     }
 
     public function members(): HasMany

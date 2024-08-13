@@ -70,8 +70,8 @@
                                 <td style="text-align: left;"><span class="td-name">{{ !empty($d->DueDate) ? date('Y-m-d', strtotime($d->DueDate)) : '' }}</span></td>
                                 <td style="text-align: center;">
                                     <span class="td-name">
-                                        {{ optional($d->collectionareamember)->CollectedAmount == 0.00 
-                                            ? 0.00 
+                                        {{ optional($d->collectionareamember)->CollectedAmount == 0.00 || 0
+                                            ? 1 
                                             : optional($d->collectionareamember)->CollectedAmount }}
                                     </span>
                                 </td>

@@ -14,6 +14,7 @@ class CollectionReport extends Component
     public $dateend;
     public $data;
     public $keyword = '';
+    public $totals = [];
     public $paginate = [];
     public $paginationPaging = [];
 
@@ -25,14 +26,32 @@ class CollectionReport extends Component
         $this->paginate['pageSize'] = 15;
     }
     
-    public function exportCollectionReport()
+    public function exportReport()
     {
-        return Excel::download(new CollectedExport( $this->data ), 'Collection_Report_'. $this->datestart . '_' . 'to' . '_' .  $this->dateend .'.xlsx');
+        $data = $this->getAreas(false, false);
+        $exportData = $data->map(function ($d) {
+            return [ 
+                'memberName' =>  $d->member->full_name,
+                'loanAmount' => !empty($d->LoanAmount) ? number_format($d->LoanAmount, 2) : '0.00',
+                'dateReleased' => !empty($d->DateReleased) ? date('Y-m-d', strtotime($d->DateReleased)) : '',
+                'dueDate' => !empty($d->DueDate) ? date('Y-m-d', strtotime($d->DueDate)) : '',
+                'totalNP' => optional($d->collectionareamember)->CollectedAmount == 0.00 
+                                ? '0.00' 
+                                : optional($d->collectionareamember)->CollectedAmount,
+                'totalPastDueDays' => $d->pastDueDays(),
+            ];
+        });
+        return Excel::download(new CollectedExport( $data ), 'Collection_Report_'. $this->datestart . '_' . 'to' . '_' .  $this->dateend .'.xlsx');
     }
     
     public function print()
     {
-        $printhtml = view('livewire.reports.collection-report.collection-report-print', [ 'data' => $this->data, 'datestart' => $this->datestart, 'dateend' => $this->dateend ])->render();    
+        $data = $this->getAreas(false, false);
+        $printhtml = view('livewire.reports.collection-report.collection-report-print', [ 
+            'data' => $data, 
+            'datestart' => $this->datestart, 
+            'dateend' => $this->dateend 
+        ])->render();    
         $this->emit('printReport', ['data' => $printhtml]);
     }
 
@@ -53,10 +72,12 @@ class CollectionReport extends Component
 
     public function render()
     {
-        $this->data = $this->getAreas(false);
+        $this->data = $this->getAreas();
 
         // dd($this->data);
-        return view('livewire.reports.collection-report.collection-report');
+        return view('livewire.reports.collection-report.collection-report', [
+            'totals' => $this->totals,
+        ]);
     }
 
     public function getAreas($paginate = true, $includeInactive = true)
@@ -68,7 +89,37 @@ class CollectionReport extends Component
             })
             ->get();
 
+        foreach ($areas as $area) {
+            $totalCollection = $area->collectionAreas->sum(function ($collectionArea) {
+                return $collectionArea->collectionAreaMembers->sum('CollectedAmount');
+            });
+        
+            $totalSavings = $area->collectionAreas->sum(function ($collectionArea) {
+                return $collectionArea->collectionAreaMembers->sum('Savings');
+            });
+        
+            $totalLapses = $area->collectionAreas->sum(function ($collectionArea) {
+                return $collectionArea->collectionAreaMembers->sum('LapsePayment');
+            });
+        
+            $totalAdvances = $area->collectionAreas->sum(function ($collectionArea) {
+                return $collectionArea->collectionAreaMembers->sum('AdvancePayment');
+            });
 
+            $totalNP = $area->collectionAreas->sum(function ($collectionArea) {
+                return $collectionArea->collectionAreaMembers->where('CollectedAmount', 0.00)->count();
+            });
+
+            $this->totals[$area->id] = [
+                'totalCollection' => $totalCollection,
+                'totalSavings' => $totalSavings,
+                'totalLapses' => $totalLapses,
+                'totalAdvances' => $totalAdvances,
+                'totalNP' => $totalNP,
+            ];
+        }
+
+        dd($this->totals);
         if ($paginate) {
             $totalItems = $areas->count();
     
