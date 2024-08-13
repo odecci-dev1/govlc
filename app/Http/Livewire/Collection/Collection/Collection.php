@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Collection\Collection;
 
 use App\Models\Application;
+use App\Models\Collection as Col;
 use App\Models\CollectionArea;
 use App\Models\CollectionAreaMember;
 use App\Models\MembersSavings;
@@ -109,25 +110,60 @@ class Collection extends Component
 
     public function print($areaRefNo = ''){   
         //dd(['areaID' => $this->areaID, 'remarks' => 'Printded ' . Carbon::now() , 'foid' => $this->foid]);    
-        $print = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/PrintCollection', ['areaID' => $this->areaID , 'remarks' => 'Printded ' . Carbon::now() , 'foid' => $this->foid]);                  
-        $print = $print->json();
-        //dd( $print );
-        if($areaRefNo == ''){               
-            $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID.'/'.$print['areaRef']]);        
-            return redirect()->to('/collection/view/'. $print['colRef'].'/'.$this->areaID);       
+        // $print = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/PrintCollection', ['areaID' => $this->areaID , 'remarks' => 'Printded ' . Carbon::now() , 'foid' => $this->foid]);                  
+        // $print = $print->json();
+        // //dd( $print );
+        // if($areaRefNo == ''){               
+        //     $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID.'/'.$print['areaRef']]);        
+        //     return redirect()->to('/collection/view/'. $print['colRef'].'/'.$this->areaID);       
+        // }
+        // else{                         
+        //     $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID.'/'.$areaRefNo]);        
+        //     return redirect()->to('/collection/view/'.$this->colrefNo.'/'.$this->areaID);  
+        // }
+        
+        if($areaRefNo == ''){  
+            $area = CollectionArea::where('AreaId','AREA-0'.$this->areaID)->whereNotNull('Area_RefNo')->count();
+            $collectionCount = Col::get()->count();
+            $areaReference = 'AREA-0'.$this->areaID.date_format(Carbon::now(),'Ymd').'-0'.$area;
+
+            $collection = Col::create([
+                'RefNo' => 'COL-'.date_format(Carbon::now(),'Ymd').'-'.$collectionCount,
+                'DateCreated' => date_format(Carbon::now(),'Y-m-d')
+            ]);
+            $collectionArea= CollectionArea::create([
+            'AreaId'=>'AREA-0'.$this->areaID,
+            'Area_RefNo'=> $areaReference,
+            'Printed_Status'=> 5,
+            'CollectionRefNo'=> $collection->RefNo,
+            ]);
+            foreach ($this->areaDetails as $detail) {
+        
+                CollectionAreaMember::create([
+                    'NAID'=>$detail['naid'],
+                    'Area_RefNo'=> $collectionArea->Area_RefNo,
+                ]);
+            }
+
+                   
+            $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID.'/'.$areaReference]);        
+            return redirect()->to('/collection/view/'. $collection->RefNo.'/'.$this->areaID);       
         }
         else{                         
             $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID.'/'.$areaRefNo]);        
             return redirect()->to('/collection/view/'.$this->colrefNo.'/'.$this->areaID);  
         }
+       
         
     }
     
     public function getCollectionDetails($areaID = '', $foid = '', $areaRefNo = '', $force = 0){      
         $this->areas = Area::whereNotNull('FOID')->where('Status',1)->get();
-        $this->areastatus = CollectionArea::where('AreaId',$areaID)->first();
+        $this->areastatus = CollectionArea::where('AreaId',$areaID)->whereNotNull('Area_RefNo')->first();
         if($this->areastatus){
 
+        }else{
+            $this->areastatus['collection_Status']='';
         }
         // $this->areaDetails = collect([]);
         // $this->areaDetailsFooter = collect([]);
@@ -182,8 +218,8 @@ class Collection extends Component
                 }
               
               
-                $details=[];
-                //Get Area Applications
+                 $details=[];
+                 //Get Area Applications
                  $collectibles=0;
                  $loanHistory=0;
                  $totalSavings=0;
@@ -220,7 +256,7 @@ class Collection extends Component
                         $applicationData['pastDue'] = 0;
                         $applicationData['totalSavingsAmount'] = $savings->TotalSavingsAmount;
                         $applicationData['advancePayment'] = $savings->TotalSavingsAmount;
-                        $applicationData['payment_Status'] = 'No Payment';
+                        $applicationData['payment_Status'] = 'Not Printed';
                         //Expaded table data
 
                         $applicationData['borrower'] = $application->member->FullName;
@@ -313,14 +349,72 @@ class Collection extends Component
         $this->areaDetailsFooter = collect([]);
         // $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/AreasCollectionList');  
         if($this->colrefNo != ''){
-            $this->areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  
+            $collectionArea = CollectionArea::where('CollectionRefNo',$this->colrefNo)->get();
+            $this->areas = Area::whereNotNull('FOID')->where('Status',1)->get();
+            
+            //$this->areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  
         }
         else{
            // $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');             
-            $this->areas = Area::whereNotNull('FOID')->where('Status',1)->get();
-             
-        }     
+            $areas   = Area::whereNotNull('FOID')->where('Status',1)->get();
+            $areaDetails=[];
+            $memberWithApplication=[];
+            $areaWithCollection=[];
+            foreach($areas as $area){
+                $locations = explode("|",$area->City);
+                $persons=[];
+                foreach($locations as $location){
+                    $address = explode(",",$location);
+                    $barangay = $address[0];
+                    $city = $address[1];
+                    $members=[];
+                    $membersPerLocations =  Members::where([['Barangay','LIKE','%'.$barangay.'%'],['City','LIKE','%'.$city.'%'],['Status','=',1]])->get();
+                    foreach($membersPerLocations as $member){
+                        $members[] = $member;
+                    }
+                    $persons=$members;
+                }
+              
+                $memberWithApplication[]=$persons;
+                $areaWithCollection[]=$area;
+                 $details=[];
+                 //Get Area Applications
+                 $collectibles=0;
+                 $loanHistory=0;
+                 $totalSavings=0;
+                
+                 foreach($persons as $person){
+              
+                    $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
+                    $savings= MembersSavings::where('MemId',$person->MemId)->first();
+                    if($application){
+                        $collectibles +=  $application->detail->ApprovedDailyAmountDue;
+                        $loanHistory +=  $application->loanhistory->OutstandingBalance;
+                        $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
+                        $details['totalCollectible']= $collectibles;
+                        $details['total_Balance']= $loanHistory;
+                        $details['total_savings']= $totalSavings;
+                        $details['total_advance']= 0;
+                        $details['total_lapses']= 0;
+                        $details['total_collectedAmount']= 0;
+                        $details['total_FieldExpenses']= 0;
+                        $details['daily_savings']= 0;
+                        $details['areaID'] = $area->Id;
+                        $details['NAID'] = $application->NAID;
+                   
+                   
+                        $areaDetails[] = $details; 
 
+
+                    }
+            }
+
+          
+            $this->areas[]=$areaDetails;
+            }     
+        
+        }
+        dd( $this->areas);
         //dd( $this->areas);    
         //$mfolist = collect([]);
         // $folist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerList');  

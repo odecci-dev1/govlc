@@ -10,10 +10,21 @@ class CollectionArea extends Model
     use HasFactory;
 
     protected $table = 'tbl_CollectionArea_Model';
-
+    public $timestamps = false;
     protected $guarded = [
         'Id'
     ];
+
+    protected $fillable =[
+        'AreaId',
+        'Area_RefNo',
+        'Printed_Status',
+        'Collection_Status',
+        'Denomination',
+        'FieldExpenses',
+        'CollectionRefNo',
+        'Remarks'
+];
 
     public function areaMembers()
     {

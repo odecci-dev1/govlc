@@ -1,6 +1,6 @@
  <div>
  <!-- * Collection Viewing Container Wrapper -->
- @php 
+ @php
     $modules = session()->get('auth_usermodules');
  @endphp
  <div class="can-container-wrapper">
@@ -12,7 +12,7 @@
             <div class="loading-text">
                 <span>Please wait . . .</span>
             </div>
-        </div>        
+        </div>
     </div>
      <!-- * Collection Add New Container 1 -->
      <div class="can-container-1">
@@ -23,33 +23,33 @@
 
              <!-- * All Areas Dropdown Button -->
              <div class="borrower-dropdown" data-bor-dropdown>
-                    @php 
+                    @php
                            $totalAreaCollected = $areas->sum('total_collectedAmount');
-                    @endphp 
+                    @endphp
                      <!-- * Summary Container total_collectedAmount -->
-                     <div class="summary-container" style="visibility: {{ $totalAreaCollected > 0 ? 'visible' : 'hidden' }};" data-collection-summary-container> 
+                     <div class="summary-container" style="visibility: {{ $totalAreaCollected > 0 ? 'visible' : 'hidden' }};" data-collection-summary-container>
                          <p class="textPrimary" data-open-collection-summary-button>View Summary</p>
-                     </div>                    
+                     </div>
                 <!-- * All Areas Button -->
                 <!-- <div class="select-box">
                     <select  wire:model="status" class="select-option-menu">
-                        <option value="">All Areas</option>     
-                        <option value="Active">Active</option>                                    
-                        <option value="Inactive">Inactive</option>                                    
-                    </select>                       
+                        <option value="">All Areas</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
                 </div>          -->
 
-                
+
              </div>
 
-             <div class="area-menu-container">             
+             <div class="area-menu-container">
                  <!-- * Area Menu -->
                  <ul class="area-menu">
                     @if($areas)
                         @foreach($areas as $area)
-                        @php 
-                            $checkIfPaid = $area['total_collectedAmount'] > 0 ? true : false; //$areaDetails->where('areaID', $area['areaID'])->where('payment_Status', 'Paid')->first();       
-                            //$checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();                 
+                        @php
+                            $checkIfPaid = $area['total_collectedAmount'] > 0 ? true : false; //$areaDetails->where('areaID', $area['areaID'])->where('payment_Status', 'Paid')->first();
+                            //$checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();
                             $checkIfPrinted = in_array($area['area_RefNo'], ['PENDING', '']) ? false : true;
                         @endphp
                         <li data-area-menu wire:click="getCollectionDetails('{{ $area['Id'] }}', '{{ $area['FOID'] }}', '{{ in_array($area['area_RefNo'], ['PENDING', '']) ? '' : $area['area_RefNo'] }}', 0)" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
@@ -63,14 +63,14 @@
                                 </div>
                                 <div class="inner-box-2">
                                     <p>Penalty</p>
-                                    @php 
+                                    @php
                                         $penalty = $area['expectedCollection'] - $area['total_collectedAmount'];
                                     @endphp
                                     <span id="collectionPenalty">{{ number_format(($penalty < 0 ? 0 : $penalty), 2) }}</span>
                                     @if( ($area['collection_Status'] ??= '') == 'Collected' )
-                                    <img src="{{ URL::to('/') }}/assets/icons/circle-check.svg" alt="upload-image" 
-                                         style="height: 2rem; width: 2rem; position: absolute; right: 8px; bottom: 8px;" />    
-                                    @endif      
+                                    <img src="{{ URL::to('/') }}/assets/icons/circle-check.svg" alt="upload-image"
+                                         style="height: 2rem; width: 2rem; position: absolute; right: 8px; bottom: 8px;" />
+                                    @endif
                                 </div>
                             </div>
                             <div class=" {{ $checkIfPrinted ? 'box-3-printed' : 'box-3' }} {{ $areaID == $area['areaID'] ? 'box-3-selected' : '' }}">
@@ -78,7 +78,7 @@
                             </div>
                         </li>
                         @endforeach
-                    @endif                    
+                    @endif
                  </ul>
              </div>
          </div>
@@ -97,24 +97,24 @@
                      <!-- * Collection Officer Search Bar -->
                      <div class="primary-search-bar">
                          <div class="row">
-                            <select wire:model.lazy="foid" class="select-option-menu" style="width: 40rem;{{ $areaID != '' ? '' : 'visibility: hidden;' }}">                                
+                            <select wire:model.lazy="foid" class="select-option-menu" style="width: 40rem;{{ $areaID != '' ? '' : 'visibility: hidden;' }}">
                                 @if($folist)
                                     @foreach($folist as $fo)
-                                        <option value="{{ $fo['Id'] }}">{{ $fo['LName'] }}, {{ $fo['FName'] }} {{ substr($fo['MName'], 0, 1) }}.</option>           
+                                        <option value="{{ $fo['Id'] }}">{{ $fo['LName'] }}, {{ $fo['FName'] }} {{ substr($fo['MName'], 0, 1) }}.</option>
                                     @endforeach
-                                @endif                                  
-                            </select>      
+                                @endif
+                            </select>
                          </div>
                          <div class="result-box" data-search-results>
                          </div>
                      </div>
-          
+
                  </div>
 
                  <!-- * Details Wrapper 1 -->
                  @php
                     $countDetails = $areaDetails->where('areaID', $areaID)->count();
-                    $checkArea = $areas->where('areaID', $areaID)->first();       
+                    $checkArea = $areas->where('areaID', $areaID)->first();
                  @endphp
                  <div class="wrapper-1">
                      <span>Total of {{ $countDetails }} Items</span>
@@ -125,34 +125,35 @@
              </div>
 
              <!-- * Inner-inner Container 1 -->
-             <div class="inner-inner-container {{ $areaID != '' ? 'show-print-remit-buttons' : '' }}" data-print-remit-buttons>    
+             <div class="inner-inner-container {{ $areaID != '' ? 'show-print-remit-buttons' : '' }}" data-print-remit-buttons>
                 @php
-                    $sumCollected = $areaDetails->where('areaID', $areaID)->sum('collectedAmount');      
-                    $countPaid = $areaDetails->where('areaID', $areaID)->where('payment_Status', 'Paid')->count();    
-                    //$areaCollectedAmount = $areas->where('areaID', $areaID)->sum('total_collectedAmount');  
-                     $areastatus = $areas->where('areaID', $areaID)->first();  
-                @endphp      
+                    $sumCollected = $areaDetails->where('areaID', $areaID)->sum('collectedAmount');
+                    $countPaid = $areaDetails->where('areaID', $areaID)->where('payment_Status', 'Paid')->count();
+                    //$areaCollectedAmount = $areas->where('areaID', $areaID)->sum('total_collectedAmount');
+                     $areastatus = $areas->where('areaID', $areaID)->first();
+                @endphp
                 <!-- delete           -->
-                @php 
+                @php
                            $totalAreaCollected = $areas->sum('total_collectedAmount');
-                @endphp 
-                     <!-- * Summary Container total_collectedAmount -->                 
-                     <!-- <div class="summary-container" style="visibility: {{ $totalAreaCollected > 0 ? 'visible' : 'hidden' }};" data-collection-summary-container> 
+                @endphp
+                     <!-- * Summary Container total_collectedAmount -->
+                     <!-- <div class="summary-container" style="visibility: {{ $totalAreaCollected > 0 ? 'visible' : 'hidden' }};" data-collection-summary-container>
                          <p class="textPrimary" data-open-collection-summary-button>View Summary</p>
                      </div> -->
                 <!-- delete -->
-              
+
                     {{-- <button type="button" style="{{ $countPaid >= 0 && ($areastatus['collection_Status'] ??= '') != 'Collected' && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button> --}}
                     {{-- <button type="button" style="{{ $countPaid >= 0 && ($areastatus['collection_Status'] ??= '') != 'Collected' && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button> --}}
                     @if($countDetails > 0)
-                        <button style="{{ ($areastatus['collection_Status'] ??= '') != 'Collected' ? '' : 'display: none;' }}" type="button" wire:click="print('{{ (!in_array($checkArea['area_RefNo'], ['PENDING', '']) ? $checkArea['area_RefNo'] : '') }}')" class="button-2" data-collection-print-button>Print</button>
+                        {{-- <button style="{{ ($areastatus['collection_Status'] ??= '') != 'Collected' ? '' : 'display: none;' }}" type="button" wire:click="print('{{ (!in_array($checkArea['area_RefNo'], ['PENDING', '']) ? $checkArea['area_RefNo'] : '') }}')" class="button-2" data-collection-print-button>Print</button> --}}
+                        <button  type="button"  class="button-2" wire:click="print" data-collection-print-button>Print</button>
                         {{-- @if(!in_array($checkArea['area_RefNo'], ['PENDING', '']))
                             @if(in_array('Module-07', $modules))
                                 <a href="{{ URL::to('/') }}/collection/remittance/{{ $foid }}/{{ $checkArea['area_RefNo'] }}/{{ $areaID }}" style="{{ ($areastatus['collection_Status'] ??= '') != 'Collected' ? '' : 'display: none;' }}" class="button-2" data-collection-remit-button>Remit</a>
-                            @endif  
+                            @endif
                         @endif             --}}
-                    @endif  
-                     
+                    @endif
+
              </div>
 
          </div>
@@ -222,31 +223,31 @@
 
 
                     <!-- * Table Data -->
-                   
+
                     @if($areaDetails)
-                        @php 
+                        @php
                             $cnt = 0;
                         @endphp
                         @foreach($areaDetails as $mdetails)
-                        @php 
+                        @php
                             $cnt = $cnt + 1;
                         @endphp
                         <tr data-area-menu-toggle data-details-wrapper-dropdown onclick="showDetails('{{ $cnt }}')" class="{{ $areaID != '' ? ($mdetails['areaID'] == $areaID ? 'show-area-details' : '') : '' }}" style="{{ $areaID != '' ? ($mdetails['areaID'] == $areaID ? '' : 'display:none;') : 'display:none;' }}">
 
-                            <td>                                                            
-                                @if(file_exists(public_path('storage/members_profile/'.(isset($mdetails['filePath']) ? $mdetails['filePath'] : 'xxxx'))))                                  
-                                    <img src="{{ asset('storage/members_profile/'.$mdetails['filePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                            <td>
+                                @if(file_exists(public_path('storage/members_profile/'.(isset($mdetails['filePath']) ? $mdetails['filePath'] : 'xxxx'))))
+                                    <img src="{{ asset('storage/members_profile/'.$mdetails['filePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />
                                 @else
-                                    <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
-                                @endif    
+                                    <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />
+                                @endif
                             </td>
 
                             <td>
                                 <span class="td-num">{{ $cnt }}</span>
                             </td>
 
-                            <td>                             
-                                <div class="td-wrapper">                                
+                            <td>
+                                <div class="td-wrapper">
                                     <span class="td-name">{{ $mdetails['borrower'] }}</span>
                                 </div>
                             </td>
@@ -321,7 +322,7 @@
                                             @php
                                                 $realeseDate = new DateTime($mdetails['releasingDate']);
                                                 $dueDate = new DateTime($mdetails['dueDate']);
-                                            @endphp   
+                                            @endphp
                                             <p>{{ number_format($mdetails['loanPrincipal'], 2) }}</p>
                                             <p>{{ $realeseDate->format('F d, Y') }}</p>
                                             <p>{{ $dueDate->format('F d, Y') }}</p>
@@ -336,10 +337,10 @@
                                         <h4>Payment Info</h4>
                                         <div class="box-wrapper">
                                             <div class="inner-inner-box">
-                                                <p>Daily Collectible:</p>                                             
+                                                <p>Daily Collectible:</p>
                                             </div>
                                             <div class="inner-inner-box">
-                                                <p>{{ number_format($mdetails['dailyCollectibles'], 2) }}</p>                                                
+                                                <p>{{ number_format($mdetails['dailyCollectibles'], 2) }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -360,8 +361,8 @@
                             </td>
                         </tr>
                         @endforeach
-                    @endif    
-                     
+                    @endif
+
 
                  </table>
 
@@ -369,7 +370,7 @@
 
              <!-- * Details Wrapper 3 -->
              <div class="wrapper-3">
-                @php 
+                @php
                     $footer = $areaDetailsFooter->where('areaID', $areaID)->first();
                 @endphp
                  <!-- * Total Collectible: -->
@@ -405,7 +406,7 @@
                      <p>Field Expenses:</p>
                      <span>{{ $footer ? number_format($footer['total_FieldExpenses'], 2) : '0.00' }}</span>
                  </div>
-                 
+
              </div>
 
          </div>
@@ -423,16 +424,16 @@
         window.livewire.on('openUrlPrintingStub', data =>{
             window.open(data.url, '_blank');
         });
-     
+
         window.livewire.on('RESPONSE_CLOSE_DENOMINATIONS_MODAL', data =>{
-          
+
                 cashDenominationModal.setAttribute("closing", "")
                 cashDenominationModal.addEventListener("animationend", () => {
                     cashDenominationModal.removeAttribute("closing")
                     cashDenominationModal.close()
-                }, { once: true })               
+                }, { once: true })
                 location.href = data.url
-                
+
         });
 
         window.livewire.on('RESPONSE_CLOSE_REJECTION_MODAL', data =>{
@@ -443,8 +444,8 @@
                 }, { once: true });
                 location.href = data.url
         });
-       
-        window.showDetails = function($cnt){              
+
+        window.showDetails = function($cnt){
             const trElem = document.getElementById("tr"+$cnt);
             const tdElem = document.getElementById("td"+$cnt);
 
@@ -455,10 +456,10 @@
             else{
                 trElem.classList.add("open-wrapper");
                 tdElem.classList.add("open-details");
-            }          
-        };   
-        
-        
+            }
+        };
+
+
         // ***** Area Menu Button ***** //
         // * used in Cash Denomination
         // * used in Print and Remit Toggle
@@ -483,9 +484,9 @@
 
         // * Cash Denomination (collection-collected.html)
         // * Approved Button
-      
+
         areaMenuButton.forEach(button => {
-            button.addEventListener('click', () => {               
+            button.addEventListener('click', () => {
                 // * Current Button Toggled
                 button.classList.toggle('view-selected-area')
 
@@ -507,11 +508,11 @@
 
             })
         })
-      
+
         if (cashDenominationModal) {
 
             if(openCashDenominationBtn){
-                openCashDenominationBtn.addEventListener('click', () => {                  
+                openCashDenominationBtn.addEventListener('click', () => {
                     cashDenominationModal.showModal()
                 })
             }
@@ -520,9 +521,9 @@
                 cashDenominationModal.addEventListener("animationend", () => {
                     cashDenominationModal.removeAttribute("closing")
                     cashDenominationModal.close()
-                }, { once: true })            
+                }, { once: true })
             })
-           
+
             // approveCashDenominationBtn.addEventListener('click', () => {
             //     cashDenominationModal.setAttribute("closing", "")
             //     cashDenominationModal.addEventListener("animationend", () => {
@@ -532,7 +533,7 @@
             //     // url = '/KC/collection/collection-collected.html'
             //     // location.href = url
             // })
-            
+
 
 
         }
@@ -542,21 +543,21 @@
         const rejectCollectionModal = document.querySelector('[data-collection-reject-modal]')
         const openRejectCollectionBtn = document.querySelector('[data-open-collection-reject-button]')
         const closeRejectCollectionBtn = document.querySelector('[data-close-collection-reject-button]')
-        const submitRejectCollectionBtn = document.querySelector('[data-submit-collection-reject-button]')       
+        const submitRejectCollectionBtn = document.querySelector('[data-submit-collection-reject-button]')
         if (rejectCollectionModal) {
 
             if(openRejectCollectionBtn){
                 openRejectCollectionBtn.addEventListener('click', () => {
                     rejectCollectionModal.showModal()
                 })
-                
+
                 closeRejectCollectionBtn.addEventListener('click', () => {
                     rejectCollectionModal.setAttribute("closing", "");
                     rejectCollectionModal.addEventListener("animationend", () => {
                         rejectCollectionModal.removeAttribute("closing");
                         rejectCollectionModal.close();
                     }, { once: true });
-                
+
                 })
             }
             submitRejectCollectionBtn.addEventListener('click', () => {
@@ -635,15 +636,15 @@
             openCollectionSummaryBtn.addEventListener('click', () => {
                 collectionSummaryModal.showModal()
             })
-            
+
             closeCollectionSummaryBtn.addEventListener('click', () => {
                 collectionSummaryModal.setAttribute("closing", "");
                 collectionSummaryModal.addEventListener("animationend", () => {
                     collectionSummaryModal.removeAttribute("closing");
                     collectionSummaryModal.close();
                 }, { once: true });
-            
+
             })
-        }        
+        }
     })
  </script>

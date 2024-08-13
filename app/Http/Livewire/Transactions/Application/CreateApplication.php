@@ -37,6 +37,7 @@ use App\Models\LoanHistory;
 use App\Models\MembersSavings;
 use App\Models\SavingsRunningBalance;
 use App\Models\CollectionAreaMember;
+use App\Models\Area;
 
 class CreateApplication extends Component
 {
@@ -775,6 +776,26 @@ class CreateApplication extends Component
             $mem->OwnProperty = null;
             $mem->OwnVehicles = null;
             $mem->save();
+
+            $areas = Area::where('Status',1)->get();
+            $isAreaExist = false;
+            foreach($areas as $area){
+                $address = explode(",",$area);
+                $barangay = $address[0];
+                $city = $address[1];
+
+                if( $input['member']['barangay'] == $barangay && $input['member']['city'] == $city){
+                    $isAreaExist = true;
+                }
+            }
+
+            if(!$isAreaExist){
+                Area::create([
+                    'City'=>$input['member']['barangay'] .', '. $input['member']['city'] ??= '',
+                    'DateCreated'=>Carbon::now(),
+                    'Status'=>1,
+                ]);
+            }
 
             $expense = new MonthlyBills();
             $expense->MemId = $mem->id;
