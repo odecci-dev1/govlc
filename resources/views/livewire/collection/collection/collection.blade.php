@@ -52,7 +52,7 @@
                             //$checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();
                             $checkIfPrinted = in_array($area['area_RefNo'], ['PENDING', '']) ? false : true;
                         @endphp
-                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['Id'] }}', '{{ $area['FOID'] }}', '{{ in_array($area['area_RefNo'], ['PENDING', '']) ? '' : $area['area_RefNo'] }}', 0)" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
+                        <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['FOID'] }}', '{{ in_array($area['area_RefNo'], ['PENDING', '']) ? '' : $area['area_RefNo'] }}', 0)" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
                             <div class="box-1">
                                 <h4 id="collectionAreaNum">{{ $area['Area'] }}</h4>
                             </div>
@@ -64,7 +64,8 @@
                                 <div class="inner-box-2">
                                     <p>Penalty</p>
                                     @php
-                                        $penalty = $area['expectedCollection'] - $area['total_collectedAmount'];
+                                        // $penalty = $area['expectedCollection'] - $area['total_collectedAmount'];
+                                         $penalty = $area['penalty'];
                                     @endphp
                                     <span id="collectionPenalty">{{ number_format(($penalty < 0 ? 0 : $penalty), 2) }}</span>
                                     @if( ($area['collection_Status'] ??= '') == 'Collected' )
@@ -100,7 +101,7 @@
                             <select wire:model.lazy="foid" class="select-option-menu" style="width: 40rem;{{ $areaID != '' ? '' : 'visibility: hidden;' }}">
                                 @if($folist)
                                     @foreach($folist as $fo)
-                                        <option value="{{ $fo['Id'] }}">{{ $fo['LName'] }}, {{ $fo['FName'] }} {{ substr($fo['MName'], 0, 1) }}.</option>
+                                        <option value="{{ $fo['Id'] }}">{{ $fo['Lname'] }}, {{ $fo['Fname'] }} {{ substr($fo['Mname'], 0, 1) }}.</option>
                                     @endforeach
                                 @endif
                             </select>
@@ -415,7 +416,7 @@
     @include('livewire.collection.collection.collection-cash-denomination-modal')
     <!-- * Reject Modal -->
     @include('livewire.collection.collection.collection-reject-reason-modal')
-    @include('livewire.collection.collection.collection-summary-modal')
+    {{-- @include('livewire.collection.collection.collection-summary-modal') --}}
  </div>
  </div>
  <script>
