@@ -365,56 +365,57 @@ class Collection extends Component
                 $persons=[];
                 foreach($locations as $location){
                     $address = explode(",",$location);
-                    $barangay = $address[0];
-                    $city = $address[1];
+                    $barangay = trim($address[0],' ');
+                    $city = trim($address[1],' ');
                     $members=[];
-                    $membersPerLocations =  Members::where([['Barangay','LIKE','%'.$barangay.'%'],['City','LIKE','%'.$city.'%'],['Status','=',1]])->get();
+                    $membersPerLocations =  Members::where([['Barangay','LIKE','%'.$barangay.'%'],['City','LIKE','%'.$city.'%'],['Status',1]])->get();
                     foreach($membersPerLocations as $member){
-                        $members[] = $member;
+                        if(!is_null($member)){
+                            $members[] = $member->MemId;
+                        }
+                       
                     }
-                    $persons=$members;
+                    $persons[]=$members;
                 }
-              
+                
+            
                 $memberWithApplication[]=$persons;
-                $areaWithCollection[]=$area;
                  $details=[];
                  //Get Area Applications
                  $collectibles=0;
                  $loanHistory=0;
                  $totalSavings=0;
                 
-                 foreach($persons as $person){
+                //  foreach($persons as $person){
               
-                    $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
-                    $savings= MembersSavings::where('MemId',$person->MemId)->first();
-                    if($application){
-                        $collectibles +=  $application->detail->ApprovedDailyAmountDue;
-                        $loanHistory +=  $application->loanhistory->OutstandingBalance;
-                        $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
-                        $details['totalCollectible']= $collectibles;
-                        $details['total_Balance']= $loanHistory;
-                        $details['total_savings']= $totalSavings;
-                        $details['total_advance']= 0;
-                        $details['total_lapses']= 0;
-                        $details['total_collectedAmount']= 0;
-                        $details['total_FieldExpenses']= 0;
-                        $details['daily_savings']= 0;
-                        $details['areaID'] = $area->Id;
-                        $details['NAID'] = $application->NAID;
-                   
-                   
-                        $areaDetails[] = $details; 
+                    
+                //         $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
+                //         $savings= MembersSavings::where('MemId',$person->MemId)->first();
+                //         if($application){
+                //             $collectibles +=  $application->detail->ApprovedDailyAmountDue;
+                //             $loanHistory +=  $application->loanhistory->OutstandingBalance;
+                //             $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
+                //             $details['totalCollectible']= $collectibles;
+                //             $details['total_Balance']= $loanHistory;
+                //             $details['total_savings']= $totalSavings;
+                //             $details['total_advance']= 0;
+                //             $details['total_lapses']= 0;
+                //             $details['total_collectedAmount']= 0;
+                //             $details['total_FieldExpenses']= 0;
+                //             $details['daily_savings']= 0;
+                //             $details['areaID'] = $area->Id;
+                //             $details['NAID'] = $application->NAID;
+                //             $areaDetails[] = $details; 
 
-
-                    }
-            }
+                //     }
+                // }
 
           
             $this->areas[]=$areaDetails;
             }     
         
         }
-        dd( $this->areas);
+        dd($memberWithApplication);
         //dd( $this->areas);    
         //$mfolist = collect([]);
         // $folist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerList');  
