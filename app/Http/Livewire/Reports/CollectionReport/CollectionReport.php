@@ -32,13 +32,7 @@ class CollectionReport extends Component
         $exportData = $data->map(function ($d) {
             return [ 
                 'memberName' =>  $d->member->full_name,
-                'loanAmount' => !empty($d->LoanAmount) ? number_format($d->LoanAmount, 2) : '0.00',
-                'dateReleased' => !empty($d->DateReleased) ? date('Y-m-d', strtotime($d->DateReleased)) : '',
-                'dueDate' => !empty($d->DueDate) ? date('Y-m-d', strtotime($d->DueDate)) : '',
-                'totalNP' => optional($d->collectionareamember)->CollectedAmount == 0.00 
-                                ? '0.00' 
-                                : optional($d->collectionareamember)->CollectedAmount,
-                'totalPastDueDays' => $d->pastDueDays(),
+                
             ];
         });
         return Excel::download(new CollectedExport( $data ), 'Collection_Report_'. $this->datestart . '_' . 'to' . '_' .  $this->dateend .'.xlsx');
@@ -74,7 +68,6 @@ class CollectionReport extends Component
     {
         $this->data = $this->getAreas();
 
-        // dd($this->data);
         return view('livewire.reports.collection-report.collection-report', [
             'totals' => $this->totals,
         ]);
@@ -88,6 +81,8 @@ class CollectionReport extends Component
                     ->orWhere('Lname', 'like', '%' . $this->keyword . '%');
             })
             ->get();
+        
+        $grandTotalCollection = 0;
 
         foreach ($areas as $area) {
             $totalCollection = $area->collectionAreas->sum(function ($collectionArea) {
@@ -117,9 +112,12 @@ class CollectionReport extends Component
                 'totalAdvances' => $totalAdvances,
                 'totalNP' => $totalNP,
             ];
+
+            $grandTotalCollection += $totalCollection;
         }
 
-        dd($this->totals);
+        $this->totals['grandTotalCollection'] = $grandTotalCollection;
+
         if ($paginate) {
             $totalItems = $areas->count();
     
