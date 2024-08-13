@@ -31,11 +31,17 @@ class CollectionReport extends Component
         $data = $this->getAreas(false, false);
         $exportData = $data->map(function ($d) {
             return [ 
-                'memberName' =>  $d->member->full_name,
-                
+                'area' =>  $d->Area,
+                'fieldOffice' =>  $d->fieldOfficer->full_name,
+                'totalCollections' =>  isset($totals[$d->id]['totalCollection']) ? number_format($totals[$d->id]['totalCollection'], 2) : '0.00',
+                'totalSavings' =>  isset($totals[$d->id]['totalSavings']) ? number_format($totals[$d->id]['totalSavings'], 2) : '0.00',
+                'totalLapses' =>  isset($totals[$d->id]['totalLapses']) ? number_format($totals[$d->id]['totalLapses'], 2) : '0.00',
+                'totalAdvances' =>  isset($totals[$d->id]['totalAdvances']) ? number_format($totals[$d->id]['totalAdvances'], 2) : '0.00',
+                'cashRemitted' =>  isset($totals[$d->id]['totalCollection']) ? number_format($totals[$d->id]['totalCollection'], 2) : '0.00',
+                'totalNP' =>  $totals[$d->id]['totalNP'] ?? '0',
             ];
         });
-        return Excel::download(new CollectedExport( $data ), 'Collection_Report_'. $this->datestart . '_' . 'to' . '_' .  $this->dateend .'.xlsx');
+        return Excel::download(new CollectedExport( $exportData ), 'Collection_Report_'. $this->datestart . '_' . 'to' . '_' .  $this->dateend .'.xlsx');
     }
     
     public function print()
