@@ -2643,7 +2643,7 @@ class CreateApplication extends Component
                     $this->loanDetails['app_ApprovalDate_1'] = $res->App_ApprovalDate_1;
 
                     //$this->loanDetails['app_ApprovedBy_1_name'] = null; //$this->getUserName($data['individualLoan'][0]['app_ApprovedBy_1']);
-                    $this->loanDetails['app_ApprovedBy_1_name'] = $res->App_ApprovedBy_1;
+                    $this->loanDetails['app_ApprovedBy_1_name'] = $this->getUserName($res->App_ApprovedBy_1);
                    // $this->loanDetails['app_ApprovalDate_1_timeint'] = null; //$this->calculateTimeDifference($data['individualLoan'][0]['app_ApprovalDate_1'], Carbon::now());
                     $this->loanDetails['app_ApprovalDate_1_timeint'] = $this->calculateTimeDifference($res->App_ApprovalDate_1, Carbon::now());
                    
