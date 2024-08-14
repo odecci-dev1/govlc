@@ -45,7 +45,7 @@ class ApplicationReleasingList extends Component
         // $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/GlobalFilter/FilterSearch', $filter);   $list = $data->json();           
         // //dd( $filter);
         // $list = $data->json();     
-  
+
         return view('livewire.transactions.application.application-releasing-list', ['list' => $list]);
     }
 }

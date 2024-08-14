@@ -196,7 +196,8 @@
                             {{ ($mlist->termsofpayment->InterestRate * 100).'%'}}
                         </td>
                         <td align="center">
-                            @if($mlist->detail->status == 15)
+       
+                            @if($mlist->Status == 15)
                             <img src="{{ URL::to('/') }}/assets/icons/check.svg" alt="funnel">
                             @endif
                         </td>
