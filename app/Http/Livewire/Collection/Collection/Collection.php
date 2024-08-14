@@ -124,25 +124,29 @@ class Collection extends Component
         // }
         
         if($areaRefNo == ''){  
-            $area = CollectionArea::where('AreaId','AREA-0'.$this->areaID)->whereNotNull('Area_RefNo')->count();
+            $area = CollectionArea::where('AreaId',$this->areaID)->whereNotNull('Area_RefNo')->count();
             $collectionCount = Col::get()->count();
-            $areaReference = 'AREA-0'.$this->areaID.date_format(Carbon::now(),'Ymd').'-0'.$area;
+            $areaReference = $this->areaID.date_format(Carbon::now(),'Ymd').'-0'.$area;
 
             $collection = Col::create([
                 'RefNo' => 'COL-'.date_format(Carbon::now(),'Ymd').'-'.$collectionCount,
                 'DateCreated' => date_format(Carbon::now(),'Y-m-d')
             ]);
             $collectionArea= CollectionArea::create([
-            'AreaId'=>'AREA-0'.$this->areaID,
+            'AreaId'=>$this->areaID,
             'Area_RefNo'=> $areaReference,
             'Printed_Status'=> 5,
             'CollectionRefNo'=> $collection->RefNo,
             ]);
+
+            //dd($this->areaDetails);
             foreach ($this->areaDetails as $detail) {
         
                 CollectionAreaMember::create([
                     'NAID'=>$detail['naid'],
                     'Area_RefNo'=> $collectionArea->Area_RefNo,
+                    'AdvanceStatus'=> 0,
+                    'Payment Status'=> 2,
                 ]);
             }
 
@@ -192,9 +196,6 @@ class Collection extends Component
   
         if($areaID != ''){
                 $this->areaID = $areaID;
-               // $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $this->areaRefNo ]);  
-                //$details = $details->json();   
-                //dd($details[0]);    
 
                 $area =  Area::where('Id',$areaID)->first();
                 $locations = explode("|",$area->City);
@@ -222,6 +223,7 @@ class Collection extends Component
               
                     $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
                     $savings= MembersSavings::where('MemId',$person->MemId)->first();
+                    $savings= CollectionAreaMember::where('Area_RefNo',$person->MemId)->first();
                     if(!is_null($application)) {
                         if($application->loanhistory->OutstandingBalance != 0){
 
@@ -249,11 +251,11 @@ class Collection extends Component
                         } 
                         $applicationData['dailyCollectibles'] = $application->detail->ApprovedDailyAmountDue;
                         $applicationData['collectedAmount'] = 0;
-                        $applicationData['amountDue'] = $application->detail->OutstandingBalance;
+                        $applicationData['amountDue'] = $application->loanhistory->OutstandingBalance;
                         $applicationData['pastDue'] = 0;
                         $applicationData['totalSavingsAmount'] = ( $savings) ? $savings->TotalSavingsAmount:0;
                         $applicationData['advancePayment'] = 0;
-                        $applicationData['payment_Status'] = 'Pending';
+                        $applicationData['payment_Status'] = '';
                         //Expaded table data
 
                         $applicationData['borrower'] = $application->member->FullName;
@@ -272,49 +274,8 @@ class Collection extends Component
                     }
 
                     }
-                   
-                        //$CollectionAreaMember = CollectionAreaMember::where('NAID',$app->NAID)
-            
-                    // foreach($applications as $app){
-                    //     $applicationCollections[]=CollectionAreaMember::where('NAID',$app->NAID)->orderBy('DateCollected','DESC')->first();
-                    // }
-                
-                    // foreach($applications as $application){ 
-                    //     $applicationDetails[] = $application;
-                        
-                    //     $terms = $application->termsofpayment->Terms;
-                    //     $collectible[] = $application->detail->ApprovedDailyAmountDue * $terms;
-                    // };
-                   
                     
                  }
-                // $this->areastatus = $areas->where('areaID', $areaID)->first();  
-
-               
-                 //Get Collectibles
-              
-                //foreach($applications as $application){
-                        // $collectionDetails=[];
-                        // $collectionAreaMember = CollectionAreaMember::where('NAID',$application->NAID)->orderBy('DateCollected','DESC')->first();
-                        // $lastCollection= date_create($collectionAreaMember->DateCollected);
-                        // $dueDate= date_create($application->loanhistory->DueDate);
-
-                        // $days = $lastCollection->diff($dueDate, true)->days;
-                        // $sundays = intval($days / 7) + ($lastCollection->format('N') + $days % 7 >= 7);
-                        // $remainDays = date_add( $dueDate, date_interval_create_from_date_string($sundays." Days"));
-                        // $collectionDetails['RemainingDays'] = $remainDays;
-                        // $details[] = $collectionDetails;
-
-                // }
-                 
-                //dd($details);
-                 
-                if(isset($details[0])){
-                     $collections = null;
-                    $details = $details[0];                                       
-                    $collections = $details['collection'];
-                    
-                    if($collections){
                         
                         $this->areaDetailsFooter[$this->areaID] = [               
                                                         'areaID' => $this->areaID,                                                        
@@ -328,16 +289,7 @@ class Collection extends Component
                                                         'total_FieldExpenses' => $details['total_FieldExpenses'],
                                                         'total_daily_savings' => $details['daily_savings'],
                                                         //'total_daily_savings' => collect($details['collection'])->sum('dailySavings'),
-                                                     ];
-                                                     
-                        foreach($collections as $coll){
-                            $this->areaDetails =  $this->areaDetails->push($coll);
-                        }                        
-                    }                                                 
-                }               
-                //dd($this->areas);
-                //dd($this->areaDetails);
-                //dd($this->areas->where('areaID', $areaID)->first());    
+                                                     ];    
         }
     }
 
@@ -346,15 +298,98 @@ class Collection extends Component
         $this->areaDetails = collect([]);
         $this->areaDetailsFooter = collect([]);
         // $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/AreasCollectionList');  
+        $areas   = Area::whereNotNull('FOID')->where('Status',1)->get();
         if($this->colrefNo != ''){
-            $collectionArea = CollectionArea::where('CollectionRefNo',$this->colrefNo)->get();
-            $this->areas = Area::whereNotNull('FOID')->where('Status',1)->get();
+            
+            foreach($areas as $area){
+                $collectionArea = CollectionArea::where('CollectionRefNo',$this->colrefNo)->where('AreaId', $area->Id)->first();
+                $locations = explode("|",$area->City);
+                $persons=[];
+                foreach($locations as $location){
+                    $address = explode(",",$location);
+                    $barangay = trim($address[0],' ');
+                    $city = trim($address[1],' ');
+                    $membersPerLocations =  Members::where([['Barangay','LIKE','%'.$barangay.'%'],['City','LIKE','%'.$city.'%'],['Status','=',1]])->get();
+                    foreach($membersPerLocations as $member){
+                        $persons[] = $member;
+                    }
+                }
+              
+                 $details=[];
+                 //Get Area Applications
+                 $collectibles=0;
+                 $loanHistory=0;
+                 $totalSavings=0;
+                 $appDetails = [];
+                 $totalItems=0;
+                 $fo = FieldOfficer::where('FOID',$area->FOID)->first();
+                 $details['expectedCollection']= 0;
+                 $details['total_collectedAmount']= 0;
+                 $details['penalty']= 0;
+                 $details['Area']= $area->Area;
+                 $details['areaName']= $area->Area;
+                 $details['areaID']= $area->Id;
+                 $details['FOID']= $area->FOID;
+                 $details['area_RefNo']= '';
+                 $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.$fo->Mname[0];
+                 $details['refNo']= $this->colrefNo;
+                 $details['collection_RefNo']= 'PENDING';
+                 $details['totalItems']= 0;
+                 $details['advancePayment']= 0;
+                 $details['dateCreated']= "";
+                 $details['dateCollected']= 0;
+                 $details['total_FieldExpenses']= 0;
+                 $details['total_Balance']= 0;
+                 $details['total_savings']= 0;
+                 $details['total_advance']= 0;
+                 $details['total_lapses']= 0;
+                 foreach($persons as $person){
+                    $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
+                    $savings= MembersSavings::where('MemId',$person->MemId)->first();
+                   
+                    if(!is_null($application)) {
+                        if($application->loanhistory->OutstandingBalance != 0){
+                           $collectibles +=  $application->detail->ApprovedDailyAmountDue;
+                           $loanHistory +=  $application->loanhistory->OutstandingBalance;
+                           $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
+                           $totalItems +=  1;
+                            $details['expectedCollection']= $collectibles;
+                            $details['total_collectedAmount']= 0;
+                            $details['penalty']= 0;
+                            $details['Area']= $area->Area;
+                            $details['areaName']= $area->Area;
+                            $details['areaID']= $area->Id;
+                            $details['FOID']= $area->FOID;
+                            $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.$fo->Mname[0];
+                            $details['refNo']= ($collectionArea) ? $collectionArea->Area_RefNo:'';
+                            $details['collection_RefNo']= '';
+                            $details['totalItems']= $totalItems;
+                            $details['advancePayment']= 0;
+                            $details['dateCreated']= "";
+                            $details['dateCollected']= 0;
+                            $details['total_FieldExpenses']= 0;
+                            $details['total_Balance']= 0;
+                            $details['total_savings']= 0;
+                            $details['total_advance']= 0;
+                            $details['total_lapses']= 0;
+                            $appDetails[]=$application->NAID;
+                            $details['application'] = $appDetails;
+                            
+                        }
+                    }
+                }
+               
+            $this->areas[]=$details;
+
+            } 
+      
+            //$this->areas = Area::whereNotNull('FOID')->where('Status',1)->get();
             
             //$this->areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  
         }
         else{
            // $areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/MakeCollection');             
-            $areas   = Area::whereNotNull('FOID')->where('Status',1)->get();
+            //$areas   = Area::whereNotNull('FOID')->where('Status',1)->get();
           
             foreach($areas as $area){
                 $locations = explode("|",$area->City);
@@ -384,9 +419,8 @@ class Collection extends Component
                  $details['areaName']= $area->Area;
                  $details['areaID']= $area->Id;
                  $details['FOID']= $area->FOID;
-                 $details['area_RefNo']= $area->FOID;
-                 $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.$fo->Mname[0];
                  $details['area_RefNo']= '';
+                 $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.$fo->Mname[0];
                  $details['collection_RefNo']= '';
                  $details['totalItems']= 0;
                  $details['advancePayment']= 0;
@@ -438,7 +472,7 @@ class Collection extends Component
             }     
         
         }
-   
+       
          $mfolist = collect([]);
         //  $folist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerList');  
         //  $folist = $folist->json();
@@ -446,8 +480,9 @@ class Collection extends Component
         if($this->areaID != ''){
            
             $refno =  $this->areas->where('areaID', $this->areaID)->first();
+            //dd( $refno);
             if($refno){                                      
-                $this->getCollectionDetails($this->areaID,$this->folist['id'], $refno['area_RefNo'], 1);
+                $this->getCollectionDetails($this->areaID,$refno['FOID'], $refno['area_RefNo'], 1);
             }            
         }
        //dd( $this->folist);

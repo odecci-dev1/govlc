@@ -2712,6 +2712,7 @@ class CreateApplication extends Component
                    
                     $this->holidayPayment = $getHolidays * $this->calculatedResult['collectible'];
                     $this->deductions = $this->notarialFee + $this->holidayPayment + $this->loanInsurance + $this->calculatedResult['advancePayment'] + $this->lifeInsurance +  $this->deductInterest ;
+                    //dd($this->holidayPayment);
                     //dd($this->deductions);
                   
                     $this->loanReceivables = $this->loanPrincipal - $this->deductions;
