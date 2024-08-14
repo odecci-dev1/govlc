@@ -552,8 +552,8 @@
                                         <td>{{ $value['NameOfTerms'] }}</td>
 
                                         <!-- * Interest Rate -->
-                                        {{-- <td>{{ ($value['InterestRate'] * 100) }}%</td> --}}
-                                        <td>{{ $value['InterestRate'] }}%</td>
+                                        <td>{{ ($value['InterestRate'] * 100) }}%</td>
+                                        {{-- <td>{{ $value['InterestRate'] }}%</td> --}}
 
                                         <!-- * Days -->
                                         <td style="text-align: center">
