@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\Collection as Col;
 use App\Models\CollectionArea;
 use App\Models\CollectionAreaMember;
+use App\Models\CollectionStatus;
 use App\Models\MembersSavings;
 use Carbon\Carbon;
 use App\Models\Area;
@@ -223,10 +224,16 @@ class Collection extends Component
               
                     $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
                     $savings= MembersSavings::where('MemId',$person->MemId)->first();
-                    $savings= CollectionAreaMember::where('Area_RefNo',$person->MemId)->first();
+                 
+             
                     if(!is_null($application)) {
                         if($application->loanhistory->OutstandingBalance != 0){
-
+                        $AreaRefNo= CollectionAreaMember::where('Area_RefNo',$areaRefNo)->where('NAID',$application->NAID)->first();
+                        $paymentStatus =  CollectionStatus::where('Id',$AreaRefNo->Payment_Status)->first();
+                        $CollectionArea = CollectionArea::where('Area_RefNo',$areaRefNo)->first();
+                        $collectionStatus =  CollectionStatus::where('Id',$CollectionArea->Collection_Status)->first();
+                        $PrintedStatus =  CollectionStatus::where('Id',$CollectionArea->PrintedStatus)->first();
+                        
                         $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                         $loanHistory +=  $application->loanhistory->OutstandingBalance;
                         $totalSavings +=  ( $savings) ? $savings->TotalSavingsAmount:0;
@@ -255,7 +262,8 @@ class Collection extends Component
                         $applicationData['pastDue'] = 0;
                         $applicationData['totalSavingsAmount'] = ( $savings) ? $savings->TotalSavingsAmount:0;
                         $applicationData['advancePayment'] = 0;
-                        $applicationData['payment_Status'] = '';
+                        $applicationData['payment_Status'] = $paymentStatus->Status;
+                        $applicationData['collection_Status'] = ($collectionStatus) ? $collectionStatus->Status:'';
                         //Expaded table data
 
                         $applicationData['borrower'] = $application->member->FullName;
@@ -303,6 +311,7 @@ class Collection extends Component
             
             foreach($areas as $area){
                 $collectionArea = CollectionArea::where('CollectionRefNo',$this->colrefNo)->where('AreaId', $area->Id)->first();
+                $printStatus = ($collectionArea) ? CollectionStatus::where('Id',$collectionArea->Printed_Status)->first():'';
                 $locations = explode("|",$area->City);
                 $persons=[];
                 foreach($locations as $location){
@@ -332,8 +341,10 @@ class Collection extends Component
                  $details['FOID']= $area->FOID;
                  $details['area_RefNo']= '';
                  $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.$fo->Mname[0];
+                 $details['payment_Status']= "No Payment";
+                  $details['collection_Status'] = "NO PAYMENT";
                  $details['refNo']= $this->colrefNo;
-                 $details['collection_RefNo']= 'PENDING';
+                 $details['collection_RefNo']= '';
                  $details['totalItems']= 0;
                  $details['advancePayment']= 0;
                  $details['dateCreated']= "";
@@ -349,6 +360,8 @@ class Collection extends Component
                    
                     if(!is_null($application)) {
                         if($application->loanhistory->OutstandingBalance != 0){
+                            $collectionAreaMember = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
+                            $paymentStatus = ($collectionArea)  ? CollectionStatus::where('Id',$collectionAreaMember->Payment_Status)->first():'';
                            $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                            $loanHistory +=  $application->loanhistory->OutstandingBalance;
                            $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
@@ -362,6 +375,9 @@ class Collection extends Component
                             $details['FOID']= $area->FOID;
                             $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.$fo->Mname[0];
                             $details['refNo']= ($collectionArea) ? $collectionArea->Area_RefNo:'';
+                            $details['area_RefNo']= ($collectionArea) ? $collectionArea->Area_RefNo:'';
+                            $details['payment_Status']= $printStatus != '' ? $paymentStatus->Status:'';
+                            $details['collection_Status'] = $paymentStatus != '' ? $paymentStatus->Status:'';
                             $details['collection_RefNo']= '';
                             $details['totalItems']= $totalItems;
                             $details['advancePayment']= 0;
@@ -372,7 +388,7 @@ class Collection extends Component
                             $details['total_savings']= 0;
                             $details['total_advance']= 0;
                             $details['total_lapses']= 0;
-                            $appDetails[]=$application->NAID;
+                            $appDetails[]=$printStatus;
                             $details['application'] = $appDetails;
                             
                         }
@@ -449,6 +465,8 @@ class Collection extends Component
                             $details['areaID']= $area->Id;
                             $details['FOID']= $area->FOID;
                             $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.$fo->Mname[0];
+                            $details['payment_Status']= '';
+                            $details['collection_Status'] = '';
                             $details['area_RefNo']= '';
                             $details['collection_RefNo']= '';
                             $details['totalItems']= $totalItems;
