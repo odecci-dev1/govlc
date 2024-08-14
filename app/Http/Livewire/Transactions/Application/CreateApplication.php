@@ -37,6 +37,7 @@ use App\Models\LoanHistory;
 use App\Models\MembersSavings;
 use App\Models\SavingsRunningBalance;
 use App\Models\CollectionAreaMember;
+use App\Models\Area;
 
 class CreateApplication extends Component
 {
@@ -775,6 +776,26 @@ class CreateApplication extends Component
             $mem->OwnProperty = null;
             $mem->OwnVehicles = null;
             $mem->save();
+
+            $areas = Area::where('Status',1)->get();
+            $isAreaExist = false;
+            foreach($areas as $area){
+                $address = explode(",",$area);
+                $barangay = $address[0];
+                $city = $address[1];
+
+                if( $input['member']['barangay'] == $barangay && $input['member']['city'] == $city){
+                    $isAreaExist = true;
+                }
+            }
+
+            if(!$isAreaExist){
+                Area::create([
+                    'City'=>$input['member']['barangay'] .', '. $input['member']['city'] ??= '',
+                    'DateCreated'=>Carbon::now(),
+                    'Status'=>1,
+                ]);
+            }
 
             $expense = new MonthlyBills();
             $expense->MemId = $mem->id;
@@ -2622,7 +2643,7 @@ class CreateApplication extends Component
                     $this->loanDetails['app_ApprovalDate_1'] = $res->App_ApprovalDate_1;
 
                     //$this->loanDetails['app_ApprovedBy_1_name'] = null; //$this->getUserName($data['individualLoan'][0]['app_ApprovedBy_1']);
-                    $this->loanDetails['app_ApprovedBy_1_name'] = $res->App_ApprovedBy_1;
+                    $this->loanDetails['app_ApprovedBy_1_name'] = $this->getUserName($res->App_ApprovedBy_1);
                    // $this->loanDetails['app_ApprovalDate_1_timeint'] = null; //$this->calculateTimeDifference($data['individualLoan'][0]['app_ApprovalDate_1'], Carbon::now());
                     $this->loanDetails['app_ApprovalDate_1_timeint'] = $this->calculateTimeDifference($res->App_ApprovalDate_1, Carbon::now());
                    

@@ -194,8 +194,8 @@
                                 <p style="font-size:1.5rem;color:darkgoldenrod; text-align: center;">
                                     Initial approval last 
                                     @if($loanDetails['app_ApprovalDate_1_timeint']['years'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['years'] }} Years</span> @endif
-                                    @if($loanDetails['app_ApprovalDate_1_timeint']['months'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['months'] }} Months</span> @endif
-                                    @if($loanDetails['app_ApprovalDate_1_timeint']['days'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['days'] }} Days</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['months'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['months'] }} Month(s)</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['days'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['days'] }} Day(s)</span> @endif
                                     @if($loanDetails['app_ApprovalDate_1_timeint']['hours'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['hours'] }} Hours</span> @endif
                                     @if($loanDetails['app_ApprovalDate_1_timeint']['minutes'] > 0) <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['minutes'] }} Minutes</span> @endif                                    
                                     <span style="font-weight: bold; font-size:1.6rem;">{{ $loanDetails['app_ApprovalDate_1_timeint']['seconds'] }} Seconds</span>                                   
@@ -205,10 +205,10 @@
                                 <p style="font-size:1.5rem;color:green;">Approved By: {{ $loanDetails['app_ApprovedBy_1_name'] }}  </p>                                                                                  
                                 <p style="font-size:1.5rem;color:green;">
                                     @if($loanDetails['app_ApprovalDate_1_timeint']['years'] > 0) <span id="ciTimeWeek">{{ $loanDetails['app_ApprovalDate_1_timeint']['years'] }} Years</span> @endif
-                                    @if($loanDetails['app_ApprovalDate_1_timeint']['months'] > 0) <span id="ciTimeWeek">{{ $loanDetails['app_ApprovalDate_1_timeint']['months'] }} Months</span> @endif
-                                    @if($loanDetails['app_ApprovalDate_1_timeint']['days'] > 0) <span id="ciTimeDay">{{ $loanDetails['app_ApprovalDate_1_timeint']['days'] }} Days</span> @endif
-                                    @if($loanDetails['app_ApprovalDate_1_timeint']['hours'] > 0) <span id="ciTimeHour">{{ $loanDetails['app_ApprovalDate_1_timeint']['hours'] }} Hours</span> @endif
-                                    @if($loanDetails['app_ApprovalDate_1_timeint']['Minutes'] > 0) <span id="ciTimeHour">{{ $loanDetails['app_ApprovalDate_1_timeint']['minutes'] }} Minutes</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['months'] > 0) <span id="ciTimeWeek">{{ $loanDetails['app_ApprovalDate_1_timeint']['months'] }} Month(s)</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['days'] > 0) <span id="ciTimeDay">{{ $loanDetails['app_ApprovalDate_1_timeint']['days'] }} Day(s)</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['hours'] > 0) <span id="ciTimeHour">{{ $loanDetails['app_ApprovalDate_1_timeint']['hours'] }} Hour(s)</span> @endif
+                                    @if($loanDetails['app_ApprovalDate_1_timeint']['minutes'] > 0) <span id="ciTimeHour">{{ $loanDetails['app_ApprovalDate_1_timeint']['minutes'] }} Minutes</span> @endif
                                     <span id="ciTimeHour">{{ $loanDetails['app_ApprovalDate_1_timeint']['seconds'] }} Seconds</span>
                                     ago
                                 </p>  <!-- this will show to another approving officer-->                                                            

@@ -10,9 +10,14 @@ class Collection extends Model
     use HasFactory;
 
     protected $table = 'tbl_CollectionModel';
-
+    public $timestamps = false;
     protected $guarded = [
         'Id'
+    ];
+
+    protected $fillable = [
+        'RefNo',
+        'DateCreated'
     ];
 
     public function collectionAreas()
