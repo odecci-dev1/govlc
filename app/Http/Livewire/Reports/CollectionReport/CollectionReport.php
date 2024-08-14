@@ -81,7 +81,7 @@ class CollectionReport extends Component
 
     public function getAreas($paginate = true, $includeInactive = true)
     {
-        $areas = Area::with(['fieldOfficer', 'collectionAreas.collectionAreaMembers', 'loanhistory'])
+        $areas = Area::with(['fieldOfficer', 'collectionAreas.areaMembers', 'loanhistory'])
             ->whereHas('fieldOfficer', function ($query) {
                 $query->where('Fname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('Lname', 'like', '%' . $this->keyword . '%');
@@ -92,23 +92,23 @@ class CollectionReport extends Component
 
         foreach ($areas as $area) {
             $totalCollection = $area->collectionAreas->sum(function ($collectionArea) {
-                return $collectionArea->collectionAreaMembers->sum('CollectedAmount');
+                return $collectionArea->areaMembers->sum('CollectedAmount');
             });
         
             $totalSavings = $area->collectionAreas->sum(function ($collectionArea) {
-                return $collectionArea->collectionAreaMembers->sum('Savings');
+                return $collectionArea->areaMembers->sum('Savings');
             });
         
             $totalLapses = $area->collectionAreas->sum(function ($collectionArea) {
-                return $collectionArea->collectionAreaMembers->sum('LapsePayment');
+                return $collectionArea->areaMembers->sum('LapsePayment');
             });
         
             $totalAdvances = $area->collectionAreas->sum(function ($collectionArea) {
-                return $collectionArea->collectionAreaMembers->sum('AdvancePayment');
+                return $collectionArea->areaMembers->sum('AdvancePayment');
             });
 
             $totalNP = $area->collectionAreas->sum(function ($collectionArea) {
-                return $collectionArea->collectionAreaMembers->where('CollectedAmount', 0.00)->count();
+                return $collectionArea->areaMembers->where('CollectedAmount', 0.00)->count();
             });
 
             $this->totals[$area->id] = [
