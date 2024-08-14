@@ -30,7 +30,7 @@ class CollectionArea extends Model
 
     public function area(): BelongsTo
     {
-        return $this->belongsTo(Area::class, 'AreaId', 'AreaID');
+        return $this->belongsTo(Area::class, 'AreaID', 'AreaId');
     }
 
     public function areaMembers(): HasMany

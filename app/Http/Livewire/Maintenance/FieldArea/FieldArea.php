@@ -235,15 +235,47 @@ class FieldArea extends Component
         return redirect()->to('/maintenance/fieldarea');
     }
 
+    // public function trash($AreaID)
+    // {
+    //     $area = Area::where('AreaID', $AreaID);
+    //     $area->update([
+    //         'Status' => 2,
+    //         'DateUpdated' => now(),
+    //     ]);
+
+    //     return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully trashed');   
+    // }
+
     public function trash($AreaID)
     {
-        $area = Area::where('AreaID', $AreaID);
-        $area->update([
-            'Status' => 2,
-            'DateUpdated' => now(),
-        ]);
+        $areaUpdate = Area::where('AreaID', $AreaID);
+        $area = Area::where('AreaID', $AreaID)->first();
 
-        return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully trashed');   
+        if ($area) {
+            $areaUpdate->update([
+                'Status' => 2,
+                'DateUpdated' => now(),
+            ]);
+
+            $cities = explode('|', $area->City);
+            foreach ($cities as $city) {
+                Area::create([
+                    'Area' => null,
+                    'FOID' => null,
+                    'City' => $city,
+                    'Status' => 1,
+                    'DateCreated' => now(),
+                    'DateUpdated' => now(),
+                ]);
+            }
+
+            // Optional: delete the original Area record if required
+            // $areaUpdate->delete();
+
+            return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully trashed and cities unassigned');
+        } else {
+            return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Area not found');
+        }
     }
 
     public function setPage($page = 1)
