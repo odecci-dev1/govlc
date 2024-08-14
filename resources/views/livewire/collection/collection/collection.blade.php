@@ -143,16 +143,16 @@
                      </div> -->
                 <!-- delete -->
 
-                    {{-- <button type="button" style="{{ $countPaid >= 0 && ($areastatus['collection_Status'] ??= '') != 'Collected' && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button> --}}
-                    {{-- <button type="button" style="{{ $countPaid >= 0 && ($areastatus['collection_Status'] ??= '') != 'Collected' && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button> --}}
+                    <button type="button" style="{{ $countPaid >= 0 && ($areastatus['collection_Status'] ??= '') != 'Collected' && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-green" data-open-cash-denomination-button>Collect</button>
+                     <button type="button" style="{{ $countPaid >= 0 && ($areastatus['collection_Status'] ??= '') != 'Collected' && $countDetails > 0 && (!in_array($checkArea['area_RefNo'], ['PENDING', ''])) ? '' : 'display: none;' }}" class="button-2-alert" data-open-collection-reject-button>Reject</button>
                     @if($countDetails > 0)
-                        {{-- <button style="{{ ($areastatus['collection_Status'] ??= '') != 'Collected' ? '' : 'display: none;' }}" type="button" wire:click="print('{{ (!in_array($checkArea['area_RefNo'], ['PENDING', '']) ? $checkArea['area_RefNo'] : '') }}')" class="button-2" data-collection-print-button>Print</button> --}}
-                        <button  type="button"  class="button-2" wire:click="print" data-collection-print-button>Print</button>
-                        {{-- @if(!in_array($checkArea['area_RefNo'], ['PENDING', '']))
+                        <button style="{{ ($areastatus['collection_Status'] ??= '') != 'Collected' ? '' : 'display: none;' }}" type="button" wire:click="print('{{ (!in_array($checkArea['area_RefNo'], ['PENDING', '']) ? $checkArea['area_RefNo'] : '') }}')" class="button-2" data-collection-print-button>Print</button>
+                        {{-- <button  type="button"  class="button-2" wire:click="print" data-collection-print-button>Print</button> --}}
+                        @if(!in_array($checkArea['area_RefNo'], ['PENDING', '']))
                             @if(in_array('Module-07', $modules))
                                 <a href="{{ URL::to('/') }}/collection/remittance/{{ $foid }}/{{ $checkArea['area_RefNo'] }}/{{ $areaID }}" style="{{ ($areastatus['collection_Status'] ??= '') != 'Collected' ? '' : 'display: none;' }}" class="button-2" data-collection-remit-button>Remit</a>
                             @endif
-                        @endif             --}}
+                        @endif            
                     @endif
 
              </div>

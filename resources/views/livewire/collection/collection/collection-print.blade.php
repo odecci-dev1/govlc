@@ -39,11 +39,11 @@
                         @endphp 
                         <div class="page page-1" style="width: 297mm; min-height: 297mm;" data-printables>
                             <div class="header-wrapper">
-                                <p>Field Officer: <span id="printFieldOfficerName">{{ !empty($areaDetails[0]['fieldOfficer']) ? $areaDetails[0]['fieldOfficer'] : 'No data' }}</span>
+                                <p>Field Officer: <span id="printFieldOfficerName">{{ !empty($areaDetailsFooter['fieldOfficer']) ? $areaDetailsFooter['fieldOfficer'] : 'No data' }}</span>
                                 </p>
-                                <p><span id="printAreaNum">{{ $areaDetails->first()['areaName'] }}</span></p>
+                                <p><span id="printAreaNum">{{ $areaDetailsFooter['areaName'] }}</span></p>
                                 <p>Collection List Number <span
-                                        id="printCollectionListNumber">{{ $areaDetails->first()['area_RefNo'] }}</span></p>
+                                        id="printCollectionListNumber">{{ $areaDetailsFooter['area_RefNo'] }}</span></p>
                             </div>
                             <div class="body-wrapper">                                                                                
                                     @php 
@@ -76,10 +76,9 @@
                                             <p>Collectible: <span  id="printCollectible">{{ number_format($dtl['dailyCollectibles'], 2) }}</span></p>
                                             <p>Balance: <span id="printBalance">{{ number_format($dtl['amountDue'], 2) }}</span></p>
                                             <p>Overall Savings: <span id="printOverallSavings">{{ number_format($dtl['totalSavingsAmount'], 2) }}</span> </p>
-                                            <p>Balance Savings: <span id="printBalanceSavings"></span></p>
-                                            <p>Savings Payment: <span id="printSavingsPayment"></span></p>
+                                         
                                             <p>Advance / Lapses: <span
-                                                    id="printAdvanceOrLapses">{{ $dtl['advancePayment'] > 0 ? number_format($dtl['advancePayment'], 2) : number_format($mdetails['lapsePayment'], 2) }}</span>
+                                                    id="printAdvanceOrLapses">{{ $dtl['advancePayment'] > 0 ? number_format($dtl['advancePayment'], 2) : number_format($dtl['lapsePayment'], 2) }}</span>
                                             </p>
                                         @endif
                                     </div>
@@ -118,10 +117,10 @@
                             <th colspan="8">
                                 <div class="header-wrapper">
                                     <p>Field Officer: <span
-                                            id="printFieldOfficerName">{{ !empty($areaDetails[0]['fieldOfficer']) ? $areaDetails[0]['fieldOfficer'] : 'No data' }}</span></p>
-                                    <p><span id="printAreaNum">{{ !empty($areaDetails[0]['areaName']) ? $areaDetails[0]['areaName'] : 'No data' }}</span></p>
+                                            id="printFieldOfficerName">{{ !empty($areaDetailsFooter['fieldOfficer']) ? $areaDetailsFooter['fieldOfficer'] : 'No data' }}</span></p>
+                                    <p><span id="printAreaNum">{{ !empty($areaDetailsFooter['areaName']) ? $areaDetailsFooter['areaName'] : 'No data' }}</span></p>
                                     <p>Collection List Number: <span
-                                            id="printCollectionListNumber">{{ !empty($areaDetails[0]['area_RefNo']) ? $areaDetails[0]['area_RefNo'] : 'No data' }}</span></p>
+                                            id="printCollectionListNumber">{{ !empty($areaDetailsFooter['area_RefNo']) ? $areaDetailsFooter['area_RefNo'] : 'No data' }}</span></p>
                                 </div>
                             </th>
                         </tr>
@@ -183,13 +182,15 @@
                         @if ($areaDetails)
                             @php 
                                 $clcnt = 0;
+                              
                             @endphp 
                             @foreach ($areaDetails as $mdetails)
                                 @php
-                                    $realeseDate = new DateTime($mdetails['releasingDate']);
-                                    $dueDate = new DateTime($mdetails['dueDate']);
+                                     $realeseDate = new DateTime($mdetails['releasingDate']);
+                                     $dueDate = new DateTime($mdetails['dueDate']);
 
-                                    $clcnt = $clcnt + 1;
+                                     $clcnt = $clcnt + 1;
+                                 
                                 @endphp
                                 <tr>
 
