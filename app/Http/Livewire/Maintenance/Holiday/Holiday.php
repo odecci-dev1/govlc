@@ -25,7 +25,17 @@ class Holiday extends Component
     public function rules()
     {
         return [
-            'HolidayName' => 'required',
+            'HolidayName' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $holiday = HolidayModel::whereRaw('LOWER(HolidayName) = ?', [strtolower($value)])
+                                           ->where('Date', date('Y-m-d', strtotime($this->Date)))
+                                           ->first();
+                    if ($holiday) {
+                        $fail('A holiday with the same name and date already exists.');
+                    }
+                },
+            ],
             'Date' => 'required|date',
             'Location' => 'required',
             'Repeat' => 'required|boolean',

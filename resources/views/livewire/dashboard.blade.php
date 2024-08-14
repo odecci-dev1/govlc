@@ -16,12 +16,12 @@
                     <p>{{ number_format(isset($data['totalInterest']) ? $data['totalInterest'] : 0, 2) }}</p>
                 </div>
                 <div class="wrapper">
-                    <p>Loan Colection</p>
+                    <p>Loan Collection</p>
                     <p>{{ number_format(isset($data['totalLoanCollection']) ? $data['totalLoanCollection'] : 0, 2) }}</p>
                 </div>
                 <div class="wrapper">
                     <p>Advance Payment</p>
-                    <p>{{ number_format(isset($data['totaolAdvancePayment']) ? $data['totaolAdvancePayment'] : 0, 2) }}</p>
+                    <p>{{ number_format(isset($data['totalAdvancePayment']) ? $data['totalAdvancePayment'] : 0, 2) }}</p>
                 </div>
                 <div class="wrapper">
                     <p>Other Deductions</p>
@@ -55,7 +55,7 @@
                         <div class="card">
                             <div class="p-wrap">
                                 <p>Savings Outstanding</p>
-                                <p>{{ isset($data['totalSvaingsOutstanding']) ? number_format($data['totalSvaingsOutstanding'], 2) : 0.00 }}</p>
+                                <p>{{ isset($data['totalSavingsOutstanding']) ? number_format($data['totalSavingsOutstanding'], 2) : 0.00 }}</p>
                             </div>
                         </div>
                         <div class="card">
