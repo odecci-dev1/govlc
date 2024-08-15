@@ -203,12 +203,13 @@
                             @if($imgprofile)
                                 <img type="image" class="profile" style="width: 70%;" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
                             @else
-                                @if(file_exists(asset('storage/users_profile/'.(isset($profilePath) ? $profilePath : 'xxxx'))))                                                                   
+                                @if(asset('storage/users_profile/'.(isset($profilePath) ? $profilePath : 'xxxx')))                                                                   
                                     <img type="image" class="profile" style="width: 70%;" src="{{ asset('storage/users_profile/'.$profilePath) }}" alt="upload-image" />                                                                     
                                 @else
                                     <img type="image" class="profile" style="width: 70%;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
                                 @endif 
-                            @endif     
+                            @endif    
+                            @error('imgprofile') <span class="text-required">{{ $message }}</span>@enderror
                         </div>
 
                         <!-- * Button Wrapper -->
@@ -528,7 +529,7 @@
                                         <!-- * Officers' Name-->
                                         <div class="td-wrapper">
                                             <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
-                                            <span class="td-name">{{ $fol['lname'] . ', ' . $fol['fname'] . ' ' . mb_substr($fol['mname'], 0, 1) . '.' }}</span>
+                                            <span class="td-name">{{ $fol->fullname }}</span>
                                         </div>
 
                                     </td>
@@ -536,7 +537,7 @@
                                     <!-- * Action -->
                                     <td class="td-btns">
                                         <div class="td-btn-wrapper">                                           
-                                            <button type="button" onclick="selectFO('{{ $fol['foid'] }}', '{{ $fol['fname'] }}', '{{ $fol['mname'] }}', '{{ $fol['lname'] }}')" class="a-btn-trash-2">Select</button>
+                                            <button type="button" onclick="selectFO('{{ $fol['FOID'] }}', '{{ $fol['Fname'] }}', '{{ $fol['Mname'] }}', '{{ $fol['Lname'] }}')" class="a-btn-trash-2">Select</button>
                                         </div>
                                     </td>
 

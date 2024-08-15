@@ -19,6 +19,8 @@ class User extends Authenticatable
         'UserId',
     ];
 
+    const CREATED_AT = 'DateCreated';
+    const UPDATED_AT = 'DateUpdated';
     public $timestamps = false; 
 
     protected $hidden = [
