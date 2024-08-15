@@ -515,7 +515,7 @@
                     <!-- * Buttons -->
                     <div class="btn-wrapper">
                         @if($type == 'details')                          
-                            <button wire:click="update({{ isset($member['statusID']) ? $member['statusID'] : 7 }})" type="button" class="button" data-save>Update Info</button>                                                           
+                            <button wire:click="updateInfo" type="button" class="button" data-save>Update Info</button>                                                           
                         @endif
                         <!-- * Save -->
                         @if($type == 'create')

@@ -91,9 +91,9 @@
             <!-- * Search Wrapper -->
             <div class="wrapper">
                 <!-- * Filter Button -->
-                <button data-open-filter-member-modal>
+                {{-- <button data-open-filter-member-modal>
                     <img src="{{ URL::to('/') }}/assets/icons/filter.svg" alt="filter" />
-                </button>
+                </button> --}}
     
                 <!-- * Search Bar -->
                 <div class="search-wrap">

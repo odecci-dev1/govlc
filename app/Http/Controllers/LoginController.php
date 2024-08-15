@@ -57,7 +57,9 @@ class LoginController extends Controller
                 if(in_array($user->UTID, [1,2])){                    
                     // $modules = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetModuleList'); 
                     $modules = Modules::all(); 
-                    dd('xx');
+                    foreach($modules as $mdl){
+                        $usermodules[] = $mdl['module_code'];
+                    }
                 } else {
                     // $modules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', ['UserId' => $user->UserId]); 
                     $modules = UserModule::where('user_id', $user->UserId)->get();
