@@ -7,11 +7,13 @@ use App\Models\Area;
 use App\Models\CollectionArea;
 use App\Models\CollectionAreaMember;
 use App\Models\CollectionStatus;
+use App\Models\LoanHistory;
 use App\Models\Members;
 use App\Models\MembersSavings;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use App\Traits\Common;
+use Carbon\Carbon;
 
 class CollectionRemittance extends Component
 {
@@ -30,6 +32,10 @@ class CollectionRemittance extends Component
     public $expcnt = [];
     public $totalexp = 0;
 
+    public $appdtl=[];
+
+    public $remitUsingAdvanceValidation;
+
     public function rules(){                
         $rules = []; 
         return $rules;
@@ -37,12 +43,14 @@ class CollectionRemittance extends Component
 
     public function setRemmittInfo($naid = '', $memid = '', $amount = 0,$index=0){
         //dd($this->list->where('naid', $naid)->first());
-        $appdtl = $this->list[$index];      
+        $this->appdtl = $this->list[$index];      
        // $appdtl = $this->list->where('naid', $naid)->first();   
-
+       // dd($this->appdtl);
         $this->memid =  $memid;
         $this->reminfo['savings'] = 0;
         $this->reminfo['amntCollected'] = $amount;
+        $this->remitUsingAdvanceValidation='';
+
         $this->computeLapses();       
     }
 
@@ -62,8 +70,10 @@ class CollectionRemittance extends Component
         //     }
             
         // }
-        
-        $this->reminfo['lapses'] = $this->reminfo['amntCollected'];
+        $this->remitUsingAdvanceValidation='';
+        $this->reminfo['lapses'] = (($this->appdtl['dailyCollectibles'] - $this->reminfo['amntCollected']) < 0 ? 0:($this->appdtl['dailyCollectibles'] - $this->reminfo['amntCollected']));
+        $this->reminfo['advance'] = (($this->reminfo['amntCollected'] - $this->appdtl['dailyCollectibles']) < 0 ? 0:($this->reminfo['amntCollected'] - $this->appdtl['dailyCollectibles']));
+
        
     }
 
@@ -105,7 +115,51 @@ class CollectionRemittance extends Component
                     "userId"=> session()->get('auth_userid'),
                     "foid"=> $this->foid
                 ];
-        $remit = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Remit', $data);                                     
+            if($this->appdtl['advancePayment'] == 0 && $this->reminfo['amntCollected'] == 0){
+             $this->remitUsingAdvanceValidation = 'No Advance Payment Available';
+            }else if($this->reminfo['amntCollected'] == 0 && $this->appdtl['advancePayment'] < $this->appdtl['dailyCollectibles']){
+                $this->remitUsingAdvanceValidation = 'Insufficient Advance Payment';
+            }else{
+                $useAdvancePayment =  $this->reminfo['amntCollected'];
+                if($this->reminfo['amntCollected'] != 0){
+                    $useAdvancePayment =0;
+                    if($this->reminfo['amntCollected'] < $this->appdtl['dailyCollectibles']){
+                        $useAdvancePayment = ($this->appdtl['dailyCollectibles'] > $this->appdtl['advancePayment']) ? $this->appdtl['advancePayment']:$this->appdtl['dailyCollectibles'];
+                    }
+                  
+                }if($this->reminfo['amntCollected'] == 0 && $this->appdtl['advancePayment'] != 0){
+                    $useAdvancePayment = $this->appdtl['dailyCollectibles'];
+                }
+                
+                 CollectionAreaMember::where("Area_RefNo",$this->areaRefNo)->where('NAID',$this->appdtl['naid'])->update([
+                'CollectedAmount' => $this->reminfo['amntCollected'],
+                'AdvancePayment' =>  $this->reminfo['advance'],
+                'LapsePayment' =>  $this->reminfo['lapses'],
+                'Payment_Method' =>  $this->reminfo['modeOfPayment'],
+                'DateCollected' =>  date_format(Carbon::now(),'Y-m-d'),
+                'Savings' =>  $this->reminfo['savings'],
+                'UsedAdvancePayment'=> $useAdvancePayment,
+                'Payment_Status'=> 1,
+                ]);
+                // $newOutStandingBalance = $this->appdtl['amountDue'] - $this->reminfo['amntCollected'];
+                // LoanHistory::where('NAID',$this->appdtl['naid'])->update([
+                //     'OutStandingBalance' => $newOutStandingBalance
+                // ]);
+                // $newSavingsAmount = $this->apptl['totalSavingsAmount'] + $this->reminfo['savings'];
+                // MembersSavings::where('MemId',$this->appdtl['memId'])->update([
+                //     'TotalSavingsAmount'=> $this->reminfo[''],
+                // ]);
+            }
+        //dd($this->reminfo['amntCollected']);
+       
+           
+    
+    
+        
+        
+        
+      
+       // $remit = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Remit', $data);                                     
         return redirect()->to('/collection/remittance/'.$this->foid.'/'.$this->areaRefNo.'/'.$this->areaID)->with(['mmessage'=> 'Remittance successfully saved', 'mword'=> 'Success']);    
     }
 
@@ -136,7 +190,12 @@ class CollectionRemittance extends Component
                           ];
             }
         }
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/FieldExpenses', $data);                
+
+        CollectionArea::where('Area_RefNo',$this->areaRefNo)->update([
+            'FieldExpenses' => $this->expenses['amount'.$cnt],
+        ]);
+
+       // $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/FieldExpenses', $data);                
         return redirect()->to('/collection/remittance/'.$this->foid.'/'.$this->areaRefNo.'/'.$this->areaID)->with(['mmessage'=> 'Field expenses successfully saved', 'mword'=> 'Success']);    
     }
 
@@ -203,29 +262,17 @@ class CollectionRemittance extends Component
         $area =  Area::where('Id',$this->areaID)->first();
         $locations = explode("|",$area->City);
         $persons=[];
-        foreach($locations as $location){
-            $address = explode(",",$location);
-            $barangay = trim($address[0],' ');
-            $city = trim($address[1],' ');
-            $members=[];
-            $membersPerLocations =  Members::where('Barangay','LIKE','%'.$barangay.'%')->where('City','LIKE','%'.$city.'%')->get();
-            foreach($membersPerLocations as $member){
-                $persons[] = $member;
-            }
-            //$persons[]=$members;
-        }
-      
-        //dd($persons);
-         $details=[];
-         //Get Area Applications
+
+        $collectionAreaMembers = CollectionAreaMember::where("Area_RefNo",$this->areaRefNo)->where('Payment_Status',2)->get();
          $collectibles=0;
          $loanHistory=0;
          $totalSavings=0;
          $applicationData=[];
-         foreach($persons as $person){
+         foreach($collectionAreaMembers as $collectionAreaMember){
       
-            $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
-            $savings= MembersSavings::where('MemId',$person->MemId)->first();
+            $application= Application::where('NAID',$collectionAreaMember->NAID)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
+            
+            $savings= MembersSavings::where('MemId',$application->MemId)->first();
          
      
             if(!is_null($application)) {
@@ -240,12 +287,6 @@ class CollectionRemittance extends Component
                     }
                 }
                
-                $AreaRefNo= CollectionAreaMember::where('Area_RefNo',$this->areaRefNo)->where('NAID',$application->NAID)->first();
-                $paymentStatus =  CollectionStatus::where('Id',$AreaRefNo->Payment_Status)->first();
-                $CollectionArea = CollectionArea::where('Area_RefNo',$this->areaRefNo)->first();
-                $collectionStatus =  CollectionStatus::where('Id',$CollectionArea->Collection_Status)->first();
-                $PrintedStatus =  CollectionStatus::where('Id',$CollectionArea->PrintedStatus)->first();
-                
                 $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                 $loanHistory +=  $application->loanhistory->OutstandingBalance;
                 $totalSavings +=  ( $savings) ? $savings->TotalSavingsAmount:0;
@@ -274,8 +315,8 @@ class CollectionRemittance extends Component
                 $applicationData['pastDue'] = 0;
                 $applicationData['totalSavingsAmount'] = ( $savings) ? $savings->TotalSavingsAmount:0;
                 $applicationData['advancePayment'] = 0;
-                $applicationData['payment_Status'] = $paymentStatus->Status;
-                $applicationData['collection_Status'] = ($collectionStatus) ? $collectionStatus->Status:'';
+                // $applicationData['payment_Status'] = ($paymentStatus) ? $paymentStatus->Status:'';
+                // $applicationData['collection_Status'] = ($collectionStatus) ? $collectionStatus->Status:'';
                 //Expaded table data
 
                 $applicationData['borrower'] = $application->member->FullName;
