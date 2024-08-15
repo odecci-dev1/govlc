@@ -69,7 +69,7 @@ class ApplicationPrintingVoucher extends Component
         $this->loansummary['createdBy'] = $this->getUserName($res->CreatedBy);
         $this->loansummary['releasedBy'] = $this->getUserName($res->ReleasedBy);
         $this->loansummary['modeOfRelease'] = $res->detail->ModeOfRelease;
-        $this->loansummary['modeOfReleaseReference'] = $res->detail->modeOfReleaseReference;
+        $this->loansummary['modeOfReleaseReference'] = $res->detail->ModeOfReleaseReference;
 
 
         return view('livewire.transactions.application.application-printing-voucher');
