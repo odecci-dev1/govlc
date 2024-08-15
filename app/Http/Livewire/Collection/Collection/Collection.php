@@ -264,7 +264,7 @@ class Collection extends Component
                     $details['total_Balance']= 0;
                     $details['total_savings']=   0;
                     $details['total_advance']= 0;
-                    $details['lapsePayment']= 0;
+                    $applicationData['lapsePayment']= 0;
                     $details['total_collectedAmount']= 0;
                     $details['total_FieldExpenses']= 0;
                     $details['daily_savings']= 0;
