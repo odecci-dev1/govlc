@@ -1122,8 +1122,19 @@ class CreateApplication extends Component
         }
         return $memattachements;
     }
-
-    public function update($type = 7){     
+    public function updateInfo(){
+      
+            //dd($this->member['cno']); 
+            Members::where('Id', $this->searchedmemId)->update([
+                'Cno' => $this->member['cno'],
+                'EmailAddress' => $this->member['emailAddress'],
+             
+            ]);
+            return redirect()->to('/tranactions/application/details/'.$this->searchedmemId)->with(['mmessage'=> 'Application successfully updated', 'mword'=> 'Success']);  
+        
+    }
+    public function update($type = 7){ 
+     
         $input = $this->validate();                
         try {                                                                    
             $childs = [];
@@ -2524,7 +2535,7 @@ class CreateApplication extends Component
              if($this->type == 'view'){
                 $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first(); 
              }else{
-                $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first(); 
+                $res = Application::where('MemId', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first(); 
              }
           
                  

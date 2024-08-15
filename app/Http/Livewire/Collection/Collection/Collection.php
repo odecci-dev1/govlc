@@ -150,7 +150,22 @@ class Collection extends Component
                     "remarks" => $this->rejectReason,  
                     "foid" => $this->foid,                             
                 ];
-        $collect = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Reject', $data);         
+
+        CollectionAreaMember::where("Area_RefNo",$this->areaRefNo)->update([
+            'AdvancePayment' => NULL,
+            'LapsePayment' => NULL,
+            'CollectedAmount' => NULL,
+            'Savings' => NULL,
+            'Payment_Status' => 2,
+            'Payment_Method' => NULL,
+            'DateCollected' => NULL,
+            'UsedAdvancePayment' => NULL,
+        ]);
+        CollectionArea::where("Area_RefNo",$this->areaRefNo)->update([
+            'Collection_Status' => NULL,
+            'Remarks' => $this->rejectReason,
+        ]);
+        //$collect = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/Reject', $data);         
         $this->emit('RESPONSE_CLOSE_REJECTION_MODAL', ['url' => URL::to('/').'/collection/view/'.$this->colrefNo]);            
     }
 
