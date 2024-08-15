@@ -236,32 +236,18 @@ class Collection extends Component
         if($areaID != ''){
                 $this->areaID = $areaID;
 
-                $area =  Area::where('Id',$areaID)->first();
-                $locations = explode("|",$area->City);
-                $persons=[];
-                foreach($locations as $location){
-                    $address = explode(",",$location);
-                    $barangay = trim($address[0],' ');
-                    $city = trim($address[1],' ');
-                    $members=[];
-                    $membersPerLocations =  Members::where('Barangay','LIKE','%'.$barangay.'%')->where('City','LIKE','%'.$city.'%')->get();
-                    foreach($membersPerLocations as $member){
-                        $persons[] = $member;
-                    }
-                    //$persons[]=$members;
-                }
-              
-                //dd($persons);
+                $collectionAreaMembers = CollectionAreaMember::where('Area_RefNo',$areaRefNo)->get();
+                
                  $details=[];
                  //Get Area Applications
                  $collectibles=0;
                  $loanHistory=0;
                  $totalSavings=0;
                  $applicationData=[];
-                 foreach($persons as $person){
+                 foreach($collectionAreaMembers as $collectionAreaMember){
               
-                    $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
-                    $savings= MembersSavings::where('MemId',$person->MemId)->first();
+                    $application= Application::where('NAID',$collectionAreaMember->NAID)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
+                    $savings= MembersSavings::where('MemId',$application->member->MemId)->first();
                  
                     $details['totalCollectible']= 0;
                     $details['total_Balance']= 0;
@@ -271,6 +257,7 @@ class Collection extends Component
                     $details['total_collectedAmount']= 0;
                     $details['total_FieldExpenses']= 0;
                     $details['daily_savings']= 0;
+              ;
                     if(!is_null($application)) {
                         if($application->loanhistory->OutstandingBalance != 0){
                         $AreaRefNo= CollectionAreaMember::where('Area_RefNo',$areaRefNo)->where('NAID',$application->NAID)->first();

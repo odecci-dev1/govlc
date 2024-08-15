@@ -90,7 +90,7 @@
             <div class="input-wrapper">
 
                 <span>Amount Collected</span>
-                <input autocomplete="off" type="text" wire:model.lazy="reminfo.amntCollected"  wire:blur="computeLapses" name="amntCollected">
+                <input autocomplete="off" type="number" wire:model.lazy="reminfo.amntCollected"  wire:blur="computeLapses" name="amntCollected">
                 <p style="color:red;margin-top:5px">{{$remitUsingAdvanceValidation}}</p>
                 @if($appdtl)
                 <br>
