@@ -5,8 +5,10 @@ namespace App\Http\Livewire;
 use App\Models\Application;
 use App\Models\CollectionAreaMember;
 use App\Models\LoanDetails;
+use App\Models\LoanHistory;
 use App\Models\Members;
 use App\Models\Settings;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
 use Livewire\Component;
@@ -91,16 +93,42 @@ class Dashboard extends Component
         $members = Members::all();
         $collectionAreaMember = CollectionAreaMember::all();
         $loanDetails = LoanDetails::all();
+        $loanHistory = LoanHistory::all();
         $application = Application::all();
         $settings = Settings::all()->first();
 
-        // dd($settings);
+        $currentDate = Carbon::now();
+        $endDate = Carbon::now()->endOfMonth(); 
+        $startDay = $currentDate->copy()->startOfDay();
+        $endDay = $currentDate->copy();
+
+        $currentMonth = $currentDate->format('Y-m');
 
         $activeMemberCount = $members->where('Status', 1)->count();
 
-        $totalCollected = $collectionAreaMember->sum('CollectedAmount');
+        $dailyCollections = CollectionAreaMember::whereBetween('DateCollected', [$startDay, $endDay])
+            ->selectRaw('CAST(DateCollected AS DATE) as day, SUM(CollectedAmount) as daily_sum')
+            ->groupByRaw('CAST(DateCollected AS DATE)')
+            ->get()
+            ->pluck('daily_sum', 'day')
+            ->all();
+
+
+        $monthlyCollection = CollectionAreaMember::selectRaw('
+            FORMAT(DateCollected, \'yyyy-MM\') as month,
+            SUM(CollectedAmount + ISNULL(Savings, 0) + ISNULL(AdvancePayment, 0)) as total_amount
+        ')
+            ->groupByRaw('FORMAT(DateCollected, \'yyyy-MM\')')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [$item->month => $item->total_amount];
+            });
+    
+
+        $totalCollected = $monthlyCollection[$currentMonth] ?? 0;
+
         $totalAmount = $loanDetails->sum('ApprovedLoanAmount');
-        $totalLoanBalance =  $totalAmount - $totalCollected;
+        $totalLoanBalance = $totalAmount - $totalCollected;
         
         $totalInterest = $loanDetails->sum('ApproveedInterest');
         $totalLoanCollection = $totalCollected;
@@ -114,15 +142,17 @@ class Dashboard extends Component
         $totalCR = 0;
         $totalEndingActiveMember = 0;
 
-        $totalSavingsOutstanding = $totalLoanBalance;
-        $totalDailyOverallCollection = $loanDetails->sum('ApproveedDailyAmountDue');
+        $totalSavingsOutstanding = $loanHistory->sum('OutstandingBalance');
+        $totalDailyOverallCollection = number_format(array_sum($dailyCollections), 2);
+        // dd($currentDate, $totalDailyOverallCollection, $dailyCollections);
         $totalNewAccountsOverall = $application->where('Status', 7)->count();
         $totalApplicationforApproval = $application->where('Status', 9)->count();
         $totalIncome = $settings->MonthlyTarget;
-        $totalIncomePercentage = 0;
+        $totalIncomePercentage = ($totalCollected / $totalIncome) * 100;
+        // $totalIncomePercentage = $totalIncome / $totalCollected;
         $totalDailyCollection = 0;
-        $totalDaysLeft = 0;
-        $totalPercentOfLastEntry = 0;
+        $totalDaysLeft = $endDate->diffInDays($currentDate);
+        $totalPercentOfLastEntry = ($totalLoanCollection / $totalIncome) * 100;
         $targetStatus = 0;
         $activeMember = 0;
         $totalLapsesArea = 0;

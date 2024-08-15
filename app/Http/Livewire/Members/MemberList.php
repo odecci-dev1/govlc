@@ -2,19 +2,20 @@
 
 namespace App\Http\Livewire\Members;
 
+use App\Models\Application;
+use App\Models\Members;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 
 class MemberList extends Component
 {
     
-    public $keyword = '';
     public $list = [];
-
     public $status = '';
     public $loantype = '';
     public $loantypeList;
     public $usertype;
+    public $keyword = '';
     public $paginate = [];
     public $paginationPaging = [];
 
@@ -33,28 +34,60 @@ class MemberList extends Component
     public function setPage($page = 1){
         $this->paginate['page'] = $page;
     }
+
+    public function goToFirstPage()
+    {
+        $this->paginate['page'] = 1;
+    }
+
+    public function goToLastPage()
+    {
+        $this->paginate['page'] = $this->paginationPaging['totalPage'];
+    }
   
     public function render()
     {
-        $inputs = [
-                    'page' => $this->paginate['page'],
-                    'pageSize' => $this->paginate['pageSize'],
-                    'FilterName' => $this->keyword,
-                    'status' => $this->status,
-                    'module' => $this->paginate['module'],
-                  ];
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Pagination/DisplayListPaginate', $inputs);                 
-        $this->list = $data->json()['items']; 
-        //dd($this->list); 
-        //dd($data->json());          
-        if( $data->json()['totalPage'] ){
-            $this->paginationPaging['totalPage'] = $data->json()['totalPage'];
-            $this->paginationPaging['totalRecord'] = $data->json()['totalRecord'];
-            $this->paginationPaging['currentPage'] = $data->json()['currentPage'];
-            $this->paginationPaging['nextPage'] = $data->json()['nextPage'] < $data->json()['totalPage'] ?  $data->json()['nextPage'] : $data->json()['totalPage'];
-            $this->paginationPaging['prevPage'] = $data->json()['prevPage'] > 0 ? $data->json()['prevPage'] : 1;
-        }
-        
+        $this->list = $this->getMembers();        
         return view('livewire.members.member-list');
+    }
+
+    private function getMembers($paginate = true)
+    {
+        $members = Members::with(['applications', 'detail', 'loanhistory'])
+            ->whereHas('applications', function ($query) {
+                $query->where('Status', 7);
+            })
+            ->where(function ($query) {
+                $query->where('Fname', 'like', '%' . $this->keyword . '%')
+                    ->orWhere('Lname', 'like', '%' . $this->keyword . '%');
+            });
+        
+        if ($this->status !== '') {
+            $members->where('Status', $this->status);
+        }
+
+        $members = $members->get();
+
+        if ($paginate) {
+            $totalItems = $members->count();
+    
+            $this->paginationPaging['totalPage'] = ceil($members->count() / $this->paginate['pageSize']);
+            $this->paginationPaging['totalRecord'] = $totalItems;
+            $this->paginationPaging['currentPage'] = $this->paginate['page'];
+            $this->paginationPaging['nextPage'] = $this->paginate['page'] < $this->paginationPaging['totalPage'] ? $this->paginate['page'] + 1 : $this->paginationPaging['totalPage'];
+            $this->paginationPaging['prevPage'] = $this->paginate['page'] > 1 ? $this->paginate['page'] - 1 : 1;
+    
+            $startItem = ($this->paginate['page'] - 1) * $this->paginate['pageSize'] + 1;
+            $endItem = min($this->paginate['page'] * $this->paginate['pageSize'], $totalItems);
+    
+            $this->paginationPaging['startItem'] = $startItem;
+            $this->paginationPaging['endItem'] = $endItem;
+    
+            $paginatedMembers = $members->slice(($this->paginate['page'] - 1) * $this->paginate['pageSize'], $this->paginate['pageSize']);
+    
+            return $paginatedMembers;
+        }
+
+        return $members;
     }
 }

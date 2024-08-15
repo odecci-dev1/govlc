@@ -25,12 +25,14 @@ class FieldOfficer extends Component
     public $officerDetails = null;
     public $usertype;
     public $foid = '';
+    public $foFileToDelete;
     public $idtypes = [];
     public $idtypename = '';
     public $showDeleteModal = false;
 
     public function rules()
     {
+        // TODO: At least 18 is required for FO Creation
         $rules = [
             'officer.Fname' => 'required',
             'officer.Mname' => '',
@@ -53,6 +55,9 @@ class FieldOfficer extends Component
             'officer.PhilHealth' => 'required',
             'officer.ID_Number' => 'required',
             'officer.IDType' => 'required',
+            'officer.FrontID' => 'required',
+            'officer.BackID' => 'required',
+            'officer.Profile' => 'required',
             'officer.Attachments' => 'required',
         ];
 
@@ -93,7 +98,7 @@ class FieldOfficer extends Component
             'officer.SSS.required' => 'SSS number is required',
             'officer.PagIbig.required' => 'PagIbig number is required',
             'officer.PhilHealth.required' => 'PhilHealth number is required',
-            'officer.ID_Number.required' => 'ID number number is required',
+            'officer.ID_Number.required' => 'ID number is required',
             'officer.IDType.required' => 'Please select ID type',
             'officer.Profile.required' => 'Please include profile image',
             'officer.Attachments.required' => 'Please attach files',
@@ -154,37 +159,83 @@ class FieldOfficer extends Component
         return $backidname;
     }
 
+    // public function storeAttachments($foid)
+    // {
+    //     $newAttachments = [];
+
+    //     if ($this->officer['Attachments'] == $this->officer['Old_Attachments']) {
+    //         $newAttachments = $this->officer['Attachments'];
+    //     } else {
+    //         if (isset($this->officer['Old_Attachments'])) {
+    //             foreach ($this->officer['Old_Attachments'] as $oldFile) {
+    //                 Storage::delete('officer_attachments/' . $oldFile['FilePath']);
+    //             }
+    //         }
+
+    //         if (isset($this->officer['Attachments'])) {
+    //             foreach ($this->officer['Attachments'] as $attachment) {
+    //                 $time = time();
+    //                 $filename = 'officer_attachments_' . $time . '_' . $attachment->getClientOriginalName();
+
+    //                 $attachment->storeAs('officer_attachments', $filename, 'public');
+
+    //                 $newAttachments[] = [
+    //                     'FOID' => $foid,
+    //                     'FilePath' => $filename,
+    //                     'FileType' => $attachment->getClientOriginalExtension(),
+    //                     'DateCreated' => now(),
+    //                 ];
+    //             }
+    //         }
+    //     }
+
+    //     return $newAttachments;
+    // }
+
     public function storeAttachments($foid)
     {
         $newAttachments = [];
 
-        if ($this->officer['Attachments'] == $this->officer['Old_Attachments']) {
-            $newAttachments = $this->officer['Attachments'];
-        } else {
-            if (isset($this->officer['Old_Attachments'])) {
-                foreach ($this->officer['Old_Attachments'] as $oldFile) {
-                    Storage::delete('officer_attachments/' . $oldFile['FilePath']);
-                }
+        if (isset($this->officer['Old_Attachments'])) {
+            foreach ($this->officer['Old_Attachments'] as $oldFile) {
+                Storage::delete('officer_attachments/' . $oldFile['FilePath']);
             }
+        }
 
-            if (isset($this->officer['Attachments'])) {
-                foreach ($this->officer['Attachments'] as $attachment) {
-                    $time = time();
-                    $filename = 'officer_attachments_' . $time . '_' . $attachment->getClientOriginalName();
+        if (isset($this->officer['Attachments'])) {
+            foreach ($this->officer['Attachments'] as $attachment) {
+                $time = time();
+                $filename = 'officer_attachments_' . $time . '_' . $attachment->getClientOriginalName();
+                
+                $attachment->storeAs('officer_attachments', $filename, 'public');
 
-                    $attachment->storeAs('officer_attachments', $filename, 'public');
-
-                    $newAttachments[] = [
-                        'FOID' => $foid,
-                        'FilePath' => $filename,
-                        'FileType' => $attachment->getClientOriginalExtension(),
-                        'DateCreated' => now(),
-                    ];
-                }
+                $newAttachments[] = [
+                    'FOID' => $foid,
+                    'FilePath' => $filename,  // Store only the filename, not the full URL
+                    'FileType' => $attachment->getClientOriginalExtension(),
+                    'DateCreated' => now(),
+                ];
             }
         }
 
         return $newAttachments;
+    }
+
+    public function confirmRemoveAttachment($foid)
+    {
+        $this->foFileToDelete = $foid;
+        $this->dispatchBrowserEvent('showDeleteModal');
+    }
+
+    public function deleteAttachment()
+    {
+        if ($this->foidToDelete) {
+            $file = FOFile::where('FOID', $this->foFileToDelete)->first();
+            if ($file) {
+                $file->delete();
+            }
+        }
+        $this->dispatchBrowserEvent('hideDeleteModal');
     }
 
     public function store()
@@ -246,6 +297,7 @@ class FieldOfficer extends Component
     {
         try {
             $this->validate();
+            // dd($this->validate());
 
             $officer = TblFieldOfficer::where('FOID', $this->foid);
             if ($officer) {
@@ -403,12 +455,7 @@ class FieldOfficer extends Component
             $this->officer['FOID'] =  $officer->FOID;
             $this->officer['Profile'] = basename($officer->ProfilePath);
             $this->officer['Old_Profile'] = basename($officer->ProfilePath);
-            $this->officer['Attachments'] = $officer->files->map(function($file) {
-                return [
-                    'FilePath' => $file->FilePath,
-                    'FileType' => $file->FileType,
-                ];
-            })->toArray();
+            $this->officer['Attachments'] = $officer->files->toArray();
             $this->officer['Old_Attachments'] = $this->officer['Attachments'];
             
             $this->officer['FrontID'] = basename($officer->FrontID_Path);
