@@ -2521,8 +2521,12 @@ class CreateApplication extends Component
             // else{
             //     $value = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/PostMemberSearching', [['column' => 'tbl_Member_Model.MemId', 'values' => $this->naID]]);
             // }
-            
-            $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first(); 
+             if($this->type == 'view'){
+                $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first(); 
+             }else{
+                $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first(); 
+             }
+          
                  
             if($res){                              
                 //dd($data);
