@@ -267,6 +267,9 @@
                 <!-- dito -->
                 <!-- * All Members Data -->
                 @if($list)
+                    @php
+                        $cnt = 0;
+                    @endphp
                     @foreach($list as $l)
                     <tr>
 
@@ -310,11 +313,14 @@
                         <!-- * Table View and Trash Button -->
                         <td class="td-btns">
                             <div class="td-btn-wrapper">
-                                <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}', {{ $l['dailyCollectibles'] }})" type="button" class="a-btn-view-3" data-open-remit-modal>Remit</button>
+                                <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}', {{ $l['dailyCollectibles'] }} , {{ $cnt }})" type="button" class="a-btn-view-3" data-open-remit-modal>Remit</button>
                             </div>
                         </td>
 
                     </tr>
+                    @php
+                        $cnt = $cnt + 1;
+                    @endphp
                     @endforeach
                 @endif                    
             </table>
@@ -329,6 +335,9 @@
         <!-- dito mobile-->
         <div class="container">
             @if($list)
+            @php
+            $cnt = 0;
+        @endphp
                 @foreach($list as $l)
                 <div class="inner-container">
                     <div class="inner-wrapper">
@@ -347,7 +356,7 @@
                         </div>
                         <div class="box" style="padding-right: 1rem;">
                             <!-- <button class="button-2" data-open-remit-modal>Remit</button> -->
-                            <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}', {{ $l['dailyCollectibles'] }})" type="button" class="button-2" data-open-remit-modal>Remit</button>
+                            <button wire:click="setRemmittInfo('{{ $l['naid'] }}', '{{ $l['memId'] }}', {{ $l['dailyCollectibles'] }},{{ $cnt }} )" type="button" class="button-2" data-open-remit-modal>Remit</button>
                         </div>
                     </div>
                     <div class="inner-wrapper" data-show-more-details-field-exp>
@@ -367,6 +376,9 @@
                         </div>
                     </div>
                 </div>
+                @php
+                        $cnt = $cnt + 1;
+                    @endphp
                 @endforeach 
             @endif            
         </div>

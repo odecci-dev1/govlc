@@ -2,6 +2,13 @@
 
 namespace App\Http\Livewire\Collection\Collection;
 
+use App\Models\Application;
+use App\Models\Area;
+use App\Models\CollectionArea;
+use App\Models\CollectionAreaMember;
+use App\Models\CollectionStatus;
+use App\Models\Members;
+use App\Models\MembersSavings;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use App\Traits\Common;
@@ -10,7 +17,7 @@ class CollectionRemittance extends Component
 {
     use Common;
     public $areaRefNo;
-    public $list;
+    public $list=[];
     public $arealist = [];
     public $foid = '';
     public $areaID = '';
@@ -28,8 +35,11 @@ class CollectionRemittance extends Component
         return $rules;
     }
 
-    public function setRemmittInfo($naid = '', $memid = '', $amount = 0){
-        $appdtl = $this->list->where('naid', $naid)->first();      
+    public function setRemmittInfo($naid = '', $memid = '', $amount = 0,$index=0){
+        //dd($this->list->where('naid', $naid)->first());
+        $appdtl = $this->list[$index];      
+       // $appdtl = $this->list->where('naid', $naid)->first();   
+
         $this->memid =  $memid;
         $this->reminfo['savings'] = 0;
         $this->reminfo['amntCollected'] = $amount;
@@ -37,21 +47,24 @@ class CollectionRemittance extends Component
     }
 
     public function computeLapses(){
-        if(isset($this->reminfo['amntCollected'])){
-            $data = [
-                "memId"=> $this->memid,
-                "areaRefno"=> $this->areaRefNo,
-                "amountCollected"=> $this->reminfo['amntCollected']
-            ];         
-            $compute = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/RemitAmountCollectedComputation', $data);                       
-            $compute = $compute->json();
+        // if(isset($this->reminfo['amntCollected'])){
+        //     $data = [
+        //         "memId"=> $this->memid,
+        //         "areaRefno"=> $this->areaRefNo,
+        //         "amountCollected"=> $this->reminfo['amntCollected']
+        //     ];         
+        //     $compute = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Collection/RemitAmountCollectedComputation', $data);                       
+        //     $compute = $compute->json();
            
-            if($compute){         
-                $this->reminfo['lapses'] = isset($compute['lapses']) ? $compute['lapses'] : 0;
-                $this->reminfo['advance'] = isset($compute['advance']) ? $compute['advance'] : 0;              
-            }
+        //     if($compute){         
+        //         $this->reminfo['lapses'] = isset($compute['lapses']) ? $compute['lapses'] : 0;
+        //         $this->reminfo['advance'] = isset($compute['advance']) ? $compute['advance'] : 0;              
+        //     }
             
-        }
+        // }
+        
+        $this->reminfo['lapses'] = $this->reminfo['amntCollected'];
+       
     }
 
     public function resetRemittance(){
@@ -170,21 +183,131 @@ class CollectionRemittance extends Component
     public function mount($areaRefNo = ''){
         $this->areaRefNo = $areaRefNo;      
         $this->expcnt = [1];     
-        $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo', ['FOID' => $this->foid]);  
-        $this->arealist = $arealist->json();       
+
+        $area = Area::where('FOID',$this->foid)->first();
+        $collectionAreas = CollectionArea::where('AreaId',$area->Id)->WhereNull('Collection_Status')->orWhere('Collection_Status',4)->get();
+        if($collectionAreas){
+            foreach($collectionAreas as $collectionArea){
+                $areaReference = [];
+                $areaReference['areaRefNo'] = $collectionArea->Area_RefNo;
+                $areaReference['areaID'] = $area->Id;
+                $this->arealist[] = $areaReference;
+
+            }
+        }     
     }
     
     public function render()
     {             
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyAreaRefno', ['areaid' => $this->areaID, 'area_refno' => $this->areaRefNo]);                
-        //dd($data->getStatusCode());
-        if($data->getStatusCode() == 200){
-            $data = $data->json();      
-            //dd($data); 
-            if(!empty($data[0]['collection'])){
-                $this->list = collect($data[0]['collection']);           
-            }   
+        $this->list=[];
+        $area =  Area::where('Id',$this->areaID)->first();
+        $locations = explode("|",$area->City);
+        $persons=[];
+        foreach($locations as $location){
+            $address = explode(",",$location);
+            $barangay = trim($address[0],' ');
+            $city = trim($address[1],' ');
+            $members=[];
+            $membersPerLocations =  Members::where('Barangay','LIKE','%'.$barangay.'%')->where('City','LIKE','%'.$city.'%')->get();
+            foreach($membersPerLocations as $member){
+                $persons[] = $member;
+            }
+            //$persons[]=$members;
         }
+      
+        //dd($persons);
+         $details=[];
+         //Get Area Applications
+         $collectibles=0;
+         $loanHistory=0;
+         $totalSavings=0;
+         $applicationData=[];
+         foreach($persons as $person){
+      
+            $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
+            $savings= MembersSavings::where('MemId',$person->MemId)->first();
+         
+     
+            if(!is_null($application)) {
+                if($application->loanhistory->OutstandingBalance != 0){
+                $collectionAreaMembers = CollectionAreaMember::where('NAID',$application->NAID)->where('AdvanceStatus',0)->get();
+                $totalLapses =0;
+                $totalAdvance = 0;
+                if($collectionAreaMembers){
+                    foreach($collectionAreaMembers as $collectionAreaMember){
+                        $totalLapses +=  $collectionAreaMember->LapsePayment;
+                        $totalAdvance +=  $collectionAreaMember->AdvancePayment;
+                    }
+                }
+               
+                $AreaRefNo= CollectionAreaMember::where('Area_RefNo',$this->areaRefNo)->where('NAID',$application->NAID)->first();
+                $paymentStatus =  CollectionStatus::where('Id',$AreaRefNo->Payment_Status)->first();
+                $CollectionArea = CollectionArea::where('Area_RefNo',$this->areaRefNo)->first();
+                $collectionStatus =  CollectionStatus::where('Id',$CollectionArea->Collection_Status)->first();
+                $PrintedStatus =  CollectionStatus::where('Id',$CollectionArea->PrintedStatus)->first();
+                
+                $collectibles +=  $application->detail->ApprovedDailyAmountDue;
+                $loanHistory +=  $application->loanhistory->OutstandingBalance;
+                $totalSavings +=  ( $savings) ? $savings->TotalSavingsAmount:0;
+                $details['totalCollectible']= $collectibles;
+                $details['total_Balance']= $loanHistory;
+                $details['total_savings']=  $totalSavings;
+                $details['total_advance']= 0;
+                $details['total_lapses']= 0;
+                $details['total_collectedAmount']= 0;
+                $details['total_FieldExpenses']= 0;
+                $details['daily_savings']= 0;
+                $details['penalty']= 0;
+                $applicationData['areaID'] = $this->areaID;
+                $memfiles = $application->member->fileuploads;
+                if($memfiles){
+                    foreach($memfiles as $memfile){
+                        if($memfile->Type == 1){
+                            $applicationData['filePath'] = $memfile->FilePath;
+                        }  
+                    }
+
+                } 
+                $applicationData['dailyCollectibles'] = $application->detail->ApprovedDailyAmountDue;
+                $applicationData['collectedAmount'] = 0;
+                $applicationData['amountDue'] = $application->loanhistory->OutstandingBalance;
+                $applicationData['pastDue'] = 0;
+                $applicationData['totalSavingsAmount'] = ( $savings) ? $savings->TotalSavingsAmount:0;
+                $applicationData['advancePayment'] = 0;
+                $applicationData['payment_Status'] = $paymentStatus->Status;
+                $applicationData['collection_Status'] = ($collectionStatus) ? $collectionStatus->Status:'';
+                //Expaded table data
+
+                $applicationData['borrower'] = $application->member->FullName;
+                $applicationData['cno'] = $application->member->Cno;
+                $applicationData['co_Borrower'] = $application->member->comaker->FullName;
+                $applicationData['co_Cno'] = $application->member->comaker->Cno;
+                $applicationData['releasingDate'] = $application->loanhistory->DateReleased ;
+                $applicationData['dueDate'] = $application->loanhistory->DueDate;
+                $applicationData['loanPrincipal'] = $application->detail->ApprovedLoanAmount ;
+                $applicationData['typeOfCollection'] = $application->termsofpayment->collectionType->TypeOfCollection ;
+                $applicationData['naid'] = $application->NAID;
+                $applicationData['dailySavings'] = $application->termsofpayment->loantype->Savings;
+                $applicationData['lapsePayment'] = $totalLapses;
+                $applicationData['advancePayment'] = $totalAdvance;
+                $applicationData['naid'] = $application->NAID;
+                $applicationData['memId'] = $application->MemId;
+                $this->list[] = $applicationData; 
+            }
+
+            }
+            
+         }
+
+        // $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyAreaRefno', ['areaid' => $this->areaID, 'area_refno' => $this->areaRefNo]);                
+        // //dd($data->getStatusCode());
+        // if($data->getStatusCode() == 200){
+        //     $data = $data->json();      
+        //     //dd($data); 
+        //     if(!empty($data[0]['collection'])){
+        //         $this->list = collect($data[0]['collection']);           
+        //     }   
+        // }
         //dd($this->list);   
         return view('livewire.collection.collection.collection-remittance');
     }

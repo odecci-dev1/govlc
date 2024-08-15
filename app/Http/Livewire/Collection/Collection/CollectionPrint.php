@@ -79,7 +79,6 @@ class CollectionPrint extends Component
                 $details['totalSavingsAmount']=  $totalSavings;
                 $details['advancePayment']=  $totalAdvance;
                 $details['lapsePayment']=  $totalLapses;
-                $details['lapsePayment']=  $totalLapses;
                 $details['loanPrincipal']=  $application->detail->ApprovedLoanAmount;
                 $details['typeOfCollection']=  $application->termsofpayment->collectionType->TypeOfCollection;
                
