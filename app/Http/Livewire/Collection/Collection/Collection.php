@@ -162,33 +162,36 @@ class Collection extends Component
             $area = CollectionArea::where('AreaId',$this->areaID)->whereNotNull('Area_RefNo')->count();
             $collectionCount = Col::get()->count();
             $areaReference = $this->areaID.date_format(Carbon::now(),'Ymd').'-0'.$area;
-
-            $collection = Col::create([
-                'RefNo' => 'COL-'.date_format(Carbon::now(),'Ymd').'-'.$collectionCount,
-                'DateCreated' => date_format(Carbon::now(),'Y-m-d')
-            ]);
-            $collectionArea= CollectionArea::create([
-            'AreaId'=>$this->areaID,
-            'Area_RefNo'=> $areaReference,
-            'Printed_Status'=> 5,
-            'CollectionRefNo'=> $collection->RefNo,
-            ]);
-
-            //dd($this->areaDetails);
-            foreach ($this->areaDetails as $detail) {
-        
-                CollectionAreaMember::create([
-                    'NAID'=>$detail['naid'],
-                    'Area_RefNo'=> $collectionArea->Area_RefNo,
-                    'AdvanceStatus'=> 0,
-                    'Payment Status'=> 2,
+            $colRefNo = '';
+            if($this->colrefNo != ''){
+                $colRefNo = $this->colrefNo;
+            }else{
+                $colRefNo = Col::create([
+                    'RefNo' => 'COL-'.date_format(Carbon::now(),'Ymd').'-'.$collectionCount,
+                    'DateCreated' => date_format(Carbon::now(),'Y-m-d')
                 ]);
-                
             }
+            $collectionArea= CollectionArea::create([
+                'AreaId'=>$this->areaID,
+                'Area_RefNo'=> $areaReference,
+                'Printed_Status'=> 5,
+                'CollectionRefNo'=>  $colRefNo,
+                ]);
+                foreach ($this->areaDetails as $detail) {
+            
+                    CollectionAreaMember::create([
+                        'NAID'=>$detail['naid'],
+                        'Area_RefNo'=> $collectionArea->Area_RefNo,
+                        'AdvanceStatus'=> 0,
+                        'Payment_Status'=> 2,
+                    ]);
+                    
+                }
+          
 
                    
             $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID.'/'.$areaReference]);        
-            return redirect()->to('/collection/view/'. $collection->RefNo.'/'.$this->areaID);       
+            return redirect()->to('/collection/view/'. $colRefNo.'/'.$this->areaID);       
         }
         else{                         
             $this->emit('openUrlPrintingStub', ['url' => URL::to('/').'/collection/print/area/'.$this->areaID.'/'.$areaRefNo]);        
@@ -454,7 +457,7 @@ class Collection extends Component
                          
                             $collectionAreaMember = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
                             $collectionArea = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
-                            $paymentStatus = ($collectionArea)  ? CollectionStatus::where('Id',$collectionAreaMember->Payment_Status)->first():'';
+                            $paymentStatus = ($collectionArea)  ? CollectionStatus::where('Id',$collectionAreaMember->Payment_Status)->first()->Status:'';
                             $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                             $loanHistory +=  $application->loanhistory->OutstandingBalance;
                             $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
@@ -474,7 +477,7 @@ class Collection extends Component
                             $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.$fo->Mname[0];
                             $details['refNo']= ($collectionArea) ? $collectionArea->Area_RefNo:'';
                             $details['area_RefNo']= ($collectionArea) ? $collectionArea->Area_RefNo:'';
-                            $details['payment_Status']= $printStatus != '' ? $paymentStatus->Status:'';
+                            $details['payment_Status']= $paymentStatus ;
                             $details['collection_Status'] = $collectionStatus != '' ? $collectionStatus->Status:'';
                             $details['collection_RefNo']= '';
                             $details['totalItems']= $totalItems;

@@ -37,7 +37,7 @@
                 for($y = 0; $y <= $pagecount; $y++){                  
                     if($arrpage[$y]){                              
                         @endphp 
-                        <div class="page page-1" style="width: 297mm; min-height: 297mm;" data-printables>
+                        <div class="page page-1" style="width: 297mm; min-height: 297mm; padding:2rem" data-printables>
                             <div class="header-wrapper">
                                 <p>Field Officer: <span id="printFieldOfficerName">{{ !empty($areaDetailsFooter['fieldOfficer']) ? $areaDetailsFooter['fieldOfficer'] : 'No data' }}</span>
                                 </p>
@@ -103,7 +103,7 @@
    
     <!-- * Page 1 -->
     <!-- * Page 2 -->
-    <div class="page page-2 page-break-after" style="width: 297mm; min-height: 209mm;">
+    <div class="page page-2 page-break-after" style="width: 297mm; min-height: 209mm;padding:2rem">
         <div class="body-wrapper">
             <!-- * Table Container -->
             <div class="table-container">

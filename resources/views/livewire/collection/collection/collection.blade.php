@@ -49,7 +49,7 @@
                         @foreach($areas as $area)
                         @php
                             $checkIfPaid = $area['total_collectedAmount'] > 0 ? true : false; //$areaDetails->where('areaID', $area['areaID'])->where('payment_Status', 'Paid')->first();
-                            //$checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();
+                            $checkIfPrinted = $areaDetails->where('areaID', $area['areaID'])->where('area_RefNo', '!=', 'PENDING')->first();
                             $checkIfPrinted = in_array($area['area_RefNo'], ['PENDING', '']) ? false : true;
                         @endphp
                         <li data-area-menu wire:click="getCollectionDetails('{{ $area['areaID'] }}', '{{ $area['FOID'] }}', '{{ in_array($area['area_RefNo'], ['PENDING', '']) ? '' : $area['area_RefNo'] }}', 0)" class=" {{ $checkIfPrinted ? 'paid-selected-area' : '' }}">
