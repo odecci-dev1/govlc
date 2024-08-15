@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CollectionArea;
+use App\Models\Modules;
+use App\Models\Notification;
+use App\Models\User;
+use App\Models\Area;
+use App\Models\UserModule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 
 class LoginController extends Controller
@@ -14,40 +21,47 @@ class LoginController extends Controller
                     'password' => $request['password']
                 ];
       
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/LogIn', $data);    
-        $res = $crt->getReasonPhrase();
-              
-        if($res == 'OK'){
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [ ['column' => 'username', 'values' =>  $request['username']] ]); 
-            $data = $crt->json();           
-            $usermodules = [];
+        $user = User::where('Username', $request['username'])->first();
+
+        if (!$user) {
+            # code...    return redirect('/')->with('message', 'You are not yet assigned to any areas or dont have remittance to view.');  
+            return redirect('/')->with('message', 'Invalid Credential');  
+        }
+        // $user = User::where('Username', $request['username'])->where('Password', Hash::check($request['password'],))->first();
+
+        if(Hash::check($request['password'], $user->Password)){
+         
+            // $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [ ['column' => 'username', 'values' =>  $request['username']] ]); 
+            // $data = $crt->json();           
+             $usermodules = [];
            
             if($data){
-                $data = $data[0];                     
-                session()->put('auth_usertype', $data['userTypeId']); 
-                session()->put('auth_username', $data['username']); 
-                session()->put('auth_name', $data['lname'] . ', ' . $data['fname'] .' '. mb_substr($data['mname'],0,1) . '.');       
-                session()->put('auth_userid', $data['userId']); 
-                session()->put('auth_id', $data['id']);     
+                                  
+                session()->put('auth_usertype', $user->UTID); 
+                session()->put('auth_username', $user->Username); 
+                session()->put('auth_name', $user->Lname . ', ' . $user->Fname .' '. mb_substr($user->Mname,0,1) . '.');       
+                session()->put('auth_userid', $user->UserId); 
+                session()->put('auth_id', $user->Id);     
                 session()->put('auth_remittance_only', 0);             
-                session()->put('auth_profile', $data['profilePath']);  
+                session()->put('auth_profile', $user->ProfilePath);  
                 
-                $noti = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Notification/NotificationCount', ['userid' => session()->get('auth_userid')]);     
+                // $noti = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Notification/NotificationCount', ['userid' => session()->get('auth_userid')]);     
+                $noti = Notification::where('isRead', 1)->where('UserId', $user->UserId)->count();
                 // dd( $noti );
-                $noti = $noti->json();
+                // $noti = $noti->json();
                 
 
-                session()->put('noti_count', $noti);  
+                session()->put('noti_count', $noti); 
+                //dd(session()->get('noti_count')) ;
                             
-                if(in_array($data['userTypeId'], [1,2])){                    
-                    $modules = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetModuleList'); 
-                }
-                else{
-                    $modules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', ['userID' => $data['userId']]); 
-                }
-                session()->forget('auth_usermodules');
-                $modules = $modules->json();              
-                if($modules){
+                if(in_array($user->UTID, [1,2])){                    
+                    // $modules = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetModuleList'); 
+                    $modules = Modules::all(); 
+                    dd('xx');
+                } else {
+                    // $modules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', ['UserId' => $user->UserId]); 
+                    $modules = UserModule::where('user_id', $user->UserId)->get();
+     
                     foreach($modules as $mdl){
                         $usermodules[] = $mdl['module_code'];
                     }
@@ -55,22 +69,26 @@ class LoginController extends Controller
                 session()->put('auth_usermodules', $usermodules);               
             }   
             
-            if(!empty($data['foid'])){
-                session()->put('auth_remittance_only', 1);                   
-                $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo', [ 'FOID' => $data['foid'] ]);  
-                $areaRefNo = $arealist->json()[0]['areaRefNo'] ??= '';  
-                $areaID = $arealist->json()[0]['areaID'] ??= '';    
+            if(!empty($user->FOID)){
+                // dd($user->FOID);
+                session()->put('auth_remittance_only', 1);           
+                
+                $getArea = Area::where('FOID',$user->FOID)->first();
+                $getColletionArea = CollectionArea::where('AreaId',$getArea->AreaID)->first();
+                // $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo', [ 'FOID' => $user['foid'] ]);  
+                $areaRefNo =  $getColletionArea->Area_RefNo;  
+                $areaID =  $getColletionArea->AreaId;    
                 if(!empty($areaRefNo)){             
-                    return redirect('/collection/remittance/'.$data['foid'].'/'.$areaRefNo.'/'.$areaID);
+                    return redirect('/collection/remittance/'.$user->FOID.'/'.$areaRefNo.'/'.$areaID);
                 }
                 else{
                     //return redirect('/logout')->with('message', 'You dont have remittance to view.'); 
                     $request->session()->flush();
                     return redirect('/')->with('message', 'You are not yet assigned to any areas or dont have remittance to view.');       
                 }
-            } 
-            else{       
+            } else {       
                 $modules = session()->get('auth_usermodules');
+                // dd($modules);
                 if(in_array('Module-018', $modules)){
                     return redirect('/dashboard');
                 }

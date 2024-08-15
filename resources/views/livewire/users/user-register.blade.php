@@ -203,7 +203,7 @@
                             @if($imgprofile)
                                 <img type="image" class="profile" style="width: 70%;" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
                             @else
-                                @if(file_exists(public_path('storage/users_profile/'.(isset($profilePath) ? $profilePath : 'xxxx'))))                                                                   
+                                @if(file_exists(asset('storage/users_profile/'.(isset($profilePath) ? $profilePath : 'xxxx'))))                                                                   
                                     <img type="image" class="profile" style="width: 70%;" src="{{ asset('storage/users_profile/'.$profilePath) }}" alt="upload-image" />                                                                     
                                 @else
                                     <img type="image" class="profile" style="width: 70%;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
