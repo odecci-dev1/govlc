@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Users;
 
+use App\Models\FieldOfficer;
 use App\Models\Modules;
 use App\Models\User;
 use App\Models\UserModule;
@@ -55,13 +56,23 @@ class UserRegister extends Component
         $rules['lname'] = 'required';  
         $rules['mname'] = 'required';  
         $rules['suffix'] = '';  
-        $rules['username'] = 'required'; 
+        $rules['username'] = ['required',
+            function ($attribute, $value, $fail) {
+                $user = User::whereRaw('LOWER(Username) = ?', [strtolower($value)])
+                                       ->where('Username', $this->username)
+                                        ->first();
+                if ($user) {
+                    $fail('A username already exists.');
+                }
+            }
+        ]; 
         $rules['password'] = $this->mid !='' ? '' : ['required', 'confirmed'];   
         $rules['password_confirmation'] = '';   
-        $rules['cno'] = '';   
+        $rules['cno'] = 'required';   
         $rules['usertype'] = 'required';      
-        $rules['address'] = '';      
+        $rules['address'] = 'required';      
         $rules['foid'] = '';      
+        $rules['imgprofile'] = 'required';      
         return $rules;
     }
 
@@ -71,6 +82,9 @@ class UserRegister extends Component
         $messages['lname'] = 'Last name is required';  
         $messages['mname'] = 'Middle name is required'; 
         $messages['usertype'] = 'Please select user level'; 
+        $messages['imgprofile'] = 'User profile is required'; 
+        $messages['address'] = 'Address number is required'; 
+        $messages['cno'] = 'Contact number is required'; 
         return $messages;
     }
 
@@ -90,8 +104,6 @@ class UserRegister extends Component
                 $this->cno = $user['CNO'];          
                 $this->address = $user['Address'];   
                 $this->profilePath = $user['ProfilePath'];  
-
-
                 $this->usertype = $user['UTID'];     
                 $this->foid = $user['FOID'];                   
 
@@ -162,35 +174,51 @@ class UserRegister extends Component
     }
 
     public function register(){      
-        $data = $this->validate();
+        $this->validate();
         $modules = [];
-        
 
-        $user = [            
-                    "id"=> $this->mid == '' ? '0' : $this->mid,        
-                    "fname"=> $this->fname,
-                    "lname"=> $this->lname,
-                    "mname"=> $this->mname,
-                    "suffix"=> $this->suffix,
-                    "username"=> $this->username,
-                    "password"=> $this->password,
-                    "cno"=> $this->cno,
-                    "address"=> $this->address,                    
-                    "profilePath"=> $this->storeProfileImage(),
-                    "foid"=> $this->foid,     
-                    "userTypeID"=> $this->usertype,
-                    "status"=> 1,
-                    "usermodule"=> $modules
-                ];
+        // $user = [            
+        //     "id"=> $this->mid == '' ? '0' : $this->mid,        
+        //     "fname"=> $this->fname,
+        //     "lname"=> $this->lname,
+        //     "mname"=> $this->mname,
+        //     "suffix"=> $this->suffix,
+        //     "username"=> $this->username,
+        //     "password"=> $this->password,
+        //     "cno"=> $this->cno,
+        //     "address"=> $this->address,                    
+        //     "profilePath"=> $this->storeProfileImage(),
+        //     "foid"=> $this->foid,     
+        //     "userTypeID"=> $this->usertype,
+        //     "status"=> 1,
+        //     "usermodule"=> $modules
+        // ];
 
         if( $this->mid == '' ) {
+            $this->validate();
 
-            // $user = User::create([])
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUser', $user); 
-            //dd($crt);
-            $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetLastUserList');       
-            $getlast =  $getlast->json();
-            return redirect()->to('/user/view/'.$getlast['userId'])->with(['sessmword'=> 'Success', 'sessmessage'=> 'User successfully saved']); 
+            $user = User::create([
+                "Id"=> $this->mid == '' ? '0' : $this->mid,        
+                "Fname"=> $this->fname,
+                "Lname"=> $this->lname,
+                "Mname"=> $this->mname,
+                "Suffix"=> $this->suffix,
+                "Username"=> $this->username,
+                "Password"=> $this->password,
+                "CNO"=> $this->cno,
+                "Address"=> $this->address,                    
+                "ProfilePath"=> $this->storeProfileImage(),
+                "FOID"=> $this->foid,     
+                "UTID"=> $this->usertype,
+                "Status"=> 1,
+                "DateCreated"=> now(),
+                "usermodule"=> $modules
+            ]);
+
+            $latestUser = User::latest()->first();
+            $UserId = $latestUser->UserId;
+
+            return redirect()->to('/user/view/'.$UserId)->with(['sessmword'=> 'Success', 'sessmessage'=> 'User successfully saved']); 
         }      
         else{
             $user = User::where('Id', $this->mid)->update([
@@ -236,10 +264,12 @@ class UserRegister extends Component
         $this->searchFO();
     }
 
-    public function searchFO(){
+    public function searchFO()
+    {
+       $fieldofficers = FieldOfficer::get();
+    //    dd($fieldofficers);
         // $fodata = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterbyFullname', ['fullname' => $this->searchfokeyword]);  
-        $fodata = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/FieldOfficer/FieldOfficerFilterPaginate', ['fullname' => $this->searchfokeyword, 'page' => 1, 'pageSize' => 50]);  
-        $this->folist = $fodata->json();   
+        $this->folist = $fieldofficers;  
     }
 
     public function selectFO($foid, $fname, $mname, $lname){
@@ -252,6 +282,9 @@ class UserRegister extends Component
 
     public function removeFO(){
         $this->foid = '';
+        $this->fname = '';
+        $this->mname = '';
+        $this->lname = '';
     }
 
     public function archive($userid){       
