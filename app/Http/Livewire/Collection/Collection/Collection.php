@@ -260,7 +260,14 @@ class Collection extends Component
                     $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
                     $savings= MembersSavings::where('MemId',$person->MemId)->first();
                  
-             
+                    $details['totalCollectible']= 0;
+                    $details['total_Balance']= 0;
+                    $details['total_savings']=   0;
+                    $details['total_advance']= 0;
+                    $details['total_lapses']= 0;
+                    $details['total_collectedAmount']= 0;
+                    $details['total_FieldExpenses']= 0;
+                    $details['daily_savings']= 0;
                     if(!is_null($application)) {
                         if($application->loanhistory->OutstandingBalance != 0){
                         $AreaRefNo= CollectionAreaMember::where('Area_RefNo',$areaRefNo)->where('NAID',$application->NAID)->first();
