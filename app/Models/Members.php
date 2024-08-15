@@ -80,6 +80,11 @@ class Members extends Model
         return $this->hasMany(Area::class, 'City', 'City');
     }
 
+    public function detail(): HasOne
+    {
+        return $this->hasOne(LoanDetails::class, 'MemId', 'Id')->select('id', '*')->withDefault();
+    }
+
     public function loanhistory(): HasOne
     {
         return $this->hasOne(LoanHistory::class, 'MemId', 'Id')->select('id', '*')->withDefault();
@@ -87,7 +92,7 @@ class Members extends Model
 
     public function status(): BelongsTo
     {
-        return $this->belongsTo(Status::class, 'Status');
+        return $this->belongsTo(Status::class, 'Status', 'Id');
     }
 
     public function getFullNameAttribute()

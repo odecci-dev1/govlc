@@ -41,7 +41,7 @@
                 <div class="printables-container">
 
                     <!-- * Page 1 -->
-                    <div class="page page-1 passbook show" data-printables>
+                    <div class="page page-1 passbook show"  data-printables>
                         <div class="passbook-container">
                             <div class="passbook p-front">
                                 <div class="header-wrapper">
@@ -523,7 +523,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="page page-2 passbook" data-printables>
+                    <div class="page page-2 passbook"  data-printables>
                         <div class="passbook-container">
                             <div class="passbook p-back">
                                 <div class="header-wrapper">
