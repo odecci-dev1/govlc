@@ -104,30 +104,30 @@
                               <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
                           @endif    
                       
-                        <span class="td-name">{{ $l['fullname'] }}</span>
+                        <span class="td-name">{{ $l->fullname }}</span>
                     </div>
                     </td>
 
                     <!-- * Contact Number -->
                     <td>
-                        {{ $l['cno'] }}
+                        {{ $l->CNO }}
                     </td>
 
                     <!-- * Address -->
                     <td>
-                        {{ $l['address'] }}
+                        {{ $l->Address }}
                     </td>
 
                     <!-- * Date Registered -->
                     <td>
-                        {{ $l['dateCreated'] }}
+                        {{ $l->DateCreated }}
                     </td>
 
                     <!-- * Table View and Trash Button -->
                     <td class="td-btns">
                     <div class="td-btn-wrapper">
-                        <a href="{{ URL::to('/') }}/user/view/{{ $l['userId'] }}" class="a-btn-view-2" data-user-view>View</a>
-                        <button onclick="showDialog('{{ $l['id'] }}')" type="button" class="a-btn-trash-2">Trash</button>
+                        <a href="{{ URL::to('/') }}/user/view/{{ $l['UserId'] }}" class="a-btn-view-2" data-user-view>View</a>
+                        <button onclick="showDialog('{{ $l['Id'] }}')" type="button" class="a-btn-trash-2">Trash</button>
                     </div>
                     </td>
                 </tr>               
@@ -135,6 +135,61 @@
               @endif                
             </table>
             
+          </div>
+          
+          <div style="padding-bottom: 2rem;  display: flex; flex-direction: column">
+              @if($paginationPaging['totalPage'])
+                  <div class="pagination-container">
+
+                      <a href="#" wire:click.prevent="goToFirstPage">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L12.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                              <path fill-rule="evenodd" d="M4.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L6.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                          </svg>
+                      </a>
+                      <!-- Previous Button -->
+                      @if($paginationPaging['prevPage'])
+                          <a href="#" wire:click.prevent="setPage({{ $paginationPaging['prevPage'] }})">
+                              <img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left">
+                          </a>
+                      @endif
+              
+                      <!-- Pagination Buttons -->
+                      @php
+                          $startPage = max(1, $paginationPaging['currentPage'] - 2);
+                          $endPage = min($paginationPaging['totalPage'], $paginationPaging['currentPage'] + 2);
+              
+                          if ($endPage - $startPage < 4) {
+                              if ($startPage > 1) {
+                                  $startPage = max(1, $endPage - 4);
+                              } else {
+                                  $endPage = min($paginationPaging['totalPage'], $startPage + 4);
+                              }
+                          }
+                      @endphp
+              
+                      @for ($i = $startPage; $i <= $endPage; $i++)
+                          <a href="#" wire:click.prevent="setPage({{ $i }})" class="{{ $paginationPaging['currentPage'] == $i ? 'font-size-1_4em color-app' : '' }}">{{ $i }}</a>
+                      @endfor
+              
+                      <!-- Next Button -->
+                      @if($paginationPaging['nextPage'])
+                          <a href="#" wire:click.prevent="setPage({{ $paginationPaging['nextPage'] }})">
+                              <img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right">
+                          </a>
+                      @endif
+
+                      <a href="#" wire:click.prevent="goToLastPage">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                              <path fill-rule="evenodd" d="M13.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                              <path fill-rule="evenodd" d="M19.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06L17.69 12l-6.97-6.97a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                          </svg>
+                      </a>
+                  </div>
+              @endif
+              <p style="text-align: center; font-size: 1.2rem; opacity: 0.7;">
+                  Page <span style="font-weight: 700;">{{$paginationPaging['currentPage']}}</span> of {{$paginationPaging['totalPage']}}
+              </p>
           </div>
 
         </div>

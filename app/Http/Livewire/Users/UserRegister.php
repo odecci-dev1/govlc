@@ -2,12 +2,17 @@
 
 namespace App\Http\Livewire\Users;
 
+use App\Models\Modules;
+use App\Models\User;
+use App\Models\UserModule;
+use App\Models\UserType;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 use File;
 use App\Traits\Common;
+use Illuminate\Support\Facades\Hash;
 
 class UserRegister extends Component
 {
@@ -74,39 +79,35 @@ class UserRegister extends Component
         $this->modulelist = collect([]);
         $this->modules = [];
         if($userid != ''){
-            $this->userid = $userid;
-            $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/FilterUserInfoByUID', [ 'userID' => $this->userid ]);     
-          
-            $res = $data->json();  
-            if(isset($res[0])){    
-                $res = $res[0];                 
-                $this->mid = $res['id'];            
-                $this->username = $res['username'];            
-                $this->fname = $res['fname'];
-                $this->lname = $res['lname'];
-                $this->mname = $res['mname'];         
-                $this->suffix = $res['suffix'];        
-                $this->cno = $res['cno'];          
-                $this->address = $res['address'];   
-                $this->profilePath = $res['profilePath'];  
-                $this->usertype = $res['userTypeId'];     
-                $this->foid = $res['foid'];                   
+            $user = User::where('UserId', $userid)->first();
+            if($user){    
+                $this->mid = $user['Id'];            
+                $this->username = $user['Username'];            
+                $this->fname = $user['Fname'];
+                $this->lname = $user['Lname'];
+                $this->mname = $user['Mname'];         
+                $this->suffix = $user['Suffix'];        
+                $this->cno = $user['CNO'];          
+                $this->address = $user['Address'];   
+                $this->profilePath = $user['ProfilePath'];  
 
-                $usemodules = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/GetUserModuleByUserID', [ 'userID' => $this->userid ]);     
-                $usemodules = $usemodules->json();
-                
-                if($usemodules){
-                    foreach($usemodules as $usemodules){
-                        $this->modules[] = $usemodules['module_code'];
+
+                $this->usertype = $user['UTID'];     
+                $this->foid = $user['FOID'];                   
+
+                $userModules = UserModule::where('user_id', $userid)->get();
+
+                if($userModules){
+                    foreach($userModules as $userModule){
+                        $this->modules[] = $userModule['module_code'];
                     }
                 }
-               
+
                 $this->updatePassword = 0;
             }           
         }           
-        $getmodules = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetModuleList');     
-        $getmodules = $getmodules->json();
-       
+        $getmodules = Modules::all();     
+
         if($getmodules){
             foreach($getmodules as $getmodules){
                 $this->modulelist[$getmodules['module_code']] = ['module_code' => $getmodules['module_code'], 'module_name' => $getmodules['module_name'], 'module_category' => $getmodules['module_category']];
@@ -127,11 +128,15 @@ class UserRegister extends Component
 
     public function updatePassword(){
         $this->validate(['password' => ['required', 'confirmed']]);
-        $data = [            
-            "userId"=> $this->userid,
-            "password"=> $this->password      
-        ];
-        $upt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/ChangePassword', $data);                   
+
+        $user = User::where('UserId', $this->userid); 
+
+        $user->update([
+            "password"=> Hash::make($this->password)      
+        ]);
+        // dd($user);
+
+        // $upt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/ChangePassword', $data);                   
         session()->flash('sessmword', 'Password Updated'); 
         session()->flash('sessmessage', 'Please logout if user was change'); 
         $this->updatePassword = 0;
@@ -142,13 +147,13 @@ class UserRegister extends Component
         if($this->imgprofile){
             $deletefiles = [];
             if(isset($profilePath)){
-                $deletefiles[] = 'public/users_profile/'.$this->profilePath;
+                $deletefiles[] = 'users_profile/'.$this->profilePath;
             }
             Storage::delete($deletefiles);       
             
             $time = time();          
             $profilename = 'users_profile_'.$time.'.'.$this->imgprofile->getClientOriginalExtension();         
-            $this->imgprofile->storeAs('public/users_profile', $profilename);    
+            $this->imgprofile->storeAs('users_profile', $profilename);    
         }
         else{
             $profilename = $this->profilePath;  
@@ -159,17 +164,7 @@ class UserRegister extends Component
     public function register(){      
         $data = $this->validate();
         $modules = [];
-        if(count($this->modules) > 0){
-            foreach($this->modules as $mdl){
-                $modules[] = [
-                                "id"=> $this->mid == '' ? '0' : $this->mid,
-                                "user_id"=> "string",
-                                "module_code"=> $mdl,
-                                "created_by"=> "ADMIN",
-                                "module_category"=> "string"
-                            ];
-            }
-        }
+        
 
         $user = [            
                     "id"=> $this->mid == '' ? '0' : $this->mid,        
@@ -188,7 +183,9 @@ class UserRegister extends Component
                     "usermodule"=> $modules
                 ];
 
-        if( $this->mid == '' ){
+        if( $this->mid == '' ) {
+
+            // $user = User::create([])
             $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/SaveUser', $user); 
             //dd($crt);
             $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetLastUserList');       
@@ -196,8 +193,39 @@ class UserRegister extends Component
             return redirect()->to('/user/view/'.$getlast['userId'])->with(['sessmword'=> 'Success', 'sessmessage'=> 'User successfully saved']); 
         }      
         else{
-            // dd($user);
-            $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/UpdateUserInfo', $user);            
+            $user = User::where('Id', $this->mid)->update([
+                'Username' => $this->username,
+                'Fname' => $this->fname,
+                'Mname' => $this->mname,
+                'Lname' => $this->lname,
+                'Cno' => $this->cno,
+                'Address' => $this->address,
+                'DateUpdated' => now(),
+                'UTID' => $this->usertype,
+                'ProfilePath' => $this->storeProfileImage(),
+            ]);
+
+            UserModule::where('user_id', $this->mid)->delete();
+
+            if(count($this->modules) > 0){
+                foreach($this->modules as $mdl){
+                    $modules[] = [
+                        "id"=> $this->mid == '' ? '0' : $this->mid,
+                        "user_id"=> "string",
+                        "module_code"=> $mdl,
+                        "created_by"=> "ADMIN",
+                        "module_category"=> "string"
+                    ];
+                    
+                    UserModule::create([
+                        "user_id"=> $this->mid == '' ? '0' : $this->mid,
+                        "module_code"=> $mdl,
+                        "created_by"=> session()->get('auth_userid'),
+                    ]);
+                }
+            }
+            
+
             return redirect()->to('/user/view/'.$this->userid)->with(['sessmword'=> 'Success', 'sessmessage'=> 'Please relogin to refresh current user session.']); 
         }     
         
