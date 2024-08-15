@@ -217,6 +217,7 @@
                                 @php
                                     $defaultImagePath = public_path('assets/icons/upload-image.svg');
                                     $profileImagePath = public_path('storage/officer_profile/' . $officer['Profile']);
+
                                 @endphp
                                 @if(file_exists($profileImagePath))
                                     <img type="image" class="profile" src="{{ asset('storage/officer_profile/' . $officer['Profile']) }}" alt="upload-image" />
@@ -248,43 +249,56 @@
                     </div>
 
                     <!-- * File Chips Container -->           
-                    <div class="file-wrapper" style="padding: 2rem 0rem;" data-attach-file-container2>                   
+                    <div class="file-wrapper" style="padding: 2rem 0rem;" data-attach-file-container2>
                         @if(isset($officer['Attachments']))
-                            @foreach($officer['Attachments'] as $attachment)
-                                @php
-                                    // Determine if $attachment is from the FieldOfficer model or another source
-                                    $filePath = is_array($attachment) ? (isset($attachment['FilePath']) ? $attachment['FilePath'] : '') : $attachment->path();
-                                    $filename = is_array($attachment) ? (isset($attachment['FilePath']) ? basename($attachment['FilePath']) : '') : $attachment->getClientOriginalName();
-                                    $filename = preg_replace('/^officer_attachments_\d+_/', '', $filename);
-                                @endphp
-                    
-                                @if(!empty($filePath))
-                                    <div style="position: relative">
-                                        <a href="{{ asset($filePath) }}" src="{{ asset('storage/officer_attachments/' . $officer['Profile']) }}" title="{{ $filename }}" target="_blank">                                                                                              
+                            @if($officer['Attachments'] == $officer['Old_Attachments'])
+                                @foreach($officer['Attachments'] as $attachments)
+                                    @php
+                                        $getfilename = $attachments['FilePath'];
+                                        $filenamearray = explode("_", $getfilename);
+                                        $filename = isset($filenamearray[3]) ? $filenamearray[3] : '';
+                                    @endphp
+                                    @if(asset('storage/officer_attachments/'.(isset($attachments['FilePath']) ? $attachments['FilePath'] : $attachments->getClientOriginalName() )))
+                                        <div style="position: relative">
+                                            <a href="{{ asset('storage/officer_attachments/'.$attachments['FilePath']) }}" title="{{ $filename }}" target="_blank">
+                                                <div type="button" class="fileButton">
+                                                    <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                    {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
+                                                </div>
+                                            </a>
+                                            {{-- <button
+                                                type="button" 
+                                                wire:click="$set('foFileToDelete', '{{ $foid }}')"
+                                                wire:click="$set('showDeleteModal', true)"
+                                                style="position: absolute; top: 0; right: 0; transform: translate(0.4rem, -0.6rem); padding: 0.3rem 0.7rem; border-radius: 100%; color: white; background: red">×
+                                            </button> --}}
+                                            <button
+                                                type="button" 
+                                                wire:click="confirmRemoveAttachment('{{ $foid }}')"
+                                                style="position: absolute; top: 0; right: 0; transform: translate(0.4rem, -0.6rem); padding: 0.3rem 0.7rem; border-radius: 100%; color: white; background: red">×</button>
+                                        </div>
+                                    @else
+                                        <a href="#" title="File is deleted" target="_blank">
                                             <div type="button" class="fileButton">
-                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png"> 
-                                                {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
-                                            </div>    
+                                                <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                                File is deleted
+                                            </div>
                                         </a>
-                                        {{-- *** Delete File Button *** --}}
-                                        <button 
-                                            style="
-                                                position: absolute; 
-                                                top: -8px;
-                                                right: 0;
-                                                padding: 1.2px 5px; 
-                                                color: white; 
-                                                background: red; 
-                                                border-radius: 50%;"
-                                            >
-                                            <span >x</span>
-                                        </button>
-                                    </div>
-                                @endif
-                            @endforeach
+                                    @endif
+                                @endforeach
+                            @else
+                                @foreach($officer['Attachments'] as $attachments)
+                                    <a href="{{ $attachments->temporaryUrl() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">
+                                        <div type="button" class="fileButton">
+                                            <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
+                                            {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @endif
                         @endif
                     </div>
-                  
+             
                     <!-- * Save Button -->
                     @if($usertype != 2)
                         @if($foid == null)
@@ -449,6 +463,7 @@
         </div>
 
     </div>
+    
 
 </div>
 <script>
@@ -463,6 +478,14 @@
 
             window.livewire.on('EMIT_ERROR_ASKING_DIALOG', data =>{
                 document.getElementById('error-asking-dialog-div').style.visibility="visible";
+            });
+
+            window.livewire.on('showDeleteModal', () => {
+                $('#confirmDeleteModal').modal('show');
+            });
+
+            window.livewire.on('hideDeleteModal', () => {
+                $('#confirmDeleteModal').modal('hide');
             });
         })
       

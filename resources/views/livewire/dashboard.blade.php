@@ -127,7 +127,14 @@
                                     <p>As of last entry</p>
                                 </div>
                             </div>
-                            <p>Last month target <span>{{ !empty($data['targetStatus']) ? $data['targetStatus'] : 'Not Achieved' }}</span></p>
+                            <p>Last month target 
+                                <span>
+                                    {{ !empty($data['targetStatus']) ? 
+                                        $data['targetStatus'] : 
+                                        'Not Achieved' 
+                                    }}
+                                </span>
+                            </p>
                         </div>
                     </div>
                     <div class="card-2 " style="display: inline;">
@@ -276,10 +283,6 @@
 </style>
 <script>
      document.addEventListener('livewire:load', function () {   
-        // var progressValue = document.getElementById("circle-div");
-        // //background: conic-gradient(#D6A330 90%, #FFFF4E 0%);    
-        // progressValue.style.background = "conic-gradient(#D6A330 90%, #FFFF4E 0%)";
-
         var ctx = document.getElementById("myChart").getContext("2d");
         const chartData = { 
             labels: [], // conditions to made //labels horizontal
