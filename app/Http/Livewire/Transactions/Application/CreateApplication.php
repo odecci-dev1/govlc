@@ -1088,69 +1088,6 @@ class CreateApplication extends Component
             return redirect()->to('/tranactions/application/view/'.$getnaid->NAID)->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
 
           
-                               
-                    //             "companyAddress"=> $input['member']['companyAddress'] ??= ''     
-                    //             "co_CompanyID"=> $input['comaker']['co_CompanyID'] ??= '',
-                    //             "remarks"=> '',                                                                                  
-     
-                    //               "userId"=> session()->get('auth_userid'),                 
-                    // ]];
-      
-                    //$extension = $request->file('filename')->getClientOriginalExtension();
-                    //dd( $data );       
-            // if($this->type == 'create'){                            
-            //     $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/SaveAll', $data); 
-            //     //dd($crt);                                                                                    
-            //     $apiresp = $crt->getStatusCode();                
-            //     if($apiresp == 200){                         
-            //         if($crt->json()['promtresult_status'] == 'ERROR'){
-            //             session()->flash('errmmessage', $crt->json()['promtresult']);        
-            //         }   
-            //         else{         
-            //             // $getlast = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Application/GetLastApplication');                                
-            //             // $getlast = $getlast->json();
-            //             //dd($getlast);   
-            //             // $modules = session()->get('auth_usermodules');
-            //             // $usertype = session()->get('auth_usertype'); 
-
-            //             // if(in_array('Module-09', $modules) || in_array($usertype, [1,2])){
-            //             //     $this->resetValidation();         
-            //             //     return redirect()->to('/tranactions/application/view/'.$crt->json()['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
-            //             // }
-            //             // else{
-            //             //     $this->resetValidation();         
-            //             //     return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
-            //             // }
-
-            //             $this->resetValidation();         
-            //             return redirect()->to('/tranactions/application/view/'.$crt->json()['naid'])->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
-            //         }
-            //     }
-            //     else{
-            //         $this->resetValidation();         
-            //         session()->flash('erroraction', 'saving(1)');                   
-            //         $this->emit('EMIT_ERROR_ASKING_DIALOG');
-            //     }
-            // }
-            // else{              
-            //     $membersongroup = session('memdata') !==null ? session('memdata') : [];
-            //     $errorcount = 0;
-            //     if(count($membersongroup) > 0){
-            //         foreach($membersongroup as $mem){                        
-            //             if( $mem['fname'] == $input['member']['fname']){
-            //                 $errorcount = $errorcount + 1;                           
-            //             }
-            //         }
-            //     }
-               
-            //     if($errorcount > 0){
-            //         session()->flash('errmmessage', 'Member already exist in group');
-            //     }
-            //     else{
-            //         session()->push('memdata', $data[0]);
-            //         return redirect()->to('/tranactions/group/application/create');
-            //     }
-            // }
             
         }
         catch (\Exception $e) {           
