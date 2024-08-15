@@ -74,10 +74,17 @@ class LoginController extends Controller
             if(!empty($user->FOID)){
                 // dd($user->FOID);
                 session()->put('auth_remittance_only', 1);           
-                
+               
                 $getArea = Area::where('FOID',$user->FOID)->first();
+                if(!$getArea){             
+                    $request->session()->flush();
+                    return redirect('/')->with('message', 'This field has no area assigned.');    
+                }
                 $getColletionArea = CollectionArea::where('AreaId',$getArea->AreaID)->first();
-                // $arealist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/GetAreaReferenceNo', [ 'FOID' => $user['foid'] ]);  
+                if(!$getColletionArea){
+                    $request->session()->flush();
+                    return redirect('/')->with('message', 'You are not yet assigned to any areas or dont have remittance to view.');  
+                }
                 $areaRefNo =  $getColletionArea->Area_RefNo;  
                 $areaID =  $getColletionArea->AreaId;    
                 if(!empty($areaRefNo)){             
