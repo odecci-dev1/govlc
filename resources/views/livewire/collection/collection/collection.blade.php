@@ -27,7 +27,7 @@
                            $totalAreaCollected = $areas->sum('total_collectedAmount');
                     @endphp
                      <!-- * Summary Container total_collectedAmount -->
-                     <div class="summary-container" style="visibility: {{ $totalAreaCollected > 0 ? 'visible' : 'hidden' }};" data-collection-summary-container>
+                     <div class="summary-container"  style="visibility: {{ $totalAreaCollected > 0 ? 'visible':'hidden'}}" data-collection-summary-container>
                          <p class="textPrimary" data-open-collection-summary-button>View Summary</p>
                      </div>
                 <!-- * All Areas Button -->
@@ -130,8 +130,9 @@
                 @php
                     $sumCollected = $areaDetails->where('areaID', $areaID)->sum('collectedAmount');
                     $countPaid = $areaDetails->where('areaID', $areaID)->where('payment_Status', 'Paid')->count();
-                    //$areaCollectedAmount = $areas->where('areaID', $areaID)->sum('total_collectedAmount');
-                     $areastatus = $areas->where('areaID', $areaID)->first();
+                    $areaCollectedAmount = $areas->where('areaID', $areaID)->sum('total_collectedAmount');
+                    $areastatus = $areas->where('areaID', $areaID)->first();
+        
                 @endphp
                 <!-- delete           -->
                 @php
@@ -298,13 +299,15 @@
                                             <p>Borrower Name:</p>
                                             <p>Contact No.:</p>
                                             <p>Co-borrower:</p>
-                                            <p>Contact No.:</p>
+                                            <p>Contact No.:</p>  
+                                            <p>Loan ID:</p>
                                         </div>
                                         <div class="inner-inner-box">
                                             <p>{{ $mdetails['borrower'] }}</p>
                                             <p>{{ $mdetails['cno'] }}</p>
                                             <p>{{ $mdetails['co_Borrower'] }}</p>
                                             <p>{{ $mdetails['co_Cno'] }}</p>
+                                            <p>{{ $mdetails['naid'] }} <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $mdetails['naid'] }}" class="cust-link" target="_blank">view</a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -317,7 +320,8 @@
                                             <p>Due Date:</p>
                                             <p>Collection Date:</p>
                                             <p>Savings:</p>
-                                            <p>Loan ID:</p>
+                                            <p>Interest Amount:</p>
+                                          
                                         </div>
                                         <div class="inner-inner-box">
                                             @php
@@ -329,7 +333,8 @@
                                             <p>{{ $dueDate->format('F d, Y') }}</p>
                                             <p>{{ $mdetails['typeOfCollection'] }}</p>
                                             <p>{{ number_format($mdetails['dailySavings'], 2) }}</p>
-                                            <p>{{ $mdetails['naid'] }} <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $mdetails['naid'] }}" class="cust-link" target="_blank">view</a></p>
+                                            <p>{{ number_format($mdetails['interestAmount'], 2) }}</p>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -391,7 +396,7 @@
                  <!-- * Total Savings: -->
                  <div class="box">
                      <p>Total Savings:</p>
-                     <span>{{ $footer ? number_format($footer['total_daily_savings'], 2) : '0.00' }}</span>
+                     <span>{{ $footer ? number_format($footer['total_savings'], 2) : '0.00' }}</span>
                  </div>
                  <!-- * Total Advance: -->
                  <div class="box">
@@ -416,7 +421,7 @@
     @include('livewire.collection.collection.collection-cash-denomination-modal')
     <!-- * Reject Modal -->
     @include('livewire.collection.collection.collection-reject-reason-modal')
-    {{-- @include('livewire.collection.collection.collection-summary-modal') --}}
+    @include('livewire.collection.collection.collection-summary-modal')
  </div>
  </div>
  <script>

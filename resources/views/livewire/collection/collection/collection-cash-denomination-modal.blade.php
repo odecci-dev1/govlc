@@ -79,10 +79,10 @@
         </div>
         <div class="inner-box-wrap">
             <p>SAVINGS</p>
-            <span id="totalCashDenom">  {{ $footer ? number_format($footer['total_daily_savings'], 2) : '0.00' }}</span>
+            <span id="totalCashDenom">  {{ $footer ? number_format($footer['total_savings'], 2) : '0.00' }}</span>
         </div>
         @php
-            $totalcoll = ($footer ? $footer['total_daily_savings'] : 0);
+            $totalcoll = ($footer ? $footer['total_savings'] : 0);
         @endphp
         <div class="inner-box-wrap">
             <p>COLLECTED AMOUNT</p>            

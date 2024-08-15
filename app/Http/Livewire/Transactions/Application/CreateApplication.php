@@ -1598,15 +1598,24 @@ class CreateApplication extends Component
                         'ApprovedLoanBy' => session()->get('auth_userid'),
                         'ApprovedTermsOfPayment' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],
                     ]);
-
-                    Application::where('NAID',$this->naID)->update([
-                        'App_ApprovedBy_1' => session()->get('auth_userid'),
-                        'App_ApprovalDate_1' => Carbon::now(),
-                        'App_Note' => isset($this->loanDetails['notes']) ? $this->loanDetails['notes'] : '',
-                        'App_Notedby' => session()->get('auth_userid'),
-                        'App_NotedDate' => Carbon::now(),
-                        'Status' => $this->loanDetails['notes'] == '' ? 9:10,
-                    ]);
+                    if($this->loanDetails['app_ApprovedBy_1']){
+                        Application::where('NAID',$this->naID)->update([
+                            'App_ApprovedBy_2' => session()->get('auth_userid'),
+                            'App_ApprovalDate_2' => Carbon::now(),
+                            'Status' => 10,
+                        ]);
+                  
+                    }else{
+                  
+                        Application::where('NAID',$this->naID)->update([
+                            'App_ApprovedBy_1' => session()->get('auth_userid'),
+                            'App_ApprovalDate_1' => Carbon::now(),
+                            'App_Note' => isset($this->loanDetails['notes']) ? $this->loanDetails['notes'] : '',
+                            'App_Notedby' => session()->get('auth_userid'),
+                            'App_NotedDate' => Carbon::now(),
+                            'Status' => $this->loanDetails['notes'] == '' ? 9:10,
+                        ]);
+                    }
 
             // $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Approval/ApproveReleasing', $data);          
             //dd($crt);
@@ -2679,13 +2688,14 @@ class CreateApplication extends Component
             
 
                     $this->interestRate = $res->TermsOfpayment->InterestRate;
-                    $this->loanPrincipal = in_array($res->Status, [7,8,9]) ? ($details->LoanAmount ??= 0) : $details->ApprovedLoanAmount;
+                    //$this->loanPrincipal = in_array($res->Status, [7,8,9]) ? ($details->LoanAmount ??= 0) : $details->ApprovedLoanAmount;
+                    $this->loanPrincipal = ($details->ApprovedLoanAmount) ? $details->ApprovedLoanAmount :$details->LoanAmount;
                     $this->terms =  $res->TermsOfpayment->Terms;
                     $this->loanAmount = ($this->loanPrincipal * $this->interestRate) + $this->loanPrincipal;
                     $this->memberId = $res->member->id;
                 
                     $this->calculatedResult = $this->calculateLoan($formulas->Id,$this->interestRate,$this->loanPrincipal,$this->terms,$res->TermsOfpayment->OldFormula );
-                    $this->notarialFee = $this->calculateNotarialFee($res->TermsOfpayment->NotarialFeeOrigin,$this->loanPrincipal,$this->loanAmount,$res->TermsOfpayment->LessThanAmount,$res->TermsOfpayment->LessThanAmountTYpe,$res->TermsOfpayment->LessThanNotarialAmount,$res->TermsOfpayment->GreaterThanEqualAmountTYpe,$res->TermsOfpayment->GreaterThanEqualNotarialAmount);
+                    $this->notarialFee = $this->calculateNotarialFee($res->TermsOfpayment->NotarialFeeOrigin,$this->loanPrincipal, $this->loanAmount,$res->TermsOfpayment->LessThanAmount,$res->TermsOfpayment->LessThanAmountTYpe,$res->TermsOfpayment->LessThanNotarialAmount,$res->TermsOfpayment->GreaterThanEqualAmountTYpe,$res->TermsOfpayment->GreaterThanEqualNotarialAmount);
                     $this->loanInsurance = $this->calculateLoanInsurance($res->TermsOfpayment->LoanInsuranceAmountType,$res->TermsOfpayment->LoanInsuranceAmount,$this->loanPrincipal);
                     $this->lifeInsurance = $this->calculateLifeInsurance($res->TermsOfpayment->LifeInsuranceAmountType,$res->TermsOfpayment->LifeInsuranceAmount,$this->loanPrincipal);
                     $this->interestAmount = $this->calculatedResult['interestAmount'];

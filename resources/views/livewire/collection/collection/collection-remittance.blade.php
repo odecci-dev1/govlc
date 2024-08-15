@@ -88,8 +88,16 @@
 
             <!-- * Amount Collected -->
             <div class="input-wrapper">
+
                 <span>Amount Collected</span>
                 <input autocomplete="off" type="text" wire:model.lazy="reminfo.amntCollected"  wire:blur="computeLapses" name="amntCollected">
+                <p style="color:red;margin-top:5px">{{$remitUsingAdvanceValidation}}</p>
+                @if($appdtl)
+                <br>
+                    <span>Available Advance Payment: {{ $appdtl['advancePayment'] }}</span>
+                    <p>Enter 0 as collected amount to use advance payment as full.</p>
+                @endif
+                
                 @error('reminfo.amntCollected') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
 
@@ -120,7 +128,7 @@
                 <input autocomplete="off" type="text" wire:model.lazy="reminfo.modeOfPayment" name="mod">
                 @error('reminfo.modeOfPayment') <span class="text-required fw-normal">{{ $message }}</span>@enderror
             </div>
-
+        
         </div>
 
         <!-- * Cancel and Save Button -->

@@ -177,7 +177,7 @@
 
                         <!-- * Loan Amount -->
                         <td>
-                            {{ $mlist->detail->LoanAmount }}
+                            {{ ($mlist->detail->ApprovedLoanAmount) ? $mlist->detail->ApprovedLoanAmount:$mlist->detail->LoanAmount }}
                         </td>
         
                         <!-- * Terms of Payment -->
