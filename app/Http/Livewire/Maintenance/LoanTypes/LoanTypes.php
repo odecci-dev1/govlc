@@ -138,7 +138,7 @@ class LoanTypes extends Component
                     
                     if ($existingTerm) {
                         $existingTerm->update([
-                            ...$    ,
+                            ...$term,
                         ]);
                     }
                 } else {
