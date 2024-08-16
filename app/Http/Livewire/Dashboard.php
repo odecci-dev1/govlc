@@ -105,7 +105,7 @@ class Dashboard extends Component
 
         $totalAmount = $loanDetails->sum('ApprovedLoanAmount');
         $totalLoanBalance = $totalAmount - $totalCollected;
-
+        
         
 
         $totalInterest = $loanDetails->sum('ApproveedInterest');
@@ -114,7 +114,8 @@ class Dashboard extends Component
         $totalOtherDeductions = $totalLoanInsurance + $totalLifeInsurance + $totalNotarialFee;
     
         $totalSavingsOutstanding = $loanHistory->sum('OutstandingBalance');
-        $totalDailyOverallCollection = number_format($loanDetails->sum('ApprovedDailyAmountDue'), 2);
+        $totalDailyOverallCollection = $loanDetails->sum('ApprovedDailyAmountDue');
+       
         $totalNewAccountsOverall = $application->where('Status', 7)->count();
         $totalApplicationforApproval = $application->where('Status', 9)->count();
         $totalIncome = $settings->MonthlyTarget;

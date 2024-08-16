@@ -70,7 +70,7 @@
                 <!-- * Search Bar -->
                 <div class="search-wrap">
                     <!-- <input type="search" wire:keydown.enter="searchExistingMembers($event.target.value)" placeholder="Search name or member ID"> -->
-                    <input type="search" wire:model="newappmodelkeyword" wire:keypress="getmemberList" placeholder="Search name or member ID">
+                    <input type="search" wire:model="newappmodelkeyword" wire:keypress="search" placeholder="Search name or member ID">
                     <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                 </div>
 

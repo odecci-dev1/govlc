@@ -74,7 +74,7 @@ class NewApplicationModal extends Component
         
         $this->changeLoanType();
         //dd($this->loantypeList);
-        $this->getmemberList();
+       // $this->getmemberList();
     }
 
     public function changeLoanType(){
@@ -112,16 +112,15 @@ class NewApplicationModal extends Component
         // dd($this->termsOfPaymentList);
         // dd('as');
     }
-
+    public function search(){
+       
+        $this->memberlist = Members::where('Status',1)->where('Fname', 'like', '%'.$this->newappmodelkeyword.'%')->orWhere('Lname', 'like', '%'.$this->newappmodelkeyword.'%')->orWhere('Mname', 'like', '%'.$this->newappmodelkeyword.'%')->get();
+        if(!$this->memberlist){
+            $this->memberlist = Members::where('Status',1)->get();
+        }
+    }
     public function getmemberList(){           
-        //$data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => $this->newappmodelkeyword]);       
-        //dd( $data );
-        $data = Members::where('Status',1)->get();
-        //$this->memberlist = $data->json();  
-        // foreach($data as $d){
-        //     dd($d);
-        // }
-        $this->memberlist = $data;
+        $this->memberlist = Members::where('Status',1)->get();
     }
 
     public function render()

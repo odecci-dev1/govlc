@@ -16,7 +16,12 @@ class DashboardController extends Controller
        
        
         $getactivemembers=[];
-        $getArea = Area::where('Id',8)->first();
+        if($request->area == 'All'){
+            $getArea = Area::all();
+        }else{
+            $getArea = Area::where('Id',$request->area)->first();
+        }
+ 
         $currentDate = date_create(date_format(Carbon::now(),'Y-m-d'));
         //date_sub($currentDate ,date_interval_create_from_date_string("30 days"));
         $newDate = $currentDate;
