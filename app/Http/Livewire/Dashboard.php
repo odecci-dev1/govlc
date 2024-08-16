@@ -57,7 +57,7 @@ class Dashboard extends Component
     {
         $members = Members::select('id', 'Status')->where('Status', 1)->get();
         $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment')->get();
-        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee')->get();
+        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue')->get();
         $loanHistory = LoanHistory::select('OutstandingBalance')->get();
         $application = Application::select('Status')->get();
         $settings = Settings::select('MonthlyTarget')->first();
@@ -99,7 +99,7 @@ class Dashboard extends Component
         $totalOtherDeductions = $totalInterest + $totalNotarialFee;
 
         $totalSavingsOutstanding = $loanHistory->sum('OutstandingBalance');
-        $totalDailyOverallCollection = number_format($dailyCollections->sum(), 2);
+        $totalDailyOverallCollection = number_format($loanHistory->sum('ApprovedDailyAmountDue'), 2);
         $totalNewAccountsOverall = $application->where('Status', 7)->count();
         $totalApplicationforApproval = $application->where('Status', 9)->count();
         $totalIncome = $settings->MonthlyTarget;
