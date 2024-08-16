@@ -114,6 +114,9 @@ class NewApplicationModal extends Component
         //dd( $data );
         $data = Members::where('Status',1)->get();
         //$this->memberlist = $data->json();  
+        // foreach($data as $d){
+        //     dd($d);
+        // }
         $this->memberlist = $data;
     }
 

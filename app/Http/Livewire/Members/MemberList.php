@@ -56,7 +56,7 @@ class MemberList extends Component
     {
         $members = Members::with(['applications', 'detail', 'loanhistory','fileuploads'])
             ->whereHas('applications', function ($query) {
-                $query->where('Status', 7);
+                $query->where('Status', 1);
             })
             ->where(function ($query) {
                 $query->where('Fname', 'like', '%' . $this->keyword . '%')
