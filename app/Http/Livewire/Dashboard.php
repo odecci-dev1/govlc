@@ -34,11 +34,13 @@ class Dashboard extends Component
         $this->data = Cache::remember('dashboard_data', 60, function () {
             return $this->prepareData();
         });
-
+       // dd($this->prepareData());
         $this->activeCollectionData();
         // dd($this->topcollectibles);
         $this->topcollectibles = $this->computeTopValues('CollectedAmount');
         $this->toplapses = $this->computeTopValues('LapseAmount');
+
+        //return $this->prepareData();
     }
 
     public function render()
@@ -56,9 +58,10 @@ class Dashboard extends Component
 
     private function prepareData()
     {
+       
         $members = Members::select('id', 'Status')->where('Status', 1)->get();
         $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment')->get();
-        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->get();
+        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->where('Status','!=',11)->get();
        
         $loanHistory = LoanHistory::select('OutstandingBalance')->get();
         $application = Application::select('Status')->get();
@@ -73,12 +76,13 @@ class Dashboard extends Component
         $activeMemberCount = $members->count();
         $totalLoanInsurance =0;
         $totalLifeInsurance = 0;
+    
         foreach($loanDetails as $loanDetail){
              $termsOfPayment = TermsOfPayment::where('Id',$loanDetail->TermsOfPayment)->first();
              $totalLoanInsurance += $termsOfPayment->LoanInsuranceAmountType == 1 ? $termsOfPayment->LoanInsuranceAmount * $loanDetail->ApprovedLoanAmount:$termsOfPayment->LoanInsuranceAmount;
              $totalLifeInsurance += $termsOfPayment->LifeInsuranceAmountType == 1 ? $termsOfPayment->LifeInsuranceAmount * $loanDetail->ApprovedLoanAmount:$termsOfPayment->LifeInsuranceAmount;
         }
-
+       
         $dailyCollections = $collectionAreaMembers
             ->whereBetween('DateCollected', [$startDay, $endDay])
             ->groupBy(function ($item) {
@@ -95,7 +99,7 @@ class Dashboard extends Component
             ->map(function ($group) {
                 return $group->sum('CollectedAmount') + $group->sum('AdvancePayment');
             });
-
+       
         $previousMonthCollected = $monthlyCollection[$previousMonth] ?? 0;
         $totalCollected = $monthlyCollection[$currentMonth] ?? 0;
 
@@ -107,8 +111,8 @@ class Dashboard extends Component
         $totalInterest = $loanDetails->sum('ApproveedInterest');
         $totalAdvancePayment = $collectionAreaMembers->sum('AdvancePayment');
         $totalNotarialFee = $loanDetails->sum('ApprovedNotarialFee');
-        $totalOtherDeductions = $totalLoanInsurance + $totalLoanInsurance + $totalNotarialFee;
-
+        $totalOtherDeductions = $totalLoanInsurance + $totalLifeInsurance + $totalNotarialFee;
+    
         $totalSavingsOutstanding = $loanHistory->sum('OutstandingBalance');
         $totalDailyOverallCollection = number_format($loanDetails->sum('ApprovedDailyAmountDue'), 2);
         $totalNewAccountsOverall = $application->where('Status', 7)->count();

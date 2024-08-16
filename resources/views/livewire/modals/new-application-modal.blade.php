@@ -44,7 +44,7 @@
                 <div style="width: 50%;padding-right: 4rem;">
                         <div class="input-wrapper">
 
-                            <select  wire:model="loanterms" class="select-option">
+                            <select  wire:model="loanterms" wire:change="changeTerms" class="select-option">
                                 <option value="">-- select terms --</option>
                                 @if($termsOfPaymentList)
                                     @foreach($termsOfPaymentList as $mtermsOfPaymentList)

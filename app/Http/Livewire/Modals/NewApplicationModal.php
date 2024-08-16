@@ -85,6 +85,10 @@ class NewApplicationModal extends Component
         $loanId = $this->loantype;
         $this->getLoanTypeName($loanId);
         $this->getLoanTerms();
+       
+    }
+    public function changeTerms(){
+        $this->getmemberList(); 
     }
 
     public function getLoanTypeName($loanId){
