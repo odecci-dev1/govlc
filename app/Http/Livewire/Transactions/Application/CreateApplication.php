@@ -926,7 +926,7 @@ class CreateApplication extends Component
                         $childinfo->Lname = $this->inpchild['lname'.$cntmemchild] ??= '';
                         $childinfo->Age = $this->inpchild['age'.$cntmemchild] ??= '0';
                         $childinfo->NOS = $this->inpchild['school'.$cntmemchild] ??= '';
-                        $childinfo->FamId = $famback->Id;
+                        $childinfo->FamId = $famback->id;
                         $childinfo->Status = 1;
                         $childinfo->DateCreated = Carbon::now();
                         $childinfo->DateUpdated = Carbon::now();
