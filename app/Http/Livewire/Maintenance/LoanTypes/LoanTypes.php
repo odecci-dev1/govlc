@@ -110,11 +110,10 @@ class LoanTypes extends Component
                 'DateCreated' => now(),
                 'DateUpdated' => null,
             ]);
-    
+            if()
             $loanType = LoanType::create($data);
             $latestLoanTypeID = $loanType->id;
-           // DD($loanType );
-            foreach ($terms as $term) {
+             foreach ($terms as $term) {
                 $term['LoanTypeId'] = $latestLoanTypeID;
                 TermsOfPayment::create(array_merge($term, [
                     'Status' => 1,

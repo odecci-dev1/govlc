@@ -7,6 +7,7 @@ use App\Http\Livewire\Transactions\Application\CreateApplicationGroup;
 
 use Livewire\Component;
 use App\Models\LoanType;
+use App\Models\Members;
 use App\Models\TermsOfPayment;
 class NewApplicationModal extends Component
 {
@@ -109,9 +110,11 @@ class NewApplicationModal extends Component
     }
 
     public function getmemberList(){           
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => $this->newappmodelkeyword]);       
+        //$data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => $this->newappmodelkeyword]);       
         //dd( $data );
-        $this->memberlist = $data->json();  
+        $data = Members::where('Status',1)->get();
+        //$this->memberlist = $data->json();  
+        $this->memberlist = $data;
     }
 
     public function render()
