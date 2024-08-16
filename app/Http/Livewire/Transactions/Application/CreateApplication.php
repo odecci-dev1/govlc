@@ -2581,7 +2581,7 @@ class CreateApplication extends Component
              
              }else{
                 
-                $res = Application::where('MemId', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first(); 
+                $res = Application::where('MemId', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->with('loanhistory')->first(); 
                
              }
             
@@ -2622,7 +2622,7 @@ class CreateApplication extends Component
                 //get loan payment and history
                 //dd($data['individualLoan']);
                 $this->currentDate = Carbon::now();
-                $this->dueDate = $res->detail->DueDate;
+                $this->dueDate = $res->loanhistory->DueDate;
                 if($this->type == 'view'){       
                
                     $details = $res->detail;
