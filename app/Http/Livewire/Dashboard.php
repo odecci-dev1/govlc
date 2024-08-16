@@ -34,7 +34,8 @@ class Dashboard extends Component
             return $this->prepareData();
         });
 
-        // dd($this->computeTopCollectibles());
+        dd($this->activeCollectionData());
+        // dd($this->topcollectibles);
         $this->topcollectibles = $this->computeTopValues('CollectedAmount');
         $this->toplapses = $this->computeTopValues('LapseAmount');
     }
@@ -44,97 +45,136 @@ class Dashboard extends Component
         // TODO: In-progress
         // $activecollections =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/ActiveCollection');      
         // $this->activecollections = $activecollections->json();         
-        // dd($this->activecollections);
+        dd($this->activeCollectionData);
 
 
 
         return view('livewire.dashboard');
     }
 
-    // private function prepareData()
-    // {
-    //     $members = Members::select('id', 'Status')->where('Status', 1)->get();
-    //     $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment')->get();
-    //     $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee')->get();
-    //     $loanHistory = LoanHistory::select('OutstandingBalance')->get();
-    //     $application = Application::select('Status')->get();
-    //     $settings = Settings::select('MonthlyTarget')->first();
+    private function prepareData()
+    {
+        $members = Members::select('id', 'Status')->where('Status', 1)->get();
+        $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment')->get();
+        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee')->get();
+        $loanHistory = LoanHistory::select('OutstandingBalance')->get();
+        $application = Application::select('Status')->get();
+        $settings = Settings::select('MonthlyTarget')->first();
 
-    //     $currentDate = Carbon::now();
-    //     $startDay = $currentDate->copy()->startOfDay();
-    //     $endDay = $currentDate->copy();
-    //     $currentMonth = $currentDate->format('Y-m');
-    //     $previousMonth = $currentDate->subMonth()->format('Y-m');
+        $currentDate = Carbon::now();
+        $startDay = $currentDate->copy()->startOfDay();
+        $endDay = $currentDate->copy();
+        $currentMonth = $currentDate->format('Y-m');
+        $previousMonth = $currentDate->subMonth()->format('Y-m');
 
-    //     $activeMemberCount = $members->count();
+        $activeMemberCount = $members->count();
 
-    //     $dailyCollections = $collectionAreaMembers
-    //         ->whereBetween('DateCollected', [$startDay, $endDay])
-    //         ->groupBy(function ($item) {
-    //             return $item->DateCollected->format('Y-m-d');
-    //         })
-    //         ->map(function ($group) {
-    //             return $group->sum('CollectedAmount');
-    //         });
+        $dailyCollections = $collectionAreaMembers
+            ->whereBetween('DateCollected', [$startDay, $endDay])
+            ->groupBy(function ($item) {
+                return $item->DateCollected->format('Y-m-d');
+            })
+            ->map(function ($group) {
+                return $group->sum('CollectedAmount');
+            });
 
-    //     $monthlyCollection = $collectionAreaMembers
-    //         ->groupBy(function ($item) {
-    //             return Carbon::parse($item->DateCollected)->format('Y-m');
-    //         })
-    //         ->map(function ($group) {
-    //             return $group->sum('CollectedAmount') + $group->sum('AdvancePayment');
-    //         });
+        $monthlyCollection = $collectionAreaMembers
+            ->groupBy(function ($item) {
+                return Carbon::parse($item->DateCollected)->format('Y-m');
+            })
+            ->map(function ($group) {
+                return $group->sum('CollectedAmount') + $group->sum('AdvancePayment');
+            });
 
-    //     $previousMonthCollected = $monthlyCollection[$previousMonth] ?? 0;
-    //     $totalCollected = $monthlyCollection[$currentMonth] ?? 0;
+        $previousMonthCollected = $monthlyCollection[$previousMonth] ?? 0;
+        $totalCollected = $monthlyCollection[$currentMonth] ?? 0;
 
-    //     $totalAmount = $loanDetails->sum('ApprovedLoanAmount');
-    //     $totalLoanBalance = $totalAmount - $totalCollected;
+        $totalAmount = $loanDetails->sum('ApprovedLoanAmount');
+        $totalLoanBalance = $totalAmount - $totalCollected;
 
-    //     $totalInterest = $loanDetails->sum('ApproveedInterest');
-    //     $totalAdvancePayment = $collectionAreaMembers->sum('AdvancePayment');
-    //     $totalNotarialFee = $loanDetails->sum('ApprovedNotarialFee');
-    //     $totalOtherDeductions = $totalInterest + $totalNotarialFee;
+        $totalInterest = $loanDetails->sum('ApproveedInterest');
+        $totalAdvancePayment = $collectionAreaMembers->sum('AdvancePayment');
+        $totalNotarialFee = $loanDetails->sum('ApprovedNotarialFee');
+        $totalOtherDeductions = $totalInterest + $totalNotarialFee;
 
-    //     $totalSavingsOutstanding = $loanHistory->sum('OutstandingBalance');
-    //     $totalDailyOverallCollection = number_format($dailyCollections->sum(), 2);
-    //     $totalNewAccountsOverall = $application->where('Status', 7)->count();
-    //     $totalApplicationforApproval = $application->where('Status', 9)->count();
-    //     $totalIncome = $settings->MonthlyTarget;
+        $totalSavingsOutstanding = $loanHistory->sum('OutstandingBalance');
+        $totalDailyOverallCollection = number_format($dailyCollections->sum(), 2);
+        $totalNewAccountsOverall = $application->where('Status', 7)->count();
+        $totalApplicationforApproval = $application->where('Status', 9)->count();
+        $totalIncome = $settings->MonthlyTarget;
 
-    //     $totalIncomePercentage = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
-    //     $totalDaysLeft = Carbon::now()->endOfMonth()->diffInDays($currentDate);
-    //     $totalPercentOfLastEntry = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
-    //     $targetStatus = $previousMonthCollected >= $totalIncome;
-    //     return [
-    //         'activeMemberCount' => $activeMemberCount,
-    //         'totalLoanBalance' => $totalLoanBalance,
-    //         'totalInterest' => $totalInterest,
-    //         'totalLoanCollection' => $totalCollected,
-    //         'totalAdvancePayment' => $totalAdvancePayment,
-    //         'totalOtherDeductions' => $totalOtherDeductions,
-    //         'totalActiveStanding' => 0,
-    //         'totalFullPayment' => 0,
-    //         'totalCR' => 0,
-    //         'totalEndingActiveMember' => 0,
-    //         'totalSavingsOutstanding' => $totalSavingsOutstanding,
-    //         'totalDailyOverallCollection' => $totalDailyOverallCollection,
-    //         'totalNewAccountsOverall' => $totalNewAccountsOverall,
-    //         'totalApplicationforApproval' => $totalApplicationforApproval,
-    //         'totalIncome' => $totalIncome,
-    //         'totalIncomePercentage' => $totalIncomePercentage,
-    //         'totalDailyCollection' => 0,
-    //         'totalDaysLeft' => $totalDaysLeft,
-    //         'totalPercentOfLastEntry' => $totalPercentOfLastEntry,
-    //         'targetStatus' => $targetStatus,
-    //         'activeMember' => 0,
-    //         'totalLapsesArea' => 0,
-    //         'topCollectiblesAreas' => 0,
-    //         'areaActiveCollection' => 0,
+        $totalIncomePercentage = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
+        $totalDaysLeft = Carbon::now()->endOfMonth()->diffInDays($currentDate);
+        $totalPercentOfLastEntry = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
+        $targetStatus = $previousMonthCollected >= $totalIncome;
+        return [
+            'activeMemberCount' => $activeMemberCount,
+            'totalLoanBalance' => $totalLoanBalance,
+            'totalInterest' => $totalInterest,
+            'totalLoanCollection' => $totalCollected,
+            'totalAdvancePayment' => $totalAdvancePayment,
+            'totalOtherDeductions' => $totalOtherDeductions,
+            'totalActiveStanding' => 0,
+            'totalFullPayment' => 0,
+            'totalCR' => 0,
+            'totalEndingActiveMember' => 0,
+            'totalSavingsOutstanding' => $totalSavingsOutstanding,
+            'totalDailyOverallCollection' => $totalDailyOverallCollection,
+            'totalNewAccountsOverall' => $totalNewAccountsOverall,
+            'totalApplicationforApproval' => $totalApplicationforApproval,
+            'totalIncome' => $totalIncome,
+            'totalIncomePercentage' => $totalIncomePercentage,
+            'totalDailyCollection' => 0,
+            'totalDaysLeft' => $totalDaysLeft,
+            'totalPercentOfLastEntry' => $totalPercentOfLastEntry,
+            'targetStatus' => $targetStatus,
+            'activeMember' => 0,
+            'totalLapsesArea' => 0,
+            'topCollectiblesAreas' => 0,
+            'areaActiveCollection' => 0,
 
         
-    //     ];
-    // }
+        ];
+    }
+
+    private function activeCollectionData()
+    {
+        $activeAreas = Area::with(['collectionAreas'])
+            ->where('Status', 1)
+            ->whereNotNull('FOID')
+            ->get();
+        
+        $newAccounts = Application::with(['collectionareamember', 'loanhistory'])
+            ->where('Status', 7)
+            ->get();
+
+        $result = $activeAreas->map(function ($area) use ($newAccounts) {
+            // Sum collected amounts for the area
+            $collections = CollectionAreaMember::where('Area_RefNo', $area->Area_RefNo)->get();
+            $sumCollectedAmount = $collections->sum('CollectedAmount');
+    
+            // Count new accounts for the area
+            $newAccountsCount = $newAccounts->filter(function ($account) use ($area) {
+                dd($area->Area_RefNo);
+                // dd($area->collectionAreas->pluck('Area_RefNo'));
+
+                // return $account->collectionareamember->Area_RefNo === $area->collectionAreas->Area_RefNo;
+            })->count();
+            // dd($newAccounts);
+    
+            return [
+                'areaName' => $area->Area,
+                'activeCollection' => $sumCollectedAmount,
+                'newAccounts' => $newAccountsCount,
+            ];
+        });
+
+        return $result->all();
+    }
+
+
+      // Area	   Active Collection	New Account	  # NPS	  Past Due Collection
+    // Next is get activeCollection from the sum of the OutstandingBalance of member per Area. And then count the newAccount from the Application with a Status of 7 meaning new application. And then for the numberOfNoPayment count the CollectionArea that has Collection_Status of 2 meaning no payment from the CollectionArea. Next is PastDueCollection you can get it from LoanHistory OutstandingBalance and the multiply it by 20% + the Outstanding Balance. All this should be is monthly data per Area.
 
     private function computeTopValues($sumType)
     {
