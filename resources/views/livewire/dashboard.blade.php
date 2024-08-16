@@ -341,9 +341,11 @@
                 method: 'get',
                 url: '/get/active/members',    
                 data: { area: area.value, days: days.value},   
-                success: function (data) {                   
+                success: function (data) {   
+                    console.log(data);   
                     const mlabels = [];
                     const mdata = [];                    
+                   
                     for (let j = 0; j < data.length; j++) {                               
                         mlabels.push(data[j]['date']); 
                         mdata.push(data[j]['count']);   
@@ -354,6 +356,7 @@
                     myChart.update();          
                 },
                 error:function (data){
+                      
                     alert("Error");   
                 },
                 dataType: 'json'
