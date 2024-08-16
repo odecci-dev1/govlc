@@ -35,4 +35,10 @@ class CollectionAreaMember extends Model
     {
         return $this->belongsTo(CollectionArea::class, 'Area_RefNo', 'Area_RefNo');
     }
+
+    public function loanHistories()
+    {
+        return $this->hasMany(LoanHistory::class, 'NAID', 'NAID');
+    }
+
 }
