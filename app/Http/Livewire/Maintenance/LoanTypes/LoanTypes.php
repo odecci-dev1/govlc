@@ -195,7 +195,7 @@ class LoanTypes extends Component
 
         $this->terms[$lastcnt] = [  
             'NameOfTerms' => $data['inpterms']['NameOfTerms'],
-            'InterestRate' => $data['inpterms']['InterestRate'],
+            'InterestRate' => $data['inpterms']['InterestRate'] * .100,
             'InterestType' => $data['inpterms']['InterestType'],                                         
             'Formula' => $data['inpterms']['Formula'], 
             'InterestApplied' => isset($data['inpterms']['InterestApplied']) ? $data['inpterms']['InterestApplied'] : 0,   
@@ -267,7 +267,7 @@ class LoanTypes extends Component
             $this->terms[$key] = [
                 'TopId' => $this->inpterms['TopId'],
                 'NameOfTerms' => $this->inpterms['NameOfTerms'],
-                'InterestRate' => $this->inpterms['InterestRate'],
+                'InterestRate' => $this->inpterms['InterestRate'] * .100,
                 'InterestType' => $this->inpterms['InterestType'],
                 'LoanTypeId' => $this->inpterms['LoanTypeId'],
                 'Formula' => $this->inpterms['Formula'],

@@ -695,6 +695,7 @@ class CreateApplication extends Component
     }
 
     public function store($type = 1){  
+        $input = $this->validate();  
         $mem = Members::select('Id AS id')->where('Fname', $this->member['fname'])
                                 ->where('Mname', $this->member['mname'])
                                 ->where('Lname', $this->member['lname'])
@@ -742,7 +743,7 @@ class CreateApplication extends Component
         
 
         $this->resetValidation();          
-        $input = $this->validate();     
+           
            
         try {                                   
             $childs = [];
