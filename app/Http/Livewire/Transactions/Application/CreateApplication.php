@@ -722,7 +722,7 @@ class CreateApplication extends Component
         $comem = CoMaker::where('Fname', $this->comaker['co_Fname'])
                 ->where('Mname', $this->comaker['co_Mname'])
                 ->where('Lnam', $this->comaker['co_Lname'])
-                ->where('Suffi', $this->comaker['co_Suffix'])
+                //->where('Suffi', $this->comaker['co_Suffix'])
                 ->where('POB', $this->comaker['co_POB'])
                 ->whereDate('DOB', $this->comaker['co_DOB'])->first();
 
