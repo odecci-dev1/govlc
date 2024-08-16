@@ -112,8 +112,8 @@ class LoanTypes extends Component
             ]);
     
             $loanType = LoanType::create($data);
-            $latestLoanTypeID = $loanType->LoanTypeID;
-    
+            $latestLoanTypeID = $loanType->id;
+           // DD($loanType );
             foreach ($terms as $term) {
                 $term['LoanTypeId'] = $latestLoanTypeID;
                 TermsOfPayment::create(array_merge($term, [
@@ -138,7 +138,7 @@ class LoanTypes extends Component
                     
                     if ($existingTerm) {
                         $existingTerm->update([
-                            ...$term,
+                            ...$    ,
                         ]);
                     }
                 } else {
