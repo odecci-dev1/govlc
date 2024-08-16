@@ -110,7 +110,7 @@ class LoanTypes extends Component
                 'DateCreated' => now(),
                 'DateUpdated' => null,
             ]);
-            if()
+          
             $loanType = LoanType::create($data);
             $latestLoanTypeID = $loanType->id;
              foreach ($terms as $term) {
