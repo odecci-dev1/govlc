@@ -259,12 +259,7 @@ class Collection extends Component
                  $loanHistory=0;
                  $totalSavings=0;
                  $applicationData=[];
-                 foreach($collectionAreaMembers as $collectionAreaMember){
-              
-                    $application= Application::where('NAID',$collectionAreaMember->NAID)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
-                    $savings= MembersSavings::where('MemId',$application->member->MemId)->first();
-                 
-                    $details['totalCollectible']= 0;
+                 $details['totalCollectible']= 0;
                     $details['total_Balance']= 0;
                     $details['total_savings']=   0;
                     $details['total_advance']= 0;
@@ -272,6 +267,12 @@ class Collection extends Component
                     $details['total_collectedAmount']= 0;
                     $details['total_FieldExpenses']= 0;
                     $details['daily_savings']= 0;
+                 foreach($collectionAreaMembers as $collectionAreaMember){
+              
+                    $application= Application::where('NAID',$collectionAreaMember->NAID)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
+                    $savings= MembersSavings::where('MemId',$application->member->MemId)->first();
+                 
+                    
               ;
                     if(!is_null($application)) {
                         if($application->loanhistory->OutstandingBalance != 0){
