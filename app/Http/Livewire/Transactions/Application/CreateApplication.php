@@ -2622,7 +2622,7 @@ class CreateApplication extends Component
                 //get loan payment and history
                 //dd($data['individualLoan']);
                 $this->currentDate = Carbon::now();
-                $this->dueDate = $res->loanhistory->DueDate;
+                $this->dueDate = date_create($res->loanhistory->DueDate);
                 if($this->type == 'view'){       
                
                     $details = $res->detail;
