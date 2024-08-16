@@ -698,7 +698,7 @@ class CreateApplication extends Component
         $mem = Members::where('Fname', $this->member['fname'])
                                 ->where('Mname', $this->member['mname'])
                                 ->where('Lname', $this->member['lname'])
-                                ->where('Suffix', $this->member['suffix'])
+                                //->where('Suffix', $this->member['suffix'])
                                 ->where('POB', $this->member['pob'])
                                 ->whereDate('DOB', $this->member['dob'])->first();
                       
