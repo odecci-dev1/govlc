@@ -10,6 +10,7 @@ use App\Models\LoanDetails;
 use App\Models\LoanHistory;
 use App\Models\Members;
 use App\Models\Settings;
+use App\Models\TermsOfPayment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -57,7 +58,8 @@ class Dashboard extends Component
     {
         $members = Members::select('id', 'Status')->where('Status', 1)->get();
         $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment')->get();
-        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue')->get();
+        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->get();
+       
         $loanHistory = LoanHistory::select('OutstandingBalance')->get();
         $application = Application::select('Status')->get();
         $settings = Settings::select('MonthlyTarget')->first();
@@ -69,6 +71,13 @@ class Dashboard extends Component
         $previousMonth = $currentDate->subMonth()->format('Y-m');
 
         $activeMemberCount = $members->count();
+        $totalLoanInsurance =0;
+        $totalLifeInsurance = 0;
+        foreach($loanDetails as $loanDetail){
+             $termsOfPayment = TermsOfPayment::where('Id',$loanDetail->TermsOfPayment)->first();
+             $totalLoanInsurance += $termsOfPayment->LoanInsuranceAmountType == 1 ? $termsOfPayment->LoanInsuranceAmount * $loanDetail->ApprovedLoanAmount:$termsOfPayment->LoanInsuranceAmount;
+             $totalLifeInsurance += $termsOfPayment->LifeInsuranceAmountType == 1 ? $termsOfPayment->LifeInsuranceAmount * $loanDetail->ApprovedLoanAmount:$termsOfPayment->LifeInsuranceAmount;
+        }
 
         $dailyCollections = $collectionAreaMembers
             ->whereBetween('DateCollected', [$startDay, $endDay])
@@ -93,13 +102,15 @@ class Dashboard extends Component
         $totalAmount = $loanDetails->sum('ApprovedLoanAmount');
         $totalLoanBalance = $totalAmount - $totalCollected;
 
+        
+
         $totalInterest = $loanDetails->sum('ApproveedInterest');
         $totalAdvancePayment = $collectionAreaMembers->sum('AdvancePayment');
         $totalNotarialFee = $loanDetails->sum('ApprovedNotarialFee');
-        $totalOtherDeductions = $totalInterest + $totalNotarialFee;
+        $totalOtherDeductions = $totalLoanInsurance + $totalLoanInsurance + $totalNotarialFee;
 
         $totalSavingsOutstanding = $loanHistory->sum('OutstandingBalance');
-        $totalDailyOverallCollection = number_format($loanHistory->sum('ApprovedDailyAmountDue'), 2);
+        $totalDailyOverallCollection = number_format($loanDetails->sum('ApprovedDailyAmountDue'), 2);
         $totalNewAccountsOverall = $application->where('Status', 7)->count();
         $totalApplicationforApproval = $application->where('Status', 9)->count();
         $totalIncome = $settings->MonthlyTarget;
