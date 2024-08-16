@@ -34,7 +34,7 @@ class Dashboard extends Component
             return $this->prepareData();
         });
 
-        dd($this->activeCollectionData());
+        $this->activeCollectionData();
         // dd($this->topcollectibles);
         $this->topcollectibles = $this->computeTopValues('CollectedAmount');
         $this->toplapses = $this->computeTopValues('LapseAmount');
@@ -45,7 +45,7 @@ class Dashboard extends Component
         // TODO: In-progress
         // $activecollections =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/ActiveCollection');      
         // $this->activecollections = $activecollections->json();         
-        dd($this->activeCollectionData);
+        $this->activeCollectionData();
 
 
 
@@ -155,7 +155,7 @@ class Dashboard extends Component
     
             // Count new accounts for the area
             $newAccountsCount = $newAccounts->filter(function ($account) use ($area) {
-                dd($area->Area_RefNo);
+              //  dd($area->Area_RefNo);
                 // dd($area->collectionAreas->pluck('Area_RefNo'));
 
                 // return $account->collectionareamember->Area_RefNo === $area->collectionAreas->Area_RefNo;
