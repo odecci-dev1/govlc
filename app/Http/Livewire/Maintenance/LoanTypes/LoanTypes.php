@@ -158,6 +158,7 @@ class LoanTypes extends Component
     
     public function addTerms()
     {
+     
         $termsCollection = collect($this->terms);
         if(isset($this->inpterms['termsKey'])){
             if($this->inpterms['termsKey'] > 0){             
@@ -170,7 +171,7 @@ class LoanTypes extends Component
         else{           
             $lastcnt = $termsCollection->keys()->last() + 1;          
         }
-
+        
         $data = $this->validate([                                    
             'inpterms.NameOfTerms' => ['required'],
             'inpterms.InterestRate' => ['required', 'numeric'],

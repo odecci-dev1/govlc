@@ -18,11 +18,12 @@ class DashboardController extends Controller
         $getactivemembers=[];
         $getArea = Area::where('Id',8)->first();
         $currentDate = date_create(date_format(Carbon::now(),'Y-m-d'));
-        date_sub($currentDate ,date_interval_create_from_date_string("30 days"));
+        //date_sub($currentDate ,date_interval_create_from_date_string("30 days"));
         $newDate = $currentDate;
-        for($i = 1;$i<=30;$i++){
+        for($i = 30;$i<=0;$i++){
+        //for($i = 0;$i<=30;$i++){
             
-             date_add($newDate,date_interval_create_from_date_string($i."days"));
+            //date_sub($newDate,date_interval_create_from_date_string($i."days"));
              $members = Members::where('Status',1)->whereDate('DateCreated','=',date_format($newDate,'Y-m-d'))->get();
         
              $locations = explode("|",$getArea->City);
