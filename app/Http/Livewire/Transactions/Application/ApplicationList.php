@@ -55,7 +55,7 @@ class ApplicationList extends Component
                     $query->where('Fname', 'like', '%'.$this->keyword.'%')->orWhere('Lname', 'like', '%'.$this->keyword.'%')->orWhere('Mname', 'like', '%'.$this->keyword.'%');
                 })                
                 ->where('Status', 7)->paginate(50);       
-
+     
         return view('livewire.transactions.application.application-list', ['list' => $list]);
     }
 }

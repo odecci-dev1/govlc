@@ -44,7 +44,8 @@ class Dashboard extends Component
     {
         // TODO: In-progress
         // $activecollections =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/ActiveCollection');      
-        // $this->activecollections = $activecollections->json();         
+        // $this->activecollections = $activecollections->json();   
+        $this->area = Area::where('Status',1)->get();      
         $this->activeCollectionData();
 
 

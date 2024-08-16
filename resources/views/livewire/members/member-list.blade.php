@@ -151,8 +151,8 @@
                             <!-- * Borrower Data -->
                             <div class="td-wrapper">
                                 <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
-                                @if(file_exists(public_path('storage/members_profile/'.(isset($l['ProfilePath']) ? $l['ProfilePath'] : 'xxxx'))))                                  
-                                    <img src="{{ asset('storage/members_profile/'.$l['ProfilePath']) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
+                                @if(file_exists(public_path('storage/members_profile/'.(isset($l->fileuploads[0]->FileName) ? $l->fileuploads[0]->FileName : 'xxxx'))))                                  
+                                    <img src="{{ asset('storage/members_profile/'.$l->fileuploads[0]->FileName) }}" alt="upload-image" style="height: 4rem; width: 4rem;" />                                                                                                                 
                                 @else
                                     <img src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" style="height: 4rem; width: 4rem;" />                                               
                                 @endif    

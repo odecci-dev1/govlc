@@ -89,7 +89,7 @@
                                     <option value="">All Areas</option> 
                                     @if($area)
                                         @foreach($area as $area)
-                                            <option value="{{ $area['areaName'] }}">{{ $area['areaName'] }}</option> 
+                                            <option value="{{ $area['Id'] }}">{{ $area['Area'] }}</option> 
                                         @endforeach
                                     @endif                                   
                                 </select>          
@@ -342,7 +342,7 @@
                 url: '/get/active/members',    
                 data: { area: area.value, days: days.value},   
                 success: function (data) {   
-                    console.log(data);   
+                    data.reverse();
                     const mlabels = [];
                     const mdata = [];                    
                    
