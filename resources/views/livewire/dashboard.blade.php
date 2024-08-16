@@ -129,30 +129,31 @@
                             </div>
                             <p>Last month target 
                                 <span>
-                                    {{ !empty($data['targetStatus']) ? 
-                                        $data['targetStatus'] : 
-                                        'Not Achieved' 
-                                    }}
+                                    @if (!empty($data['targetStatus']) && $data['targetStatus'])
+                                        <span style="padding: 0.4rem 1.2rem; border-radius: 25px; background: rgb(2, 59, 19); color: rgb(91, 236, 115)">Achieved</span>
+                                    @else
+                                        <span style="padding: 0.4rem 1.2rem; border-radius: 25px; background: rgb(59, 2, 2); color: rgb(236, 91, 91)">Not Achieved</span>
+                                    @endif
                                 </span>
                             </p>
                         </div>
                     </div>
                     <div class="card-2 " style="display: inline;">
                         <h3>Top Collectibles Per Area</h3>
-                        @php
-                            //$topcollectibles = !empty($data['topCollectiblesAreas']) ? $data['topCollectiblesAreas'] : [];
-                        @endphp
                         <div class="div-1" style="height: 21rem; overflow-y: auto;">
-                            @if(!empty($topcollectibles))
-                                @foreach($topcollectibles as $top)
+                            @forelse ($topcollectibles as $top)
                                 <div class="p-wrap">
                                     <div class="wrap">
                                         <p>{{  $top['areaName'] }}</p>
                                         <p style="padding-right: 5px;">{{  !empty($top['amount']) ? number_format($top['amount'], 2) : '0.00' }}</p>
                                     </div>
                                 </div>
-                                @endforeach                           
-                            @endif
+                            @empty
+                                <div style="height: 100%; display: flex; flex-direction: column; justify-content: center;  align-items: center">
+                                    <span style="text-align: center; font-weight: 600; font-size: 1.6rem;">No Data Available</span>
+                                    <span style="text-align: center; font-size: 1.2rem;  color: rgba(0, 0, 0, 0.5)">No current data available</span>
+                                </div>
+                            @endforelse                      
                         </div>
                         <div class="div-2">
                             <a href="{{ URL::to('/') }}/collection/list" class="button">View All</a>
@@ -246,20 +247,20 @@
                 <div class="md-con-3 tlpa">
                     <div class="card-2 tlpa">
                         <h3>Top Lapses Per Area</h3>
-                        @php
-                            //$toplapses = !empty($data['totalLapsesArea']) ? $data['totalLapsesArea'] : [];
-                        @endphp                       
                         <div class="div-1" style="height: 180rem; overflow-y: auto;">
-                            @if(!empty($toplapses))
-                                @foreach($toplapses as $lapses)
-                                    <div class="p-wrap">
-                                        <div class="wrap">
-                                            <p>{{ $lapses['areaName'] }}</p>
-                                            <p  style="padding-right: 5px;">{{ !empty($lapses['amount']) ? number_format($lapses['amount'], 2) : '0.00' }}</p>
-                                        </div>
+                            @forelse ($toplapses as $lapses)
+                                <div class="p-wrap">
+                                    <div class="wrap">
+                                        <p>{{ $lapses['areaName'] }}</p>
+                                        <p  style="padding-right: 5px;">{{ !empty($lapses['amount']) ? number_format($lapses['amount'], 2) : '0.00' }}</p>
                                     </div>
-                                @endforeach                           
-                            @endif                            
+                                </div>
+                            @empty
+                                <div style="height: 100%; display: flex; flex-direction: column; justify-content: center;  align-items: center">
+                                    <span style="text-align: center; font-weight: 600; font-size: 1.6rem;">No Data Available</span>
+                                    <span style="text-align: center; font-size: 1.2rem;  color: rgba(0, 0, 0, 0.5)">No current data available</span>
+                                </div>
+                            @endforelse                    
                         </div>
                         <div class="div-2">
                             <a href="{{ URL::to('/') }}/collection/list" class="button">View All</a>

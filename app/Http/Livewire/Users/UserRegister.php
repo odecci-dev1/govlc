@@ -59,8 +59,8 @@ class UserRegister extends Component
         $rules['username'] = ['required',
             function ($attribute, $value, $fail) {
                 $user = User::whereRaw('LOWER(Username) = ?', [strtolower($value)])
-                                       ->where('Username', $this->username)
-                                        ->first();
+                                    ->where('UserId', '!=', $this->userid)
+                                    ->first();
                 if ($user) {
                     $fail('A username already exists.');
                 }
@@ -72,7 +72,11 @@ class UserRegister extends Component
         $rules['usertype'] = 'required';      
         $rules['address'] = 'required';      
         $rules['foid'] = '';      
-        $rules['imgprofile'] = 'required';      
+        $rules['imgprofile'] = ['nullable', function($attribute, $value, $fail) {
+            if (!$this->imgprofile && !$this->profilePath) {
+                $fail('User profile is required.');
+            }
+        }]; 
         return $rules;
     }
 
@@ -177,25 +181,7 @@ class UserRegister extends Component
         $this->validate();
         $modules = [];
 
-        // $user = [            
-        //     "id"=> $this->mid == '' ? '0' : $this->mid,        
-        //     "fname"=> $this->fname,
-        //     "lname"=> $this->lname,
-        //     "mname"=> $this->mname,
-        //     "suffix"=> $this->suffix,
-        //     "username"=> $this->username,
-        //     "password"=> $this->password,
-        //     "cno"=> $this->cno,
-        //     "address"=> $this->address,                    
-        //     "profilePath"=> $this->storeProfileImage(),
-        //     "foid"=> $this->foid,     
-        //     "userTypeID"=> $this->usertype,
-        //     "status"=> 1,
-        //     "usermodule"=> $modules
-        // ];
-
         if( $this->mid == '' ) {
-            $this->validate();
 
             $user = User::create([
                 "Id"=> $this->mid == '' ? '0' : $this->mid,        
