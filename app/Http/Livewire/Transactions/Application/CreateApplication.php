@@ -2623,6 +2623,10 @@ class CreateApplication extends Component
                 //dd($data['individualLoan']);
                 $this->currentDate = Carbon::now();
                 $this->dueDate = date_create($res->loanhistory->DueDate);
+                $this->loanDetails['approvedBy'] = $this->getUserName($res->App_ApprovedBy_1);                                                           
+                $this->loanDetails['prepearedBy'] = $this->getUserName($res->CreatedBy);   
+                $this->loanDetails['modeOfRelease'] = $res->details->ModeOfRelease;
+                $this->loanDetails['modeOfReleaseReference'] = $res->details->ModeOfReleaseReference;
                 if($this->type == 'view'){       
                
                     $details = $res->detail;
