@@ -1530,6 +1530,7 @@ class CreateApplication extends Component
             LoanDetails::where('LDID',$this->naID)->update([
                 'loanAmount' =>$this->member['loanAmount'] ??= 0,
                 'dateUpdated' =>Carbon::now(),
+                'status' => 9,
             ]);
             Application::where('NAID',$this->naID)->update([
                 'remarks' => $this->loanDetails['remarks'] ??= '',
@@ -1588,6 +1589,7 @@ class CreateApplication extends Component
                         'ApprovedLoanAmount' => $this->loanDetails['loanAmount'],
                         'ApprovedLoanBy' => session()->get('auth_userid'),
                         'ApprovedTermsOfPayment' => isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : $this->member['termsOfPayment'],
+                        'Status' => 10,
                     ]);
                     if($this->loanDetails['app_ApprovedBy_1']){
                         Application::where('NAID',$this->naID)->update([
@@ -1637,6 +1639,7 @@ class CreateApplication extends Component
                                 'CourierCno' => $this->loanDetails['couriercno'],
                                 'modeOfRelease' => $this->loanDetails['modeOfRelease'],   
                                 'modeOfReleaseReference' => $this->loanDetails['denomination'], 
+                                'Status' => 15,
                     ]);
 
                     LoanHistory::create([
@@ -1717,6 +1720,10 @@ class CreateApplication extends Component
                         'Status' => 14,
                     ]);
 
+                    LoanDetails::where('NAID',$this->naID)->update([
+                        'Status' => 14,
+                    ]);
+
                     CollectionAreaMember::create([
                         'NAID' => $this->naID,
                         'AdvancePayment'=>0,
@@ -1767,6 +1774,11 @@ class CreateApplication extends Component
             "DeclinedBy"=> session()->get('auth_userid'),
             "Remarks"=> $this->reason,
             'Status'=>11,
+        ]);
+        LoanDetails::where('NAID',$this->naID)->update([
+            'Status'=> 11,
+            "DeclineDate"=> Carbon::now(),
+            "DeclinedBy"=> session()->get('auth_userid'),
         ]);                     
         //dd($data);
         return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application has been declined', 'mword'=> 'Success']);

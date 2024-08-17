@@ -302,13 +302,14 @@
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                yAxes: [
+                y: 
                     {
                         ticks: {
                             beginAtZero: true,
+                            stepSize: 1
                         },                   
                     },
-                ],
+                
             },       
         };
 
@@ -342,7 +343,7 @@
                 url: '/get/active/members',    
                 data: { area: area.value, days: days.value},   
                 success: function (data) {   
-                    data.reverse();
+
                     const mlabels = [];
                     const mdata = [];                    
                    
@@ -355,6 +356,7 @@
                     chartData.labels = mlabels;
                     myChart.update();          
                 },
+                
                 error:function (data){
                       
                     alert("Error");   

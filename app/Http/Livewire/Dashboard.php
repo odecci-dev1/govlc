@@ -9,6 +9,7 @@ use App\Models\CollectionAreaMember;
 use App\Models\LoanDetails;
 use App\Models\LoanHistory;
 use App\Models\Members;
+use App\Models\MembersSavings;
 use App\Models\Settings;
 use App\Models\TermsOfPayment;
 use Carbon\Carbon;
@@ -48,7 +49,7 @@ class Dashboard extends Component
         // TODO: In-progress
         // $activecollections =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/ActiveCollection');      
         // $this->activecollections = $activecollections->json();   
-        $this->area = Area::where('Status',1)->get();      
+        $this->area = Area::where('Status',1)->whereNotNull('Area')->get();      
         $this->activeCollectionData();
 
 
@@ -61,8 +62,9 @@ class Dashboard extends Component
        
         $members = Members::select('id', 'Status')->where('Status', 1)->get();
         $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment')->get();
-        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->where('Status','!=',11)->get();
-       
+        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->where('Status','=',14)->get();
+        $totalMemberSavings = MembersSavings::select('TotalSavingsAmount')->get();
+        
         $loanHistory = LoanHistory::select('OutstandingBalance')->get();
         $application = Application::select('Status')->get();
         $settings = Settings::select('MonthlyTarget')->first();
@@ -76,6 +78,15 @@ class Dashboard extends Component
         $activeMemberCount = $members->count();
         $totalLoanInsurance =0;
         $totalLifeInsurance = 0;
+        
+        $totalOfNewAccounts = 0;
+       
+        foreach($members as $member){
+            $appCount = Application::where('MemId',$member->id)->get()->count();
+            if($appCount == 1){
+                $totalOfNewAccounts += 1;
+            }
+        }
     
         foreach($loanDetails as $loanDetail){
              $termsOfPayment = TermsOfPayment::where('Id',$loanDetail->TermsOfPayment)->first();
@@ -113,10 +124,10 @@ class Dashboard extends Component
         $totalNotarialFee = $loanDetails->sum('ApprovedNotarialFee');
         $totalOtherDeductions = $totalLoanInsurance + $totalLifeInsurance + $totalNotarialFee;
     
-        $totalSavingsOutstanding = $loanHistory->sum('OutstandingBalance');
+        $totalSavingsOutstanding = $totalMemberSavings->sum('TotalSavingsAmount');
         $totalDailyOverallCollection = $loanDetails->sum('ApprovedDailyAmountDue');
        
-        $totalNewAccountsOverall = $application->where('Status', 7)->count();
+        $totalNewAccountsOverall = $totalOfNewAccounts;
         $totalApplicationforApproval = $application->where('Status', 9)->count();
         $totalIncome = $settings->MonthlyTarget;
 

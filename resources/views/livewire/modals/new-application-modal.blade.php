@@ -120,7 +120,7 @@
                                 <td>
 
                                     <!-- * Data Name-->
-                                    <span class="td-name">{{ $list['Lname'].', '.$list['Fname'].' '.$list['Mname'][0].'.' }}</span>
+                                    <span class="td-name">{{ ($list['Lname']) ? $list['Lname'].', '.$list['Fname'].' '.$list['Mname'][0].'.':'' }}</span>
 
                                 </td>
                                 <td>

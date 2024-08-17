@@ -74,7 +74,7 @@ class NewApplicationModal extends Component
         
         $this->changeLoanType();
         //dd($this->loantypeList);
-       // $this->getmemberList();
+        $this->getmemberList();
     }
 
     public function changeLoanType(){
@@ -114,13 +114,16 @@ class NewApplicationModal extends Component
     }
     public function search(){
        
-        $this->memberlist = Members::where('Status',1)->where('Fname', 'like', '%'.$this->newappmodelkeyword.'%')->orWhere('Lname', 'like', '%'.$this->newappmodelkeyword.'%')->orWhere('Mname', 'like', '%'.$this->newappmodelkeyword.'%')->get();
-        if(!$this->memberlist){
+        if(strlen($this->newappmodelkeyword)>3){
+            $this->memberlist = Members::where('Status',1)->where('Fname', 'like', '%'.$this->newappmodelkeyword.'%')->orWhere('Lname', 'like', '%'.$this->newappmodelkeyword.'%')->orWhere('Mname', 'like', '%'.$this->newappmodelkeyword.'%')->get();
+        }else{
             $this->memberlist = Members::where('Status',1)->get();
         }
+
     }
     public function getmemberList(){           
         $this->memberlist = Members::where('Status',1)->get();
+     
     }
 
     public function render()
