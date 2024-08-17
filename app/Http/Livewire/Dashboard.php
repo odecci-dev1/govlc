@@ -93,6 +93,12 @@ class Dashboard extends Component
              $totalLoanInsurance += $termsOfPayment->LoanInsuranceAmountType == 1 ? $termsOfPayment->LoanInsuranceAmount * $loanDetail->ApprovedLoanAmount:$termsOfPayment->LoanInsuranceAmount;
              $totalLifeInsurance += $termsOfPayment->LifeInsuranceAmountType == 1 ? $termsOfPayment->LifeInsuranceAmount * $loanDetail->ApprovedLoanAmount:$termsOfPayment->LifeInsuranceAmount;
         }
+        $totalFullPayments = 0;
+        foreach($loanHistory as $history){
+            if($history->OutstandingBalance == 0){
+                $totalFullPayments += 1;
+            }
+        }
        
         $dailyCollections = $collectionAreaMembers
             ->whereBetween('DateCollected', [$startDay, $endDay])
@@ -114,8 +120,8 @@ class Dashboard extends Component
         $previousMonthCollected = $monthlyCollection[$previousMonth] ?? 0;
         $totalCollected = $monthlyCollection[$currentMonth] ?? 0;
 
-        $totalAmount = $loanDetails->sum('ApprovedLoanAmount');
-        $totalLoanBalance = $totalAmount - $totalCollected;
+        $totalAmount = $loanDetails->sum('ApprovedLoanAmount')+ $loanDetails->sum('ApproveedInterest');
+        $totalLoanBalance =$loanHistory->sum('OutstandingBalance');
         
         
 
@@ -143,7 +149,7 @@ class Dashboard extends Component
             'totalAdvancePayment' => $totalAdvancePayment,
             'totalOtherDeductions' => $totalOtherDeductions,
             'totalActiveStanding' => 0,
-            'totalFullPayment' => 0,
+            'totalFullPayment' => $totalFullPayments,
             'totalCR' => 0,
             'totalEndingActiveMember' => 0,
             'totalSavingsOutstanding' => $totalSavingsOutstanding,

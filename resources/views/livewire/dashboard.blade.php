@@ -139,7 +139,7 @@
                         </div>
                     </div>
                     <div class="card-2 " style="display: inline;">
-                        <h3>Top Collectibles Per Area</h3>
+                        <h3>Collectibles Per Area</h3>
                         <div class="div-1" style="height: 21rem; overflow-y: auto;">
                             @forelse ($topcollectibles as $top)
                                 <div class="p-wrap">
@@ -246,7 +246,7 @@
                 <!-- * Dashboard Container 3 -->
                 <div class="md-con-3 tlpa">
                     <div class="card-2 tlpa">
-                        <h3>Top Lapses Per Area</h3>
+                        <h3>Lapses Per Area</h3>
                         <div class="div-1" style="height: 180rem; overflow-y: auto;">
                             @forelse ($toplapses as $lapses)
                                 <div class="p-wrap">
