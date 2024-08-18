@@ -82,7 +82,7 @@ class Dashboard extends Component
         $totalOfNewAccounts = 0;
        
         foreach($members as $member){
-            $appCount = Application::where('MemId',$member->id)->get()->count();
+            $appCount = Application::where('MemId',$member->id)->where('Status','!=',11)->get()->count();
             if($appCount == 1){
                 $totalOfNewAccounts += 1;
             }

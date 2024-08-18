@@ -1779,7 +1779,10 @@ class CreateApplication extends Component
             'Status'=> 11,
             "DeclineDate"=> Carbon::now(),
             "DeclinedBy"=> session()->get('auth_userid'),
-        ]);                     
+        ]);   
+        Members::where('MemId', $this->MemId)->update([
+            'Status'=> 2,
+        ]);                    
         //dd($data);
         return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application has been declined', 'mword'=> 'Success']);
     }
