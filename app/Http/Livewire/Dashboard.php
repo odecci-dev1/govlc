@@ -32,16 +32,17 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $this->data = Cache::remember('dashboard_data', 60, function () {
+        $this->data = Cache::remember('dashboard_data', 1, function () {
             return $this->prepareData();
         });
        // dd($this->prepareData());
+      
         $this->activeCollectionData();
         // dd($this->topcollectibles);
         $this->topcollectibles = $this->computeTopValues('CollectedAmount');
         $this->toplapses = $this->computeTopValues('LapseAmount');
-
         //return $this->prepareData();
+       
     }
 
     public function render()
