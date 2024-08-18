@@ -699,7 +699,7 @@ class CreateApplication extends Component
         $mem = Members::select('Id AS id')->where('Fname', $this->member['fname'])
                                 ->where('Mname', $this->member['mname'])
                                 ->where('Lname', $this->member['lname'])
-                                //->where('Suffix', $this->member['suffix'])
+                                ->where('Suffix', empty($this->member['suffix']) ? '':empty($this->member['suffix']))
                                 ->where('POB', $this->member['pob'])
                                 ->whereDate('DOB', $this->member['dob'])->first();
                 
@@ -724,9 +724,9 @@ class CreateApplication extends Component
         }
      
         $comem = CoMaker::where('Fname', $this->comaker['co_Fname'])
-                ->where('Mname', $this->comaker['co_Mname'])
+                ->where('Mname', empty($this->comaker['co_Mname']) ?  '':$this->comaker['co_Mname'])
                 ->where('Lnam', $this->comaker['co_Lname'])
-                //->where('Suffi', $this->comaker['co_Suffix'])
+                ->where('Suffi', empty($this->comaker['co_Suffix']) ? '':$this->comaker['co_Suffix'])
                 ->where('POB', $this->comaker['co_POB'])
                 ->whereDate('DOB', $this->comaker['co_DOB'])->first();
         $checkComaker = 0;
@@ -2137,58 +2137,68 @@ class CreateApplication extends Component
     public function checkExistingMember(){      
         if(!empty($this->member['fname']) && !empty($this->member['fname']) && !empty($this->member['lname']) && !empty($this->member['pob']) && !empty($this->member['barangay']) && !empty($this->member['dob']) && !empty($this->member['age'])){  
             $data = [
-                        'fname'=> $this->member['fname'],
-                        'mname'=> $this->member['mname'],
-                        'lname'=> $this->member['lname'],
-                        'pob'=> $this->member['pob'],
-                        'barangay'=> $this->member['barangay'],
-                        'dob'=> $this->member['dob'],
-                        'age'=> $this->member['age'],
+                        'fname'=>  empty($this->member['fname']) ? '':$this->member['fname'],
+                        'mname'=> empty($this->member['mname']) ? '':$this->member['mname'],
+                        'lname'=> empty($this->member['lname']) ? '':$this->member['lname'],
+                        'pob'=> empty($this->member['pob']) ? '':$this->member['pob'],
+                        'barangay'=>  empty($this->member['barangay']) ? '':$this->member['barangay'],
+                        'dob'=> empty($this->member['dob']) ? '':$this->member['dob'],
+                        'age'=> empty($this->member['age']) ? '':$this->member['age'],
                     ];
-            $checkmem = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/Member_ValidationOnChange', $data);                                   
-            $checkmem = $checkmem->json();    
-            if(isset( $checkmem[0] )){                         
-                if(empty($this->member['gender'])){                 
-                    $this->member['gender'] = $checkmem[0]['gender'];                   
+
+                $checkmem = Members::where('Fname', empty($this->member['fname']) ? '':$this->member['fname'])
+                                ->where('Mname', empty($this->member['mname']) ? '':$this->member['mname'])
+                                ->where('Lname', empty($this->member['lname']) ? '':$this->member['lname'])
+                                ->where('POB', empty($this->member['pob']) ? '':$this->member['pob'])
+                                ->whereDate('DOB', empty($this->member['dob']) ? '':$this->member['dob'])->first();
+                
+            //$checkmem = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/Member_ValidationOnChange', $data);                                   
+           // $checkmem = $checkmem->json();    
+          
+            if( $checkmem ){         
+                $getmonthlyBills = MonthlyBills::where('MemId',$checkmem['MemId'])->first();
+               
+                if(empty($this->member['Gender'])){                 
+                    $this->member['gender'] = $checkmem['Gender'];                   
                 }
-                if(empty($this->member['civil_Status'])){                 
-                    $this->member['civil_Status'] = $checkmem[0]['civil_Status'];                   
+                if(empty($this->member['Civil_Status'])){                 
+                    $this->member['civil_Status'] = $checkmem['Civil_Status'];                   
                 }
-                if(empty($this->member['cno'])){                 
-                    $this->member['cno'] = $checkmem[0]['cno'];                   
+                if(empty($this->member['Cno'])){                 
+                    $this->member['cno'] = $checkmem['Cno'];                   
                 }
-                if(empty($this->member['emailAddress'])){                 
-                    $this->member['emailAddress'] = $checkmem[0]['emailAddress'];                   
+                if(empty($this->member['EmailAddress'])){                 
+                    $this->member['emailAddress'] = $checkmem['EmailAddress'];                   
                 }                
-                if(empty($this->member['house_Stats'])){                                   
-                    $this->member['house_Stats'] = $checkmem[0]['houseStatusId'];                   
+                if(empty($this->member['House_Stats'])){                                   
+                    $this->member['house_Stats'] = $checkmem['House_Stats'];                   
                 }
-                if(empty($this->member['houseNo'])){                                   
-                    $this->member['houseNo'] = $checkmem[0]['houseNo'];                   
+                if(empty($this->member['HouseNo'])){                                   
+                    $this->member['houseNo'] = $checkmem['HouseNo'];                   
                 }
-                if(empty($this->member['country'])){                                   
-                    $this->member['country'] = $checkmem[0]['country'];                   
+                if(empty($this->member['Country'])){                                   
+                    $this->member['country'] = $checkmem['Country'];                   
                 }
-                if(empty($this->member['zipCode'])){                                   
-                    $this->member['zipCode'] = $checkmem[0]['zipCode'];                   
+                if(empty($this->member['ZipCode'])){                                   
+                    $this->member['zipCode'] = $checkmem['ZipCode'];                   
                 }
-                if(empty($this->member['yearsStay'])){                                   
-                    $this->member['yearsStay'] = $checkmem[0]['yearsStay'];                   
+                if(empty($this->member['YearsStay'])){                                   
+                    $this->member['yearsStay'] = $checkmem['YearsStay'];                   
                 }
-                if(empty($this->member['electricBill'])){                                   
-                    $this->member['electricBill'] = $checkmem[0]['electricBill'];                   
+                if(empty($this->getmonthlyBills['electricBill'])){                                   
+                    $this->member['electricBill'] = $getmonthlyBills['ElectricBill'];                   
                 }
-                if(empty($this->member['waterBill'])){                                   
-                    $this->member['waterBill'] = $checkmem[0]['waterBill'];                   
+                if(empty($this->getmonthlyBills['WaterBill'])){                                   
+                    $this->member['waterBill'] = $getmonthlyBills['WaterBill'];                   
                 }
-                if(empty($this->member['otherBills'])){                                   
-                    $this->member['otherBills'] = $checkmem[0]['otherBills'];                   
+                if(empty($this->getmonthlyBills['OtherBills'])){                                   
+                    $this->member['otherBills'] = $getmonthlyBills['OtherBills'];                   
                 }
-                if(empty($this->member['dailyExpenses'])){                                   
-                    $this->member['dailyExpenses'] = $checkmem[0]['dailyExpenses'];                   
+                if(empty($this->getmonthlyBills['DailyExpenses'])){                                   
+                    $this->member['dailyExpenses'] = $getmonthlyBills['DailyExpenses'];                   
                 }
                 //dd($checkmem[0]);
-            }       
+            }
         }
     }
 

@@ -43,7 +43,7 @@ class FieldArea extends Component
     public function rules()
     {
         $rules = [
-            'Area' => 'required',
+            'Area' => 'required|unique:tbl_Area_Model,Area,'.$this->AreaID.',Id',
             'FOID' => 'required',
             'selectedLocations' => 'required',
             'fullname' => 'required',
@@ -56,6 +56,7 @@ class FieldArea extends Component
     {
         $messages = [
             'Area.required' => 'Please enter an area name',
+            'Area.unique' => 'Area already exist',
             'selectedLocations.required' => 'Please select locations from unassigned',
             'FOID.required' => 'Please select a field officer',
         ];
@@ -152,6 +153,7 @@ class FieldArea extends Component
     public function store()
     {
         $this->validate();
+
 
         $locations = array_map('trim', array_column($this->selectedLocations, 'City'));
 
