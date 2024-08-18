@@ -111,16 +111,17 @@
 
 
                         <!-- * Members Data -->
-                       
+                    
                         @if($memberlist)
+                       
                             @foreach($memberlist as $list)
-                            <tr onclick="createIndividualLoan('{{ $list['memId'] }}', '{{ $loantype }}')">
+                            <tr onclick="createIndividualLoan('{{ $list['MemId'] }}', '{{ $loantype }}')">
                             <!-- * Checkbox Opt
                             <td><input type="checkbox" id="checkbox" data-checkbox></td> -->
                                 <td>
 
                                     <!-- * Data Name-->
-                                    <span class="td-name">{{ ($list['Lname']) ? $list['Lname'].', '.$list['Fname'].' '.$list['Mname'][0].'.':'' }}</span>
+                                    <span class="td-name">{{ (($list['Lname']) ? $list['Lname'].', '.$list['Fname'].' '.(($list['Mname'] == '') ? $list['Mname'].'.':''):'') }}</span>
 
                                 </td>
                                 <td>

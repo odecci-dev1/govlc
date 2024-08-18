@@ -122,7 +122,9 @@ class NewApplicationModal extends Component
 
     }
     public function getmemberList(){           
+        
         $this->memberlist = Members::where('Status',1)->get();
+      
      
     }
 
