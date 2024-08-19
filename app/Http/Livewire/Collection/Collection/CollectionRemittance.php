@@ -263,7 +263,7 @@ class CollectionRemittance extends Component
         $locations = explode("|",$area->City);
         $persons=[];
 
-        $collectionAreaMembers = CollectionAreaMember::where("Area_RefNo",$this->areaRefNo)->where('Payment_Status',2)->get();
+         $collectionAreaMembers = CollectionAreaMember::where("Area_RefNo",$this->areaRefNo)->where('Payment_Status',2)->get();
          $collectibles=0;
          $loanHistory=0;
          $totalSavings=0;
