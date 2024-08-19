@@ -113,7 +113,10 @@ class Collection extends Component
                     ]);
                     //Update Member Savings
                     $application = Application::where('NAID',$getCollection->NAID)->with('member')->first();
-                    $currentSavings = MembersSavings::where('MemId',$application->member->MemId)->first()->TotalSavingsAmount;
+                    $currentSavings=0;
+                    if($application){
+                        $currentSavings = MembersSavings::where('MemId',$application->member->MemId)->first()->TotalSavingsAmount;
+                    }
                     $collectedSavings =$getCollection->Savings;
                     $newSavings = $currentSavings + $collectedSavings;
                     MembersSavings::where('MemId',$application->member->MemId)->update([
@@ -249,7 +252,7 @@ class Collection extends Component
         }    
    
        $this->areaRefNo = $this->areaRefNo == 'PENDING' ? '' : $this->areaRefNo;
-       $memberDetails = [];
+  
         if($areaID != ''){
         
                  $this->areaID = $areaID;
@@ -328,6 +331,7 @@ class Collection extends Component
                         $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                         $loanHistory +=  $application->loanhistory->OutstandingBalance;
                         $totalSavings +=  ( $savings) ? $savings->TotalSavingsAmount:0;
+                       
                         $details['totalCollectible']= $collectibles;
                         $details['total_Balance']= $loanHistory;
                         $details['total_savings']=   $totalAreaSavings;
