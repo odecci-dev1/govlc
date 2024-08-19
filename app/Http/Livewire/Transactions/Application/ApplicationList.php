@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\Common;
 use App\Models\Application;
+use App\Models\CoMaker;
 use App\Models\LoanType;
+use App\Models\Members;
 use Carbon\Carbon;
 
 class ApplicationList extends Component
@@ -40,8 +42,16 @@ class ApplicationList extends Component
         Application::where('NAID',$naID)->update([
             'Status' => 2,
             'DeclineDate'=>Carbon::now(),
-             'DeclinedBy'=>session()->get('auth_usertype'),
-        ]) ;                                           
+            'DeclinedBy'=>session()->get('auth_usertype'),
+        ]) ;
+        $getApplication=Application::where('NAID',$naID)->first();
+        Members::where('MemId',$getApplication->MemId)->update([
+            'Status' => 2,
+        ]);
+        CoMaker::where('MemId',$getApplication->MemId)->update([
+            'Status' => 2,
+        ]);
+
         return redirect()->to('/tranactions/application/list')->with('mmessage', 'Application has been deleted');  
     }
     

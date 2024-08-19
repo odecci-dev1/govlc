@@ -2765,7 +2765,7 @@
                                                                     <!-- * Officers' Name-->
                                                                     <div class="td-wrapper">
                                                                         <!-- <img src="{{ URL::to('/') }}/assets/icons/sample-dp/Borrower-1.svg" alt="Dela Cruz, Juana"> <span class="td-num">1</span> -->
-                                                                        <span class="td-name">{{ $fol['lname'] . ', ' . $fol['fname'] . ' ' . mb_substr($fol['mname'], 0, 1) . '.' }}</span>
+                                                                        <span class="td-name">{{ $fol['Lname'] . ', ' . $fol['Fname'] . ' ' . mb_substr($fol['Mname'], 0, 1) . '.' }}</span>
                                                                     </div>
 
                                                                 </td>
@@ -2773,7 +2773,7 @@
                                                                 <!-- * Action -->
                                                                 <td class="td-btns">
                                                                     <div class="td-btn-wrapper">                                           
-                                                                        <button type="button" wire:click="selectEmployee('{{ $fol['fname'] . ' ' . $fol['lname'] }}')" class="a-btn-trash-2">Select</button>
+                                                                        <button type="button" wire:click="selectEmployee('{{ $fol['Fname'] . ' ' . $fol['Lname'] }}')" class="a-btn-trash-2">Select</button>
                                                                     </div>
                                                                 </td>
 
