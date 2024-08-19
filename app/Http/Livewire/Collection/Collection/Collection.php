@@ -98,7 +98,7 @@ class Collection extends Component
                 'Collection_Status'=>7,
             ]);
 
-            $getCollections =  CollectionAreaMember::where('Area_RefNo',$this->areaRefNo)->get();
+            $getCollections =  CollectionAreaMember::where('Area_RefNo',$this->areaRefNo)->where('Status',1)->get();
             if($getCollections){
                 foreach($getCollections as $getCollection){
                     //Update Oustanding Balance
@@ -191,6 +191,8 @@ class Collection extends Component
                 ]);
                 $colRefNo = $createColRefNo->RefNo;
             }
+
+         
          
             $collectionArea= CollectionArea::create([
                 'AreaId'=>$this->areaID,
@@ -199,6 +201,8 @@ class Collection extends Component
                 'CollectionRefNo'=>  $colRefNo,
                 ]);
                 foreach ($this->areaDetails as $detail) {
+
+
             
                     CollectionAreaMember::create([
                         'NAID'=>$detail['naid'],
@@ -549,6 +553,7 @@ class Collection extends Component
                  $totalSavings=0;
                  $appDetails = [];
                  $totalItems=0;
+                 $newPenalty = 0;
                  $fo = FieldOfficer::where('FOID',$area->FOID)->first();
                  $details['expectedCollection']= 0;
                  $details['totalCollectible']= 0;
@@ -581,10 +586,18 @@ class Collection extends Component
                            $loanHistory +=  $application->loanhistory->OutstandingBalance;
                            $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
                            $totalItems +=  1;
+
+                            $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
+                            
+                            if($getLoanHistory){
+                                if($getLoanHistory->DueDate > date_format(Carbon::now(),'Y-m-d')){
+                                    $newPenalty += $getLoanHistory->OutstandingBalance * .20;
+                                }
+                            }
                             $details['expectedCollection']= $collectibles;
                             $details['totalCollectible']= $collectibles;
                             $details['total_collectedAmount']= 0;
-                            $details['penalty']= 0;
+                            $details['penalty']= $newPenalty;
                             $details['Area']= $area->Area;
                             $details['areaName']= $area->Area;
                             $details['areaID']= $area->Id;
