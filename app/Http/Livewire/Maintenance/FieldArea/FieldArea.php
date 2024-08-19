@@ -322,7 +322,8 @@ class FieldArea extends Component
         $this->paginationPaging['nextPage'] = $areas->currentPage() + 1 > $areas->lastPage() ? $areas->lastPage() : $areas->currentPage() + 1;
         $this->paginationPaging['prevPage'] = $areas->currentPage() - 1 < 1 ? 1 : $areas->currentPage() - 1;
 
-        $fodata = FieldOfficer::where('Status', 1)
+        $fodata = FieldOfficer::doesntHave('area')
+            ->where('Status', 1)
             ->where(function ($query) {
             $query->where('Fname', 'like', "%{$this->searchfokeyword}%")
                     ->orWhere('Mname', 'like', "%{$this->searchfokeyword}%")

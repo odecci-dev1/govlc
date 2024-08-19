@@ -407,9 +407,11 @@
 
                                 </tr>
                                 @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="2">No unassigned officers found.</td>
+                                </tr>
                             @endif     
-
-                          
 
                         </table>
 
