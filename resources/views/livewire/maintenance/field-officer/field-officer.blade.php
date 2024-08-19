@@ -266,15 +266,9 @@
                                                     {{ strlen($filename) > 23 ? strtolower(substr($filename, 0, 23)) . '...' : $filename }}
                                                 </div>
                                             </a>
-                                            {{-- <button
-                                                type="button" 
-                                                wire:click="$set('foFileToDelete', '{{ $foid }}')"
-                                                wire:click="$set('showDeleteModal', true)"
-                                                style="position: absolute; top: 0; right: 0; transform: translate(0.4rem, -0.6rem); padding: 0.3rem 0.7rem; border-radius: 100%; color: white; background: red">×
-                                            </button> --}}
                                             <button
                                                 type="button" 
-                                                wire:click="confirmRemoveAttachment('{{ $foid }}')"
+                                                wire:click="removeAttachment('{{ $attachments['FilePath'] }}', '{{ $foid }}')"
                                                 style="position: absolute; top: 0; right: 0; transform: translate(0.4rem, -0.6rem); padding: 0.3rem 0.7rem; border-radius: 100%; color: white; background: red">×</button>
                                         </div>
                                     @else
@@ -288,12 +282,18 @@
                                 @endforeach
                             @else
                                 @foreach($officer['Attachments'] as $attachments)
+                                <div style="position: relative;">
                                     <a href="{{ $attachments->temporaryUrl() }}" target="_blank" title="{{ $attachments->getClientOriginalName() }}">
                                         <div type="button" class="fileButton">
                                             <img src="{{ URL::to('/') }}/assets/icons/file.svg" alt="file.png">
                                             {{ strlen($attachments->getClientOriginalName()) > 23 ? strtolower(substr($attachments->getClientOriginalName(), 0, 23)) . '...' : $attachments->getClientOriginalName() }}
                                         </div>
                                     </a>
+                                    <button
+                                        type="button" 
+                                        wire:click="removeTmpAttachment('{{ $attachments->temporaryUrl() }}')"
+                                        style="position: absolute; top: 0; right: 0; transform: translate(0.4rem, -0.6rem); padding: 0.2rem 0.6rem; border-radius: 100%; color: white; background: red">×</button>
+                                </div>
                                 @endforeach
                             @endif
                         @endif
