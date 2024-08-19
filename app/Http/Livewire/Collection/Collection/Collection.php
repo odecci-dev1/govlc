@@ -181,11 +181,13 @@ class Collection extends Component
             if($this->colrefNo != ''){
                 $colRefNo = $this->colrefNo;
             }else{
-                $colRefNo = Col::create([
+                $createColRefNo = Col::create([
                     'RefNo' => 'COL-'.date_format(Carbon::now(),'Ymd').'-'.$collectionCount,
                     'DateCreated' => date_format(Carbon::now(),'Y-m-d')
                 ]);
+                $colRefNo = $createColRefNo->RefNo;
             }
+         
             $collectionArea= CollectionArea::create([
                 'AreaId'=>$this->areaID,
                 'Area_RefNo'=> $areaReference,
@@ -220,7 +222,7 @@ class Collection extends Component
         $this->folist = FieldOfficer::where('Status',1)->get()->sortBy('Lname');
         $this->areaDetails = collect([]);
         $this->areaDetailsFooter = collect([]);
-       
+    
         if($this->areaID == ''){
             $this->areaID = $areaID;       
             $this->foid = $foid;
@@ -247,12 +249,27 @@ class Collection extends Component
         }    
    
        $this->areaRefNo = $this->areaRefNo == 'PENDING' ? '' : $this->areaRefNo;
-  
+       $memberDetails = [];
         if($areaID != ''){
-                $this->areaID = $areaID;
+        
+                 $this->areaID = $areaID;
+                 $collectionAreaMembers=[];
+                 if($areaRefNo != ''){
+                    $collectionAreaMembers = CollectionAreaMember::where('Area_RefNo',$areaRefNo)->get();
+                 }else{
+                    $selectedArea = Area::where('AreaID', $areaID)->first();
+                    $locations = explode("|",$selectedArea->City);
+                    foreach($locations as $location){
+                        $address = explode(",",$location);
+                        $barangay = trim($address[0],' ');
+                        $city = trim($address[1],' ');
+                        $membersPerLocations =  Members::where([['Barangay','LIKE','%'.$barangay.'%'],['City','LIKE','%'.$city.'%'],['Status','=',1]])->get();
+                        foreach($membersPerLocations as $member){
+                            $collectionAreaMembers[] = $member;
+                        }
+                    }
+                 }
 
-                $collectionAreaMembers = CollectionAreaMember::where('Area_RefNo',$areaRefNo)->get();
-                
                  $details=[];
                  //Get Area Applications
                  $collectibles=0;
@@ -267,14 +284,13 @@ class Collection extends Component
                     $details['total_collectedAmount']= 0;
                     $details['total_FieldExpenses']= 0;
                     $details['daily_savings']= 0;
+               
                  foreach($collectionAreaMembers as $collectionAreaMember){
-              
-                    $application= Application::where('NAID',$collectionAreaMember->NAID)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
-                    $savings= MembersSavings::where('MemId',$application->member->MemId)->first();
-                 
-                    
-              ;
+                  
+                     $application= Application::where(($collectionAreaMember->NAID) ? 'NAID':'MemId',($collectionAreaMember->NAID) ? $collectionAreaMember->NAID : $collectionAreaMember->MemId )->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
+       
                     if(!is_null($application)) {
+                        $savings= MembersSavings::where('MemId',$application->MemId)->first();
                         if($application->loanhistory->OutstandingBalance != 0){
                         $AreaRefNo= CollectionAreaMember::where('Area_RefNo',$areaRefNo)->where('NAID',$application->NAID)->first();
                         $paymentStatus = ($AreaRefNo) ? CollectionStatus::where('Id',$AreaRefNo->Payment_Status)->first()->Status:'Pending';
@@ -309,11 +325,6 @@ class Collection extends Component
                                 $totalApplicationAdvance += $collectionAreaMember->AdvancePayment;
                             }
                         }
-                    
-
-                       //dd($totalAreaSavings);
-                           //
-                        
                         $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                         $loanHistory +=  $application->loanhistory->OutstandingBalance;
                         $totalSavings +=  ( $savings) ? $savings->TotalSavingsAmount:0;
@@ -376,7 +387,9 @@ class Collection extends Component
                                                         'total_daily_savings' => $details['daily_savings'],
                                                         //'total_daily_savings' => collect($details['collection'])->sum('dailySavings'),
                                                      ];    
-        }
+        
+    }
+        //dd($memberDetails);
     }
 
     public function mount(){       
@@ -502,7 +515,7 @@ class Collection extends Component
             $this->areas[]=$details;
 
             } 
-      
+            //dd($this->areas);
             //$this->areas = Area::whereNotNull('FOID')->where('Status',1)->get();
             
             //$this->areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  

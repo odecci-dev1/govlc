@@ -1722,33 +1722,48 @@ class CreateApplication extends Component
                         "totalSavingsUsed" => 0                                
                     ];
 
+                    $checkMemberSavings = MembersSavings::where('MemId',$this->memberId)->first();
+                    if(!$checkMemberSavings){
+                        MembersSavings::create([
+                            'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                            'DateUpdated'=>Carbon::now(),
+                            'UpdatedFrom'=>'Updated from new application with NAID='.$this->naID,
+                            'UpdateBy'=>session()->get('auth_userid'),
+                        ]);
+                    }else{
+                        MembersSavings::where('MemId',$this->memberId)->update([
+                            'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                            'DateUpdated'=>Carbon::now(),
+                            'UpdatedFrom'=>'Updated from new application with NAID='.$this->naID,
+                            'UpdateBy'=>session()->get('auth_userid'),
+                        ]);
+                    }
+                  
 
-                    MembersSavings::where('MemId',$this->memberId)->update([
-                        'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
-                        'DateUpdated'=>Carbon::now(),
-                        'UpdatedFrom'=>'Updated from new application with NAID='.$this->naID,
-                        'UpdateBy'=>session()->get('auth_userid'),
-                    ]);
-
-                    LoanHistory::where('MemId', $this->memberId)->whereNot('OustandingBalance',0)->whereNot('NAID',$this->naID)->update([
-                        'OutstandingBalance' => $this->loanDetails['OutstandingBalance'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                    LoanHistory::where('MemId', $this->memberId)->whereNot('OutstandingBalance',0)->whereNot('NAID',$this->naID)->update([
+                        'OutstandingBalance' => $this->loanDetails['outstandingBalance'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
                         'DateOfFullPayment'=> Carbon::now(),
                     ]);
                     
-
-                    SavingsRunningBalance::create([[
-                        'MemId'=>$this->memberId,
-                        'Savings'=> $this->loanDetails['totalSavingsAmount'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
-                        'Date'=>Carbon::now(),
-                        'Note'=>'Updated from new application with application: '.$this->naID,
-                        'Updated_By'=>session()->get('auth_userid'),
-                    ],[
-                        'MemId'=>$this->memberId,
-                        'Savings'=> $this->loanDetails['totalSavingsAmount'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
-                        'Date'=>Carbon::now(),
-                        'Note'=>'A savings is deposited from application: '.$this->naID,
-                        'Updated_By'=>session()->get('auth_userid'),
-                    ]]);
+                    if(isset($this->loanDetails['totalSavingUsed'])){
+                        SavingsRunningBalance::create([
+                            'MemId'=>$this->memberId,
+                            'Savings'=> $this->loanDetails['totalSavingsAmount'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                            'Date'=>Carbon::now(),
+                            'Note'=>'Updated from new application with application: '.$this->naID,
+                            'Updated_By'=>session()->get('auth_userid'),
+                        ]);
+                        SavingsRunningBalance::create([
+                            
+                                'MemId'=>$this->memberId,
+                                'Savings'=> $this->loanDetails['totalSavingsAmount'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                                'Date'=>Carbon::now(),
+                                'Note'=>'A savings is deposited from application: '.$this->naID,
+                                'Updated_By'=>session()->get('auth_userid'),
+                            
+                        ]);
+                    }
+                   
       
                     Application::where('NAID',$this->naID)->update([
                         'Status' => 14,
