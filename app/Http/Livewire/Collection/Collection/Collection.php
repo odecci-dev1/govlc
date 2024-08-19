@@ -115,7 +115,8 @@ class Collection extends Component
                     $application = Application::where('NAID',$getCollection->NAID)->with('member')->first();
                     $currentSavings=0;
                     if($application){
-                        $currentSavings = MembersSavings::where('MemId',$application->member->MemId)->first()->TotalSavingsAmount;
+                        $currentSaving = MembersSavings::where('MemId',$application->member->MemId)->first();
+                        $currentSavings = ($currentSavings) ? $currentSaving->TotalSavingsAmount : 0;
                     }
                     $collectedSavings =$getCollection->Savings;
                     $newSavings = $currentSavings + $collectedSavings;
