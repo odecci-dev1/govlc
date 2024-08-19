@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use App\Traits\Common;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class FieldArea extends Component
 {
@@ -33,7 +34,7 @@ class FieldArea extends Component
     public $folist;
 
     public $searchfokeyword = '';
-
+    public $isProcessing = false;
     public $paginate = [];
     public $paginationPaging = [];
 
@@ -43,7 +44,13 @@ class FieldArea extends Component
     public function rules()
     {
         $rules = [
-            'Area' => 'required|unique:tbl_Area_Model,Area,'.$this->AreaID.',Id',
+            // 'Area' => 'required|unique:tbl_Area_Model,Area,'.$this->AreaID.',Id',
+            'Area' => [
+                'required',
+                Rule::unique('tbl_Area_Model', 'Area')
+                    ->ignore($this->AreaID, 'Id')
+                    ->where('Status', 1),
+                ],
             'FOID' => 'required',
             'selectedLocations' => 'required',
             'fullname' => 'required',
@@ -110,12 +117,40 @@ class FieldArea extends Component
         $this->emit('closeSearchFOModal', ['data' => '' , 'title' => 'This is the title', 'message' => 'This is the message']);
     }
 
+    // public function addToSelected($location, $stat)
+    // {
+    //     $this->selectedLocations = is_array($this->selectedLocations) ? $this->selectedLocations : [];
+    //     $this->unassignedLocations = is_array($this->unassignedLocations) ? $this->unassignedLocations : [];
+
+    //     $this->selectedLocations[] = ['City' => $location, 'Status' => $stat];
+
+    //     $this->unassignedLocations = array_filter($this->unassignedLocations, function($unassigned) use ($location) {
+    //         return $unassigned['City'] !== $location;
+    //     });
+    // }
     public function addToSelected($location, $stat)
     {
         $this->selectedLocations = is_array($this->selectedLocations) ? $this->selectedLocations : [];
         $this->unassignedLocations = is_array($this->unassignedLocations) ? $this->unassignedLocations : [];
 
-        $this->selectedLocations[] = ['City' => $location, 'Status' => $stat];
+        // Check if the location already exists in selectedLocations
+        $alreadySelected = false;
+        foreach ($this->selectedLocations as $selected) {
+            if ($selected['City'] === $location) {
+                $alreadySelected = true;
+                break;
+            }
+        }
+
+        // Only add the location if it isn't already selected
+        if (!$alreadySelected) {
+            $this->selectedLocations[] = ['City' => $location, 'Status' => $stat];
+
+            // Remove the location from unassignedLocations
+            $this->unassignedLocations = array_filter($this->unassignedLocations, function($unassigned) use ($location) {
+                return $unassigned['City'] !== $location;
+            });
+        }
 
         $this->unassignedLocations = array_filter($this->unassignedLocations, function($unassigned) use ($location) {
             return $unassigned['City'] !== $location;
@@ -141,6 +176,7 @@ class FieldArea extends Component
         $this->FOID = null;
         $this->fullname = null;
         $this->selectedLocations = [];
+        $this->getUnassignedLocation();
     }
 
     public function removeAssignedLocations()
@@ -237,17 +273,6 @@ class FieldArea extends Component
         return redirect()->to('/maintenance/fieldarea');
     }
 
-    // public function trash($AreaID)
-    // {
-    //     $area = Area::where('AreaID', $AreaID);
-    //     $area->update([
-    //         'Status' => 2,
-    //         'DateUpdated' => now(),
-    //     ]);
-
-    //     return redirect()->to('/maintenance/fieldarea')->with('mmessage', 'Field area successfully trashed');   
-    // }
-
     public function trash($AreaID)
     {
         $areaUpdate = Area::where('AreaID', $AreaID);
@@ -290,16 +315,8 @@ class FieldArea extends Component
         $this->usertype = session()->get('auth_usertype');
         $this->selectedLocations = collect([]);
 
-        $unassignedLocations = Area::whereNull('FOID') 
-                ->where('Status', 1)->get();
-
-        $this->unassignedLocations = $unassignedLocations->map(function($location) {
-            return [
-                'City' => $location->City,
-                'Status' => $location->Status
-            ];
-        })->toArray();
-
+        $this->getUnassignedLocation();
+ 
         $this->paginate['page'] = 1;
         $this->paginate['pageSize'] = 10;
         $this->paginate['FilterName'] = '';
@@ -340,5 +357,18 @@ class FieldArea extends Component
         });     
 
         return view('livewire.maintenance.field-area.field-area');
+    }
+
+    private function getUnassignedLocation()
+    {
+        $unassignedLocations = Area::whereNull('FOID') 
+                ->where('Status', 1)->get();
+
+        $this->unassignedLocations = $unassignedLocations->map(function($location) {
+            return [
+                'City' => $location->City,
+                'Status' => $location->Status
+            ];
+        })->toArray();
     }
 }

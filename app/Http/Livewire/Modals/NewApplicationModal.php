@@ -13,6 +13,8 @@ class NewApplicationModal extends Component
 {
     public $memberlist;
     public $newappmodelkeyword = '';
+    public $selectedMemberId = null;
+    public $selectedMember = null;
 
     public $loantype;
     public $loanterms;
@@ -20,20 +22,54 @@ class NewApplicationModal extends Component
     public $loantypename = '';
     public $termsOfPaymentList = [];
 
-    public function messages(){
+    public function messages()
+    {
         $messages = [];
         $messages['loantype.required'] = 'Please select loan type';
         $messages['loanterms.required'] = 'Please select loan terms';
         return $messages;
     }
 
-    public function searchExistingMembers($value){
+    public function searchExistingMembers($value)
+    {
         $this->memberlist = $value;
     }
 
-    public function createIndividualLoan($value, $loanid){
-      
-        $this->validate([ 'loantype' => 'required', 'loanterms' => 'required' ]);
+    public function selectMember($memid, $loanid, $loanterms)
+    {
+        if (empty($this->loanterms)) {
+            $this->deselectMember();
+            $this->validate([ 
+                'loanterms' => 'required' 
+            ]);
+        }
+        $this->selectedMemberId = $memid;
+        $this->selectedMember = Members::where('MemId', $memid)->first();
+        $this->memberlist = collect([$this->selectedMember]);
+    }
+
+    public function deselectMember()
+    {
+        $this->selectedMemberId = null;
+        $this->selectedMember = null;
+        $this->getmemberList();
+    }
+
+    public function createIndividualLoan($value, $loanid)
+    {
+        if (empty($this->loanterms)) {
+            $this->deselectMember();
+            $this->validate([ 
+                'loanterms' => 'required' 
+            ]);
+        }
+
+        $this->validate([ 
+            'loantype' => 'required', 
+            'loanterms' => 'required' 
+        ]);
+
+        
         if(in_array($loanid, ['LT-02'])){          
             return redirect()->action(
                 [CreateApplicationGroup::class], ['type' => 'create', 'loanTypeID' => $loanid, 'loanTypeName' => $this->loantypeList[$loanid]['loanTypeName'], 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
@@ -46,7 +82,6 @@ class NewApplicationModal extends Component
                 );
             }
             else{          
-                // return redirect()->to('/tranactions/application/create/'.$value);            
                 return redirect()->action(
                     [CreateApplication::class], ['type' => 'create', 'naID' => $value, 'loanTypeID' => $loanid, 'loanTypeName' => $this->loantypeList[$loanid]['loanTypeName'], 'loantermsID' => $this->loanterms, 'loantermsName' => $this->termsOfPaymentList[$this->loanterms]['termsofPayment'] ]
                 );
@@ -54,14 +89,13 @@ class NewApplicationModal extends Component
         }
     }
 
-    public function redirectToGroupLoan(){
+    public function redirectToGroupLoan()
+    {
         return redirect()->to('/tranactions/group/application/create');
     }
 
-    public function mount(){
-      
-        // $getloans = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetails');  
-        // $getloans = $getloans->json();       
+    public function mount()
+    {
         $getloans = LoanType::where('Status',1)->get();
         $loantypeList = collect([]);
         if(count($getloans) > 0){
@@ -73,11 +107,11 @@ class NewApplicationModal extends Component
         $this->loantypeList = $loantypeList;
         
         $this->changeLoanType();
-        //dd($this->loantypeList);
         $this->getmemberList();
     }
 
-    public function changeLoanType(){
+    public function changeLoanType()
+    {
         // if($loanId == 'LT-02'){
         //     $this->redirectToGroupLoan();
         // }
@@ -85,9 +119,11 @@ class NewApplicationModal extends Component
         $loanId = $this->loantype;
         $this->getLoanTypeName($loanId);
         $this->getLoanTerms();
-       
+        $this->getmemberList();
     }
-    public function changeTerms(){
+
+    public function changeTerms()
+    {
         $this->getmemberList(); 
     }
 
@@ -98,9 +134,8 @@ class NewApplicationModal extends Component
         }
     }
 
-    public function getLoanTerms(){
-        // $loanterms = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Approval/getTermsListByLoanType', ['loantypeid' => $this->loantype]);                  
-        // $loanterms = $loanterms->json();      
+    public function getLoanTerms()
+    {
         $loanterms = TermsOfPayment::where('LoanTypeId',$this->loantype)->get();
  
         if( $loanterms ){
@@ -109,24 +144,27 @@ class NewApplicationModal extends Component
                 $this->termsOfPaymentList[$loanterms['Id']] = ['topId' => $loanterms['Id'],'termsofPayment' => $loanterms['NameOfTerms'],'loanTypeId' => $loanterms['Id']];   
             }
         }
-        // dd($this->termsOfPaymentList);
-        // dd('as');
     }
-    public function search(){
-       
-        if(strlen($this->newappmodelkeyword)>3){
-            $this->memberlist = Members::where('Status',1)->where('Fname', 'like', '%'.$this->newappmodelkeyword.'%')->orWhere('Lname', 'like', '%'.$this->newappmodelkeyword.'%')->orWhere('Mname', 'like', '%'.$this->newappmodelkeyword.'%')->get();
-        }else{
-            $this->memberlist = Members::where('Status',1)->get();
-        }
 
+
+    public function updatedNewappmodelkeyword()
+    {
+        $this->getmemberList();
+        $this->deselectMember();
     }
-    public function getmemberList(){           
-        
-        $this->memberlist = Members::where('Status',1)->get();
-      
-     
+
+
+    public function getmemberList()
+    {
+        $this->memberlist = Members::where('Status', 1)
+            ->where(function ($query) {
+                $query->where('Fname', 'like', '%' . $this->newappmodelkeyword . '%')
+                      ->orWhere('Lname', 'like', '%' . $this->newappmodelkeyword . '%')
+                      ->orWhere('Mname', 'like', '%' . $this->newappmodelkeyword . '%');
+            })
+            ->get();
     }
+
 
     public function render()
     {       
