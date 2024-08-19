@@ -295,7 +295,7 @@
                                             <tr>
                                                 <td>
                                                     @if($usertype != 2)
-                                                        <button type="button" wire:click="addToSelected('{{ $unassigned['City'] }}', '{{ $unassigned['Status'] }}')" class="btn-add-icon"> + </button>
+                                                        <button type="button" wire:click.prevent.throttle.2000ms="addToSelected('{{ $unassigned['City'] }}', '{{ $unassigned['Status'] }}')" class="btn-add-icon" @if($isProcessing) disabled @endif> + </button>
                                                     @endif
                                                 </td>
                                                 <td class="td-name">
