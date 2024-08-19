@@ -38,6 +38,7 @@ use App\Models\MembersSavings;
 use App\Models\SavingsRunningBalance;
 use App\Models\CollectionAreaMember;
 use App\Models\Area;
+use App\Models\User;
 
 class CreateApplication extends Component
 {
@@ -1184,6 +1185,7 @@ class CreateApplication extends Component
                 ->where('Lnam', $this->comaker['co_Lname'])
                 ->where('Suffi', empty($this->comaker['co_Suffix']) ? '':$this->comaker['co_Suffix'])
                 ->where('POB', $this->comaker['co_POB'])
+                ->where('Status',1)
                 ->whereDate('DOB', $this->comaker['co_DOB'])->first();
         $checkComaker = 0;
         if($comem){
@@ -1648,7 +1650,11 @@ class CreateApplication extends Component
                                 'loanDetails.savingsToUse' => '',                                                                
                             ]);
 
-  
+                    if($this->loanDetails['totalSavings'] < $this->loanDetails['totalSavingUsed']){
+                        session()->flash('errmmessage', 'Not allowed to use savings, savings is insufficient.'); 
+                        return false;
+                    }
+
                     LoanDetails::where('NAID',$this->naID)->update([
                                 'Courerier' => $this->loanDetails['courier'],
                                 'CourerierName' => $this->loanDetails['courier'] == 'Employee' ? $this->loanDetails['courieremployee'] : $this->loanDetails['courierclient'],
@@ -1663,7 +1669,7 @@ class CreateApplication extends Component
                         'LoanAmount' => $this->loanAmount, 
                         'DueDate'=>date_format($this->dueDate,'Y-m-d'),
                         'OutstandingBalance'=> $this->outstandingBalance,
-                        'DateReleased'=> $this->dueDate,
+                        'DateReleased'=> date_format(Carbon::now(),'Y-m-d'),
                         'DateCreated'=> $this->loanDetails['dateCreated'],
                         'NAID'=> $this->naID,
                         'MemId'=> $this->memberId,
@@ -1718,19 +1724,31 @@ class CreateApplication extends Component
 
 
                     MembersSavings::where('MemId',$this->memberId)->update([
-                        'TotalSavingsAmount'=> $this->loanDetails['totalSavingsAmount'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                        'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
                         'DateUpdated'=>Carbon::now(),
                         'UpdatedFrom'=>'Updated from new application with NAID='.$this->naID,
                         'UpdateBy'=>session()->get('auth_userid'),
                     ]);
 
-                    SavingsRunningBalance::create([
+                    LoanHistory::where('MemId', $this->memberId)->whereNot('OustandingBalance',0)->whereNot('NAID',$this->naID)->update([
+                        'OutstandingBalance' => $this->loanDetails['OutstandingBalance'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                        'DateOfFullPayment'=> Carbon::now(),
+                    ]);
+                    
+
+                    SavingsRunningBalance::create([[
                         'MemId'=>$this->memberId,
                         'Savings'=> $this->loanDetails['totalSavingsAmount'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
                         'Date'=>Carbon::now(),
-                        'Note'=>'Updated from new application with NAID='.$this->naID,
+                        'Note'=>'Updated from new application with application: '.$this->naID,
                         'Updated_By'=>session()->get('auth_userid'),
-                    ]);
+                    ],[
+                        'MemId'=>$this->memberId,
+                        'Savings'=> $this->loanDetails['totalSavingsAmount'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                        'Date'=>Carbon::now(),
+                        'Note'=>'A savings is deposited from application: '.$this->naID,
+                        'Updated_By'=>session()->get('auth_userid'),
+                    ]]);
       
                     Application::where('NAID',$this->naID)->update([
                         'Status' => 14,
@@ -3231,8 +3249,9 @@ class CreateApplication extends Component
     }
 
     public function searchEmployee(){
-        $emplist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserListFilter', [ 'page' => 1, 'pageSize' => 50, 'fullname' => $this->searchempkeyword ]);         
-        $this->emplist = $emplist->json();          
+       // $emplist = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/UserRegistration/GetUserListFilter', [ 'page' => 1, 'pageSize' => 50, 'fullname' => $this->searchempkeyword ]);  
+        $this->emplist = User::where('Fname','like','%'.$this->searchempkeyword.'%')->orWhere('Lname','like','%'.$this->searchempkeyword.'%')->orWhere('Mname','like','%'.$this->searchempkeyword.'%')->get();
+        //$this->emplist = $emplist->json();          
     }
 
     public function render()

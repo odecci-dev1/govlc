@@ -19,20 +19,20 @@ class ApplicationReleasingList extends Component
     public $loanAmountFrom = 0;
     public $loanAmountTo = 0;
 
-    public function mount(){
+    // public function mount(){
       
-        $getloans = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetails');  
-        $getloans = $getloans->json();       
-        $loantypeList = collect([]);
-        if(count($getloans) > 0){
-            foreach($getloans as $getloans){
-                $loantypeList[$getloans['loanTypeID']] = ['loanTypeName' => $getloans['loanTypeName'], 'loanTypeID' => $getloans['loanTypeID']];
-            }
-        }
+    //     $getloans = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/LoanType/LoanTypeDetails');  
+    //     $getloans = $getloans->json();       
+    //     $loantypeList = collect([]);
+    //     if(count($getloans) > 0){
+    //         foreach($getloans as $getloans){
+    //             $loantypeList[$getloans['loanTypeID']] = ['loanTypeName' => $getloans['loanTypeName'], 'loanTypeID' => $getloans['loanTypeID']];
+    //         }
+    //     }
        
-        $this->loantypeList = $loantypeList; 
-        $this->loantype = '';
-    }
+    //     $this->loantypeList = $loantypeList; 
+    //     $this->loantype = '';
+    // }
     
     public function render()
     {

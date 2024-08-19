@@ -32,15 +32,17 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $this->data = Cache::remember('dashboard_data', 1, function () {
-            return $this->prepareData();
-        });
-       // dd($this->prepareData());
-      
+        // $this->data = Cache::remember('dashboard_data', 1, function () {
+        //     return $this->prepareData();
+        // });
+     
+        
         $this->activeCollectionData();
-        // dd($this->topcollectibles);
+        //  dd($this->topcollectibles);
         $this->topcollectibles = $this->computeTopValues('CollectedAmount');
         $this->toplapses = $this->computeTopValues('LapseAmount');
+        $this->data = $this->prepareData();
+        return $this->data;
         //return $this->prepareData();
        
     }
@@ -142,7 +144,8 @@ class Dashboard extends Component
         $totalDaysLeft = Carbon::now()->endOfMonth()->diffInDays($currentDate);
         $totalPercentOfLastEntry = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
         $targetStatus = $previousMonthCollected >= $totalIncome;
-        return [
+     
+        return  [
             'activeMemberCount' => $activeMemberCount,
             'totalLoanBalance' => $totalLoanBalance,
             'totalInterest' => $totalInterest,

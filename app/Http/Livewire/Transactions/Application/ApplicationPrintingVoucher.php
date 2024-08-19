@@ -24,7 +24,7 @@ class ApplicationPrintingVoucher extends Component
     {
         $res = Application::where('NAID', $this->naID)->with('member')->with('detail')->with('loantype')->with('termsofpayment')->first(); 
         $formulas = AdvancePaymentFormula::where('APFID',$res->TermsOfpayment->Formula)->first();
-        $loanHisotry = LoanHistory::where('NAID',$this->naID)->first();
+        $loanHistory = LoanHistory::where('NAID',$this->naID)->first();
       
 
       
@@ -56,10 +56,10 @@ class ApplicationPrintingVoucher extends Component
         $this->loansummary['releasingDate'] = $res->ReleasingDate;
 
         $this->loansummary['holidayPayment'] = $getHolidays * $calculatedResult['collectible'];
-        $this->loansummary['deductions'] = $this->loansummary['notarialFee'] + $this->loansummary['holidayPayment'] + $this->loansummary['loanInsurance'] + $calculatedResult['advancePayment'] + $this->loansummary['lifeInsurance'] +  ($this->loansummary['deductInterest'] == 1 ? $this->loansummary['interestAmount']:0);
+        $this->loansummary['deductions'] = $this->loansummary['notarialFee'] + $this->loansummary['holidayPayment'] + $this->loansummary['loanInsurance'] + $calculatedResult['advancePayment'] + $this->loansummary['lifeInsurance'] +  ($this->loansummary['deductInterest'] == 1 ? $this->loansummary['interestAmount']:0) + $loanHistory->UsedSavings;
         
         $this->loansummary['loanReceivables'] = $this->loansummary['loanPrincipal'] - $this->loansummary['deductions'];
-        $this->loansummary['usedSavings'] = $loanHisotry->UsedSavings;
+        $this->loansummary['usedSavings'] = $loanHistory->UsedSavings;
         $this->loansummary['fname'] = $res->member->Fname;
         $this->loansummary['lname'] = $res->member->Lname;
         $this->loansummary['mname'] = $res->member->Mname;
