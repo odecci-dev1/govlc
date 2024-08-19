@@ -249,10 +249,8 @@ class Collection extends Component
        $this->areaRefNo = $this->areaRefNo == 'PENDING' ? '' : $this->areaRefNo;
   
         if($areaID != ''){
-                $this->areaID = $areaID;
-
-                $collectionAreaMembers = CollectionAreaMember::where('Area_RefNo',$areaRefNo)->get();
-                
+                 $this->areaID = $areaID;
+                 $collectionAreaMembers = CollectionAreaMember::where('Area_RefNo',$areaRefNo)->get();
                  $details=[];
                  //Get Area Applications
                  $collectibles=0;
@@ -273,7 +271,7 @@ class Collection extends Component
                     $savings= MembersSavings::where('MemId',$application->member->MemId)->first();
                  
                     
-              ;
+              
                     if(!is_null($application)) {
                         if($application->loanhistory->OutstandingBalance != 0){
                         $AreaRefNo= CollectionAreaMember::where('Area_RefNo',$areaRefNo)->where('NAID',$application->NAID)->first();
