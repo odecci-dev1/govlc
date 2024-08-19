@@ -110,6 +110,7 @@ class Collection extends Component
                     $newOutStaingBalance = $currentOutStanding - ($usedAdvancePayment+ $collectedAmount + $collectedAdvancePayment); 
                     LoanHistory::where('NAID', $getCollection->NAID)->update([
                         'OutstandingBalance'=>$newOutStaingBalance,
+                        'DateOfFullPayment'=>($newOutStaingBalance == 0) ? Carbon::now():NULL,
                     ]);
                     //Update Member Savings
                     $application = Application::where('NAID',$getCollection->NAID)->with('member')->first();
@@ -210,9 +211,11 @@ class Collection extends Component
                         'AdvanceStatus'=> 0,
                         'Payment_Status'=> 2,
                     ]);
-
-                    LoanHistory::create([]);
-                    
+                    if($detail['penalty'] != 0){
+                        LoanHistory::where('NAID',$detail['naid'])->update([
+                            'Penalty'=>$detail['penalty'],
+                        ]);
+                    }
                 }
           
 
@@ -342,11 +345,13 @@ class Collection extends Component
                         $pastDue=0;
                         $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
                         if($getLoanHistory){
-                          
-                            if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
-                                $newPenalty = $getLoanHistory->OutstandingBalance * .20;
-                                $pastDue = $newPenalty + $getLoanHistory->OutstandingBalance;
+                            if($getLoanHistory->penalty != 0){
+                                if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
+                                    $newPenalty = $getLoanHistory->OutstandingBalance * .20;
+                                    $pastDue = $newPenalty + $getLoanHistory->OutstandingBalance;
+                                }
                             }
+                            
                         }
                        
                         $details['totalCollectible']= $collectibles;
@@ -494,9 +499,12 @@ class Collection extends Component
                             $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
                             
                             if($getLoanHistory){
-                                if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
-                                    $newPenalty += $getLoanHistory->OutstandingBalance * .20;
+                                if($getLoanHistory->penalty != 0){
+                                    if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
+                                        $newPenalty += $getLoanHistory->OutstandingBalance * .20;
+                                    }
                                 }
+
                             }
 
                          
