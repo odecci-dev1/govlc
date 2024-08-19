@@ -24,7 +24,7 @@ class HolidayList extends Component
         if ($holiday) {
             $holiday->update([
                 'Status' => 2,
-                'DateUpdate' => now(),
+                'DateUpdated' => now(),
             ]);
 
             session()->flash('mmessage', 'Holiday has been successfully archived!');
