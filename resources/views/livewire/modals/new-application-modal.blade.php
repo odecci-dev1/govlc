@@ -70,13 +70,16 @@
                 <!-- * Search Bar -->
                 <div class="search-wrap">
                     <!-- <input type="search" wire:keydown.enter="searchExistingMembers($event.target.value)" placeholder="Search name or member ID"> -->
-                    <input type="search" wire:model="newappmodelkeyword" wire:keypress="search" placeholder="Search name or member ID">
+                    <input type="search" wire:model.live.debounce.400ms="newappmodelkeyword" placeholder="Search name or member ID">
                     <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                 </div>
 
                 <!-- * Create New Button -->
-                <div  wire:loading.remove>
-                    <button wire:click="createIndividualLoan('', '{{ $loantype }}')" type="button"  class="button">Create New</button>
+                <div wire:loading.remove>
+                    @if ($selectedMember)
+                        <button wire:click="deselectMember" type="button"  class="button">Deselect</button>
+                    @endif
+                    <button wire:click="createIndividualLoan('', '{{ $loantype }}')" type="button"  class="button" style="margin-left: 1rem">Create New</button>
                 </div>                
             </div>
 
@@ -109,29 +112,58 @@
 
                         </tr>
 
-
                         <!-- * Members Data -->
-                    
-                        @if($memberlist)
-                       
-                            @foreach($memberlist as $list)
-                            <tr onclick="createIndividualLoan('{{ $list['MemId'] }}', '{{ $loantype }}')">
-                            <!-- * Checkbox Opt
-                            <td><input type="checkbox" id="checkbox" data-checkbox></td> -->
-                                <td>
-
-                                    <!-- * Data Name-->
-                                    <span class="td-name">{{ (($list['Lname']) ? $list['Lname'].', '.$list['Fname'].' '.(($list['Mname'] == '') ? $list['Mname'].'.':''):'') }}</span>
-
-                                </td>
-                                <td>
-                                    <!-- * Data Member ID-->
-                                    <span class="td-name">{{ $list['memId'] }}</span>
+                        @forelse ($memberlist as $list)
+                            {{-- <tr onclick="createIndividualLoan('{{ $list['MemId'] }}', '{{ $loantype }}', '{{ $loanterms }}')"> --}}
+                            {{-- <tr onclick="selectMember('{{ $list['MemId'] }}', '{{ $loantype }}', '{{ $loanterms }}')"> --}}
+                            @if ($selectedMember && $selectedMemberId)
+                                <tr 
+                                    wire:click="deselectMember()" 
+                                >
+                                    <td>
+                                        <!-- * Data Name-->
+                                        <span class="td-name">{{ (($selectedMember['Lname']) ? $selectedMember['Lname'].', '.$selectedMember['Fname'].' '.(($selectedMember['Mname'] == '') ? $selectedMember['Mname'].'.':''):'') }}</span>
+                                    </td>
+                                    <td>
+                                        <!-- * Data Member ID-->
+                                        <span class="td-name">{{ $selectedMember['MemId'] }}</span>
+                                    </td>
+                                    <td>
+                                        <!-- * Data Member ID-->
+                                        <span class="td-name">
+                                            <span style="padding: 0.4rem 1.2rem; border-radius: 25px; font-size: 1rem; background: #D6A330; color: white">Selected ✓</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            {{-- @elseif (empty($loanterms))
+                                <tr>
+                                    <td colspan="2">
+                                        <span >Select a term first.</span>
+                                    </td>
+                                </tr> --}}
+                            @else
+                                <tr 
+                                    wire:click="selectMember('{{ $list['MemId'] }}', '{{ $loantype }}', '{{ $loanterms }}')"
+                                >
+                                    <td>
+                                        <!-- * Data Name-->
+                                        <span class="td-name">{{ (($list['Lname']) ? $list['Lname'].', '.$list['Fname'].' '.(($list['Mname'] == '') ? $list['Mname'].'.':''):'') }}</span>
+                                    </td>
+                                    <td>
+                                        <!-- * Data Member ID-->
+                                        <span class="td-name">{{ $list['MemId'] }}</span>
+                                    </td>
+                                </tr>
+                            @endif
+                        @empty
+                            <tr>
+                                <td colspan="2">
+                                    <span >There are no existing members.</span>
                                 </td>
                             </tr>
-                            @endforeach
-                        @endif
-
+                        @endforelse
+                        
+                       
                     </table>
 
                 </div>

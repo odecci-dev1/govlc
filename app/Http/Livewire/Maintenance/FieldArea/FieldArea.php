@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use App\Traits\Common;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class FieldArea extends Component
 {
@@ -43,7 +44,13 @@ class FieldArea extends Component
     public function rules()
     {
         $rules = [
-            'Area' => 'required|unique:tbl_Area_Model,Area,'.$this->AreaID.',Id',
+            // 'Area' => 'required|unique:tbl_Area_Model,Area,'.$this->AreaID.',Id',
+            'Area' => [
+                'required',
+                Rule::unique('tbl_Area_Model', 'Area')
+                    ->ignore($this->AreaID, 'Id')
+                    ->where('Status', 1),
+                ],
             'FOID' => 'required',
             'selectedLocations' => 'required',
             'fullname' => 'required',
