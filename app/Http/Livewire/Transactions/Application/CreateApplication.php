@@ -1731,7 +1731,7 @@ class CreateApplication extends Component
                     ]);
 
                     LoanHistory::where('MemId', $this->memberId)->whereNot('OustandingBalance',0)->whereNot('NAID',$this->naID)->update([
-                        'OutstandingBalance' => $this->loanDetails['OutstandingBalance'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                        'OutstandingBalance' => $this->loanDetails['outstandingBalance'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
                         'DateOfFullPayment'=> Carbon::now(),
                     ]);
                     
