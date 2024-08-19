@@ -210,7 +210,7 @@
                         
                     <!-- * Borrower -->
                     <td>
-                       {{ $l->member->fullname }}. 
+                       {{ $l->member->fullname }} 
                     </td>
 
                     <!-- * Borrower Contact Number -->
@@ -220,12 +220,12 @@
                         
                     <!-- * Co-Borrower -->
                     <td>
-                        {{ $l->comaker->Lnam.', '.$l->comaker->Fname.' '.(!empty($l->comaker->Suffi) ? ' '.$l->comaker->Suffix : '').' '.mb_substr($l->comaker->Mname, 0, 1).'.' }} 
+                        {{ $l->member->comaker->Lnam.', '.$l->member->comaker->Fname.' '.(!empty($l->member->comaker->Suffi) ? ' '.$l->member->comaker->Suffi : '').' '.mb_substr($l->member->comaker->Mname, 0, 1).'.' }} 
                     </td>
 
                     <!-- * Co-Borrower Contact Number -->
                     <td>
-                        {{ $l->comaker->Cno }}
+                        {{ $l->member->comaker->Cno }}
                     </td>
 
                     <!-- * Applied Loan Amount -->

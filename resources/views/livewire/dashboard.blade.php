@@ -86,10 +86,10 @@
                             <h2 style="font-size: 2.5rem;">Active Members</h2>
                             <div class="btn-wrapper">                                
                                 <select  id="selectarea" wire:loading.attr="disabled" onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
-                                    <option value="">All Areas</option> 
+                                    <option value="All">All Areas</option> 
                                     @if($area)
                                         @foreach($area as $area)
-                                            <option value="{{ $area['areaName'] }}">{{ $area['areaName'] }}</option> 
+                                            <option value="{{ $area['Id'] }}">{{ $area['Area'] }}</option> 
                                         @endforeach
                                     @endif                                   
                                 </select>          
@@ -139,7 +139,7 @@
                         </div>
                     </div>
                     <div class="card-2 " style="display: inline;">
-                        <h3>Top Collectibles Per Area</h3>
+                        <h3>Collectibles Per Area</h3>
                         <div class="div-1" style="height: 21rem; overflow-y: auto;">
                             @forelse ($topcollectibles as $top)
                                 <div class="p-wrap">
@@ -246,7 +246,7 @@
                 <!-- * Dashboard Container 3 -->
                 <div class="md-con-3 tlpa">
                     <div class="card-2 tlpa">
-                        <h3>Top Lapses Per Area</h3>
+                        <h3>Lapses Per Area</h3>
                         <div class="div-1" style="height: 180rem; overflow-y: auto;">
                             @forelse ($toplapses as $lapses)
                                 <div class="p-wrap">
@@ -302,13 +302,14 @@
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                yAxes: [
+                y: 
                     {
                         ticks: {
                             beginAtZero: true,
+                            stepSize: 1
                         },                   
                     },
-                ],
+                
             },       
         };
 
@@ -341,9 +342,11 @@
                 method: 'get',
                 url: '/get/active/members',    
                 data: { area: area.value, days: days.value},   
-                success: function (data) {                   
+                success: function (data) {   
+
                     const mlabels = [];
                     const mdata = [];                    
+                   
                     for (let j = 0; j < data.length; j++) {                               
                         mlabels.push(data[j]['date']); 
                         mdata.push(data[j]['count']);   
@@ -353,7 +356,9 @@
                     chartData.labels = mlabels;
                     myChart.update();          
                 },
+                
                 error:function (data){
+                      
                     alert("Error");   
                 },
                 dataType: 'json'

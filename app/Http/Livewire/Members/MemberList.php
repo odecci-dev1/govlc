@@ -47,27 +47,28 @@ class MemberList extends Component
   
     public function render()
     {
-        $this->list = $this->getMembers();        
+        $this->list = $this->getMembers();       
+       
         return view('livewire.members.member-list');
     }
 
     private function getMembers($paginate = true)
     {
-        $members = Members::with(['applications', 'detail', 'loanhistory'])
+        $members = Members::with(['applications', 'detail', 'loanhistory','fileuploads'])
             ->whereHas('applications', function ($query) {
-                $query->where('Status', 7);
+                $query->whereIn('Status', [7,8,9,10,14,15]);
             })
             ->where(function ($query) {
                 $query->where('Fname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('Lname', 'like', '%' . $this->keyword . '%');
             });
-        
+  
         if ($this->status !== '') {
             $members->where('Status', $this->status);
         }
 
         $members = $members->get();
-
+  
         if ($paginate) {
             $totalItems = $members->count();
     

@@ -9,7 +9,9 @@ use App\Models\CollectionAreaMember;
 use App\Models\LoanDetails;
 use App\Models\LoanHistory;
 use App\Models\Members;
+use App\Models\MembersSavings;
 use App\Models\Settings;
+use App\Models\TermsOfPayment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -30,22 +32,26 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $this->data = Cache::remember('dashboard_data', 60, function () {
+        $this->data = Cache::remember('dashboard_data', 1, function () {
             return $this->prepareData();
         });
-
-        dd($this->activeCollectionData());
+       // dd($this->prepareData());
+      
+        $this->activeCollectionData();
         // dd($this->topcollectibles);
         $this->topcollectibles = $this->computeTopValues('CollectedAmount');
         $this->toplapses = $this->computeTopValues('LapseAmount');
+        //return $this->prepareData();
+       
     }
 
     public function render()
     {
         // TODO: In-progress
         // $activecollections =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/ActiveCollection');      
-        // $this->activecollections = $activecollections->json();         
-        dd($this->activeCollectionData);
+        // $this->activecollections = $activecollections->json();   
+        $this->area = Area::where('Status',1)->whereNotNull('Area')->get();      
+        $this->activeCollectionData();
 
 
 
@@ -54,9 +60,12 @@ class Dashboard extends Component
 
     private function prepareData()
     {
+       
         $members = Members::select('id', 'Status')->where('Status', 1)->get();
         $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment')->get();
-        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee')->get();
+        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->where('Status','=',14)->get();
+        $totalMemberSavings = MembersSavings::select('TotalSavingsAmount')->get();
+        
         $loanHistory = LoanHistory::select('OutstandingBalance')->get();
         $application = Application::select('Status')->get();
         $settings = Settings::select('MonthlyTarget')->first();
@@ -68,7 +77,30 @@ class Dashboard extends Component
         $previousMonth = $currentDate->subMonth()->format('Y-m');
 
         $activeMemberCount = $members->count();
-
+        $totalLoanInsurance =0;
+        $totalLifeInsurance = 0;
+        
+        $totalOfNewAccounts = 0;
+       
+        foreach($members as $member){
+            $appCount = Application::where('MemId',$member->id)->where('Status','!=',11)->get()->count();
+            if($appCount == 1){
+                $totalOfNewAccounts += 1;
+            }
+        }
+    
+        foreach($loanDetails as $loanDetail){
+             $termsOfPayment = TermsOfPayment::where('Id',$loanDetail->TermsOfPayment)->first();
+             $totalLoanInsurance += $termsOfPayment->LoanInsuranceAmountType == 1 ? $termsOfPayment->LoanInsuranceAmount * $loanDetail->ApprovedLoanAmount:$termsOfPayment->LoanInsuranceAmount;
+             $totalLifeInsurance += $termsOfPayment->LifeInsuranceAmountType == 1 ? $termsOfPayment->LifeInsuranceAmount * $loanDetail->ApprovedLoanAmount:$termsOfPayment->LifeInsuranceAmount;
+        }
+        $totalFullPayments = 0;
+        foreach($loanHistory as $history){
+            if($history->OutstandingBalance == 0){
+                $totalFullPayments += 1;
+            }
+        }
+       
         $dailyCollections = $collectionAreaMembers
             ->whereBetween('DateCollected', [$startDay, $endDay])
             ->groupBy(function ($item) {
@@ -85,21 +117,24 @@ class Dashboard extends Component
             ->map(function ($group) {
                 return $group->sum('CollectedAmount') + $group->sum('AdvancePayment');
             });
-
+       
         $previousMonthCollected = $monthlyCollection[$previousMonth] ?? 0;
         $totalCollected = $monthlyCollection[$currentMonth] ?? 0;
 
-        $totalAmount = $loanDetails->sum('ApprovedLoanAmount');
-        $totalLoanBalance = $totalAmount - $totalCollected;
+        $totalAmount = $loanDetails->sum('ApprovedLoanAmount')+ $loanDetails->sum('ApproveedInterest');
+        $totalLoanBalance =$loanHistory->sum('OutstandingBalance');
+        
+        
 
         $totalInterest = $loanDetails->sum('ApproveedInterest');
         $totalAdvancePayment = $collectionAreaMembers->sum('AdvancePayment');
         $totalNotarialFee = $loanDetails->sum('ApprovedNotarialFee');
-        $totalOtherDeductions = $totalInterest + $totalNotarialFee;
-
-        $totalSavingsOutstanding = $loanHistory->sum('OutstandingBalance');
-        $totalDailyOverallCollection = number_format($dailyCollections->sum(), 2);
-        $totalNewAccountsOverall = $application->where('Status', 7)->count();
+        $totalOtherDeductions = $totalLoanInsurance + $totalLifeInsurance + $totalNotarialFee;
+    
+        $totalSavingsOutstanding = $totalMemberSavings->sum('TotalSavingsAmount');
+        $totalDailyOverallCollection = $loanDetails->sum('ApprovedDailyAmountDue');
+       
+        $totalNewAccountsOverall = $totalOfNewAccounts;
         $totalApplicationforApproval = $application->where('Status', 9)->count();
         $totalIncome = $settings->MonthlyTarget;
 
@@ -115,7 +150,7 @@ class Dashboard extends Component
             'totalAdvancePayment' => $totalAdvancePayment,
             'totalOtherDeductions' => $totalOtherDeductions,
             'totalActiveStanding' => 0,
-            'totalFullPayment' => 0,
+            'totalFullPayment' => $totalFullPayments,
             'totalCR' => 0,
             'totalEndingActiveMember' => 0,
             'totalSavingsOutstanding' => $totalSavingsOutstanding,
@@ -155,7 +190,7 @@ class Dashboard extends Component
     
             // Count new accounts for the area
             $newAccountsCount = $newAccounts->filter(function ($account) use ($area) {
-                dd($area->Area_RefNo);
+              //  dd($area->Area_RefNo);
                 // dd($area->collectionAreas->pluck('Area_RefNo'));
 
                 // return $account->collectionareamember->Area_RefNo === $area->collectionAreas->Area_RefNo;

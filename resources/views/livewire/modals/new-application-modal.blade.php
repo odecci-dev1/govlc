@@ -44,7 +44,7 @@
                 <div style="width: 50%;padding-right: 4rem;">
                         <div class="input-wrapper">
 
-                            <select  wire:model="loanterms" class="select-option">
+                            <select  wire:model="loanterms" wire:change="changeTerms" class="select-option">
                                 <option value="">-- select terms --</option>
                                 @if($termsOfPaymentList)
                                     @foreach($termsOfPaymentList as $mtermsOfPaymentList)
@@ -70,7 +70,7 @@
                 <!-- * Search Bar -->
                 <div class="search-wrap">
                     <!-- <input type="search" wire:keydown.enter="searchExistingMembers($event.target.value)" placeholder="Search name or member ID"> -->
-                    <input type="search" wire:model="newappmodelkeyword" wire:keypress="getmemberList" placeholder="Search name or member ID">
+                    <input type="search" wire:model="newappmodelkeyword" wire:keypress="search" placeholder="Search name or member ID">
                     <img src="{{ URL::to('/') }}/assets/icons/magnifyingglass.svg" alt="search">
                 </div>
 
@@ -111,16 +111,17 @@
 
 
                         <!-- * Members Data -->
-                       
+                    
                         @if($memberlist)
+                       
                             @foreach($memberlist as $list)
-                            <tr onclick="createIndividualLoan('{{ $list['memId'] }}', '{{ $loantype }}')">
+                            <tr onclick="createIndividualLoan('{{ $list['MemId'] }}', '{{ $loantype }}')">
                             <!-- * Checkbox Opt
                             <td><input type="checkbox" id="checkbox" data-checkbox></td> -->
                                 <td>
 
                                     <!-- * Data Name-->
-                                    <span class="td-name">{{ $list['fullname'] }}</span>
+                                    <span class="td-name">{{ (($list['Lname']) ? $list['Lname'].', '.$list['Fname'].' '.(($list['Mname'] == '') ? $list['Mname'].'.':''):'') }}</span>
 
                                 </td>
                                 <td>

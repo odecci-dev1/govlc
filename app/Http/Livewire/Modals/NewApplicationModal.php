@@ -7,6 +7,7 @@ use App\Http\Livewire\Transactions\Application\CreateApplicationGroup;
 
 use Livewire\Component;
 use App\Models\LoanType;
+use App\Models\Members;
 use App\Models\TermsOfPayment;
 class NewApplicationModal extends Component
 {
@@ -84,6 +85,10 @@ class NewApplicationModal extends Component
         $loanId = $this->loantype;
         $this->getLoanTypeName($loanId);
         $this->getLoanTerms();
+       
+    }
+    public function changeTerms(){
+        $this->getmemberList(); 
     }
 
     public function getLoanTypeName($loanId){
@@ -107,11 +112,20 @@ class NewApplicationModal extends Component
         // dd($this->termsOfPaymentList);
         // dd('as');
     }
+    public function search(){
+       
+        if(strlen($this->newappmodelkeyword)>3){
+            $this->memberlist = Members::where('Status',1)->where('Fname', 'like', '%'.$this->newappmodelkeyword.'%')->orWhere('Lname', 'like', '%'.$this->newappmodelkeyword.'%')->orWhere('Mname', 'like', '%'.$this->newappmodelkeyword.'%')->get();
+        }else{
+            $this->memberlist = Members::where('Status',1)->get();
+        }
 
+    }
     public function getmemberList(){           
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Member/MembershipFilterByFullname', ['fullname' => $this->newappmodelkeyword]);       
-        //dd( $data );
-        $this->memberlist = $data->json();  
+        
+        $this->memberlist = Members::where('Status',1)->get();
+      
+     
     }
 
     public function render()

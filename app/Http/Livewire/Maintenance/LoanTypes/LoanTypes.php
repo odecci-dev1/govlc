@@ -110,11 +110,10 @@ class LoanTypes extends Component
                 'DateCreated' => now(),
                 'DateUpdated' => null,
             ]);
-    
+          
             $loanType = LoanType::create($data);
-            $latestLoanTypeID = $loanType->LoanTypeID;
-    
-            foreach ($terms as $term) {
+            $latestLoanTypeID = $loanType->id;
+             foreach ($terms as $term) {
                 $term['LoanTypeId'] = $latestLoanTypeID;
                 TermsOfPayment::create(array_merge($term, [
                     'Status' => 1,
@@ -158,6 +157,7 @@ class LoanTypes extends Component
     
     public function addTerms()
     {
+     
         $termsCollection = collect($this->terms);
         if(isset($this->inpterms['termsKey'])){
             if($this->inpterms['termsKey'] > 0){             
@@ -170,7 +170,7 @@ class LoanTypes extends Component
         else{           
             $lastcnt = $termsCollection->keys()->last() + 1;          
         }
-
+        
         $data = $this->validate([                                    
             'inpterms.NameOfTerms' => ['required'],
             'inpterms.InterestRate' => ['required', 'numeric'],
@@ -195,7 +195,7 @@ class LoanTypes extends Component
 
         $this->terms[$lastcnt] = [  
             'NameOfTerms' => $data['inpterms']['NameOfTerms'],
-            'InterestRate' => $data['inpterms']['InterestRate'],
+            'InterestRate' => $data['inpterms']['InterestRate'] * .0100,
             'InterestType' => $data['inpterms']['InterestType'],                                         
             'Formula' => $data['inpterms']['Formula'], 
             'InterestApplied' => isset($data['inpterms']['InterestApplied']) ? $data['inpterms']['InterestApplied'] : 0,   
@@ -267,7 +267,7 @@ class LoanTypes extends Component
             $this->terms[$key] = [
                 'TopId' => $this->inpterms['TopId'],
                 'NameOfTerms' => $this->inpterms['NameOfTerms'],
-                'InterestRate' => $this->inpterms['InterestRate'],
+                'InterestRate' => $this->inpterms['InterestRate'] * .0100,
                 'InterestType' => $this->inpterms['InterestType'],
                 'LoanTypeId' => $this->inpterms['LoanTypeId'],
                 'Formula' => $this->inpterms['Formula'],
