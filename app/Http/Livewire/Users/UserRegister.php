@@ -202,7 +202,7 @@ class UserRegister extends Component
             ]);
 
             $latestUser = User::latest()->first();
-            $UserId = $latestUser->UserId;
+            $UserId = $user->Id;
 
             return redirect()->to('/user/view/'.$UserId)->with(['sessmword'=> 'Success', 'sessmessage'=> 'User successfully saved']); 
         }      

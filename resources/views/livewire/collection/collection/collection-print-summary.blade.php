@@ -64,13 +64,13 @@
                 <tfoot>
                         <tr>
                             <td>Grand Total</td>
-                            <td>{{ number_format($areas->sum('totalCollectible'), 2) }}</td>
-                            <td>{{ number_format($areas->sum('total_Balance'), 2) }}</td>
-                            <td>{{ number_format($areas->sum('total_savings'), 2) }}</td>
-                            <td>{{ number_format($areas->sum('total_advance'), 2) }}</td>
-                            <td>{{ number_format($areas->sum('total_lapses'), 2) }}</td>
+                            <td>{{ number_format(array_sum(array_column($this->areas,'totalCollectible')), 2) }}</td>
+                            <td>{{ number_format( array_sum(array_column($this->areas,'total_Balance')), 2) }}</td>
+                            <td>{{ number_format(array_sum(array_column($this->areas,'total_savings')), 2) }}</td>
+                            <td>{{ number_format(array_sum(array_column($this->areas,'total_advance')), 2) }}</td>
+                            <td>{{ number_format(array_sum(array_column($this->areas,'total_lapses')), 2) }}</td>
                             <td>0.00</td>
-                            <td class="textPrimary" style="font-size: 1.7rem;">{{ number_format($areas->sum('total_collectedAmount'), 2) }}</td>
+                            <td class="textPrimary" style="font-size: 1.7rem;">{{ number_format(array_sum(array_column($this->areas,'total_collectedAmount')), 2) }}</td>
                         </tr>
                     </tfoot>                            
             </table>

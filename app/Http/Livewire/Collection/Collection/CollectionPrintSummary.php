@@ -60,6 +60,12 @@ class CollectionPrintSummary extends Component
              $details['total_savings']= 0;
              $details['total_advance']= 0;
              $details['total_lapses']= 0;
+             $details['grand_totalCollectible']=0;
+             $details['grand_total_collectedAmount']=0;
+             $details['grand_total_Balance'] = 0;
+             $details['grand_total_savings'] =0;
+             $details['grand_total_advance'] =0;
+             $details['grand_total_lapses'] =0;
      
              foreach($persons as $person){
                 $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
@@ -104,21 +110,19 @@ class CollectionPrintSummary extends Component
                         
                     }
                 }
-                $details['grand_totalCollectible']= $collectibles;
-                $details['grand_total_collectedAmount']= $totalCollectedAmount;
-                $details['grand_total_Balance']=  $application->loanhistory->OutstandingBalance;
-                $details['grand_total_savings']= $totalSavings ;
-                $details['total_advance']= $totalAdvance;
-                $details['total_lapses']= $totalLapses;
-                $appDetails[]=$printStatus;
-                $details['application'] = $appDetails;
+                // $details['grand_totalCollectible'] += $details['totalCollectible'];
+                // $details['grand_total_collectedAmount'] += $details['total_collectedAmount'];
+                // $details['grand_total_Balance'] += $details['total_Balance'];
+                // $details['grand_total_savings'] += $details['total_savings'];
+                // $details['grand_total_advance'] += $details['total_advance'];
+                // $details['grand_total_lapses'] += $details['total_lapses'];
             }
            
         //$this->areas=collect($details);
         $this->areas[] = $details;
         } 
-     //dd($this->areas->sum('total_collectedAmount'));
- 
+       // dd(array_sum(array_column($this->areas,'totalCollectible')));
+       // dd( json_encode($this->areas)->sum(1));
         
         return view('livewire.collection.collection.collection-print-summary');
     }
