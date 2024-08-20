@@ -214,6 +214,7 @@ class Collection extends Component
                     if($detail['penalty'] != 0){
                         LoanHistory::where('NAID',$detail['naid'])->update([
                             'Penalty'=>$detail['penalty'],
+                            'OutstandingBalance'=>$detail['penalty'] + $detail['amountDue'],
                         ]);
                     }
                 }
@@ -354,7 +355,7 @@ class Collection extends Component
                                 }
                             }else{
                                 $newPenalty = $getLoanHistory->Penalty;
-                                $pastDue = $getLoanHistory->Penalty + $getLoanHistory->OutstandingBalance;
+                                $pastDue = $getLoanHistory->OutstandingBalance;
 
                             }
                             
