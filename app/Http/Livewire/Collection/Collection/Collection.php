@@ -98,7 +98,7 @@ class Collection extends Component
                 'Collection_Status'=>7,
             ]);
 
-            $getCollections =  CollectionAreaMember::where('Area_RefNo',$this->areaRefNo)->get();
+            $getCollections =  CollectionAreaMember::where('Area_RefNo',$this->areaRefNo)->where('Payment_Status',1)->get();
             if($getCollections){
                 foreach($getCollections as $getCollection){
                     //Update Oustanding Balance
@@ -107,13 +107,18 @@ class Collection extends Component
                     $collectedAdvancePayment=($getCollection->AdvancePayment) ? $getCollection->AdvancePayment:0;
                     $usedAdvancePayment=($getCollection->UsedAdvancePayment) ? $getCollection->UsedAdvancePayment:0;
 
-                    $newOutStaingBalance = $currentOutStanding - ($usedAdvancePayment+ $collectedAmount + $collectedAdvancePayment); 
+                    $newOutStaingBalance = $currentOutStanding - ($usedAdvancePayment+ $collectedAmount); 
                     LoanHistory::where('NAID', $getCollection->NAID)->update([
                         'OutstandingBalance'=>$newOutStaingBalance,
+                        'DateOfFullPayment'=>($newOutStaingBalance == 0) ? Carbon::now():NULL,
                     ]);
                     //Update Member Savings
                     $application = Application::where('NAID',$getCollection->NAID)->with('member')->first();
-                    $currentSavings = MembersSavings::where('MemId',$application->member->MemId)->first()->TotalSavingsAmount;
+                    $currentSavings=0;
+                    if($application){
+                        $currentSaving = MembersSavings::where('MemId',$application->member->MemId)->first();
+                        $currentSavings = ($currentSavings) ? $currentSaving->TotalSavingsAmount : 0;
+                    }
                     $collectedSavings =$getCollection->Savings;
                     $newSavings = $currentSavings + $collectedSavings;
                     MembersSavings::where('MemId',$application->member->MemId)->update([
@@ -187,6 +192,8 @@ class Collection extends Component
                 ]);
                 $colRefNo = $createColRefNo->RefNo;
             }
+
+         
          
             $collectionArea= CollectionArea::create([
                 'AreaId'=>$this->areaID,
@@ -195,6 +202,8 @@ class Collection extends Component
                 'CollectionRefNo'=>  $colRefNo,
                 ]);
                 foreach ($this->areaDetails as $detail) {
+
+
             
                     CollectionAreaMember::create([
                         'NAID'=>$detail['naid'],
@@ -202,7 +211,11 @@ class Collection extends Component
                         'AdvanceStatus'=> 0,
                         'Payment_Status'=> 2,
                     ]);
-                    
+                    if($detail['penalty'] != 0){
+                        LoanHistory::where('NAID',$detail['naid'])->update([
+                            'Penalty'=>$detail['penalty'],
+                        ]);
+                    }
                 }
           
 
@@ -249,7 +262,7 @@ class Collection extends Component
         }    
    
        $this->areaRefNo = $this->areaRefNo == 'PENDING' ? '' : $this->areaRefNo;
-       $memberDetails = [];
+  
         if($areaID != ''){
         
                  $this->areaID = $areaID;
@@ -328,6 +341,25 @@ class Collection extends Component
                         $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                         $loanHistory +=  $application->loanhistory->OutstandingBalance;
                         $totalSavings +=  ( $savings) ? $savings->TotalSavingsAmount:0;
+                        $newPenalty=0;
+                        $pastDue=0;
+                        $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
+                        if($getLoanHistory){
+                            
+                            if($getLoanHistory->Penalty == 0){
+                                if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
+                                    $newPenalty = $getLoanHistory->OutstandingBalance * .20;
+                                    $pastDue = $newPenalty + $getLoanHistory->OutstandingBalance;
+                                  
+                                }
+                            }else{
+                                $newPenalty = $getLoanHistory->Penalty;
+                                $pastDue = $getLoanHistory->Penalty + $getLoanHistory->OutstandingBalance;
+
+                            }
+                            
+                        }
+                      
                         $details['totalCollectible']= $collectibles;
                         $details['total_Balance']= $loanHistory;
                         $details['total_savings']=   $totalAreaSavings;
@@ -336,7 +368,6 @@ class Collection extends Component
                         $details['total_collectedAmount']= $totalCollectedAmount;
                         $details['total_FieldExpenses']= ($CollectionArea) ? $CollectionArea->FieldExpenses:0;
                         $details['daily_savings']= 0;
-                        $details['penalty']= 0;
                         $applicationData['areaID'] = $areaID;
                         $memfiles = $application->member->fileuploads;
                         if($memfiles){
@@ -350,7 +381,8 @@ class Collection extends Component
                         $applicationData['dailyCollectibles'] = $application->detail->ApprovedDailyAmountDue;
                         $applicationData['collectedAmount'] = ($AreaRefNo) ? $AreaRefNo->CollectedAmount:0;
                         $applicationData['amountDue'] = $application->loanhistory->OutstandingBalance;
-                        $applicationData['pastDue'] = 0;
+                        $applicationData['pastDue'] = $pastDue;
+                        $applicationData['penalty'] =  $newPenalty;
                         $applicationData['totalSavingsAmount'] = ( $savings) ? $savings->TotalSavingsAmount:0;
                         $applicationData['payment_Status'] = ($paymentStatus) ? $paymentStatus:0;
                         $applicationData['collection_Status'] = ($collectionStatus) ? $collectionStatus->Status:'';
@@ -450,6 +482,7 @@ class Collection extends Component
                  $details['total_savings']= 0;
                  $details['total_advance']= 0;
                  $details['total_lapses']= 0;
+                 $newPenalty = 0;
                  foreach($persons as $person){
                     $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
                     $savings= MembersSavings::where('MemId',$person->MemId)->first();
@@ -469,6 +502,18 @@ class Collection extends Component
                                     $totalCollecitonLapses += $collectionAreaMember->LapsePayment;
                                 }
                             }
+                            $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
+                            
+                            if($getLoanHistory){
+                                if($getLoanHistory->Penalty == 0){
+                                    if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
+                                        $newPenalty += $getLoanHistory->OutstandingBalance * .20;
+                                    }
+                                }else{
+                                    $newPenalty += $getLoanHistory->Penalty;
+                                }
+
+                            }
 
                          
                             $collectionAreaMember = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
@@ -480,12 +525,12 @@ class Collection extends Component
                             $totalLapses += $totalCollecitonLapses;
                             $totalAdvance += $totalCollectionAdvance;
                             $totalItems +=  1;
-
+                            
                          
                             $details['expectedCollection']= $collectibles;
                             $details['totalCollectible']= $collectibles;
                             $details['total_collectedAmount']= 0;
-                            $details['penalty']= 0;
+                            $details['penalty']= $newPenalty;
                             $details['Area']= $area->Area;
                             $details['areaName']= $area->Area;
                             $details['areaID']= $area->Id;
@@ -544,6 +589,7 @@ class Collection extends Component
                  $totalSavings=0;
                  $appDetails = [];
                  $totalItems=0;
+                 $newPenalty = 0;
                  $fo = FieldOfficer::where('FOID',$area->FOID)->first();
                  $details['expectedCollection']= 0;
                  $details['totalCollectible']= 0;
@@ -576,10 +622,22 @@ class Collection extends Component
                            $loanHistory +=  $application->loanhistory->OutstandingBalance;
                            $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
                            $totalItems +=  1;
+
+                            $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
+                            
+                            if($getLoanHistory){
+                                if($getLoanHistory->Penalty == 0){
+                                    if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
+                                        $newPenalty += $getLoanHistory->OutstandingBalance * .20;
+                                    }
+                                }else{
+                                    $newPenalty += $getLoanHistory->Penalty;
+                                }
+                            }
                             $details['expectedCollection']= $collectibles;
                             $details['totalCollectible']= $collectibles;
                             $details['total_collectedAmount']= 0;
-                            $details['penalty']= 0;
+                            $details['penalty']= $newPenalty;
                             $details['Area']= $area->Area;
                             $details['areaName']= $area->Area;
                             $details['areaID']= $area->Id;

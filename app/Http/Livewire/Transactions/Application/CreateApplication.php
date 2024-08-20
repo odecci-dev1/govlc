@@ -1180,23 +1180,23 @@ class CreateApplication extends Component
     public function update($type = 7){ 
      
         $input = $this->validate(); 
-        $comem = CoMaker::where('Fname', $this->comaker['co_Fname'])
-                ->where('Mname', empty($this->comaker['co_Mname']) ?  '':$this->comaker['co_Mname'])
-                ->where('Lnam', $this->comaker['co_Lname'])
-                ->where('Suffi', empty($this->comaker['co_Suffix']) ? '':$this->comaker['co_Suffix'])
-                ->where('POB', $this->comaker['co_POB'])
-                ->where('Status',1)
-                ->whereDate('DOB', $this->comaker['co_DOB'])->first();
-        $checkComaker = 0;
-        if($comem){
-            $checkComaker = Application::where('MemId',$comem->MemId)->where('Status','!=', 14)->get()->count();
-        }
+        // $comem = CoMaker::where('Fname', $this->comaker['co_Fname'])
+        //         ->where('Mname', empty($this->comaker['co_Mname']) ?  '':$this->comaker['co_Mname'])
+        //         ->where('Lnam', $this->comaker['co_Lname'])
+        //         ->where('Suffi', empty($this->comaker['co_Suffix']) ? '':$this->comaker['co_Suffix'])
+        //         ->where('POB', $this->comaker['co_POB'])
+        //         ->where('Status',1)
+        //         ->whereDate('DOB', $this->comaker['co_DOB'])->first();
+        // $checkComaker = 0;
+        // if($comem){
+        //     $checkComaker = Application::where('MemId',$comem->MemId)->where('Status','!=', 14)->get()->count();
+        // }
       
        
-        if( $checkComaker > 0){
-            session()->flash('errmmessage', 'Comaker already exist to other loan application'); 
-            return false;
-        }                    
+        // if( $checkComaker > 0){
+        //     session()->flash('errmmessage', 'Comaker already exist to other loan application'); 
+        //     return false;
+        // }                    
         try {                                                                    
             $childs = [];
             $businesses = [];
