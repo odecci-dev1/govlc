@@ -105,7 +105,7 @@ class UserRegister extends Component
                 $this->lname = $user['Lname'];
                 $this->mname = $user['Mname'];         
                 $this->suffix = $user['Suffix'];        
-                $this->cno = $user['CNO'];          
+                $this->cno = $user['Cno'];          
                 $this->address = $user['Address'];   
                 $this->profilePath = $user['ProfilePath'];  
                 $this->usertype = $user['UTID'];     
@@ -191,7 +191,7 @@ class UserRegister extends Component
                 "Suffix"=> $this->suffix,
                 "Username"=> $this->username,
                 "Password"=> $this->password,
-                "CNO"=> $this->cno,
+                "Cno"=> $this->cno,
                 "Address"=> $this->address,                    
                 "ProfilePath"=> $this->storeProfileImage(),
                 "FOID"=> $this->foid,     

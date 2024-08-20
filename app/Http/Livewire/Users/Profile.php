@@ -2,12 +2,14 @@
 
 namespace App\Http\Livewire\Users;
 
+use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
 
 use App\Traits\Common;
+use Illuminate\Support\Facades\Hash;
 
 class Profile extends Component
 {
@@ -60,21 +62,22 @@ class Profile extends Component
         $userid = session()->get('auth_userid');        
         if($userid != ''){
             $this->userid = $userid;
-            $data = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/FilterUserInfoByUID', [ 'userID' => $this->userid ]);     
+            
+            
+            $data = User::where('UserId', $this->userid)->first();     
           
-            $res = $data->json();  
-            if(isset($res[0])){    
-                $res = $res[0];                 
-                $this->mid = $res['id'];            
-                $this->username = $res['username'];            
-                $this->fname = $res['fname'];
-                $this->lname = $res['lname'];
-                $this->mname = $res['mname'];         
-                $this->suffix = $res['suffix'];        
-                $this->cno = $res['cno'];          
-                $this->address = $res['address'];   
-                $this->profilePath = $res['profilePath'];       
-                $this->usertype = $res['userTypeId'];                                   
+            $res = $data;  
+            if(isset($res)){    
+                $this->mid = $res['Id'];            
+                $this->username = $res['Username'];            
+                $this->fname = $res['Fname'];
+                $this->lname = $res['Lname'];
+                $this->mname = $res['Mname'];         
+                $this->suffix = $res['Suffix'];        
+                $this->cno = $res['Cno'];          
+                $this->address = $res['Address'];   
+                $this->profilePath = $res['ProfilePath'];       
+                $this->usertype = $res['UTID'];                                   
                 $this->updatePassword = 0;               
             }           
         }                  
@@ -99,34 +102,29 @@ class Profile extends Component
         return $profilename;
     }
 
-    public function register(){      
-        $data = $this->validate();               
-        $user = [            
-                    "id"=> $this->mid == '' ? '0' : $this->mid,        
-                    "fname"=> $this->fname,
-                    "lname"=> $this->lname,
-                    "mname"=> $this->mname,
-                    "suffix"=> $this->suffix,
-                    "username"=> $this->username,
-                    "password"=> $this->password,
-                    "cno"=> $this->cno,
-                    "address"=> $this->address,
-                    "userTypeID"=> $this->usertype,                    
-                    "status"=> 1,                  
-                    "profilePath"=> $this->storeProfileImage(), 
-                ];
+    public function update(){      
+        $this->validate();               
+        User::where('UserId', $this->userid)->update([      
+            'Username' => $this->username,
+            'Fname' => $this->fname,
+            'Mname' => $this->mname,
+            'Lname' => $this->lname,
+            'Cno' => $this->cno,
+            'Address' => $this->address,
+            'DateUpdated' => now(),
+            'UTID' => $this->usertype,
+            'ProfilePath' => $this->storeProfileImage(), 
+        ]);
 
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/UpdateUserInformation', $user); 
         return redirect()->to('/profile')->with('sessmessage', 'Your profile has successfully updated');         
     }
 
     public function updatePassword(){
         $this->validate(['password' => ['required', 'confirmed']]);
-        $data = [            
-            "userId"=> $this->userid,
-            "password"=> $this->password      
-        ];
-        $upt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/ChangePassword', $data);            
+        User::where('UserId', $this->userid)->update([            
+            "password"=> Hash::make($this->password)
+        ]);
+
         session()->flash('sessmword', 'Password Updated'); 
         session()->flash('sessmessage', 'Please logout if user was change'); 
         $this->updatePassword = 0;
