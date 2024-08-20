@@ -200,9 +200,9 @@ class UserRegister extends Component
                 "DateCreated"=> now(),
                 "usermodule"=> $modules
             ]);
-
+  
             $latestUser = User::latest()->first();
-            $UserId = $user->Id;
+            $UserId = $user->id;
 
             return redirect()->to('/user/view/'.$UserId)->with(['sessmword'=> 'Success', 'sessmessage'=> 'User successfully saved']); 
         }      
