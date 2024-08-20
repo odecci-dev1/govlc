@@ -39,6 +39,7 @@ use App\Http\Livewire\Dashboard;
 use App\Http\Controllers\ExportsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Livewire\Transactions\Application\ApplicationListTrash;
+use App\Http\Livewire\Transactions\LoanCalculator\LoanCalculatorList;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,7 +64,6 @@ Route::get('/getnoticount', [NotificationController::class, 'getnoticount']);
 
 Route::get('/test', [NotificationController::class, 'testMe']);
 Route::get('/corectRelation', [NotificationController::class, 'corectRelation']);
-
 
 Route::middleware(['authenticated'])->group(function () {
     Route::get('/notification/view', [NotificationController::class, 'viewNotification'])->name('viewNotification');
@@ -147,6 +147,11 @@ Route::middleware(['authenticated'])->group(function () {
         Route::get('/tranactions/application/printing/{naID}', function(){
             return view('livewire.transactions.application.application-html');
         });
+    });
+
+    
+    Route::middleware(['access:Module-012'])->group(function () {
+        Route::get('/transactions/loan-calculator/list', LoanCalculatorList::class)->name('loancalculator.list');
     });
 
     Route::middleware(['access:Module-09'])->group(function () {

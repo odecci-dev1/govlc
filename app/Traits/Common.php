@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use DateTime;
+use Illuminate\Support\Facades\Auth;
 
 trait Common {
 
@@ -41,10 +42,11 @@ trait Common {
       $user_name = 'User not found';
       if( $userid != ''){
          // $getuser = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/UserRegistration/PostUserSearching', [['column' => 'userId', 'values' => $userid]]); 
-         // // dd( $userid );
-         // $getuser = $getuser->json();
+         // $getuser = $getuser->json()[0];
          $getuser = User::where('UserId',$userid)->first();
+         // dd( $getuser );
          if(isset($getuser)){
+            // $user_name = $getuser['fname'] .' '. $getuser['lname'];
             $user_name = $getuser->Fname .' '. $getuser->Lname;
          }
      }
