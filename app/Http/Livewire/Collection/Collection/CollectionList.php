@@ -67,9 +67,9 @@ class CollectionList extends Component
                 $carry['total_savings'] += $member->Savings;
                 $newBalance   = $getLoanDetails->BeginningBalance-$member->CollectedAmount;
                 //$this->runningBalance -= $this->runningBalance == 0 ? ($getLoanDetails->BeginningBalance  - $member->CollectedAmount):($this->runningBalance  - $member->CollectedAmount);
-                $this->runningBalance += $newBalance;
+                $this->runningBalance = $newBalance;
                 $outstandingBalance = $this->runningBalance - LoanHistory::where('NAID',$member->NAID)->first()->OutstandingBalance;
-                $carry['total_Balance'] = $this->runningBalance;
+                $carry['total_Balance'] += $this->runningBalance;
                 //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
                 return $carry;
             }, [

@@ -336,7 +336,7 @@ class Collection extends Component
                         if($collectionAreaMembersAdvanceLapses){
                             foreach($collectionAreaMembersAdvanceLapses as $collectionAreaMember){
                                 $totalApplicationUsedAdvance += $collectionAreaMember->UsedAdvancePayment;
-                                $totalApplicationLapses += $collectionAreaMember->LapsePayment - $collectionAreaMember->UsedAdvancePayment;
+                                $totalApplicationLapses += $collectionAreaMember->LapsePayment - $collectionAreaMember->UsedAdvancePayment - $collectionAreaMember->AdvancePayment;
                                 $totalApplicationAdvance += $collectionAreaMember->AdvancePayment;
                             }
                         }
