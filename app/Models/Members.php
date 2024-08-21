@@ -95,6 +95,11 @@ class Members extends Model
         return $this->belongsTo(Status::class, 'Status', 'Id');
     }
 
+    public function savingsRunning(): HasMany
+    {
+        return $this->hasMany(SavingsRunningBalance::class, 'MemId', 'MemId');
+    }
+
     public function getFullNameAttribute()
     {
         return $this->Lname.', '.$this->Fname.(!empty($this->Suffix) ? ' '.($this->Suffix == 'N/A' ? '':$this->Suffix) : '').' '.mb_substr($this->Mname == 'N/A' ? '':$this->Mname, 0, 1).'.';

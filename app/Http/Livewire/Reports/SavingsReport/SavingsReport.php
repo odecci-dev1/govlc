@@ -10,12 +10,17 @@ use App\Models\Area;
 use App\Models\Members;
 use App\Models\SavingsRunningBalance;
 use Illuminate\Support\Facades\Log;
+use Livewire\WithPagination;
 
 class SavingsReport extends Component
 {
+    use WithPagination;
+
     public $datestart;
     public $dateend;
     public $member;
+    public $memberName;
+    public $memberId;
     public $data;
     public $keyword = '';
     public $paginate = [
@@ -23,8 +28,8 @@ class SavingsReport extends Component
         'pageSize' => 15
     ];
     public $paginateModal = [
-        'page' => 1,
-        'pageSize' => 15
+        'pageModal' => 1,
+        'pageSizeModal' => 5
     ];
     public $paginationPaging = [];
     public $paginationPagingModal = [];
@@ -36,9 +41,43 @@ class SavingsReport extends Component
     {
         $this->dateend = date('Y-m-d');      
         $this->datestart = date('Y-m-d', strtotime("-1 months"));
+        $this->paginationPaging = [
+            'startItem' => 0,
+            'endItem' => 0,
+            'totalRecord' => 0,
+            'totalPage' => 1,
+            'currentPage' => 1,
+            'nextPage' => 1,
+            'prevPage' => 1
+        ];
+
+        $this->paginationPagingModal = [
+            'startItemModal' => 0,
+            'endItemModal' => 0,
+            'totalRecordModal' => 0,
+            'totalPageModal' => 1,
+            'currentPageModal' => 1,
+            'nextPageModal' => 1,
+            'prevPageModal' => 1
+        ];
     }
     
-    public function toggleRunningSavings()
+    public function toggleRunningSavings($memId)
+    {
+        $this->memberId =  $memId;
+        $member = Members::find($this->memberId);
+        if ($member) {
+            $this->memberName = $member->full_name;
+        } else {
+            $this->memberName = 'Unknown Member';
+        }
+        // $this->runningSavings = $this->getRunningSavings(true, $this->memberId);
+        $this->runningSavings = $this->getRunningSavings(true, $this->memberId);
+            // ->paginate($this->paginateModal['pageSizeModal']);
+        $this->showModal = !$this->showModal;
+    }
+
+    public function closeModal()
     {
         $this->showModal = !$this->showModal;
     }
@@ -92,28 +131,28 @@ class SavingsReport extends Component
     
     public function setPageModal($page = 1)
     {
-        $this->paginateModal['page'] = $page;
+        $this->paginateModal['pageModal'] = $page;
     }
 
     public function goToFirstPageModal()
     {
-        $this->paginateModal['page'] = 1;
+        $this->paginateModal['pageModal'] = 1;
     }
 
     public function goToLastPageModal()
     {
-        $this->paginateModal['page'] = $this->paginationPagingModal['totalPage'];
+        $this->paginateModal['pageModal'] = $this->paginationPagingModal['totalPageModal'];
     }
 
     public function render()
     {
         $members = $this->getMembers();
         $this->totalSavingsAmount = $this->getTotalSavingsAmount();
-        $this->runningSavings = $this->getRunningSavings();
 
         return view('livewire.reports.savings-report.savings-report', [
             'totalSavings' => $this->totalSavingsAmount,
             'members' => $members,
+            'runningSavings' => $this->runningSavings
         ]);
     }
 
@@ -188,27 +227,57 @@ class SavingsReport extends Component
         return $members;
     }
 
+    // private function getRunningSavings($paginateModal = true, $memId)
+    // {
+    //     $data = SavingsRunningBalance::where('MemId', $memId)
+    //         ->orderBy('Date', 'desc')
+    //         ->get();
+
+    //     if ($paginateModal) {
+    //         $totalItems = $data->count();
     
-    private function getRunningSavings($paginateModal = true)
+    //         $this->paginationPagingModal['totalPage'] = ceil($data->count() / $this->paginateModal['pageSize']);
+    //         $this->paginationPagingModal['totalRecord'] = $totalItems;
+    //         $this->paginationPagingModal['currentPage'] = $this->paginateModal['page'];
+    //         $this->paginationPagingModal['nextPage'] = $this->paginateModal['page'] < $this->paginationPagingModal['totalPage'] ? $this->paginateModal['page'] + 1 : $this->paginationPagingModal['totalPage'];
+    //         $this->paginationPagingModal['prevPage'] = $this->paginateModal['page'] > 1 ? $this->paginateModal['page'] - 1 : 1;
+    
+    //         $startItem = ($this->paginateModal['page'] - 1) * $this->paginateModal['pageSize'] + 1;
+    //         $endItem = min($this->paginateModal['page'] * $this->paginateModal['pageSize'], $totalItems);
+    
+    //         $this->paginationPagingModal['startItem'] = $startItem;
+    //         $this->paginationPagingModal['endItem'] = $endItem;
+    
+    //         $paginatedData = $data->slice(($this->paginateModal['page'] - 1) * $this->paginateModal['pageSize'], $this->paginateModal['pageSize']);
+    
+    //         return $paginatedData;
+    //     }
+
+    //     return $data;
+    // }
+
+    private function getRunningSavings($paginateModal = true, $memId)
     {
-        $data = SavingsRunningBalance::get();
+        $data = SavingsRunningBalance::where('MemId', $memId)
+            ->orderBy('Date', 'desc')
+            ->get();
 
         if ($paginateModal) {
             $totalItems = $data->count();
     
-            $this->paginationPagingModal['totalPage'] = ceil($data->count() / $this->paginateModal['pageSize']);
-            $this->paginationPagingModal['totalRecord'] = $totalItems;
-            $this->paginationPagingModal['currentPage'] = $this->paginateModal['page'];
-            $this->paginationPagingModal['nextPage'] = $this->paginateModal['page'] < $this->paginationPagingModal['totalPage'] ? $this->paginateModal['page'] + 1 : $this->paginationPagingModal['totalPage'];
-            $this->paginationPagingModal['prevPage'] = $this->paginateModal['page'] > 1 ? $this->paginateModal['page'] - 1 : 1;
+            $this->paginationPagingModal['totalPageModal'] = ceil($data->count() / $this->paginateModal['pageSizeModal']);
+            $this->paginationPagingModal['totalRecordModal'] = $totalItems;
+            $this->paginationPagingModal['currentPageModal'] = $this->paginateModal['pageModal'];
+            $this->paginationPagingModal['nextPageModal'] = $this->paginateModal['pageModal'] < $this->paginationPagingModal['totalPageModal'] ? $this->paginateModal['pageModal'] + 1 : $this->paginationPagingModal['totalPageModal'];
+            $this->paginationPagingModal['prevPageModal'] = $this->paginateModal['pageModal'] > 1 ? $this->paginateModal['pageModal'] - 1 : 1;
     
-            $startItem = ($this->paginateModal['page'] - 1) * $this->paginateModal['pageSize'] + 1;
-            $endItem = min($this->paginateModal['page'] * $this->paginateModal['pageSize'], $totalItems);
+            $startItemModal = ($this->paginateModal['pageModal'] - 1) * $this->paginateModal['pageSizeModal'] + 1;
+            $endItemModal = min($this->paginateModal['pageModal'] * $this->paginateModal['pageSizeModal'], $totalItems);
     
-            $this->paginationPagingModal['startItem'] = $startItem;
-            $this->paginationPagingModal['endItem'] = $endItem;
+            $this->paginationPagingModal['startItemModal'] = $startItemModal;
+            $this->paginationPagingModal['endItemModal'] = $endItemModal;
     
-            $paginatedData = $data->slice(($this->paginateModal['page'] - 1) * $this->paginateModal['pageSize'], $this->paginateModal['pageSize']);
+            $paginatedData = $data->slice(($this->paginateModal['pageModal'] - 1) * $this->paginateModal['pageSizeModal'], $this->paginateModal['pageSizeModal']);
     
             return $paginatedData;
         }
@@ -216,9 +285,45 @@ class SavingsReport extends Component
         return $data;
     }
 
+    // private function getRunningSavings($paginate = true, $memId)
+    // {
+    //     $data = SavingsRunningBalance::where('MemId', $memId)
+    //         ->orderBy('Date', 'desc')
+    //         ->get();
+
+    //     if ($paginate) {
+    //         $totalItemsModal = $data->count();
+
+    //         $this->paginationPagingModal['totalPageModal'] = (int) ceil($totalItemsModal / $this->paginateModal['pageSizeModal']);
+    //         $this->paginationPagingModal['Modal'] = $totalItemsModal;
+    //         $this->paginationPagingModal['currentPageModal'] = $this->paginateModal['pageModal'];
+    //         $this->paginationPagingModal['nextPageModal'] = $this->paginateModal['pageModal'] < $this->paginationPagingModal['totalPageModal'] ? $this->paginateModal['pageModal'] + 1 : $this->paginationPagingModal['totalPageModal'];
+    //         $this->paginationPagingModal['prevPageModal'] = $this->paginateModal['pageModal'] > 1 ? $this->paginateModal['pageModal'] - 1 : 1;
+
+    //         $startItemModal = ($this->paginateModal['pageModal'] - 1) * $this->paginateModal['pageSizeModal'] + 1;
+    //         $endItemModal = min($this->paginateModal['pageModal'] * $this->paginateModal['pageSizeModal'], $totalItemsModal);
+
+    //         $this->paginationPagingModal['startItemModal'] = $startItemModal;
+    //         $this->paginationPagingModal['endItemModal'] = $endItemModal;
+
+    //         $paginatedData = $data->slice($startItemModal - 1, $this->paginateModal['pageSizeModal']);
+    //         $paginatedMembers = $members->slice(($this->paginate['page'] - 1) * $this->paginate['pageSize'], $this->paginate['pageSize']);
+
+    //         return $paginatedData;
+    //     }
+
+    //     return $data;
+    // }
+
+    // private function getRunningSavings($memId)
+    // {
+    //     return SavingsRunningBalance::where('MemId', $memId)
+    //         ->orderBy('Date', 'desc');
+    // }
+
     private function getTotalSavingsAmount()
     {
-        $membersQuery = Members::with('memberSavings')
+        $membersQuery = Members::with('memberSavings', 'savingsRunning')
             ->where(function ($query) {
                 $query->where('Fname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('Lname', 'like', '%' . $this->keyword . '%')

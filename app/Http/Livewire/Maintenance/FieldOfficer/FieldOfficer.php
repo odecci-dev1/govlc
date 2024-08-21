@@ -162,35 +162,6 @@ class FieldOfficer extends Component
         return $backidname;
     }
 
-    // public function storeAttachments($foid)
-    // {
-    //     $newAttachments = [];
-
-    //     if (isset($this->officer['Old_Attachments'])) {
-    //         foreach ($this->officer['Old_Attachments'] as $oldFile) {
-    //             Storage::delete('officer_attachments/' . $oldFile['FilePath']);
-    //         }
-    //     }
-
-    //     if (isset($this->officer['Attachments'])) {
-    //         foreach ($this->officer['Attachments'] as $attachment) {
-    //             $time = time();
-    //             $filename = 'officer_attachments_' . $time . '_' . $attachment->getClientOriginalName();
-                
-    //             $attachment->storeAs('officer_attachments', $filename, 'public');
-
-    //             $newAttachments[] = [
-    //                 'FOID' => $foid,
-    //                 'FilePath' => $filename,  // Store only the filename, not the full URL
-    //                 'FileType' => $attachment->getClientOriginalExtension(),
-    //                 'DateCreated' => now(),
-    //             ];
-    //         }
-    //     }
-
-    //     return $newAttachments;
-    // }
-
     public function storeAttachments($foid)
     {
         $newAttachments = [];
