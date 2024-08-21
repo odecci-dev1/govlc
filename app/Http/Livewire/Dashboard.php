@@ -320,7 +320,7 @@ class Dashboard extends Component
                     ->with('areaMembers')
                     ->get()
                     ->sum(function($collectionArea) use ($sumType) {
-                        return $collectionArea->areaMembers->sum($sumType);
+                        return $collectionArea->areaMembers->sum($sumType) - $collectionArea->areaMembers->sum('UsedAdvancePayment');
                     });
             }
        
