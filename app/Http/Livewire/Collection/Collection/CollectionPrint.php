@@ -52,13 +52,18 @@ class CollectionPrint extends Component
                 $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                 $totalBalance +=  $application->loanhistory->OutstandingBalance;
                 $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
-                if($collectionAreaMember->NaID == $application->NAID){
-                    $totalAdvance += $collectionAreaMember->AdvancePayment;
+                $getprviousCollectionRecord = CollectionAreaMember::where('NAID',$application->NAID)->where('AdvanceStatus',0)->get();
+               // dd($getprviousCollectionRecord->sum('LapsePayment'));
+                if($collectionAreaMember->NAID == $application->NAID){
+                    $totalAdvance += $getprviousCollectionRecord->sum('AdvancePayment');
+                    //$totalAdvance += $collectionAreaMember->AdvancePayment;
                 }
-                if($collectionAreaMember->NaID == $application->NAID){
-                    $totalLapses += $collectionAreaMember->LapsePayment;
+                if($collectionAreaMember->NAID == $application->NAID){
+                   
+                    $totalLapses += $getprviousCollectionRecord->sum('LapsePayment');
+                   //$totalLapses += $collectionAreaMember->LapsePayment;
                 }
-                if($collectionAreaMember->NaID == $application->NAID){
+                if($collectionAreaMember->NAID == $application->NAID){
                     $totalCollected += $collectionAreaMember->CollectedAmount;
                 }
                 $areaName= $getArea->Area;
@@ -87,7 +92,7 @@ class CollectionPrint extends Component
               
                 $this->areaDetails[] = $details;
             }
-
+           
             
             // $this->details['areaName'] = $areaName;
             // $this->details['area_RefNo']= $this->areaRefNo;
