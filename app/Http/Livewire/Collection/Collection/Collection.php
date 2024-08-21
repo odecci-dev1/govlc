@@ -605,7 +605,7 @@ class Collection extends Component
                  $details['areaID']= $area->Id;
                  $details['FOID']= $area->FOID;
                  $details['area_RefNo']= '';
-                 $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.($fo->Mname == '') ? $fo->Mname[0]:'';
+                 $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.($fo->Mname != '') ? $fo->Mname[0]:'';
                  $details['collection_RefNo']= '';
                  $details['totalItems']= 0;
                  $details['advancePayment']= 0;
@@ -647,7 +647,7 @@ class Collection extends Component
                             $details['areaName']= $area->Area;
                             $details['areaID']= $area->Id;
                             $details['FOID']= $area->FOID;
-                            $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.($fo->Mname == '') ? $fo->Mname[0]:'';
+                            $details['fieldOfficer']= $fo->Lname.', '.$fo->Fname.' '.($fo->Mname != '') ? $fo->Mname[0]:'';
                             $details['payment_Status']= '';
                             $details['collection_Status'] = '';
                             $details['area_RefNo']= '';
