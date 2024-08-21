@@ -5,8 +5,17 @@
     <dialog @if ($showModal) open @endif class="na-modal" style="z-index: 11; padding: 0 auto; width: calc(100vw - 30rem)">
         <div class="modal-container" style="padding: 1.6rem 1.4rem;">
             <div style="display: flex; align-items: center;">
-                <span style="font-size: 2rem; font-weight: 600;">Savings Running Balance</span>
-                <button class="exit-button" wire:click="toggleRunningSavings">
+                <div style="display: flex; flex-direction: row; align-items: center">
+                    <span style="font-size: 2rem; font-weight: 600;">Savings Running Balance</span>
+                    <div style="margin: 0 1.6rem; width: 0.5rem; height: 5rem; background: #D6A330;"></div>
+                    <div style="display: flex; flex-direction: column;">
+                        @if (!empty($memberId))
+                            {{-- <span style="font-size: 1.8rem; font-weight: 600;">{{ $memberName }}</span> --}}
+                            <span style="font-size: 1.8rem; font-weight: 300; color: rgba(0, 0, 0, 0.5)">{{ $memberId }}</span>
+                        @endif
+                    </div>
+                </div>
+                <button class="exit-button" wire:click="closeModal">
                     <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="exit">
                 </button>
             </div>
@@ -22,15 +31,7 @@
                         <tr>
 
                             <!-- * Header Name -->
-                            <th style="text-align: left; padding: 1.4rem">
-                                <div style="display: flex; flex-direction: column;">
-                                    <span class="td-name" style="font-size: 1.3rem">Member Name</span>
-                                    <span style="font-size: 1.3rem; color: rgba(0, 0, 0, 0.5)">MemId</span>
-                                </div>
-                            </th>
-
-                            <!-- * Header Name -->
-                            <th><span class="th-name" style="font-size: 1.3rem">Savings</span></th>
+                            <th style="padding: 1.4rem; text-align: left"><span class="th-name" style="font-size: 1.3rem">Savings</span></th>
 
                             <!-- * Header Name -->
                             <th><span class="th-name" style="font-size: 1.3rem">Note</span></th>
@@ -44,34 +45,30 @@
                         </tr>
 
                         <!-- * Members Data -->
-                        @forelse ($runningSavings as $rs)
-                            <tr>
-                                <td style="padding: 1.4rem">
-                                    <div style="display: flex; flex-direction: column;">
-                                        <span class="td-name" style="font-size: 1.3rem">{{ $rs->member->fullname }}</span>
-                                        <span style="font-size: 1.3rem; color: rgba(0, 0, 0, 0.5)">{{ $rs->MemId }}</span>
-                                    </div>
-                                </td>
-                                <td style="text-align: center;">
-                                    <span class="td-name" style="font-size: 1.3rem">{{ $rs->Savings }}</span>
-                                </td>
-                                <td style="text-align: center;">
-                                    <span class="td-name" style="font-size: 1.3rem">{{ $rs->Note }}</span>
-                                </td>
-                                <td style="text-align: center;">
-                                    <span class="td-name" style="font-size: 1.3rem">{{ date('Y-m-d', strtotime($rs->Date))}}</span>
-                                </td>
-                                <td style="text-align: center;">
-                                    <span class="td-name" style="font-size: 1.3rem">{{ $rs->user->full_name }}</span>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5">
-                                    <span >There are no savings running balance.</span>
-                                </td>
-                            </tr>
-                        @endforelse
+                        @if (!empty($memberId) && !empty($runningSavings))
+                            @forelse ($runningSavings as $rs)
+                                <tr>
+                                    <td style="padding: 1.4rem; text-align: left">
+                                        <span class="td-name" style="font-size: 1.3rem">{{ number_format($rs->Savings, 2) ?? '0.00' }}</span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <span class="td-name" style="font-size: 1.3rem">{{ $rs->Note }}</span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <span class="td-name" style="font-size: 1.3rem">{{ date('Y-m-d', strtotime($rs->Date))}}</span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <span class="td-name" style="font-size: 1.3rem">{{ $rs->user->full_name ?? 'Unknown User' }}</span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" style="padding: 1.4rem; text-align: center">
+                                        <span style="font-size: 1.3rem; color: rgba(0, 0, 0, 0.5)">There are no savings running balance.</span>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        @endif
                         
                     
                     </table>
@@ -81,11 +78,11 @@
                 <div class="total-collection-footer" style="display: flex; justify-content: space-between;">
                     <div style="margin: 2rem 0 0 2rem;">
                         <p style="font-size: 1.4rem">
-                            {{$paginationPagingModal['startItem']}}-{{ $paginationPagingModal['endItem'] }} of <span style="font-weight: 700;">{{ $paginationPagingModal['totalRecord'] }}</span> Results 
+                            {{$paginationPagingModal['startItemModal']}}-{{ $paginationPagingModal['endItemModal'] }} of <span style="font-weight: 700;">{{ $paginationPagingModal['totalRecordModal'] }}</span> Results 
                         </p>
                     </div>
                     <div class="footer-wrapper">
-                        @if($paginationPagingModal['totalPage'])
+                        @if($paginationPagingModal['totalPageModal'])
                             <div class="pagination-container" style="padding-bottom: 0;">
                                 <a href="#" wire:click.prevent="goToFirstPageModal">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -94,33 +91,33 @@
                                     </svg>
                                 </a>
                                 <!-- Previous Button -->
-                                @if($paginationPagingModal['prevPage'])
-                                    <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['prevPage'] }})">
+                                @if($paginationPagingModal['prevPageModal'])
+                                    <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['prevPageModal'] }})">
                                         <img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left">
                                     </a>
                                 @endif
                         
                                 <!-- Pagination Buttons -->
                                 @php
-                                    $startPage = max(1, $paginationPagingModal['currentPage'] - 2);
-                                    $endPage = min($paginationPagingModal['totalPage'], $paginationPagingModal['currentPage'] + 2);
+                                    $startPageModal = max(1, $paginationPagingModal['currentPageModal'] - 2);
+                                    $endPageModal = min($paginationPagingModal['totalPageModal'], $paginationPagingModal['currentPageModal'] + 2);
                         
-                                    if ($endPage - $startPage < 4) {
-                                        if ($startPage > 1) {
-                                            $startPage = max(1, $endPage - 4);
+                                    if ($endPageModal - $startPageModal < 4) {
+                                        if ($startPageModal > 1) {
+                                            $startPageModal = max(1, $endPageModal - 4);
                                         } else {
-                                            $endPage = min($paginationPagingModal['totalPage'], $startPage + 4);
+                                            $endPageModal = min($paginationPagingModal['totalPageModal'], $startPageModal + 4);
                                         }
                                     }
                                 @endphp
                         
-                                @for ($i = $startPage; $i <= $endPage; $i++)
-                                    <a href="#" wire:click.prevent="setPageModal({{ $i }})" class="{{ $paginationPagingModal['currentPage'] == $i ? 'font-size-1_4em color-app' : '' }}">{{ $i }}</a>
+                                @for ($i = $startPageModal; $i <= $endPageModal; $i++)
+                                    <a href="#" wire:click.prevent="setPageModal({{ $i }})" class="{{ $paginationPagingModal['currentPageModal'] == $i ? 'font-size-1_4em color-app' : '' }}">{{ $i }}</a>
                                 @endfor
                         
                                 <!-- Next Button -->
-                                @if($paginationPagingModal['nextPage'])
-                                    <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['nextPage'] }})">
+                                @if($paginationPagingModal['nextPageModal'])
+                                    <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['nextPageModal'] }})">
                                         <img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right">
                                     </a>
                                 @endif
@@ -173,9 +170,6 @@
                             </div>
                             @error('member') <span class="text-required">{{ $message }}</span> @enderror              
                         </div>    
-                        <button class="button" type="button" wire:click='toggleRunningSavings' style="margin-top: 1.8rem">
-                            Running Balance
-                        </button>
                     </div>              
                 </div>
             <div class="body-wrapper" style="gap: 0; height:clamp(100% - 21rem, 40rem, 80vh); overflow-y: auto;">
@@ -215,7 +209,7 @@
                             @if($members)
                                 @foreach($members as $member)
                                 <!-- * Savings Data -->
-                                <tr>
+                                <tr wire:click="toggleRunningSavings('{{ $member->MemId }}')">
 
                                     <!-- * Member Name -->
                                     <td>

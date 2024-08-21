@@ -60,6 +60,7 @@ class UserRegister extends Component
             function ($attribute, $value, $fail) {
                 $user = User::whereRaw('LOWER(Username) = ?', [strtolower($value)])
                                     ->where('UserId', '!=', $this->userid)
+                                    ->where('Status', '!=', 2)
                                     ->first();
                 if ($user) {
                     $fail('A username already exists.');
@@ -177,7 +178,8 @@ class UserRegister extends Component
         return $profilename;
     }
 
-    public function register(){      
+    public function register()
+    {      
         $this->validate();
         $modules = [];
 
@@ -198,11 +200,24 @@ class UserRegister extends Component
                 "UTID"=> $this->usertype,
                 "Status"=> 1,
                 "DateCreated"=> now(),
-                "usermodule"=> $modules
             ]);
-  
-            $latestUser = User::latest()->first();
+
             $UserId = $user->id;
+            
+            foreach($this->modules as $mdl){
+                $modules[] = [
+                    "user_id"=> $UserId,
+                    "module_code"=> $mdl,
+                    "created_by"=> session()->get('auth_userid'),
+                    "DateCreated"=> now()
+                ];
+            }
+
+            foreach ($modules as $moduleData) {
+                UserModule::create($moduleData);
+            }
+            
+            
 
             return redirect()->to('/user/view/'.$UserId)->with(['sessmword'=> 'Success', 'sessmessage'=> 'User successfully saved']); 
         }      
