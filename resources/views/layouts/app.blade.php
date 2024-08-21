@@ -189,7 +189,7 @@
                         </a>
                         @endif
 
-                        @if(in_array('Module-012', $modules))
+                        {{-- @if(in_array('Module-012', $modules))
                         <a href="{{ URL::to('/') }}/transactions/loan-calculator/list" data-nav-link>
                             <li>
                                 <!-- * Loan Calculator  -->
@@ -197,7 +197,7 @@
                                 <span>Loan Calculator</span>
                             </li>
                         </a>
-                        @endif
+                        @endif --}}
                        
                     </ul>
                 </div>
