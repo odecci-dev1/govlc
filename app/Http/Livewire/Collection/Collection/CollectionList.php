@@ -18,6 +18,9 @@ class CollectionList extends Component
     public $paginate = [];
     public $paginationPaging = [];
 
+    public $runningBalance = 0;
+    public $newBalance = 0;
+
     public function mount(){
         $this->paginate['page'] = 1;
         $this->paginate['pageSize'] = 25;
@@ -53,18 +56,20 @@ class CollectionList extends Component
         }
 
         $collections = $query->paginate($this->paginate['pageSize'], ['*'], 'page', $this->paginate['page']);
-     
-        $one = $this->list = $collections->map(function ($collection) {
+        $one = $this->list = $collections->map(function ($collection,) {
+            
             $totals = $collection->collectionAreas->flatMap->areaMembers->reduce(function ($carry, $member) {
                 $getLoanDetails = LoanDetails::where('NAID',$member->NAID)->first();
                 $getLoanHistory = LoanHistory::where('NAID',$member->NAID)->first();
                 $carry['total_advance'] += $member->AdvancePayment;
-                $carry['total_lapses'] += $member->LapsePayment;
+                $carry['total_lapses'] += $member->LapsePayment - $member->UsedAdvancePayment;
                 $carry['totalCollectible'] += ($getLoanHistory->Penalty != 0) ? $getLoanHistory->OutstandingBalance:$getLoanDetails->ApprovedDailyAmountDue;
                 $carry['total_savings'] += $member->Savings;
-                $beginingBalance =  $getLoanDetails->BeginningBalance;
-                $outstandingBalance = LoanHistory::where('NAID',$member->NAID)->first()->OutstandingBalance;
-                $carry['total_Balance'] += $beginingBalance - $member->CollectedAmount ;
+                $newBalance   = $getLoanDetails->BeginningBalance-$member->CollectedAmount;
+                //$this->runningBalance -= $this->runningBalance == 0 ? ($getLoanDetails->BeginningBalance  - $member->CollectedAmount):($this->runningBalance  - $member->CollectedAmount);
+                $this->runningBalance += $newBalance;
+                $outstandingBalance = $this->runningBalance - LoanHistory::where('NAID',$member->NAID)->first()->OutstandingBalance;
+                $carry['total_Balance'] = $this->runningBalance;
                 //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
                 return $carry;
             }, [
