@@ -141,7 +141,8 @@ class Dashboard extends Component
         $totalApplicationforApproval = $application->where('Status', 9)->count();
         $totalIncome = $settings->MonthlyTarget;
 
-        $totalIncomePercentage = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
+       // $totalIncomePercentage = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
+        $totalIncomePercentage = $totalIncome ? $totalCollected : 0;
         $totalDaysLeft = Carbon::now()->endOfMonth()->diffInDays($currentDate);
         $totalPercentOfLastEntry = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
         $targetStatus = $previousMonthCollected >= $totalIncome;
@@ -197,16 +198,16 @@ class Dashboard extends Component
             ->get();
         //$result = $activeAreas->map(function ($area) use ($newAccounts) {
         //dd($collectionArea);
-        if(empty($collectionArea)){
-            $details['area'] = '';
-            $details['activeCollection'] = '';
-            $details['newAccount'] = '';
-            $details['noPayment'] = '';
-            $details['pastDueCollection'] = 0;
-            $detailResult= $details;
-        }
+        // if(empty($collectionArea)){
+        //     $details['area'] = '';
+        //     $details['activeCollection'] = '';
+        //     $details['newAccount'] = '';
+        //     $details['noPayment'] = '';
+        //     $details['pastDueCollection'] = 0;
+        //     $detailResult= $details;
+        // }
 
-
+        //dd($activeAreas);
         foreach($collectionArea as $area) {
             $details=[];
             // Sum collected amounts for the area
@@ -247,7 +248,7 @@ class Dashboard extends Component
         }
         $result[] =  $detailResult;
         //});
-       // dd( $result);
+        //dd( $result);
         return $result;
     }
 

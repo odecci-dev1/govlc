@@ -209,6 +209,7 @@
                                     <!-- * Data Table -->
                                     @if($activecollections)
                                         @foreach($activecollections as $activecoll)
+                                        @if(!emptY($activecoll))
                                         <tr>            
                                             <!-- * Td Num-->
                                             <td>
@@ -235,6 +236,7 @@
                                             <td class="td-due">{{ !empty($activecoll['pastDueCollection']) ? number_format($activecoll['pastDueCollection'], 2) : '0.00' }}</td>
                 
                                         </tr>
+                                        @endif
                                         @endforeach                                        
                                     @endif                                                                        
                                 </table>                                
@@ -343,7 +345,7 @@
                 url: '/get/active/members',    
                 data: { area: area.value, days: days.value},   
                 success: function (data) {   
-
+                    data = data.reverse();
                     const mlabels = [];
                     const mdata = [];                    
                    
