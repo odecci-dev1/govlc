@@ -215,10 +215,19 @@ class Dashboard extends Component
             
             $collections = CollectionAreaMember::where('Area_RefNo', $area->Area_RefNo)->get();
             $sumCollectedAmount =0;
+            $totalNewAccount = 0;
+            $totalPastDueCollection = 0;
             foreach( $collections as $collection ) {
                 $dailyCollectible = LoanDetails::where('NAID',$collection->NAID)->first();
+                $loanhistory = LoanHistory::where('NAID',$collection->NAID)->first();
                 //$sumCollectedAmount += $collections->sum('CollectedAmount');
-                $sumCollectedAmount += $dailyCollectible->ApprovedDailyAmountDue;
+                $sumCollectedAmount += ($loanhistory->Penalty == 0 ) ? $dailyCollectible->ApprovedDailyAmountDue:$loanhistory->OutstandingBalance;
+                $totalPastDueCollection += ($loanhistory->Penalty == 0 ) ? 0:$loanhistory->OutstandingBalance;
+                $getMember = Application::where('NAID',$collection->NAID)->first();
+                $getApplicationCount = Application::where('MemId',$getMember->MemId)->get()->count();
+                if( $getApplicationCount == 1){
+                    $totalNewAccount += 1;
+                }
             }
            
     
@@ -229,9 +238,10 @@ class Dashboard extends Component
 
             //     // return $account->collectionareamember->Area_RefNo === $area->collectionAreas->Area_RefNo;
             // })->count();
+
+        
+
             $noPayment =0;
-           
-         
             foreach( $collections as $collection) {
                 if($collection->Payment_Status == 2){
                     $noPayment += 1;
@@ -241,9 +251,9 @@ class Dashboard extends Component
             
             $details['area'] = $getArea->Area;
             $details['activeCollection'] = $sumCollectedAmount;
-            $details['newAccount'] = 0;
+            $details['newAccount'] =$totalNewAccount;
             $details['noPayment'] = $noPayment;
-            $details['pastDueCollection'] = 0;
+            $details['pastDueCollection'] = $totalPastDueCollection;
             $detailResult= $details;
         }
         $result[] =  $detailResult;

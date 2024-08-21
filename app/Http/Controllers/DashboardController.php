@@ -28,7 +28,7 @@ class DashboardController extends Controller
         //date_sub($currentDate ,date_interval_create_from_date_string("30 days"));
         $newDate = $currentDate;
         $days = ($request['days'] == 1) ? 12:$request['days'];
-        for($i = 0;$i<=$days;$i++){
+        for($i = 0;$i<$days;$i++){
         //for($i = 0;$i<=30;$i++){
             
              if($request['days'] == 1){
