@@ -339,7 +339,7 @@
     <!-- modals -->
     
     <!-- * Main Dashboard -->
-    <div class="main-dashboard">  
+    <div class="main-dashboard" style="height: 92%">  
     {{ $slot }}  
     </div>
     <div class='div-noti hide-me' id='div-noti'></div>

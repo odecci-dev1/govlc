@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SavingsExport;
 use App\Models\Area;
 use App\Models\Members;
+use App\Models\SavingsRunningBalance;
 use Illuminate\Support\Facades\Log;
 
 class SavingsReport extends Component
@@ -20,6 +21,8 @@ class SavingsReport extends Component
     public $paginate = [];
     public $paginationPaging = [];
     public $totalSavingsAmount = 0; 
+    public $runningSavings;
+    public $showModal = true;
 
     public function mount()
     {
@@ -27,6 +30,11 @@ class SavingsReport extends Component
         $this->datestart = date('Y-m-d', strtotime("-1 months"));
         $this->paginate['page'] = 1;
         $this->paginate['pageSize'] = 15;
+    }
+    
+    public function toggleRunningSavings()
+    {
+        $this->showModal = !$this->showModal;
     }
 
     public function setPage($page = 1)
@@ -80,6 +88,7 @@ class SavingsReport extends Component
     {
         $members = $this->getMembers();
         $this->totalSavingsAmount = $this->getTotalSavingsAmount();
+        $this->runningSavings = SavingsRunningBalance::get();
 
         return view('livewire.reports.savings-report.savings-report', [
             'totalSavings' => $this->totalSavingsAmount,
