@@ -71,8 +71,15 @@ class CollectionRemittance extends Component
             
         // }
         $this->remitUsingAdvanceValidation='';
+        $getLoanHistory = LoanHistory::where('NAID',$this->appdtl['naid'])->first();
+        
         $this->reminfo['lapses'] = (($this->appdtl['dailyCollectibles'] - $this->reminfo['amntCollected']) < 0 ? 0:($this->appdtl['dailyCollectibles'] - $this->reminfo['amntCollected']));
-        $this->reminfo['advance'] = (($this->reminfo['amntCollected'] - $this->appdtl['dailyCollectibles']) < 0 ? 0:($this->reminfo['amntCollected'] - $this->appdtl['dailyCollectibles']));
+        if($getLoanHistory->Penalty == 0){
+            $this->reminfo['advance'] = (($this->reminfo['amntCollected'] - $this->appdtl['dailyCollectibles']) < 0 ? 0:($this->reminfo['amntCollected'] - $this->appdtl['dailyCollectibles']));
+        }else{
+            $this->reminfo['advance'] = 0;
+        }
+
 
        
     }

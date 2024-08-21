@@ -205,6 +205,9 @@
                          <th style="padding: 0rem 0.5rem;">
                              <span class="th-name">Past Due</span>
                          </th>
+                         <th style="padding: 0rem 0.5rem;">
+                            <span class="th-name">Penalty</span>
+                        </th>
 
                          <!-- * Overall Savings -->
                          <th>
@@ -273,7 +276,10 @@
                             <td style="padding: 0rem 0.5rem;">
                                 {{ number_format($mdetails['pastDue'], 2) }}
                             </td>
-
+                             <!-- * Penalty -->
+                            <td style="padding: 0rem 0.5rem;">
+                                {{ number_format($mdetails['penalty'], 2) }}
+                            </td>
                             <!-- * Overall Savings -->
                             <td>
                                 {{ number_format($mdetails['totalSavingsAmount'], 2) }}

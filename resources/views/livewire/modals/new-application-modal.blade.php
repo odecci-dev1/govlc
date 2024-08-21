@@ -79,7 +79,7 @@
                     @if ($selectedMember)
                         <button wire:click="deselectMember" type="button"  class="button">Deselect</button>
                     @endif
-                    <button wire:click="createIndividualLoan('', '{{ $loantype }}')" type="button"  class="button" style="margin-left: 1rem">Create New</button>
+                    <button wire:click="createIndividualLoan({{$selectedMemberId}}, '{{ $loantype }}')" type="button"  class="button" style="margin-left: 1rem">Create New</button>
                 </div>                
             </div>
 

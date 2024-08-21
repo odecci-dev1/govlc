@@ -37,6 +37,8 @@ use App\Models\LoanHistory;
 use App\Models\MembersSavings;
 use App\Models\SavingsRunningBalance;
 use App\Models\CollectionAreaMember;
+use App\Models\CollectionArea;
+use App\Models\FieldOfficer;
 use App\Models\Area;
 use App\Models\User;
 
@@ -92,7 +94,7 @@ class CreateApplication extends Component
     public $imgmemsign;
     public $imgcosign;
 
-    public $paymenthistory;
+    public $paymenthistory= [];
     public $loanhistory;
 
     public $reason;
@@ -2011,38 +2013,56 @@ class CreateApplication extends Component
     //     return $termsofPayment;
     // }
 
-    public function getLoanHistory(){              
-        $loanhistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/LoanHistory', ['memid' => $this->searchedmemId]);                        
-        $apiresp = $loanhistory->getStatusCode();   
-     
-        if($apiresp != 400){
-            $loanhistory = $loanhistory->json();   
-            
-            if($loanhistory){
-                $this->loanhistory = collect($loanhistory);        
+    public function getLoanHistory(){       
+      
+        $loanhistory = Application::where('MemId',$this->searchedmemId)->with('loanhistory')->with('member')->get();
+            if($loanhistory){    
+                $this->loanhistory = $loanhistory;        
                          
-            }        
-
-            // $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['naid' => $this->searchedmemId]);                 
-            // $paymenthistory = $paymenthistory->json();            
-           
-            // if($paymenthistory){
-            //     $this->paymenthistory = collect($paymenthistory);       
-            //     dd($this->paymenthistory);             
-            // }
-        }
+            }   
+       // dd( $this->loanhistory);     
     }    
 
-    public function getPaymentHistory($naid){               
-        $paymenthistory = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Credit/PaymentHistory', ['naid' =>$naid]);                 
-               
-        $apiresp = $paymenthistory->getStatusCode();   
-        if($apiresp != 400){
-            $paymenthistory = $paymenthistory->json();   
-            if($paymenthistory){
-                $this->paymenthistory = collect($paymenthistory);                         
+    public function getPaymentHistory($naid){    
+        $loanhistory = Application::where('MemId',$this->searchedmemId)->with('loanhistory')->with('member')->get();
+        if($loanhistory){    
+            $this->loanhistory = $loanhistory;        
+                     
+        }   
+        $collectionAreaMembers = CollectionAreaMember::where('NAID',$naid)->get();       
+        $Application = Application::where('NAID',$naid)->with('loanhistory')->first();    
+        if($collectionAreaMembers){
+            
+            $OutstandingBalance =0;
+            foreach($collectionAreaMembers as $areaMember){
+                $foName='Advance Payment';
+                $collectionArea = CollectionArea::where('Area_RefNo',$areaMember->Area_RefNo)->first();
+                if($collectionArea){
+                    $getArea = Area::where('AreaID',$collectionArea->AreaId)->first();
+                    $getFO = FieldOfficer::where('FOID',$getArea->FOID)->first();
+                    $foName= $getFO->Fname.', '.$getFO->Fname.' '.$getFO->Lname;
+                }
+                $detailsx=[];
+                $detailsx['loanAmount'] = $Application->loanhistory->LoanAmount;
+                $detailsx['outstandingBalance'] =  $OutstandingBalance;
+                $detailsx['collectedAmount'] =   $areaMember->CollectedAmount;
+                $detailsx['collector'] =   $foName;
+                $detailsx['paymentDate'] =  $areaMember->DateCollected;
+                $detailsx['paymentType'] =  $areaMember->Payment_Method;
+                $detailsx['penalty'] =  $Application->loanhistory->Penalty;
+                $detailsx['Payment_Status'] =  $areaMember->Payment_Status == 1 ? 'Paid':'No Payment';
+                $this->paymenthistory[] = $detailsx;  
             }
-        }       
+           
+        }
+      
+        // $apiresp = $paymenthistory->getStatusCode();   
+        // if($apiresp != 400){
+        //     $paymenthistory = $paymenthistory->json();   
+        //     if($paymenthistory){
+        //         $this->paymenthistory = collect($paymenthistory);                         
+        //     }
+        // }       
     }  
 
 

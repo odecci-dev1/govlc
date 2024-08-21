@@ -75,7 +75,7 @@ class CollectionPrint extends Component
                 $details['releasingDate']= $application->loanhistory->DateReleased;
                 $details['dueDate']= $application->loanhistory->DueDate;
                 $details['dailyCollectibles']= $application->detail->ApprovedDailyAmountDue;
-                $details['amountDue']= $application->loanhistory->OutstandingBalance + (($application->loanhistory->Penalty) ? $application->loanhistory->Penalty:0);
+                $details['amountDue']= $application->loanhistory->OutstandingBalance;
                 $details['totalSavingsAmount']=  $totalSavings;
                 $details['advancePayment']=  $totalAdvance;
                 $details['lapsePayment']=  $totalLapses;
@@ -106,39 +106,10 @@ class CollectionPrint extends Component
                 'fieldOfficer' => $fieldOfficer,
             ];
 
-            
-            //dd( $this->areaDetailsFooter);
+        
            
         }
-        // $details = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsList', ['areaid' => $this->areaID, 'arearefno' => $this->areaRefNo]);         
-   
-        // $details = $details->json();           
-       
-        // if($details){
-        //     $details = $details[0];                       
-        //     $collections = $details['collection'];
-        //     if($collections){
-        //         $this->areaDetailsFooter[$this->areaID] = [
-        //                                 'areaID' =>$this->areaID,
-        //                                 'totalCollectible' => $details['totalCollectible'],
-        //                                 'total_Balance' => $details['total_Balance'],
-        //                                 'total_savings' => $details['total_savings'],
-        //                                 'total_advance' => $details['total_advance'],
-        //                                 'total_lapses' => $details['total_lapses'],
-        //                                 'total_collectedAmount' => $details['total_collectedAmount'],
-        //                               ];
-        //         //dd($collections);     
-        //         $cnt = 0;                 
-        //         foreach($collections as $coll){
-        //             $cnt = $cnt + 1;          
-        //             if($coll['payment_Status'] != 'Paid'){
-        //                 $this->areaDetails =  $this->areaDetails->put($cnt, $coll);
-        //             }                   
-        //         }                    
-        //     }                         
-        // }      
-        //dd($this->areaDetails);
-      // dd($this->areaDetails);
+     
     }
 
     public function render()
