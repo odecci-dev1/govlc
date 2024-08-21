@@ -89,9 +89,11 @@ class CollectionReport extends Component
             ->get();
         
         $grandTotalCollection = 0;
-
+         
         foreach ($areas as $area) {
+           
             $totalCollection = $area->collectionAreas->sum(function ($collectionArea) {
+              
                 return $collectionArea->areaMembers->sum('CollectedAmount');
             });
         
@@ -100,18 +102,20 @@ class CollectionReport extends Component
             });
         
             $totalLapses = $area->collectionAreas->sum(function ($collectionArea) {
-                return $collectionArea->areaMembers->sum('LapsePayment');
+
+                return $collectionArea->areaMembers->sum('LapsePayment') - $collectionArea->areaMembers->sum('UsedAdvancePayment');
             });
         
             $totalAdvances = $area->collectionAreas->sum(function ($collectionArea) {
-                return $collectionArea->areaMembers->sum('AdvancePayment');
+                $lapse =  $collectionArea->areaMembers->sum('LapsePayment') - $collectionArea->areaMembers->sum('UsedAdvancePayment');
+                return $collectionArea->areaMembers->sum('AdvancePayment') - $collectionArea->areaMembers->sum('UsedAdvancePayment') - $lapse;
             });
 
             $totalNP = $area->collectionAreas->sum(function ($collectionArea) {
                 return $collectionArea->areaMembers->where('CollectedAmount', 0.00)->count();
             });
 
-            $this->totals[$area->id] = [
+            $this->totals[$area->Id] = [
                 'totalCollection' => $totalCollection,
                 'totalSavings' => $totalSavings,
                 'totalLapses' => $totalLapses,
@@ -121,7 +125,7 @@ class CollectionReport extends Component
 
             $grandTotalCollection += $totalCollection;
         }
-
+      
         $this->totals['grandTotalCollection'] = $grandTotalCollection;
 
         if ($paginate) {
