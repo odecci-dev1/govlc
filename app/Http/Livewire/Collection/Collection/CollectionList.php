@@ -62,8 +62,9 @@ class CollectionList extends Component
                 $carry['total_lapses'] += $member->LapsePayment;
                 $carry['totalCollectible'] += ($getLoanHistory->Penalty != 0) ? $getLoanHistory->OutstandingBalance:$getLoanDetails->ApprovedDailyAmountDue;
                 $carry['total_savings'] += $member->Savings;
+                $beginingBalance =  $getLoanDetails->BeginningBalance;
                 $outstandingBalance = LoanHistory::where('NAID',$member->NAID)->first()->OutstandingBalance;
-                $carry['total_Balance'] += $outstandingBalance ;
+                $carry['total_Balance'] += $beginingBalance - $member->CollectedAmount ;
                 //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
                 return $carry;
             }, [

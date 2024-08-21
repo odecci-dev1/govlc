@@ -129,7 +129,7 @@ class Collection extends Component
                     SavingsRunningBalance::create([
                         'MemId'=>$application->MemId,
                         'Savings'=>$newSavings,
-                        'Note'=> 'New savings added from loan application '.$getCollection->NAID,
+                        'Note'=> 'New savings added from collection '.$this->areaRefNo,
                         'Date'=> Carbon::now(),
                         'Updated_By'=>session()->get('auth_userid'),
 

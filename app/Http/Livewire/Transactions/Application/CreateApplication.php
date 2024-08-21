@@ -1774,6 +1774,7 @@ class CreateApplication extends Component
 
                     LoanDetails::where('NAID',$this->naID)->update([
                         'Status' => 14,
+                        'BeginningBalance' => $this->loanDetails['outstandingBalance'],
                     ]);
 
                     CollectionAreaMember::create([
