@@ -37,8 +37,8 @@ class ReleaseReport extends Component
                 'area' => !empty($member->areaName) ? $member->areaName : 'N/A',
                 'loanType' => $member->loantype->LoanTypeName,
                 'loanAmount' => number_format($member->detail->LoanAmount, 2),
-                'advancePayment' => !empty($member->collectionareamember->AdvancePayment) ? number_format($member->collectionareamember->AdvancePayment, 2) : 0.00,
-                'terms' => !empty($member->termsofpayments->NameOfTerms) ? $member->termsofpayments->NameOfTerms : 'No terms',
+                'advancePayment' => !empty($member->detail->ApprovedAdvancePayment) ? number_format($member->detail->ApprovedAdvancePayment, 2) : 0.00,
+                'terms' => !empty($member->termsofpayment->NameOfTerms) ? $member->termsofpayment->NameOfTerms : 'No terms',
                 'dueDate' => !empty($member->loanHistory->DueDate) ? date('Y-m-d', strtotime($member->loanHistory->DueDate)) : 'Empty date',
                 'releasingDate' => !empty($member->loanHistory->DateReleased) ? date('Y-m-d', strtotime($member->loanHistory->DateReleased)) : 'Empty date',
             ];
@@ -48,8 +48,8 @@ class ReleaseReport extends Component
 
     public function print()
     {
-        $data = $this->getMembers(false, false);
-
+        $data = $this->getMembers(false,true);
+     
         $printhtml = view('livewire.reports.release-report.release-report-print', [
             'members' => $data,
             'datestart' => $this->datestart,
@@ -77,7 +77,7 @@ class ReleaseReport extends Component
     public function render()
     {      
         $members = $this->getMembers();
-
+   
         return view('livewire.reports.release-report.release-report', [
             'members' => $members
         ]);
@@ -87,13 +87,13 @@ class ReleaseReport extends Component
     {
         $members = Application::with(['member', 'detail', 'loantype', 'loanhistory', 'termsofpayment'])
             ->when(!$includeInactive, function ($query) {
-                $query->where('Status', '!=', 2);
+                $query->where('Status', '!=', 14);
             })
             ->whereHas('loanhistory', function ($query) {
                 $query->whereBetween('DateCreated', [$this->datestart, $this->dateend]);
             })
             ->get();
-        
+       
         $members->map(function ($application) {
             if ($application->member) {
                 $application->areaName = $application->member->areaName;
@@ -121,7 +121,7 @@ class ReleaseReport extends Component
     
             return $paginatedMembers;
         }
-
+        
         return $members;
     }
 
