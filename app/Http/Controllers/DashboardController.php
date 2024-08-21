@@ -31,8 +31,14 @@ class DashboardController extends Controller
         for($i = 0;$i<=$days;$i++){
         //for($i = 0;$i<=30;$i++){
             
-             date_sub($newDate,date_interval_create_from_date_string("1 days"));
-             $members = Members::where('Status',1)->whereDate('DateCreated','=',date_format($newDate,'Y-m-d'))->get();
+             if($request['days'] == 1){
+                date_sub($newDate,date_interval_create_from_date_string("1 month"));
+                $members = Members::where('Status',1)->whereMonth('DateCreated','=',date_format($newDate,'m'))->get();
+             }else{
+                date_sub($newDate,date_interval_create_from_date_string("1 days"));
+                $members = Members::where('Status',1)->whereDate('DateCreated','=',date_format($newDate,'Y-m-d'))->get();
+             }
+
              $count=0;
              if($request->area == 'All'){
                 foreach($getArea as $area){
@@ -71,7 +77,7 @@ class DashboardController extends Controller
             $areamember=[];
             $areamember['count'] = $count;
             $areamember['areaName'] = ($request->area == 'All') ? 'All':$getArea->Id;
-            $areamember['date'] = $request['days'] == 1 ? date_format($newDate,'m/d/Y'):0;
+            $areamember['date'] = $request['days'] == 1 ? date_format($newDate,'F'):date_format($newDate,'m/d/Y');
             $getactivemembers[] = $areamember;
             
         }
