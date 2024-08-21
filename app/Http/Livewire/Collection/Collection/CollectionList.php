@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Collection\Collection;
 
 use App\Models\Collection;
+use App\Models\LoanDetails;
 use App\Models\LoanHistory;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
@@ -52,14 +53,17 @@ class CollectionList extends Component
         }
 
         $collections = $query->paginate($this->paginate['pageSize'], ['*'], 'page', $this->paginate['page']);
-
+     
         $one = $this->list = $collections->map(function ($collection) {
             $totals = $collection->collectionAreas->flatMap->areaMembers->reduce(function ($carry, $member) {
+                $getLoanDetails = LoanDetails::where('NAID',$member->NAID)->first();
+                $getLoanHistory = LoanHistory::where('NAID',$member->NAID)->first();
                 $carry['total_advance'] += $member->AdvancePayment;
                 $carry['total_lapses'] += $member->LapsePayment;
-                $carry['totalCollectible'] += $member->CollectedAmount;
+                $carry['totalCollectible'] += ($getLoanHistory->Penalty != 0) ? $getLoanDetails->ApprovedDailyAmountDue:$getLoanHistory->OutstandingBalance;
                 $carry['total_savings'] += $member->Savings;
-                $carry['total_Balance'] += LoanHistory::where('NAID',$member->NAID)->first()->OutstandingBalance -  ( $member->CollectedAmount + $member->AdvancePayment);
+                $outstandingBalance = LoanHistory::where('NAID',$member->NAID)->first()->OutstandingBalance;
+                $carry['total_Balance'] += $outstandingBalance  - $member->CollectedAmount;
                 //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
                 return $carry;
             }, [
