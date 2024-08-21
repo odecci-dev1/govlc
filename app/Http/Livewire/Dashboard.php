@@ -197,12 +197,21 @@ class Dashboard extends Component
             ->get();
         //$result = $activeAreas->map(function ($area) use ($newAccounts) {
         //dd($collectionArea);
-       
+        if(empty($collectionArea)){
+            $details['area'] = '';
+            $details['activeCollection'] = '';
+            $details['newAccount'] = '';
+            $details['noPayment'] = '';
+            $details['pastDueCollection'] = 0;
+            $detailResult= $details;
+        }
+
+
         foreach($collectionArea as $area) {
             $details=[];
             // Sum collected amounts for the area
             $getArea = Area::where('AreaID', $area->AreaId)->first();
-      
+            
             $collections = CollectionAreaMember::where('Area_RefNo', $area->Area_RefNo)->get();
             $sumCollectedAmount =0;
             foreach( $collections as $collection ) {
