@@ -59,10 +59,10 @@
                                     <span class="td-name" style="font-size: 1.3rem">{{ $rs->Note }}</span>
                                 </td>
                                 <td style="text-align: center;">
-                                    <span class="td-name" style="font-size: 1.3rem">{{ $rs->Date }}</span>
+                                    <span class="td-name" style="font-size: 1.3rem">{{ date('Y-m-d', strtotime($rs->Date))}}</span>
                                 </td>
                                 <td style="text-align: center;">
-                                    <span class="td-name" style="font-size: 1.3rem">{{ $rs->Updated_By }}</span>
+                                    <span class="td-name" style="font-size: 1.3rem">{{ $rs->user->full_name }}</span>
                                 </td>
                             </tr>
                         @empty
@@ -78,7 +78,62 @@
 
                 </div>
                 <!-- * Pagination Container -->
-                <div class="pagination-container">
+                <div class="total-collection-footer" style="display: flex; justify-content: space-between;">
+                    <div style="margin: 2rem 0 0 2rem;">
+                        <p style="font-size: 1.4rem">
+                            {{$paginationPagingModal['startItem']}}-{{ $paginationPagingModal['endItem'] }} of <span style="font-weight: 700;">{{ $paginationPagingModal['totalRecord'] }}</span> Results 
+                        </p>
+                    </div>
+                    <div class="footer-wrapper">
+                        @if($paginationPagingModal['totalPage'])
+                            <div class="pagination-container" style="padding-bottom: 0;">
+                                <a href="#" wire:click.prevent="goToFirstPageModal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L12.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                                        <path fill-rule="evenodd" d="M4.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L6.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                                <!-- Previous Button -->
+                                @if($paginationPagingModal['prevPage'])
+                                    <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['prevPage'] }})">
+                                        <img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left">
+                                    </a>
+                                @endif
+                        
+                                <!-- Pagination Buttons -->
+                                @php
+                                    $startPage = max(1, $paginationPagingModal['currentPage'] - 2);
+                                    $endPage = min($paginationPagingModal['totalPage'], $paginationPagingModal['currentPage'] + 2);
+                        
+                                    if ($endPage - $startPage < 4) {
+                                        if ($startPage > 1) {
+                                            $startPage = max(1, $endPage - 4);
+                                        } else {
+                                            $endPage = min($paginationPagingModal['totalPage'], $startPage + 4);
+                                        }
+                                    }
+                                @endphp
+                        
+                                @for ($i = $startPage; $i <= $endPage; $i++)
+                                    <a href="#" wire:click.prevent="setPageModal({{ $i }})" class="{{ $paginationPagingModal['currentPage'] == $i ? 'font-size-1_4em color-app' : '' }}">{{ $i }}</a>
+                                @endfor
+                        
+                                <!-- Next Button -->
+                                @if($paginationPagingModal['nextPage'])
+                                    <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['nextPage'] }})">
+                                        <img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right">
+                                    </a>
+                                @endif
+        
+                                <a href="#" wire:click.prevent="goToLastPageModal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M13.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                                        <path fill-rule="evenodd" d="M19.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06L17.69 12l-6.97-6.97a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -118,7 +173,9 @@
                             </div>
                             @error('member') <span class="text-required">{{ $message }}</span> @enderror              
                         </div>    
-                        <button class="button" type="button" wire:click='toggleRunningSavings' style="padding: 0.8rem 2rem">Running Balance</button>
+                        <button class="button" type="button" wire:click='toggleRunningSavings' style="margin-top: 1.8rem">
+                            Running Balance
+                        </button>
                     </div>              
                 </div>
             <div class="body-wrapper" style="gap: 0; height:clamp(100% - 21rem, 40rem, 80vh); overflow-y: auto;">
