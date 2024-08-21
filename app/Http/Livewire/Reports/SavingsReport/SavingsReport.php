@@ -30,7 +30,7 @@ class SavingsReport extends Component
     public $paginationPagingModal = [];
     public $totalSavingsAmount = 0; 
     public $runningSavings;
-    public $showModal = true;
+    public $showModal = false;
 
     public function mount()
     {
