@@ -31,10 +31,10 @@
 
                         <table>
                             <tr>
+                                <th>Application ID</th>
                                 <th>Loan Amount</th>
                                 <th>Savings</th>
                                 <th>Penalty</th>
-                                <th>Outstanding Balance</th>
                                 <th>Date Released</th>
                                 <th>Due Date</th>     
                                 <th>Status</th> 
@@ -42,18 +42,21 @@
                             </tr>
                             @if($loanhistory)                                                           
                                 @foreach($loanhistory as $lhistory)
-                                <tr wire:click="getPaymentHistory('{{ $lhistory['naid'] }}')">
-                                    <td>{{ $lhistory['loanPrincipal'] }}</td>                                  
-                                    <td>{{ $lhistory['totalSavingsAmount'] }}</td>
-                                    <td>{{ $lhistory['penalty'] }}</td>
-                                    <td>{{ $lhistory['amountDue'] }}</td>
-                                    <td>{{ $lhistory['releasingDate'] }}</td>
-                                    <td>{{ date('m-d-Y', strtotime($lhistory['dueDate'])) }}</td>   
-                                    <td>{{ $lhistory['status'] }}</td>  
+                                <tr wire:click="getPaymentHistory('{{ $lhistory['NAID'] }}')">
+                                    <td>{{ $lhistory['NAID']}}</td>                                  
+                                    <td>{{ $lhistory['loanhistory']['LoanAmount'] }}</td>                                  
+                                    <td>0</td>
+                                    {{-- <td>{{ $lhistory['member']['memberSavings'][0]['TotalSavingsAmount']  }}</td> --}}
+                                    <td>{{ $lhistory['loanhistory']['Penalty'] }}</td>
+                                    <td>{{ $lhistory['loanhistory']['OutstandingBalance'] }}</td>
+                                    <td>{{ date('m/d/Y', strtotime($lhistory['loanhistory']['DateReleased'] )) }}</td>
+                                    <td>{{ date('m/d/Y', strtotime($lhistory['loanhistory']['DueDate'] )) }}</td>   
+                                    <td>{{ $lhistory->Status == 14 ? 'On going':'In process'}}</td>  
                                     <td class="td-btns" style="width: 1%;">
                                         <div class="td-btn-wrapper">
-                                            <a href="{{ URL::to('/') }}/members/details/{{ $lhistory['naid'] }}" class="a-btn-view-2">View</a>                         
+                                            <a href="{{ URL::to('/') }}/tranactions/application/view/{{ $lhistory['NAID'] }}" class="a-btn-view-2">View</a>                         
                                         </div>
+                                    
                                     </td>                                                                  
                                 </tr>   
                                 @endforeach
@@ -90,25 +93,22 @@
                     <div class="rowspan"  style="overflow-y: auto;">
                         <table>
                             <tr>
-                                <th>Loan Amount</th>
-                                <th>Outstanding Balance</th>
+
                                 <th>Paid Amount</th>
                                 <th>Collector</th>
                                 <th>Payment Date</th>
                                 <th>Payment Type</th>
-                                <th>Penalty</th>
+                                <th>Payment Status</th>
                             </tr>
                             <tr>
                                 @if($paymenthistory)
-                                    @foreach($paymenthistory as $paymenthistory)
+                                    @foreach($paymenthistory as $history)
                                     <tr>
-                                        <td>{{ $paymenthistory['loanPrincipal'] }}</td>        
-                                        <td>{{ $paymenthistory['amountDue'] }}</td>
-                                        <td>{{ $paymenthistory['collectedAmount'] }}</td>
-                                        <td>{{ $paymenthistory['fieldOfficer'] }}</td>
-                                        <td>{{ date('m-d-Y', strtotime($paymenthistory['dateOfFullPayment'])) }}</td>
-                                        <td>{{ $paymenthistory['payment_Method'] }}</td>
-                                        <td>{{ $paymenthistory['penalty'] }}</td>
+                                        <td>{{ $history['collectedAmount'] }}</td>
+                                        <td>{{ $history['collector'] }}</td>
+                                        <td>{{ ($history['paymentDate']) ? date('m/d/Y', strtotime($history['paymentDate'])):'' }}</td>
+                                        <td>{{ $history['paymentType'] }}</td>
+                                        <td>{{ $history['Payment_Status'] }}</td>
                                     </tr>   
                                     @endforeach
                                 @endif                                         
