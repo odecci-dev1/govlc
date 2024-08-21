@@ -505,12 +505,20 @@ class Collection extends Component
                             if($collectionAreasMembers){
                                 foreach( $collectionAreasMembers as $collectionAreaMember){
                                     $totalUsedAdvance += $collectionAreaMember->UsedAdvancePayment;
-                                    $totalCollectionAdvance += $collectionAreaMember->AdvancePayment;
+                                    $totalCollectionAdvance += $collectionAreaMember->AdvancePayment - $collectionAreaMember->UsedAdvancePayment;
                                     $totalCollecitonLapses += $collectionAreaMember->LapsePayment - $collectionAreaMember->UsedAdvancePayment;
-                                    $totalCollected += $collectionAreaMember->CollectedAmount;
+                                    
                                  
                                 }
                             }
+
+                            $collectionAreasMembersCollections = CollectionAreaMember::where('Area_RefNo',$collectionArea->Area_RefNo)->get();
+                            if($collectionAreasMembersCollections){
+                                foreach( $collectionAreasMembersCollections as $collectionAreasMembersCollection){
+                                    $totalCollected += $collectionAreasMembersCollection->CollectedAmount;
+                                }
+                            }
+
                             $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
                             
                             if($getLoanHistory){
@@ -560,8 +568,8 @@ class Collection extends Component
                             $details['total_FieldExpenses']= 0;
                             $details['total_Balance']=  $application->loanhistory->OutstandingBalance;
                             $details['total_savings']= $totalSavings ;
-                            $details['total_advance']= $totalAdvance;
-                            $details['total_lapses']= $totalLapses;
+                            $details['total_advance']= $totalAdvance -$totalLapses ;
+                            $details['total_lapses']= $totalAdvance > $totalLapses ? 0:$totalLapses ;
                             $appDetails[]=$printStatus;
                             $details['application'] = $appDetails;
                             

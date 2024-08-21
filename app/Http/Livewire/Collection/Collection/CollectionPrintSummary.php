@@ -66,7 +66,7 @@ class CollectionPrintSummary extends Component
              $details['grand_total_savings'] =0;
              $details['grand_total_advance'] =0;
              $details['grand_total_lapses'] =0;
-            $collectionAreaMembers = CollectionAreaMember::where('Area_RefNo')->get();
+            $collectionAreaMembers = CollectionAreaMember::where('Area_RefNo',$collectionArea->Area_RefNo)->get();
             $totalCollectionAdvance=0;
             $totalCollecitonLapses=0;
             $totalCollected=0;
@@ -83,14 +83,15 @@ class CollectionPrintSummary extends Component
                    
                         if($collectionAreasMembers){
                             foreach( $collectionAreasMembers as $collectionAreaMember){
-                                $totalCollectionAdvance += $collectionAreaMember->AdvancePayment;
                                 $totalCollecitonLapses += $collectionAreaMember->LapsePayment - $collectionAreaMember->UsedAdvancePayment;
-                                $totalCollected += $collectionAreaMember->CollectedAmount;
+                                $totalCollectionAdvance += $collectionAreaMember->AdvancePayment -  $collectionAreaMember->UsedAdvancePayment ;
+                                
+                               
                             }
                         }
+                        $totalCollected += $collectionAreaMember->CollectedAmount;
 
-                        $collectionAreaMember = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
-                        $collectionArea = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
+
                         $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                         $loanHistory +=  $application->loanhistory->OutstandingBalance;
                         $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
@@ -104,8 +105,8 @@ class CollectionPrintSummary extends Component
                         $details['total_collectedAmount']= $totalCollectedAmount;
                         $details['total_Balance']=  $application->loanhistory->OutstandingBalance;
                         $details['total_savings']= $totalSavings ;
-                        $details['total_advance']= $totalAdvance;
-                        $details['total_lapses']= $totalLapses;
+                        $details['total_advance']= $totalAdvance - $totalLapses;
+                        $details['total_lapses']= $totalAdvance > $totalLapses ? 0:$totalLapses;
                         $appDetails[]=$printStatus;
                         $details['application'] = $appDetails;
                         

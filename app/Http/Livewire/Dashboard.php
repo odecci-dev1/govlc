@@ -65,7 +65,7 @@ class Dashboard extends Component
     {
        
         $members = Members::select('id', 'Status')->where('Status', 1)->get();
-        $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment','UsedAdvancePayment')->get();
+        $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment','UsedAdvancePayment','LapsePayment')->get();
         $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->where('Status','=',14)->get();
         $totalMemberSavings = MembersSavings::select('TotalSavingsAmount')->get();
         
@@ -130,7 +130,8 @@ class Dashboard extends Component
         
 
         $totalInterest = $loanDetails->sum('ApproveedInterest');
-        $totalAdvancePayment = $collectionAreaMembers->sum('AdvancePayment') - $collectionAreaMembers->sum('UsedAdvancePayment');
+        $lapses = $collectionAreaMembers->sum('LapsePayment') - $collectionAreaMembers->sum('UsedAdvancePayment');
+        $totalAdvancePayment = $collectionAreaMembers->sum('AdvancePayment') -  $collectionAreaMembers->sum('UsedAdvancePayment') -$lapses ;
         $totalNotarialFee = $loanDetails->sum('ApprovedNotarialFee');
         $totalOtherDeductions = $totalLoanInsurance + $totalLifeInsurance + $totalNotarialFee;
     
@@ -320,7 +321,7 @@ class Dashboard extends Component
                     ->with('areaMembers')
                     ->get()
                     ->sum(function($collectionArea) use ($sumType) {
-                        return $collectionArea->areaMembers->sum($sumType) - $collectionArea->areaMembers->sum('UsedAdvancePayment');
+                        return  $collectionArea->areaMembers->sum($sumType)  - $collectionArea->areaMembers->sum('UsedAdvancePayment') ;
                     });
             }
        
