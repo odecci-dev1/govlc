@@ -40,7 +40,7 @@ class Dashboard extends Component
         $this->activeCollectionData();
         //  dd($this->topcollectibles);
         $this->topcollectibles = $this->computeTopValues('Collectibles');
-        $this->toplapses = $this->computeTopValues('LapseAmount');
+        $this->toplapses = $this->computeTopValues('LapsePayment');
         $this->data = $this->prepareData();
         $this->activecollections = $this->activeCollectionData();
         return $this->data;
