@@ -1727,6 +1727,7 @@ class CreateApplication extends Component
                     $checkMemberSavings = MembersSavings::where('MemId',$this->memberId)->first();
                     if(!$checkMemberSavings){
                         MembersSavings::create([
+                            'MemId'=>  $this->memberId,
                             'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
                             'DateUpdated'=>Carbon::now(),
                             'UpdatedFrom'=>'Updated from new application with NAID='.$this->naID,
@@ -3297,6 +3298,14 @@ class CreateApplication extends Component
     }
 
     public function notifyUser($action,$module,$name,$userId,$reference){
-        
+        switch ($module) {
+            case 'Application':
+            case 'Credit Investigation':
+            case 'Approval':
+            case 'Realising':
+            default:
+        }
+
+        $users = User::where('Status',1)->get();
     }
 }
