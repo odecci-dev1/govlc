@@ -314,7 +314,7 @@ class Dashboard extends Component
 
                     }
             }
-            if($sumType == 'LapseAmount'){
+            if($sumType == 'LapsePayment'){
                       $sumAmount = CollectionArea::where('AreaID', $area->AreaID)
                     ->where('Collection_Status', 7)
                     ->with('areaMembers')
