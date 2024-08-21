@@ -1789,7 +1789,7 @@ class CreateApplication extends Component
                     ]);
            
             
-            return redirect()->to('tranactions/application/releasing/list')->with(['mmessage'=> 'Application is complete and ready for releasing', 'mword'=> 'Success']);
+            return redirect()->to('tranactions/application/releasing/list')->with(['mmessage'=> 'Application has been completed', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
             throw $e;            
@@ -3294,5 +3294,9 @@ class CreateApplication extends Component
         //dd(session()->get('auth_userid'));        
         // $getLoanTermsname = $this->getLoanTermsname(isset($this->loanDetails['topId']) ? $this->loanDetails['topId'] : '');
         return view('livewire.transactions.application.create-application');        
+    }
+
+    public function notifyUser($action,$module,$name,$userId,$reference){
+        
     }
 }
