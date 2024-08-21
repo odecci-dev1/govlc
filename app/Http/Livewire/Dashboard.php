@@ -273,24 +273,22 @@ class Dashboard extends Component
             ->get();
 
         $topValues = [];
-
+        
+    
         foreach ($activeAreas as $area) {
-            // $sumAmount = CollectionArea::where('AreaID', $area->AreaID)
-            //     ->where('Collection_Status', 7)
-            //     ->with('areaMembers')
-            //     ->get()
-            //     ->sum(function($collectionArea) use ($sumType) {
-            //         return $collectionArea->areaMembers->sum($sumType);
-            //     });
             if($sumType == 'Collectibles'){
-                    $collections = CollectionAreaMember::where('Area_RefNo', $area->Area_RefNo)->get();
+          
+                    $locations = explode('|',$area->City);
                     $sumAmount =0;
-                    foreach( $collections as $collection ) {
-                    $dailyCollectible = LoanDetails::where('NAID',$collection->NAID)->first();
-                    $loanHistory = LoanHistory::where('NAID',$collection->NAID)->first();
-                    //$sumCollectedAmount += $collections->sum('CollectedAmount');
-                    $sumAmount += ($loanHistory->Penalty != 0) ? $loanHistory->OutstandingBalance:$dailyCollectible->ApprovedDailyAmountDue;
-                }
+                    foreach($locations as $location){
+                        $address = explode(",",$location);
+                        $barangay = trim($address[0],' ');
+                        $city = trim($address[1],' ');
+                        $member = Members::where('Barangay', $barangay)->where('City',$city)->first();
+                        $application = Application::where('MemID',$member->Id)->with('detail')->with('loanhistory')->first();
+                        $sumAmount += ($application->loanhistory->Penalty != 0) ? $application->loanhistory->OutstandingBalance:$application->detail->ApprovedDailyAmountDue;
+
+                    }
             }
             if($sumType == 'LapseAmount'){
                       $sumAmount = CollectionArea::where('AreaID', $area->AreaID)
@@ -301,7 +299,7 @@ class Dashboard extends Component
                         return $collectionArea->areaMembers->sum($sumType);
                     });
             }
-
+       
             if ($sumAmount > 0) {
                 $topValues[] = [
                     'areaName' => $area->Area,
@@ -309,7 +307,7 @@ class Dashboard extends Component
                 ];
             }
         }
-
+        //dd($tops);
         usort($topValues, function ($a, $b) {
             return $b['amount'] <=> $a['amount'];
         });
