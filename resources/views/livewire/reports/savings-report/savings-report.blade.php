@@ -1,7 +1,144 @@
-<div>    
+<div style="overflow-y: clip">    
     <script src="{{ asset('jquery-master/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('jquery-master/jquery-ui.js') }}"></script>
     <script type="text/javascript" src="{{ asset('jquery.print/jQuery.print.js') }}"></script>    
+    <dialog @if ($showModal) open @endif class="na-modal" style="z-index: 11; padding: 0 auto; width: calc(100vw - 30rem)">
+        <div class="modal-container" style="padding: 1.6rem 1.4rem;">
+            <div style="display: flex; align-items: center;">
+                <span style="font-size: 2rem; font-weight: 600;">Savings Running Balance</span>
+                <button class="exit-button" wire:click="toggleRunningSavings">
+                    <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="exit">
+                </button>
+            </div>
+            <!-- * Table -->
+            <div>
+                <!-- * Table Container -->
+                <div class="table-container" style="height: calc(100vh - 30rem)">
+
+                    <!-- * Members Table -->
+                    <table>
+
+                        <!-- * Table Header -->
+                        <tr>
+
+                            <!-- * Header Name -->
+                            <th style="text-align: left; padding: 1.4rem">
+                                <div style="display: flex; flex-direction: column;">
+                                    <span class="td-name" style="font-size: 1.3rem">Member Name</span>
+                                    <span style="font-size: 1.3rem; color: rgba(0, 0, 0, 0.5)">MemId</span>
+                                </div>
+                            </th>
+
+                            <!-- * Header Name -->
+                            <th><span class="th-name" style="font-size: 1.3rem">Savings</span></th>
+
+                            <!-- * Header Name -->
+                            <th><span class="th-name" style="font-size: 1.3rem">Note</span></th>
+
+                            <!-- * Header Member ID -->
+                            <th><span class="th-name" style="font-size: 1.3rem">Date</span></th>
+
+                            <!-- * Header Member ID -->
+                            <th><span class="th-name" style="font-size: 1.3rem">Updated By</span></th>
+
+                        </tr>
+
+                        <!-- * Members Data -->
+                        @forelse ($runningSavings as $rs)
+                            <tr>
+                                <td style="padding: 1.4rem">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span class="td-name" style="font-size: 1.3rem">{{ $rs->member->fullname }}</span>
+                                        <span style="font-size: 1.3rem; color: rgba(0, 0, 0, 0.5)">{{ $rs->MemId }}</span>
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="td-name" style="font-size: 1.3rem">{{ $rs->Savings }}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="td-name" style="font-size: 1.3rem">{{ $rs->Note }}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="td-name" style="font-size: 1.3rem">{{ date('Y-m-d', strtotime($rs->Date))}}</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="td-name" style="font-size: 1.3rem">{{ $rs->user->full_name }}</span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">
+                                    <span >There are no savings running balance.</span>
+                                </td>
+                            </tr>
+                        @endforelse
+                        
+                    
+                    </table>
+
+                </div>
+                <!-- * Pagination Container -->
+                <div class="total-collection-footer" style="display: flex; justify-content: space-between;">
+                    <div style="margin: 2rem 0 0 2rem;">
+                        <p style="font-size: 1.4rem">
+                            {{$paginationPagingModal['startItem']}}-{{ $paginationPagingModal['endItem'] }} of <span style="font-weight: 700;">{{ $paginationPagingModal['totalRecord'] }}</span> Results 
+                        </p>
+                    </div>
+                    <div class="footer-wrapper">
+                        @if($paginationPagingModal['totalPage'])
+                            <div class="pagination-container" style="padding-bottom: 0;">
+                                <a href="#" wire:click.prevent="goToFirstPageModal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L12.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                                        <path fill-rule="evenodd" d="M4.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L6.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                                <!-- Previous Button -->
+                                @if($paginationPagingModal['prevPage'])
+                                    <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['prevPage'] }})">
+                                        <img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left">
+                                    </a>
+                                @endif
+                        
+                                <!-- Pagination Buttons -->
+                                @php
+                                    $startPage = max(1, $paginationPagingModal['currentPage'] - 2);
+                                    $endPage = min($paginationPagingModal['totalPage'], $paginationPagingModal['currentPage'] + 2);
+                        
+                                    if ($endPage - $startPage < 4) {
+                                        if ($startPage > 1) {
+                                            $startPage = max(1, $endPage - 4);
+                                        } else {
+                                            $endPage = min($paginationPagingModal['totalPage'], $startPage + 4);
+                                        }
+                                    }
+                                @endphp
+                        
+                                @for ($i = $startPage; $i <= $endPage; $i++)
+                                    <a href="#" wire:click.prevent="setPageModal({{ $i }})" class="{{ $paginationPagingModal['currentPage'] == $i ? 'font-size-1_4em color-app' : '' }}">{{ $i }}</a>
+                                @endfor
+                        
+                                <!-- Next Button -->
+                                @if($paginationPagingModal['nextPage'])
+                                    <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['nextPage'] }})">
+                                        <img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right">
+                                    </a>
+                                @endif
+        
+                                <a href="#" wire:click.prevent="goToLastPageModal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M13.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                                        <path fill-rule="evenodd" d="M19.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06L17.69 12l-6.97-6.97a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+    <dialog @if ($showModal) open @endif style="position: absolute; inset: 0; z-index: 10; width: 100%; height: 112%; background: rgba(0, 0, 0, 0.612)"></dialog>
     <div class="reports-container">
         <div class="report-inner-container-2">
                 <div class="header-wrapper">
@@ -35,7 +172,10 @@
                                 </svg>
                             </div>
                             @error('member') <span class="text-required">{{ $message }}</span> @enderror              
-                        </div>     
+                        </div>    
+                        <button class="button" type="button" wire:click='toggleRunningSavings' style="margin-top: 1.8rem">
+                            Running Balance
+                        </button>
                     </div>              
                 </div>
             <div class="body-wrapper" style="gap: 0; height:clamp(100% - 21rem, 40rem, 80vh); overflow-y: auto;">
@@ -67,6 +207,8 @@
                                 <th style="text-align: right;">
                                     <span class="th-name">Total Savings</span>
                                 </th>
+
+                                <th/>
                             
                             </tr>
 
@@ -96,6 +238,9 @@
                                             number_format($member->memberSavings->sum('TotalSavingsAmount'), 2) ?? '0.00'
                                         }}
                                         </span>
+                                    </td>
+
+                                    <td style="text-align: right;">
                                     </td>
 
                                 </tr>

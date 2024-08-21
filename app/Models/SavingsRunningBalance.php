@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class SavingsRunningBalance extends Model
 {
@@ -18,7 +20,6 @@ class SavingsRunningBalance extends Model
         'Id'
     ];
 
-
     protected $fillable = [
         'MemId',
         'Savings',
@@ -26,4 +27,14 @@ class SavingsRunningBalance extends Model
         'Date',
         'Updated_By'
     ];
+
+    public function member(): HasOne
+    {
+        return $this->hasOne(Members::class, 'Id', 'MemId')->select('id', '*')->withDefault();
+    }
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'UserId', 'Updated_By');
+    }
 }
