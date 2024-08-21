@@ -128,7 +128,7 @@ class Collection extends Component
                     ]);
                     SavingsRunningBalance::create([
                         'MemId'=>$application->MemId,
-                        'Savings'=>$newSavings,
+                        'Savings'=>$currentSavings,
                         'Note'=> 'New savings added from collection '.$this->areaRefNo,
                         'Date'=> Carbon::now(),
                         'Updated_By'=>session()->get('auth_userid'),
@@ -322,8 +322,8 @@ class Collection extends Component
                         if($collectionAreaMembersCollectedAmounts){
                                foreach($collectionAreaMembersCollectedAmounts as $collectionAreaMember){
                                 $totalCollectedAmount += $collectionAreaMember->CollectedAmount;
-                                $totalAreaLapses += $collectionAreaMember->LapsePayment;
                                 $totalAreaAdvance += $collectionAreaMember->AdvancePayment;
+                                $totalAreaLapses += $collectionAreaMember->LapsePayment;
                                 $totalAreaSavings += $collectionAreaMember->Savings;
                                 
                             }
@@ -336,10 +336,12 @@ class Collection extends Component
                         if($collectionAreaMembersAdvanceLapses){
                             foreach($collectionAreaMembersAdvanceLapses as $collectionAreaMember){
                                 $totalApplicationUsedAdvance += $collectionAreaMember->UsedAdvancePayment;
-                                $totalApplicationLapses += $collectionAreaMember->LapsePayment - $collectionAreaMember->UsedAdvancePayment - $collectionAreaMember->AdvancePayment;
+                                
+                                $totalApplicationLapses +=  $collectionAreaMember->LapsePayment;
                                 $totalApplicationAdvance += $collectionAreaMember->AdvancePayment;
                             }
                         }
+               
                         $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                         $loanHistory +=  $application->loanhistory->OutstandingBalance;
                         $totalSavings +=  ( $savings) ? $savings->TotalSavingsAmount:0;
@@ -365,8 +367,8 @@ class Collection extends Component
                         $details['totalCollectible']= $collectibles;
                         $details['total_Balance']= $loanHistory;
                         $details['total_savings']=   $totalAreaSavings;
-                        $details['total_advance']= $totalAreaAdvance - $totalAreaUsedAdvance;
-                        $details['total_lapses']= $totalAreaLapses - $totalAreaAdvance;
+                        $details['total_advance']= $totalAreaAdvance - $totalAreaUsedAdvance  ;
+                        $details['total_lapses']= $totalAreaLapses;
                         $details['total_collectedAmount']= $totalCollectedAmount;
                         $details['total_FieldExpenses']= ($CollectionArea) ? $CollectionArea->FieldExpenses:0;
                         $details['daily_savings']= 0;
@@ -399,8 +401,8 @@ class Collection extends Component
                         $applicationData['typeOfCollection'] = $application->termsofpayment->collectionType->TypeOfCollection ;
                         $applicationData['naid'] = $application->NAID;
                         $applicationData['dailySavings'] = $application->termsofpayment->loantype->Savings;
-                        $applicationData['lapsePayment'] = $totalApplicationLapses;
-                        $applicationData['advancePayment'] = $totalApplicationAdvance - $totalApplicationUsedAdvance;
+                        $applicationData['lapsePayment'] = ($totalApplicationLapses - $totalApplicationAdvance < 0) ? 0:$totalApplicationLapses - $totalApplicationAdvance;
+                        $applicationData['advancePayment'] = $totalApplicationAdvance - $totalApplicationUsedAdvance - $totalApplicationLapses;
                         $applicationData['interestAmount'] = $application->detail->ApproveedInterest ;
                         $this->areaDetails[] = $applicationData; 
                     }
@@ -415,7 +417,7 @@ class Collection extends Component
                                                         'total_Balance' => $details['total_Balance'],
                                                         'total_savings' => $details['total_savings'],
                                                         'total_advance' => $details['total_advance'],
-                                                        'total_lapses' => $applicationData['lapsePayment'],
+                                                        'total_lapses' => $details['total_lapses'],
                                                         'total_collectedAmount' => $details['total_collectedAmount'],
                                                         'total_FieldExpenses' => $details['total_FieldExpenses'],
                                                         'total_daily_savings' => $details['daily_savings'],
@@ -455,6 +457,7 @@ class Collection extends Component
                  $collectibles=0;
                  $loanHistory=0;
                  $totalSavings=0;
+                 $totalUsedAdvance=0;
                  $totalAdvance=0;
                  $totalLapses=0;
                  $totalCollectedAmount=0;
@@ -498,11 +501,14 @@ class Collection extends Component
                             $totalCollectionAdvance=0;
                             $totalCollecitonLapses=0;
                             $totalCollected=0;
+                            $totalUsedAdvance=0;
                             if($collectionAreasMembers){
                                 foreach( $collectionAreasMembers as $collectionAreaMember){
+                                    $totalUsedAdvance += $collectionAreaMember->UsedAdvancePayment;
                                     $totalCollectionAdvance += $collectionAreaMember->AdvancePayment;
-                                    $totalCollecitonLapses += $collectionAreaMember->LapsePayment;
+                                    $totalCollecitonLapses += $collectionAreaMember->LapsePayment - $collectionAreaMember->UsedAdvancePayment;
                                     $totalCollected += $collectionAreaMember->CollectedAmount;
+                                 
                                 }
                             }
                             $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
@@ -525,6 +531,7 @@ class Collection extends Component
                             $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                             $loanHistory +=  $application->loanhistory->OutstandingBalance;
                             $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
+                            $totalUsedAdvance +=  ($savings) ? $savings->TotalSavingsAmount:0;
                             $totalLapses += $totalCollecitonLapses;
                             $totalAdvance += $totalCollectionAdvance;
                             $totalCollectedAmount += $totalCollected;

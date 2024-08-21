@@ -19,7 +19,7 @@ class CollectionList extends Component
     public $paginationPaging = [];
 
     public $runningBalance = 0;
-    public $newBalance = 0;
+    public $tester = [];
 
     public function mount(){
         $this->paginate['page'] = 1;
@@ -65,12 +65,8 @@ class CollectionList extends Component
                 $carry['total_lapses'] += $member->LapsePayment - $member->UsedAdvancePayment;
                 $carry['totalCollectible'] += ($getLoanHistory->Penalty != 0) ? $getLoanHistory->OutstandingBalance:$getLoanDetails->ApprovedDailyAmountDue;
                 $carry['total_savings'] += $member->Savings;
-                $newBalance   = $getLoanDetails->BeginningBalance-$member->CollectedAmount;
-                //$this->runningBalance -= $this->runningBalance == 0 ? ($getLoanDetails->BeginningBalance  - $member->CollectedAmount):($this->runningBalance  - $member->CollectedAmount);
-                $this->runningBalance = $newBalance;
-                $outstandingBalance = $this->runningBalance - LoanHistory::where('NAID',$member->NAID)->first()->OutstandingBalance;
-                $carry['total_Balance'] += $this->runningBalance;
-                //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
+                $carry['total_Balance'] += $getLoanDetails->BeginningBalance - $member->CollectedAmount ;
+                 //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
                 return $carry;
             }, [
                 'total_advance' => 0, 
@@ -81,10 +77,10 @@ class CollectionList extends Component
             ]);
 
             $collection->totals = $totals;
-
+            
             return $collection;
         });
-
+      
         // $inputs = [
         //     'page' => $this->paginate['page'],
         //     'pageSize' => $this->paginate['pageSize'],
