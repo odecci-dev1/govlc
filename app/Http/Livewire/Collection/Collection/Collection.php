@@ -98,7 +98,7 @@ class Collection extends Component
                 'Collection_Status'=>7,
             ]);
 
-            $getCollections =  CollectionAreaMember::where('Area_RefNo',$this->areaRefNo)->where('Payment_Status',1)->get();
+            $getCollections =  CollectionAreaMember::where('Area_RefNo',$this->areaRefNo)->get();
             if($getCollections){
                 foreach($getCollections as $getCollection){
                     //Update Oustanding Balance
@@ -117,7 +117,7 @@ class Collection extends Component
                     $currentSavings=0;
                     if($application){
                         $currentSaving = MembersSavings::where('MemId',$application->member->MemId)->first();
-                        $currentSavings = ($currentSavings) ? $currentSaving->TotalSavingsAmount : 0;
+                        $currentSavings =  $currentSaving->TotalSavingsAmount;
                     }
                     $collectedSavings =$getCollection->Savings;
                     $newSavings = $currentSavings + $collectedSavings;
