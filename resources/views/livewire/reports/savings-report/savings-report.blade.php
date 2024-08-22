@@ -10,7 +10,7 @@
                     <div style="margin: 0 1.6rem; width: 0.5rem; height: 5rem; background: #D6A330;"></div>
                     <div style="display: flex; flex-direction: column;">
                         @if (!empty($memberId))
-                            {{-- <span style="font-size: 1.8rem; font-weight: 600;">{{ $memberName }}</span> --}}
+                            <span style="font-size: 1.8rem; font-weight: 600;">{{ $memberName }}</span>
                             <span style="font-size: 1.8rem; font-weight: 300; color: rgba(0, 0, 0, 0.5)">{{ $memberId }}</span>
                         @endif
                     </div>
@@ -19,6 +19,7 @@
                     <img src="{{ URL::to('/') }}/assets/icons/x-circle.svg" alt="exit">
                 </button>
             </div>
+
             <!-- * Table -->
             <div>
                 <!-- * Table Container -->
@@ -26,7 +27,6 @@
 
                     <!-- * Members Table -->
                     <table>
-
                         <!-- * Table Header -->
                         <tr>
 
@@ -44,8 +44,8 @@
 
                         </tr>
 
-                        <!-- * Members Data -->
-                        @if (!empty($memberId) && !empty($runningSavings))
+                        {{-- @if (!empty($memberId) && !empty($runningSavings)) --}}
+                        @if ($this->runningSavings && $this->runningSavings->count())    
                             @forelse ($runningSavings as $rs)
                                 <tr>
                                     <td style="padding: 1.4rem; text-align: left">
@@ -69,70 +69,76 @@
                                 </tr>
                             @endforelse
                         @endif
-                        
-                    
                     </table>
 
                 </div>
                 <!-- * Pagination Container -->
                 <div class="total-collection-footer" style="display: flex; justify-content: space-between;">
-                    <div style="margin: 2rem 0 0 2rem;">
-                        <p style="font-size: 1.4rem">
-                            {{$paginationPagingModal['startItemModal']}}-{{ $paginationPagingModal['endItemModal'] }} of <span style="font-weight: 700;">{{ $paginationPagingModal['totalRecordModal'] }}</span> Results 
-                        </p>
-                    </div>
-                    <div class="footer-wrapper">
-                        @if($paginationPagingModal['totalPageModal'])
-                            <div class="pagination-container" style="padding-bottom: 0;">
-                                <a href="#" wire:click.prevent="goToFirstPageModal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L12.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
-                                        <path fill-rule="evenodd" d="M4.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L6.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
-                                    </svg>
-                                </a>
-                                <!-- Previous Button -->
-                                @if($paginationPagingModal['prevPageModal'])
-                                    <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['prevPageModal'] }})">
-                                        <img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left">
+                    @if ($this->runningSavings && $this->runningSavings->count())
+                        <div style="margin: 2rem 0 0 2rem;">
+                            <p style="font-size: 1.4rem">
+                                {{$paginationPagingModal['startItemModal']}}-{{ $paginationPagingModal['endItemModal'] }} of <span style="font-weight: 700;">{{ $paginationPagingModal['totalRecordModal'] }}</span> Results 
+                            </p>
+                        </div>
+                        <div class="footer-wrapper">
+                            @if($paginationPagingModal['totalPageModal'])
+                                <div class="pagination-container" style="padding-bottom: 0;">
+                                    <a href="#" wire:click.prevent="goToFirstPageModal">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L12.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                                            <path fill-rule="evenodd" d="M4.72 11.47a.75.75 0 0 0 0 1.06l7.5 7.5a.75.75 0 1 0 1.06-1.06L6.31 12l6.97-6.97a.75.75 0 0 0-1.06-1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                                        </svg>
                                     </a>
-                                @endif
-                        
-                                <!-- Pagination Buttons -->
-                                @php
-                                    $startPageModal = max(1, $paginationPagingModal['currentPageModal'] - 2);
-                                    $endPageModal = min($paginationPagingModal['totalPageModal'], $paginationPagingModal['currentPageModal'] + 2);
-                        
-                                    if ($endPageModal - $startPageModal < 4) {
-                                        if ($startPageModal > 1) {
-                                            $startPageModal = max(1, $endPageModal - 4);
-                                        } else {
-                                            $endPageModal = min($paginationPagingModal['totalPageModal'], $startPageModal + 4);
+                                    <!-- Previous Button -->
+                                    @if($paginationPagingModal['prevPageModal'])
+                                        <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['prevPageModal'] }})">
+                                            <img src="{{ URL::to('/') }}/assets/icons/caret-left.svg" alt="caret-left">
+                                        </a>
+                                    @endif
+                            
+                                    <!-- Pagination Buttons -->
+                                    @php
+                                        $startPageModal = max(1, $paginationPagingModal['currentPageModal'] - 2);
+                                        $endPageModal = min($paginationPagingModal['totalPageModal'], $paginationPagingModal['currentPageModal'] + 2);
+                            
+                                        if ($endPageModal - $startPageModal < 4) {
+                                            if ($startPageModal > 1) {
+                                                $startPageModal = max(1, $endPageModal - 4);
+                                            } else {
+                                                $endPageModal = min($paginationPagingModal['totalPageModal'], $startPageModal + 4);
+                                            }
                                         }
-                                    }
-                                @endphp
-                        
-                                @for ($i = $startPageModal; $i <= $endPageModal; $i++)
-                                    <a href="#" wire:click.prevent="setPageModal({{ $i }})" class="{{ $paginationPagingModal['currentPageModal'] == $i ? 'font-size-1_4em color-app' : '' }}">{{ $i }}</a>
-                                @endfor
-                        
-                                <!-- Next Button -->
-                                @if($paginationPagingModal['nextPageModal'])
-                                    <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['nextPageModal'] }})">
-                                        <img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right">
+                                    @endphp
+                            
+                                    @for ($i = $startPageModal; $i <= $endPageModal; $i++)
+                                        <a href="#" wire:click.prevent="setPageModal({{ $i }})" class="{{ $paginationPagingModal['currentPageModal'] == $i ? 'font-size-1_4em color-app' : '' }}">{{ $i }}</a>
+                                    @endfor
+                            
+                                    <!-- Next Button -->
+                                    @if($paginationPagingModal['nextPageModal'])
+                                        <a href="#" wire:click.prevent="setPageModal({{ $paginationPagingModal['nextPageModal'] }})">
+                                            <img src="{{ URL::to('/') }}/assets/icons/caret-right.svg" alt="caret-right">
+                                        </a>
+                                    @endif
+            
+                                    <a href="#" wire:click.prevent="goToLastPageModal">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M13.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                                            <path fill-rule="evenodd" d="M19.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06L17.69 12l-6.97-6.97a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
+                                        </svg>
                                     </a>
-                                @endif
-        
-                                <a href="#" wire:click.prevent="goToLastPageModal">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M13.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L11.69 12 4.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
-                                        <path fill-rule="evenodd" d="M19.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06L17.69 12l-6.97-6.97a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd" />
-                                    </svg>
-                                </a>
-                            </div>
-                        @endif
-                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+                    {{-- @if ($this->runningSavings && $this->runningSavings->count())
+                        <div class="pagination-links">
+                            {{ $this->runningSavings->links() }}
+                        </div>
+                    @endif --}}
                 </div>
             </div>
+
         </div>
     </dialog>
     <dialog @if ($showModal) open @endif style="position: absolute; inset: 0; z-index: 10; width: 100%; height: 112%; background: rgba(0, 0, 0, 0.612)"></dialog>
