@@ -231,7 +231,7 @@ class Dashboard extends Component
                         if( $getApplicationCount == 1){
                                      $totalNewAccount += 1;
                          }
-                         $totalPastDueCollection += ($loanhistory->Penalty) ? 0:$loanhistory->OutstandingBalance;
+                       //  $totalPastDueCollection += ($loanhistory->Penalty) ? 0:$loanhistory->OutstandingBalance;
 
             }
             // Sum collected amounts for the area
