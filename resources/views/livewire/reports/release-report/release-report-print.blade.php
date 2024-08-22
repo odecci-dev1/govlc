@@ -87,12 +87,12 @@
 
                                     <!-- * Advance Payment -->
                                     <td>
-                                        <span class="td-name">{{ !empty($member->collectionareamember->AdvancePayment) ? number_format($member->collectionareamember->AdvancePayment, 2) : 0.00 }}</span> 
+                                        <span class="td-name">{{ !empty($member->detail->ApprovedAdvancePayment) ? number_format($member->detail->ApprovedAdvancePayment, 2) : 0.00 }}</span> 
                                     </td>
 
                                     <!-- * Terms -->
                                     <td>
-                                        <span class="td-name">{{ !empty($member->termsofpayments->NameOfTerms) ? $member->termsofpayments->NameOfTerms : 'No terms' }}</span> 
+                                        <span class="td-name">{{ !empty($member->termsofpayment->NameOfTerms) ? $member->termsofpayment->NameOfTerms : 'No terms' }}</span> 
                                     </td>
 
                                     <!-- * Due Date -->

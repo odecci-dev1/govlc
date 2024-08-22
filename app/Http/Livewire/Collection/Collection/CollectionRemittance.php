@@ -146,7 +146,7 @@ class CollectionRemittance extends Component
                 'DateCollected' =>  date_format(Carbon::now(),'Y-m-d'),
                 'Savings' =>  $this->reminfo['savings'],
                 'UsedAdvancePayment'=> $useAdvancePayment,
-                'Payment_Status'=> 1,
+                'Payment_Status'=> ($this->reminfo['lapses'] == 0) ? 1:2,
                 ]);
                 // $newOutStandingBalance = $this->appdtl['amountDue'] - $this->reminfo['amntCollected'];
                 // LoanHistory::where('NAID',$this->appdtl['naid'])->update([

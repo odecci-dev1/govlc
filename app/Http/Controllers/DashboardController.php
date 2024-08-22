@@ -27,11 +27,18 @@ class DashboardController extends Controller
         $currentDate = date_create(date_format(Carbon::now(),'Y-m-d'));
         //date_sub($currentDate ,date_interval_create_from_date_string("30 days"));
         $newDate = $currentDate;
-        for($i = 0;$i<=$request['days'];$i++){
+        $days = ($request['days'] == 1) ? 12:$request['days'];
+        for($i = 0;$i<$days;$i++){
         //for($i = 0;$i<=30;$i++){
             
-             date_sub($newDate,date_interval_create_from_date_string("1 days"));
-             $members = Members::where('Status',1)->whereDate('DateCreated','=',date_format($newDate,'Y-m-d'))->get();
+             if($request['days'] == 1){
+                date_sub($newDate,date_interval_create_from_date_string("1 month"));
+                $members = Members::where('Status',1)->whereMonth('DateCreated','=',date_format($newDate,'m'))->get();
+             }else{
+                date_sub($newDate,date_interval_create_from_date_string("1 days"));
+                $members = Members::where('Status',1)->whereDate('DateCreated','=',date_format($newDate,'Y-m-d'))->get();
+             }
+
              $count=0;
              if($request->area == 'All'){
                 foreach($getArea as $area){
@@ -70,7 +77,7 @@ class DashboardController extends Controller
             $areamember=[];
             $areamember['count'] = $count;
             $areamember['areaName'] = ($request->area == 'All') ? 'All':$getArea->Id;
-            $areamember['date'] = date_format($newDate,'m/d/Y');
+            $areamember['date'] = $request['days'] == 1 ? date_format($newDate,'F'):date_format($newDate,'m/d/Y');
             $getactivemembers[] = $areamember;
             
         }

@@ -58,13 +58,13 @@
                                 <p style="font-size: 1.8rem !important; margin-top: 0;">Santol Balagtas Bulacan</p>
                                 <p>Receipt Voucher</p>
                             </div>
-                            <div class="body-wrapper">
+                            <div class="body-wrapper" > 
                                 <div class="box-wrapper">
                                     <!-- * Box-1 -->
                                     <div class="box">
                                         <p>NAME: <span id="printClientName"> {{ $loansummary['fname'] }}, {{ $loansummary['lname'] }} {{ mb_substr($loansummary['mname'], 0, 1) }}</span></p>
                                         <p class="p-bold">{{ isset($loansummary['areaName']) ? $loansummary['areaName'] : '' }}</p>
-                                        <div class="box-inner">
+                                        <div class="box-inner" style="margin-right:5rem">
                                             <div class="box-inner-wrapper">
                                                 <p>DATE:</p> 
                                                 <span id="printDate">{{ isset($loansummary['releasingDate']) ? date('F j, Y', strtotime($loansummary['releasingDate'])) : 'not found' }}</span>
@@ -119,7 +119,7 @@
                                                 <span id=""></span>
                                             </div>
                                         </div>
-                                        <div class="box-inner">
+                                        <div class="box-inner" style="margin-right:5rem">
                                             <p>{{ isset($loansummary['loanAmount']) ? number_format($loansummary['loanAmount'], 2) : 'not found' }}</p>
                                             <p>{{ isset($loansummary['interestAmount']) ? number_format($loansummary['interestAmount'], 2) : 'not found' }}</p>
                                             <p>{{ isset($loansummary['notarialFee']) ? number_format($loansummary['notarialFee'], 2) : 'not found' }}</p>
@@ -151,7 +151,7 @@
                                                 <p>RELEASED THRU {{ isset($loansummary['modeOfRelease']) ? strtoupper($loansummary['modeOfRelease']) : 'NOT SET' }} {!! ($loansummary['modeOfRelease'] ??='') == 'Check' ? '<br>Check Reference : ' . $loansummary['modeOfReleaseReference'] : '' !!}</p>
                                             </div>
                                         </div>
-                                        <div class="box-inner">
+                                        <div class="box-inner" style="margin-right:5rem">
                                             <div class="box-inner-wrapper">
                                                 <p>RECEIVED FROM:</p>
                                                 <span id="">GOLD ONE VICTORY LENDING CORPORATION</span>
@@ -168,7 +168,7 @@
                                             <p class="p-bold line-sig">CO-MAKER</p>
                                             <p>CONTACT NO. : {{ $loansummary['co_Cno'] ??= '' }}</p>
                                         </div>
-                                        <div class="box-inner">
+                                        <div class="box-inner" style="margin-right:5rem">
                                             <p class="p-bold line-sig">CLIENT</p>
                                             <p>CONTACT NO. : {{ $loansummary['cno'] ??= '' }}</p>
                                         </div>

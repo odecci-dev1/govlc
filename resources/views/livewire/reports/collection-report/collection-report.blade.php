@@ -93,27 +93,27 @@
                                     <td><span class="td-name">{{ $d->fieldOfficer->full_name }}</span></td>
                                     
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ isset($totals[$d->id]['totalCollection']) ? number_format($totals[$d->id]['totalCollection'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ isset($totals[$d->Id]['totalCollection']) ? number_format($totals[$d->Id]['totalCollection'], 2) : '0.00' }}</span>
                                     </td>
                             
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ isset($totals[$d->id]['totalSavings']) ? number_format($totals[$d->id]['totalSavings'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ isset($totals[$d->Id]['totalSavings']) ? number_format($totals[$d->Id]['totalSavings'], 2) : '0.00' }}</span>
                                     </td>
                             
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ isset($totals[$d->id]['totalLapses']) ? number_format($totals[$d->id]['totalLapses'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ isset($totals[$d->Id]['totalLapses']) ? number_format($totals[$d->Id]['totalLapses'], 2) : '0.00' }}</span>
                                     </td>
                             
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ isset($totals[$d->id]['totalAdvances']) ? number_format($totals[$d->id]['totalAdvances'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ isset($totals[$d->Id]['totalAdvances']) ? number_format($totals[$d->Id]['totalAdvances'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ isset($totals[$d->id]['totalCollection']) ? number_format($totals[$d->id]['totalCollection'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ isset($totals[$d->Id]['totalCollection']) ? number_format($totals[$d->Id]['totalCollection'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td  style="text-align: center;">
-                                        <span class="td-name">{{ $totals[$d->id]['totalNP'] ?? 0 }}</span>
+                                        <span class="td-name">{{ $totals[$d->Id]['totalNP'] ?? 0 }}</span>
                                     </td>
                                 </tr>
                                 @endforeach

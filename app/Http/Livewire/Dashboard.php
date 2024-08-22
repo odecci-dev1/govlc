@@ -39,9 +39,10 @@ class Dashboard extends Component
         
         $this->activeCollectionData();
         //  dd($this->topcollectibles);
-        $this->topcollectibles = $this->computeTopValues('CollectedAmount');
-        $this->toplapses = $this->computeTopValues('LapseAmount');
+        $this->topcollectibles = $this->computeTopValues('Collectibles');
+        $this->toplapses = $this->computeTopValues('LapsePayment');
         $this->data = $this->prepareData();
+        $this->activecollections = $this->activeCollectionData();
         return $this->data;
         //return $this->prepareData();
        
@@ -64,7 +65,7 @@ class Dashboard extends Component
     {
        
         $members = Members::select('id', 'Status')->where('Status', 1)->get();
-        $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment')->get();
+        $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment','UsedAdvancePayment','LapsePayment')->get();
         $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->where('Status','=',14)->get();
         $totalMemberSavings = MembersSavings::select('TotalSavingsAmount')->get();
         
@@ -129,7 +130,8 @@ class Dashboard extends Component
         
 
         $totalInterest = $loanDetails->sum('ApproveedInterest');
-        $totalAdvancePayment = $collectionAreaMembers->sum('AdvancePayment');
+        $lapses = $collectionAreaMembers->sum('LapsePayment') - $collectionAreaMembers->sum('UsedAdvancePayment');
+        $totalAdvancePayment = $collectionAreaMembers->sum('AdvancePayment') -  $collectionAreaMembers->sum('UsedAdvancePayment') -$lapses ;
         $totalNotarialFee = $loanDetails->sum('ApprovedNotarialFee');
         $totalOtherDeductions = $totalLoanInsurance + $totalLifeInsurance + $totalNotarialFee;
     
@@ -140,7 +142,8 @@ class Dashboard extends Component
         $totalApplicationforApproval = $application->where('Status', 9)->count();
         $totalIncome = $settings->MonthlyTarget;
 
-        $totalIncomePercentage = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
+       // $totalIncomePercentage = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
+        $totalIncomePercentage = $totalIncome ? $totalCollected : 0;
         $totalDaysLeft = Carbon::now()->endOfMonth()->diffInDays($currentDate);
         $totalPercentOfLastEntry = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
         $targetStatus = $previousMonthCollected >= $totalIncome;
@@ -177,37 +180,113 @@ class Dashboard extends Component
 
     private function activeCollectionData()
     {
+        // $activeAreas = Area::with(['collectionAreas'])
+        //     ->where('Status', 1)
+        //     ->whereNotNull('FOID')
+        //     ->get();
+        $collectionArea=[];
+        $result=[];
+        $detailResult=[];
         $activeAreas = Area::with(['collectionAreas'])
             ->where('Status', 1)
             ->whereNotNull('FOID')
             ->get();
-        
+            foreach( $activeAreas as $activeArea ){
+                $collectionArea = CollectionArea::where('AreaID',$activeArea->AreaID)->get();
+            }
         $newAccounts = Application::with(['collectionareamember', 'loanhistory'])
             ->where('Status', 7)
             ->get();
+        //$result = $activeAreas->map(function ($area) use ($newAccounts) {
+        //dd($collectionArea);
+        // if(empty($collectionArea)){
+        //     $details['area'] = '';
+        //     $details['activeCollection'] = '';
+        //     $details['newAccount'] = '';
+        //     $details['noPayment'] = '';
+        //     $details['pastDueCollection'] = 0;
+        //     $detailResult= $details;
+        // }
 
-        $result = $activeAreas->map(function ($area) use ($newAccounts) {
+        //dd($activeAreas);
+        $activeAreas = Area::where('Status', 1)
+            ->whereNotNull('FOID')
+            ->get();
+
+        foreach($activeAreas as $area) {
+            $details=[];
+            $sumCollectedAmount =0;
+            $totalNewAccount = 0;
+            $totalPastDueCollection = 0;
+            $locations = explode('|',$area->City);
+            foreach($locations as $location){
+                        $address = explode(",",$location);
+                        $barangay = trim($address[0],' ');
+                        $city = trim($address[1],' ');
+                        $member = Members::where('Barangay', $barangay)->where('City',$city)->first();
+                        $application = Application::where('MemID',$member->Id)->with('detail')->with('loanhistory')->first();
+                        $loanhistory = LoanHistory::where('NAID',$application->NAID)->first();
+                        $sumCollectedAmount += ($application->loanhistory->Penalty != 0) ? $application->loanhistory->OutstandingBalance:$application->detail->ApprovedDailyAmountDue;
+                        $getApplicationCount = Application::where('MemId',$member->Id)->get()->count();
+                        if( $getApplicationCount == 1){
+                                     $totalNewAccount += 1;
+                         }
+                       //  $totalPastDueCollection += ($loanhistory->Penalty) ? 0:$loanhistory->OutstandingBalance;
+
+            }
             // Sum collected amounts for the area
+            // $getArea = Area::where('AreaID', $area->AreaId)->first();
+            // $collections = CollectionAreaMember::where('Area_RefNo', $area->Area_RefNo)->get();
+            // $sumCollectedAmount =0;
+            // $totalNewAccount = 0;
+            // $totalPastDueCollection = 0;
+            // foreach( $collections as $collection ) {
+            //     $dailyCollectible = LoanDetails::where('NAID',$collection->NAID)->first();
+            //     $loanhistory = LoanHistory::where('NAID',$collection->NAID)->first();
+            //     //$sumCollectedAmount += $collections->sum('CollectedAmount');
+            //     $sumCollectedAmount += ($loanhistory->Penalty == 0 ) ? $dailyCollectible->ApprovedDailyAmountDue:$loanhistory->OutstandingBalance;
+            //     $totalPastDueCollection += ($loanhistory->Penalty == 0 ) ? 0:$loanhistory->OutstandingBalance;
+            //     $getMember = Application::where('NAID',$collection->NAID)->first();
+            //     $getApplicationCount = Application::where('MemId',$getMember->MemId)->get()->count();
+            //     if( $getApplicationCount == 1){
+            //         $totalNewAccount += 1;
+            //     }
+             //}
+            
+
+
+           
+    
+            // // Count new accounts for the area
+            // $newAccountsCount = $newAccounts->filter(function ($account) use ($area) {
+            //   //  dd($area->Area_RefNo);
+            //     // dd($area->collectionAreas->pluck('Area_RefNo'));
+
+            //     // return $account->collectionareamember->Area_RefNo === $area->collectionAreas->Area_RefNo;
+            // })->count();
+
+        
+
+            $noPayment =0;
             $collections = CollectionAreaMember::where('Area_RefNo', $area->Area_RefNo)->get();
-            $sumCollectedAmount = $collections->sum('CollectedAmount');
-    
-            // Count new accounts for the area
-            $newAccountsCount = $newAccounts->filter(function ($account) use ($area) {
-              //  dd($area->Area_RefNo);
-                // dd($area->collectionAreas->pluck('Area_RefNo'));
-
-                // return $account->collectionareamember->Area_RefNo === $area->collectionAreas->Area_RefNo;
-            })->count();
-            // dd($newAccounts);
-    
-            return [
-                'areaName' => $area->Area,
-                'activeCollection' => $sumCollectedAmount,
-                'newAccounts' => $newAccountsCount,
-            ];
-        });
-
-        return $result->all();
+            foreach( $collections as $collection) {
+                if($collection->Payment_Status == 2){
+                    $noPayment += 1;
+                }
+            }
+           // return [
+            
+            $details['area'] = $area->Area;
+            $details['activeCollection'] = $sumCollectedAmount;
+            $details['newAccount'] =$totalNewAccount;
+            $details['noPayment'] = $noPayment;
+            $details['pastDueCollection'] = $totalPastDueCollection;
+            $result[]= $details;
+        }
+        //$result[] =  $detailResult;
+        //});
+        //dd( $result);
+        return $result;
     }
 
 
@@ -221,16 +300,31 @@ class Dashboard extends Component
             ->get();
 
         $topValues = [];
-
         foreach ($activeAreas as $area) {
-            $sumAmount = CollectionArea::where('AreaID', $area->AreaID)
-                ->where('Collection_Status', 7)
-                ->with('areaMembers')
-                ->get()
-                ->sum(function($collectionArea) use ($sumType) {
-                    return $collectionArea->areaMembers->sum($sumType);
-                });
+            if($sumType == 'Collectibles'){
+          
+                    $locations = explode('|',$area->City);
+                    $sumAmount =0;
+                    foreach($locations as $location){
+                        $address = explode(",",$location);
+                        $barangay = trim($address[0],' ');
+                        $city = trim($address[1],' ');
+                        $member = Members::where('Barangay', $barangay)->where('City',$city)->first();
+                        $application = Application::where('MemID',$member->Id)->with('detail')->with('loanhistory')->first();
+                        $sumAmount += ($application->loanhistory->Penalty != 0) ? $application->loanhistory->OutstandingBalance:$application->detail->ApprovedDailyAmountDue;
 
+                    }
+            }
+            if($sumType == 'LapsePayment'){
+                      $sumAmount = CollectionArea::where('AreaID', $area->AreaID)
+                    ->where('Collection_Status', 7)
+                    ->with('areaMembers')
+                    ->get()
+                    ->sum(function($collectionArea) use ($sumType) {
+                        return  $collectionArea->areaMembers->sum($sumType)  - $collectionArea->areaMembers->sum('AdvancePayment') ;
+                    });
+            }
+       
             if ($sumAmount > 0) {
                 $topValues[] = [
                     'areaName' => $area->Area,
@@ -238,7 +332,7 @@ class Dashboard extends Component
                 ];
             }
         }
-
+        //dd($tops);
         usort($topValues, function ($a, $b) {
             return $b['amount'] <=> $a['amount'];
         });
