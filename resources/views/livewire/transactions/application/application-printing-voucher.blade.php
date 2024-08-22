@@ -64,7 +64,7 @@
                                     <div class="box">
                                         <p>NAME: <span id="printClientName"> {{ $loansummary['fname'] }}, {{ $loansummary['lname'] }} {{ mb_substr($loansummary['mname'], 0, 1) }}</span></p>
                                         <p class="p-bold">{{ isset($loansummary['areaName']) ? $loansummary['areaName'] : '' }}</p>
-                                        <div class="box-inner">
+                                        <div class="box-inner" style="margin-right:5rem">
                                             <div class="box-inner-wrapper">
                                                 <p>DATE:</p> 
                                                 <span id="printDate">{{ isset($loansummary['releasingDate']) ? date('F j, Y', strtotime($loansummary['releasingDate'])) : 'not found' }}</span>
