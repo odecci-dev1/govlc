@@ -54,10 +54,27 @@ class CollectionList extends Component
         } else {
             $query->orderBy('DateCreated', 'desc');
         }
-
-        $collections = $query->paginate($this->paginate['pageSize'], ['*'], 'page', $this->paginate['page']);
-        $one = $this->list = $collections->map(function ($collection,) {
-            
+    
+         $collections = $query->paginate($this->paginate['pageSize'], ['*'], 'page', $this->paginate['page']);
+        // foreach( $collections as $collection ){
+        //          $carry=[];
+        //         foreach($collection->collectionAreas->flatMap->areaMember as $member){
+        //             $details=[];
+        //             $getLoanDetails = LoanDetails::where('NAID',$member->NAID)->first();
+        //             $getLoanHistory = LoanHistory::where('NAID',$member->NAID)->first();
+        //             $details['total_advance'] += $member->AdvancePayment;
+        //             $details['total_lapses'] += $member->LapsePayment - $member->UsedAdvancePayment;
+        //             $details['totalCollectible'] += ($getLoanHistory->Penalty != 0) ? $getLoanHistory->OutstandingBalance:$getLoanDetails->ApprovedDailyAmountDue;
+        //             $details['total_savings'] += $member->Savings;
+        //             $details['total_Balance'] += $getLoanDetails->BeginningBalance - $member->CollectedAmount ;
+        //             $carry[] = $details;
+        //              //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
+        //         }
+        //         $this->list[] = $carry;   
+        // }
+        //dd($this->list);
+        $one = $this->list = $collections->map(function ($collection) {
+            $runningBalance = 0;
             $totals = $collection->collectionAreas->flatMap->areaMembers->reduce(function ($carry, $member) {
                 $getLoanDetails = LoanDetails::where('NAID',$member->NAID)->first();
                 $getLoanHistory = LoanHistory::where('NAID',$member->NAID)->first();
@@ -65,7 +82,8 @@ class CollectionList extends Component
                 $carry['total_lapses'] += $member->LapsePayment - $member->UsedAdvancePayment;
                 $carry['totalCollectible'] += ($getLoanHistory->Penalty != 0) ? $getLoanHistory->OutstandingBalance:$getLoanDetails->ApprovedDailyAmountDue;
                 $carry['total_savings'] += $member->Savings;
-                $carry['total_Balance'] += $getLoanDetails->BeginningBalance - $member->CollectedAmount ;
+                $runningBalance = $getLoanDetails->BeginningBalance - $member->CollectedAmount ;
+                $carry['total_Balance'] += $runningBalance;
                  //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
                 return $carry;
             }, [
