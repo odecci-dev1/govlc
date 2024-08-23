@@ -234,7 +234,7 @@ class Dashboard extends Component
                          }
                          $loanhistory = LoanHistory::where('NAID',$application->NAID)->first();
                          if($loanhistory){
-                            $totalPastDueCollection += ($loanhistory->Penalty) ? 0:$loanhistory->OutstandingBalance;
+                            $totalPastDueCollection += ($loanhistory->Penalty) ? $loanhistory->OutstandingBalance:0;
                          }
                        
 
