@@ -86,7 +86,7 @@ class Dashboard extends Component
         $totalOfNewAccounts = 0;
        
         foreach($members as $member){
-            $appCount = Application::where('MemId',$member->id)->where('Status','!=',11)->get()->count();
+            $appCount = Application::where('MemId',$member->id)->where('Status','=',14)->get()->count();
             if($appCount == 1){
                 $totalOfNewAccounts += 1;
             }
@@ -140,6 +140,7 @@ class Dashboard extends Component
        
         $totalNewAccountsOverall = $totalOfNewAccounts;
         $totalApplicationforApproval = $application->where('Status', 9)->count();
+        $totalCurrentReleased = $application->where('Status', 14)->count();
         $totalIncome = $settings->MonthlyTarget;
 
        // $totalIncomePercentage = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
@@ -157,7 +158,7 @@ class Dashboard extends Component
             'totalOtherDeductions' => $totalOtherDeductions,
             'totalActiveStanding' => 0,
             'totalFullPayment' => $totalFullPayments,
-            'totalCR' => 0,
+            'totalCR' => $totalCurrentReleased,
             'totalEndingActiveMember' => 0,
             'totalSavingsOutstanding' => $totalSavingsOutstanding,
             'totalDailyOverallCollection' => $totalDailyOverallCollection,
@@ -225,13 +226,17 @@ class Dashboard extends Component
                         $city = trim($address[1],' ');
                         $member = Members::where('Barangay', $barangay)->where('City',$city)->first();
                         $application = Application::where('MemID',$member->Id)->with('detail')->with('loanhistory')->first();
-                        $loanhistory = LoanHistory::where('NAID',$application->NAID)->first();
+                     
                         $sumCollectedAmount += ($application->loanhistory->Penalty != 0) ? $application->loanhistory->OutstandingBalance:$application->detail->ApprovedDailyAmountDue;
                         $getApplicationCount = Application::where('MemId',$member->Id)->get()->count();
                         if( $getApplicationCount == 1){
                                      $totalNewAccount += 1;
                          }
-                       //  $totalPastDueCollection += ($loanhistory->Penalty) ? 0:$loanhistory->OutstandingBalance;
+                         $loanhistory = LoanHistory::where('NAID',$application->NAID)->first();
+                         if($loanhistory){
+                            $totalPastDueCollection += ($loanhistory->Penalty) ? 0:$loanhistory->OutstandingBalance;
+                         }
+                       
 
             }
             // Sum collected amounts for the area

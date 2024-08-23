@@ -57,7 +57,7 @@ class CollectionList extends Component
    
          $collections = $query->paginate($this->paginate['pageSize'], ['*'], 'page', $this->paginate['page']);
     
-
+      
          $this->list = $collections->map(function ($collection) {
 
                 $carry=[];
@@ -66,7 +66,7 @@ class CollectionList extends Component
                 $totalCollectible =0;
                 $totalMemberSavings =0;
                 $totalBalance =0;
-                $counter=0;
+                $runningBalance=0;
                 foreach($collection->collectionAreas->flatMap->areaMembers as $member){
                   
                     $details=[];
@@ -83,13 +83,13 @@ class CollectionList extends Component
                     $details['total_lapses'] = $totalLapses;
                     $details['totalCollectible'] = $totalCollectible;
                     $details['total_savings'] = $totalMemberSavings;
-                    $details['total_Balance'] =($collection->totals) ? 1:$totalBalance;
+                    $details['total_Balance'] = ($runningBalance == 0) ? $totalBalance:2;
                     $carry = $details;
                    
                      //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
                 }
-               
-                $counter++;
+           
+                $runningBalance= $carry['total_Balance'];
                 $collection->totals = $carry;
             
                 return $collection;
