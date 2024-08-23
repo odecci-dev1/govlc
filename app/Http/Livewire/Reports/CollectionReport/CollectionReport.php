@@ -112,7 +112,7 @@ class CollectionReport extends Component
             });
 
             $totalNP = $area->collectionAreas->sum(function ($collectionArea) {
-                return $collectionArea->areaMembers->where('CollectedAmount', 0.00)->count();
+                return $collectionArea->areaMembers->where('CollectedAmount', 2)->count();
             });
 
             $this->totals[$area->Id] = [

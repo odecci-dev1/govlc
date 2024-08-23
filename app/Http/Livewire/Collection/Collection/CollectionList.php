@@ -54,51 +54,74 @@ class CollectionList extends Component
         } else {
             $query->orderBy('DateCreated', 'desc');
         }
-    
+   
          $collections = $query->paginate($this->paginate['pageSize'], ['*'], 'page', $this->paginate['page']);
-        // foreach( $collections as $collection ){
-        //          $carry=[];
-        //         foreach($collection->collectionAreas->flatMap->areaMember as $member){
-        //             $details=[];
-        //             $getLoanDetails = LoanDetails::where('NAID',$member->NAID)->first();
-        //             $getLoanHistory = LoanHistory::where('NAID',$member->NAID)->first();
-        //             $details['total_advance'] += $member->AdvancePayment;
-        //             $details['total_lapses'] += $member->LapsePayment - $member->UsedAdvancePayment;
-        //             $details['totalCollectible'] += ($getLoanHistory->Penalty != 0) ? $getLoanHistory->OutstandingBalance:$getLoanDetails->ApprovedDailyAmountDue;
-        //             $details['total_savings'] += $member->Savings;
-        //             $details['total_Balance'] += $getLoanDetails->BeginningBalance - $member->CollectedAmount ;
-        //             $carry[] = $details;
-        //              //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
-        //         }
-        //         $this->list[] = $carry;   
-        // }
-        //dd($this->list);
-        $one = $this->list = $collections->map(function ($collection) {
-            $runningBalance = 0;
-            $totals = $collection->collectionAreas->flatMap->areaMembers->reduce(function ($carry, $member) {
-                $getLoanDetails = LoanDetails::where('NAID',$member->NAID)->first();
-                $getLoanHistory = LoanHistory::where('NAID',$member->NAID)->first();
-                $carry['total_advance'] += $member->AdvancePayment;
-                $carry['total_lapses'] += $member->LapsePayment - $member->UsedAdvancePayment;
-                $carry['totalCollectible'] += ($getLoanHistory->Penalty != 0) ? $getLoanHistory->OutstandingBalance:$getLoanDetails->ApprovedDailyAmountDue;
-                $carry['total_savings'] += $member->Savings;
-                $runningBalance = $getLoanDetails->BeginningBalance - $member->CollectedAmount ;
-                $carry['total_Balance'] += $runningBalance;
-                 //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
-                return $carry;
-            }, [
-                'total_advance' => 0, 
-                'total_lapses' => 0, 
-                'totalCollectible' => 0, 
-                'total_savings' => 0, 
-                'total_Balance' => 0
-            ]);
+    
 
-            $collection->totals = $totals;
+         $this->list = $collections->map(function ($collection) {
+
+                $carry=[];
+                $totalAdvance=0;
+                $totalLapses=0;
+                $totalCollectible =0;
+                $totalMemberSavings =0;
+                $totalBalance =0;
+                $counter=0;
+                foreach($collection->collectionAreas->flatMap->areaMembers as $member){
+                  
+                    $details=[];
+                    $getLoanDetails = LoanDetails::where('NAID',$member->NAID)->first();
+                    $getLoanHistory = LoanHistory::where('NAID',$member->NAID)->first();
+                    $totalAdvance += $member->AdvancePayment;
+                    $totalLapses += $member->LapsePayment - $member->UsedAdvancePayment;
+                    $totalCollectible += ($getLoanHistory->Penalty != 0) ? $getLoanHistory->OutstandingBalance:$getLoanDetails->ApprovedDailyAmountDue;
+                    $totalMemberSavings+=$member->Savings;
+                    $totalBalance +=  $getLoanDetails->BeginningBalance - $member->CollectedAmount;
+             
+
+                    $details['total_advance'] = $totalAdvance;
+                    $details['total_lapses'] = $totalLapses;
+                    $details['totalCollectible'] = $totalCollectible;
+                    $details['total_savings'] = $totalMemberSavings;
+                    $details['total_Balance'] =($collection->totals) ? 1:$totalBalance;
+                    $carry = $details;
+                   
+                     //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
+                }
+               
+                $counter++;
+                $collection->totals = $carry;
             
-            return $collection;
+                return $collection;
         });
-      
+       
+        //dd($collections);
+        // $one = $this->list = $collections->map(function ($collection) {
+        //     $runningBalance = 0;
+        //     $totals = $collection->collectionAreas->flatMap->areaMembers->reduce(function ($carry, $member) {
+        //         $getLoanDetails = LoanDetails::where('NAID',$member->NAID)->first();
+        //         $getLoanHistory = LoanHistory::where('NAID',$member->NAID)->first();
+        //         $carry['total_advance'] += $member->AdvancePayment;
+        //         $carry['total_lapses'] += $member->LapsePayment - $member->UsedAdvancePayment;
+        //         $carry['totalCollectible'] += ($getLoanHistory->Penalty != 0) ? $getLoanHistory->OutstandingBalance:$getLoanDetails->ApprovedDailyAmountDue;
+        //         $carry['total_savings'] += $member->Savings;
+        //         $runningBalance = $getLoanDetails->BeginningBalance - $member->CollectedAmount ;
+        //         $carry['total_Balance'] += $runningBalance;
+        //          $carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
+        //         return $carry;
+        //     }, [
+        //         'total_advance' => 0, 
+        //         'total_lapses' => 0, 
+        //         'totalCollectible' => 0, 
+        //         'total_savings' => 0, 
+        //         'total_Balance' => 0
+        //     ]);
+
+        //     $collection->totals = $totals;
+            
+        //     return $collection;
+        // });
+       
         // $inputs = [
         //     'page' => $this->paginate['page'],
         //     'pageSize' => $this->paginate['pageSize'],
@@ -122,7 +145,7 @@ class CollectionList extends Component
 
         // Check if there's an entry for the current date
         $this->check = $this->list->where('DateCreated', $date)->first();
-
+        //dd($this->list[0]->totals);
         return view('livewire.collection.collection.collection-list', [
             'collections' => $this->list,
         ]);
