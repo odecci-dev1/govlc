@@ -511,14 +511,14 @@ class Collection extends Component
                                  
                                 }
                             }
-
-                            $collectionAreasMembersCollections = CollectionAreaMember::where('Area_RefNo',$collectionArea->Area_RefNo)->get();
-                            if($collectionAreasMembersCollections){
-                                foreach( $collectionAreasMembersCollections as $collectionAreasMembersCollection){
-                                    $totalCollected += $collectionAreasMembersCollection->CollectedAmount;
+                            if($collectionArea){
+                                $collectionAreasMembersCollections = CollectionAreaMember::where('Area_RefNo',$collectionArea->Area_RefNo)->get();
+                                if($collectionAreasMembersCollections){
+                                    foreach( $collectionAreasMembersCollections as $collectionAreasMembersCollection){
+                                        $totalCollected += $collectionAreasMembersCollection->CollectedAmount;
+                                    }
                                 }
                             }
-
                             $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
                             
                             if($getLoanHistory){

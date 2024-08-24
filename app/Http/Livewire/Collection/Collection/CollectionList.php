@@ -52,13 +52,14 @@ class CollectionList extends Component
         if ($this->displayrecent) {
             $query->whereDate('DateCreated', $date);
         } else {
-            $query->orderBy('DateCreated', 'desc');
+            $query->orderBy('DateCreated', 'asc');
         }
    
          $collections = $query->paginate($this->paginate['pageSize'], ['*'], 'page', $this->paginate['page']);
     
-      
-         $this->list = $collections->map(function ($collection) {
+        $runningBalance = 0;
+         foreach($collections as $collection){
+        // $this->list = $collections->map(function ($collection,$key){
 
                 $carry=[];
                 $totalAdvance=0;
@@ -66,7 +67,7 @@ class CollectionList extends Component
                 $totalCollectible =0;
                 $totalMemberSavings =0;
                 $totalBalance =0;
-                $runningBalance=0;
+                $totalCollected=0;
                 foreach($collection->collectionAreas->flatMap->areaMembers as $member){
                   
                     $details=[];
@@ -77,24 +78,26 @@ class CollectionList extends Component
                     $totalCollectible += ($getLoanHistory->Penalty != 0) ? $getLoanHistory->OutstandingBalance:$getLoanDetails->ApprovedDailyAmountDue;
                     $totalMemberSavings+=$member->Savings;
                     $totalBalance +=  $getLoanDetails->BeginningBalance - $member->CollectedAmount;
-             
+                    $totalCollected += $member->CollectedAmount;
 
                     $details['total_advance'] = $totalAdvance;
                     $details['total_lapses'] = $totalLapses;
                     $details['totalCollectible'] = $totalCollectible;
                     $details['total_savings'] = $totalMemberSavings;
-                    $details['total_Balance'] = ($runningBalance == 0) ? $totalBalance:2;
+                    $details['total_Balance'] =($runningBalance == 0) ? $totalBalance:$runningBalance - $totalCollected ;//$key;
                     $carry = $details;
                    
                      //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
                 }
-           
-                $runningBalance= $carry['total_Balance'];
+                //dd($carry['total_Balance']);
+                $runningBalance = $carry['total_Balance'];
                 $collection->totals = $carry;
-            
-                return $collection;
-        });
-       
+                $this->list[] = $collection;
+                //return $collection;
+       // });
+        };
+       // dd($this->list);
+      // dd($collections[0]->totals['total_Balance']);
         //dd($collections);
         // $one = $this->list = $collections->map(function ($collection) {
         //     $runningBalance = 0;
@@ -144,7 +147,7 @@ class CollectionList extends Component
         $this->paginationPaging['prevPage'] = $collections->currentPage() > 1 ? $collections->currentPage() - 1 : 1;
 
         // Check if there's an entry for the current date
-        $this->check = $this->list->where('DateCreated', $date)->first();
+       // $this->check = $this->list->where('DateCreated', $date)->first();
         //dd($this->list[0]->totals);
         return view('livewire.collection.collection.collection-list', [
             'collections' => $this->list,

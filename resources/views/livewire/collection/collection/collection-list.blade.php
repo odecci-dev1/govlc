@@ -105,7 +105,7 @@
 
                     <!-- * Table Data -->
                     @if($list)
-                        @foreach($list->sortBy('DateCreated') as $collection)
+                        @foreach($list as $collection)
                         <tr>
                             @php
                                 $DateCreated = new DateTime($collection['DateCreated']);
