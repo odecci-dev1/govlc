@@ -66,7 +66,7 @@ class Dashboard extends Component
        
         $members = Members::select('id', 'Status')->where('Status', 1)->get();
         $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment','UsedAdvancePayment','LapsePayment')->get();
-        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->where('Status','=',14)->get();
+        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->whereIn('Status',[14,9,15])->get();
         $totalMemberSavings = MembersSavings::select('TotalSavingsAmount')->get();
         
         $loanHistory = LoanHistory::select('OutstandingBalance')->get();
