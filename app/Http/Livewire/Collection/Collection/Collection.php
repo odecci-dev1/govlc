@@ -128,7 +128,7 @@ class Collection extends Component
                     ]);
                     SavingsRunningBalance::create([
                         'MemId'=>$application->MemId,
-                        'Savings'=>$currentSavings,
+                        'Savings'=>$collectedSavings,
                         'Note'=> 'New savings added from collection '.$this->areaRefNo,
                         'Date'=> Carbon::now(),
                         'Updated_By'=>session()->get('auth_userid'),
