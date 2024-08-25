@@ -189,15 +189,15 @@
                         </a>
                         @endif
 
-                        {{-- @if(in_array('Module-012', $modules))
-                        <a href="{{ URL::to('/') }}/transactions/loan-calculator/list" data-nav-link>
+                        @if(in_array('Module-012', $modules))
+                        <a href="{{ URL::to('/') }}/transactions/loan-calculator" data-nav-link>
                             <li>
                                 <!-- * Loan Calculator  -->
                                 <img src="{{ URL::to('/') }}/assets/icons/sub-menu/loan-calc.svg" alt="loan-calculator" />
                                 <span>Loan Calculator</span>
                             </li>
                         </a>
-                        @endif --}}
+                        @endif
                        
                     </ul>
                 </div>
