@@ -120,10 +120,10 @@ class Dashboard extends Component
             ->map(function ($group) {
                 return $group->sum('CollectedAmount');
             });
-       
+      
         $previousMonthCollected = $monthlyCollection[$previousMonth] ?? 0;
         $totalCollected = $monthlyCollection[$currentMonth] ?? 0;
-
+       // dd($totalCollected );
         $totalAmount = $loanDetails->sum('ApprovedLoanAmount')+ $loanDetails->sum('ApproveedInterest');
         $totalLoanBalance =$loanHistory->sum('OutstandingBalance');
         

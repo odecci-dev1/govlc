@@ -1759,7 +1759,7 @@ class CreateApplication extends Component
                         SavingsRunningBalance::create([
                             
                                 'MemId'=>$this->memberId,
-                                'Savings'=> $this->loanDetails['totalSavingsAmount'] - (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                                'Savings'=> (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
                                 'Date'=>Carbon::now(),
                                 'Note'=>'A savings is deposited from application: '.$this->naID,
                                 'Updated_By'=>session()->get('auth_userid'),
