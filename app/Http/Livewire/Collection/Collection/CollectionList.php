@@ -85,6 +85,8 @@ class CollectionList extends Component
                     $details['totalCollectible'] = $totalCollectible;
                     $details['total_savings'] = $totalMemberSavings;
                     $details['total_Balance'] =($runningBalance == 0) ? $totalBalance:$runningBalance - $totalCollected ;//$key;
+                    $details['total_Collected'] = $totalCollected ;//$key;
+                    $details['previous_Balance'] = ($runningBalance == 0) ? $getLoanDetails->BeginningBalance:$runningBalance ;//$key;
                     $carry = $details;
                    
                      //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
@@ -96,7 +98,7 @@ class CollectionList extends Component
                 //return $collection;
        // });
         };
-       // dd($this->list);
+       //dd($this->list);
       // dd($collections[0]->totals['total_Balance']);
         //dd($collections);
         // $one = $this->list = $collections->map(function ($collection) {

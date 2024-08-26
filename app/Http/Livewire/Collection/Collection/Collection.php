@@ -534,8 +534,8 @@ class Collection extends Component
 
                          
                             $collectionAreaMember = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
-                            $collectionArea = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
-                            $paymentStatus = ($collectionArea)  ? CollectionStatus::where('Id',$collectionAreaMember->Payment_Status)->first()->Status:'';
+                           // $collectionArea = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
+                            $paymentStatus = ($collectionAreaMember)  ? CollectionStatus::where('Id',$collectionAreaMember->Payment_Status)->first()->Status:'';
                             $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                             $loanHistory +=  $application->loanhistory->OutstandingBalance;
                             $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
@@ -580,9 +580,8 @@ class Collection extends Component
             $this->areas[]=$details;
 
             } 
-            //dd($this->areas);
+            //  dd($this->areas);
             //$this->areas = Area::whereNotNull('FOID')->where('Status',1)->get();
-            
             //$this->areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  
         }
         else{
