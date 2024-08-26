@@ -112,7 +112,6 @@ class CollectionPrint extends Component
                 'fieldOfficer' => $fieldOfficer,
             ];
 
-        dd( $this->areaDetails);
            
         }
      
