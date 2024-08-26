@@ -52,6 +52,7 @@ class CollectionPrint extends Component
                 $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                 $totalBalance +=  $application->loanhistory->OutstandingBalance;
                 $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
+                $Membersavings = ($savings) ? $savings->TotalSavingsAmount:0;
                 $getprviousCollectionRecord = CollectionAreaMember::where('NAID',$application->NAID)->where('AdvanceStatus',0)->get();
                // dd($getprviousCollectionRecord->sum('LapsePayment'));
                 if($collectionAreaMember->NAID == $application->NAID){
@@ -81,7 +82,7 @@ class CollectionPrint extends Component
                 $details['dueDate']= $application->loanhistory->DueDate;
                 $details['dailyCollectibles']= $application->detail->ApprovedDailyAmountDue;
                 $details['amountDue']= $application->loanhistory->OutstandingBalance;
-                $details['totalSavingsAmount']=  $totalSavings;
+                $details['totalSavingsAmount']=  $Membersavings;
                 $details['advancePayment']=  $totalAdvance;
                 $details['lapsePayment']=  $totalLapses;
                 $details['loanPrincipal']=  $application->detail->ApprovedLoanAmount;
@@ -102,7 +103,7 @@ class CollectionPrint extends Component
                 'areaID' =>$this->areaID,
                 'totalCollectible' => $collectibles,
                 'total_Balance' => $totalBalance,
-                'total_savings' => $collectibles,
+                'total_savings' => $totalSavings,
                 'total_advance' => $totalAdvance,
                 'total_lapses' => $totalLapses,
                 'total_collectedAmount' => $totalCollected,
@@ -111,7 +112,7 @@ class CollectionPrint extends Component
                 'fieldOfficer' => $fieldOfficer,
             ];
 
-        
+        dd( $this->areaDetails);
            
         }
      
