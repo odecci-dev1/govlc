@@ -235,7 +235,7 @@
                                     <td style="text-align: right;">
                                         <span class="td-name">
                                         {{ 
-                                            number_format($member->memberSavings->sum('TotalSavingsAmount'), 2) ?? '0.00'
+                                            number_format($member->savingsRunning->sum('Savings'), 2) ?? '0.00'
                                         }}
                                         </span>
                                     </td>

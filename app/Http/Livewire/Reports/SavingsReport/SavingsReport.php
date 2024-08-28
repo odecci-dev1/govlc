@@ -162,7 +162,12 @@ class SavingsReport extends Component
 
     private function getMembers($paginate = true, $includeInactive = true)
     {
-        $membersWithSavings = Members::with(['memberSavings', 'memberArea'])
+        //$membersWithSavings = Members::with(['savingsRunning','memberArea'])
+       $membersWithSavings = Members::with(['memberSavings', 'memberArea'])
+            ->with('savingsRunning', function ($query) {
+                $query->whereBetween('Date', [$this->datestart, $this->dateend]);
+                //$query->where('Date','>', '2024-08-22')->where('Date','<=', '2024-08-23');
+            })
             ->when(!$includeInactive, function ($query) {
                 $query->where('Status', '!=', 2);
             })
@@ -171,14 +176,19 @@ class SavingsReport extends Component
                     ->orWhere('Lname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('MemId', 'like', '%' . $this->keyword . '%');
             })
-            ->whereHas('memberSavings', function ($query) {
-                $query->whereBetween('DateUpdated', [$this->datestart, $this->dateend]);
-            })
+            // ->whereHas('memberSavings', function ($query) {
+            //     $query->whereBetween('DateUpdated', [$this->datestart, $this->dateend]);
+            // })
+           
+            ->whereHas('savingsRunning', function ($query) {
+                $query->whereBetween('Date', [$this->datestart, $this->dateend]);
+             })
             ->when($this->member, function ($query) {
                 $query->where('MemId', $this->member);  
             })
             ->get();
-
+   
+            //dd($membersWithSavings);
         $membersWithoutSavings = Members::with(['memberArea'])
             ->when(!$includeInactive, function ($query) {
                 $query->where('Status', '!=', 2);
@@ -254,7 +264,9 @@ class SavingsReport extends Component
 
     private function getTotalSavingsAmount()
     {
-        $membersQuery = Members::with('memberSavings', 'savingsRunning')
+        $membersQuery = Members::with('memberSavings')->with('savingsRunning',function($query) {
+            $query->whereBetween('Date', [$this->datestart, $this->dateend]);
+             })
             ->where(function ($query) {
                 $query->where('Fname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('Lname', 'like', '%' . $this->keyword . '%')
@@ -264,10 +276,21 @@ class SavingsReport extends Component
                 $query->where('MemId', $this->member);  
             });
 
-        return $membersQuery->whereHas('memberSavings', function ($query) {
-            $query->whereBetween('DateUpdated', [$this->datestart, $this->dateend]);
-        })->with('memberSavings')->get()->flatMap(function ($member) {
-            return $member->memberSavings;
-        })->sum('TotalSavingsAmount');
+            return $membersQuery->whereHas('savingsRunning', function ($query) {
+                $query->whereBetween('Date', [$this->datestart, $this->dateend]);
+            })->get()->flatMap(function ($member) {
+                return $member->savingsRunning;
+            })->sum('Savings');
+        // ->with('savingsRunning')->get()->flatMap(function ($member) {
+         
+        //     return $member->savingsRunning;
+        // })->sum('Savings');
+
+        
+        // return $membersQuery->whereHas('memberSavings', function ($query) {
+        //     $query->whereBetween('DateUpdated', [$this->datestart, $this->dateend]);
+        // })->with('memberSavings')->get()->flatMap(function ($member) {
+        //     return $member->memberSavings;
+        // })->sum('TotalSavingsAmount');
     }
 }
