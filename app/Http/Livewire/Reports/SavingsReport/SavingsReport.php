@@ -89,6 +89,7 @@ class SavingsReport extends Component
 
     public function print()
     {
+       
         $data = $this->getMembers(false, false);
 
         $printhtml = view('livewire.reports.savings-report.savings-report-print', [

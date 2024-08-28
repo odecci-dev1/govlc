@@ -81,7 +81,9 @@ class CollectionReport extends Component
 
     public function getAreas($paginate = true, $includeInactive = true)
     {
-        $areas = Area::with(['fieldOfficer', 'collectionAreas.areaMembers', 'loanhistory'])
+        $areas = Area::with(['fieldOfficer', 'loanhistory'])->with( 'collectionAreas.areaMembers',function($query){
+                $query->whereBetween('DateCollected',[$this->datestart, $this->dateend]);
+            })
             ->whereHas('fieldOfficer', function ($query) {
                 $query->where('Fname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('Lname', 'like', '%' . $this->keyword . '%');
