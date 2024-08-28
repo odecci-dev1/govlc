@@ -22,7 +22,7 @@ class DashboardController extends Controller
             $getArea = Area::all()->whereNotNull('Area');
         }else{
             
-            $getArea = Area::where('Id',$request['area'])->first();
+            $getArea = Area::where('Id',$request->area)->first();
         }
 
         $currentDate = date_create(date_format(Carbon::now(),'Y-m-d'));
@@ -62,19 +62,19 @@ class DashboardController extends Controller
                     }
                 }
             }else{
+             
                 $locations = explode("|",$getArea->City);
                 foreach($locations as $location){
                     $location = explode(',', $location);
                     $barangay = trim($location[0],' ');
                     $city = trim($location[1],' ');
                     
-                  
                     foreach($members as $member){
                       
                         if($member->Barangay == $barangay && $member->City == $city){
                           
                             $application = Application::where('MemID',$member->MemId)->where('Status',14)->get();
-                            if($application > 0){
+                            if($application->count() > 0){
                                 $count +=1;
                             }
                            
