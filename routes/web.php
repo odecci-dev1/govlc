@@ -151,7 +151,7 @@ Route::middleware(['authenticated'])->group(function () {
 
     
     Route::middleware(['access:Module-012'])->group(function () {
-        Route::get('/transactions/loan-calculator/list', LoanCalculatorList::class)->name('loancalculator.list');
+        Route::get('/transactions/loan-calculator', LoanCalculatorList::class)->name('loancalculator.list');
     });
 
     Route::middleware(['access:Module-09'])->group(function () {

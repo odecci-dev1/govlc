@@ -128,7 +128,7 @@ class Collection extends Component
                     ]);
                     SavingsRunningBalance::create([
                         'MemId'=>$application->MemId,
-                        'Savings'=>$currentSavings,
+                        'Savings'=>$collectedSavings,
                         'Note'=> 'New savings added from collection '.$this->areaRefNo,
                         'Date'=> Carbon::now(),
                         'Updated_By'=>session()->get('auth_userid'),
@@ -511,14 +511,14 @@ class Collection extends Component
                                  
                                 }
                             }
-
-                            $collectionAreasMembersCollections = CollectionAreaMember::where('Area_RefNo',$collectionArea->Area_RefNo)->get();
-                            if($collectionAreasMembersCollections){
-                                foreach( $collectionAreasMembersCollections as $collectionAreasMembersCollection){
-                                    $totalCollected += $collectionAreasMembersCollection->CollectedAmount;
+                            if($collectionArea){
+                                $collectionAreasMembersCollections = CollectionAreaMember::where('Area_RefNo',$collectionArea->Area_RefNo)->get();
+                                if($collectionAreasMembersCollections){
+                                    foreach( $collectionAreasMembersCollections as $collectionAreasMembersCollection){
+                                        $totalCollected += $collectionAreasMembersCollection->CollectedAmount;
+                                    }
                                 }
                             }
-
                             $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
                             
                             if($getLoanHistory){
@@ -534,8 +534,8 @@ class Collection extends Component
 
                          
                             $collectionAreaMember = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
-                            $collectionArea = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
-                            $paymentStatus = ($collectionArea)  ? CollectionStatus::where('Id',$collectionAreaMember->Payment_Status)->first()->Status:'';
+                           // $collectionArea = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
+                            $paymentStatus = ($collectionAreaMember)  ? CollectionStatus::where('Id',$collectionAreaMember->Payment_Status)->first()->Status:'';
                             $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                             $loanHistory +=  $application->loanhistory->OutstandingBalance;
                             $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
@@ -580,9 +580,8 @@ class Collection extends Component
             $this->areas[]=$details;
 
             } 
-            //dd($this->areas);
+            //  dd($this->areas);
             //$this->areas = Area::whereNotNull('FOID')->where('Status',1)->get();
-            
             //$this->areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  
         }
         else{

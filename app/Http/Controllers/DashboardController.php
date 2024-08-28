@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Application;
 use App\Models\Area;
 use App\Models\Members;
 use Carbon\Carbon;
@@ -52,7 +53,10 @@ class DashboardController extends Controller
                         foreach($members as $member){
                           
                             if($member->Barangay == $barangay && $member->City == $city){
-                                $count +=1;
+                                $application = Application::where('MemID',$member->MemId)->where('Status',14)->get();
+                                if($application->count() > 0){
+                                    $count +=1;
+                                }
                             }
                         }
                     }
@@ -68,7 +72,12 @@ class DashboardController extends Controller
                     foreach($members as $member){
                       
                         if($member->Barangay == $barangay && $member->City == $city){
-                            $count +=1;
+                          
+                            $application = Application::where('MemID',$member->MemId)->where('Status',14)->get();
+                            if($application > 0){
+                                $count +=1;
+                            }
+                           
                         }
                     }
                 }

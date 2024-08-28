@@ -95,7 +95,8 @@ class PastDueReport extends Component
                     ->orWhere('Lname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('MemId', 'like', '%' . $this->keyword . '%');
             })
-            ->whereBetween('DateCreated', [$this->datestart, $this->dateend])
+            //->whereBetween('DateCreated', [$this->datestart, $this->dateend])
+            ->whereNotNull('Penalty')
             ->get();
 
 
