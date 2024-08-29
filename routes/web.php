@@ -66,7 +66,8 @@ Route::get('/test', [NotificationController::class, 'testMe']);
 Route::get('/corectRelation', [NotificationController::class, 'corectRelation']);
 
 Route::middleware(['authenticated'])->group(function () {
-    Route::get('/notification/view/{id}', [NotificationController::class, 'viewNotification'])->name('viewNotification');
+    Route::get('/notifications//view/{ref}/{id}', [NotificationController::class, 'viewNotification'])->name('viewNotification');
+    // Route::get('/notification/view/{id}', [NotificationController::class, 'viewNotification'])->name('viewNotification');
     Route::get('/notification/mark/{notiid}', [NotificationController::class, 'markNotification'])->name('markNotification');
 
     Route::middleware(['isfo:0'])->group(function () {
