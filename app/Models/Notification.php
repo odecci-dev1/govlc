@@ -10,5 +10,11 @@ class Notification extends Model
     use HasFactory;
 
     protected $table = 'tbl_Notifications_Model';
+
+    protected $guarded = [
+        'Id'
+    ];
+
+    public $timestamps = false; 
 }
 

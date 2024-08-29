@@ -1,18 +1,18 @@
 <div class="div-noti-container" id="div-noti-container">
     <table style="font-size: 1.4rem;">
-        @if(!empty($noti))
+        @if(!empty($notifications))
             <tr>
                 <th></th>
             </tr>
-            @foreach($noti as $notification)
-            <tr x-data="{ notiid: {{ $notification->id }} }">
+            @foreach($notifications as $notification)
+            <tr>
                 <td>
-                    <a href="{{ route('viewNotification', $notification->Reference) }}">
+                    <span wire:click.prevent="viewNotification({{ $notification->Id }})">
                         {{ $notification->Actions }}
-                    </a>
+                    </span>
                 </td>
                 {{-- <td onclick="markNotification({{ $notification->Id }})"> --}}
-                <td onclick="markNotification({{ $notification->Id }})">
+                <td wire:click="markAsRead({{ $notification->Id }})">
                     Mark as Read
                 </td>
             </tr>

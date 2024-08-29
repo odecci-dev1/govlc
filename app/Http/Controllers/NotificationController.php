@@ -31,7 +31,9 @@ class NotificationController extends Controller
     public function notifications()
     {
         $userId = session()->get('auth_userid');
-        $noti = Notification::where('UserId', $userId)->get();
+        $noti = Notification::where('UserId', $userId)
+            ->where('isRead', 0)
+            ->get();
         return view('notifications', ['noti' => $noti]);
     }
 
@@ -42,30 +44,29 @@ class NotificationController extends Controller
             ->where('isRead', false)
             ->count();
 
-        // dd($notiCount);
         session()->put('noti_count', $notiCount);
         return $notiCount;
     }
 
-    public function viewNotification(Request $request)
+    public function viewNotification($ref)
     {
-        $notification = Notification::findOrFail($request->Id);
+        $notification = Notification::where('Reference', $ref)->first();
         $notification->update(['isRead' => 1]);
 
         $notiCount = session()->get('noti_count');
         session()->put('noti_count', $notiCount - 1);
 
-        return redirect()->to('/transactions/application/view/' . $notification->Reference);
+        return redirect()->to('/tranactions/application/view/' . $notification->Reference);
     }
 
-    public function markNotification(Request $request)
+    public function markNotification($notiid)
     {
-        dd('xxxx');
-        $notification = Notification::findOrFail($request->Id);
+        $notification = Notification::findOrFail($notiid);
         $notification->update(['isRead' => 1]);
 
         $notiCount = session()->get('noti_count');
         session()->put('noti_count', $notiCount - 1);
+
     }
 
     public function testMe(){
