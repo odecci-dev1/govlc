@@ -76,11 +76,13 @@
     </div>
     @endif
     
-    @if($member['statusID'] == 8 || $member['statusID'] == 14)                
+    @if($member['statusID'] == 8 || $member['statusID'] == 14 )                
                 <!-- * New Application Notes and Remarks Section -->
                 <div class="na-notes-remarks-sec">
                     <div class="wrapper-1">
+                        @if($member['statusID'] == 14 && $type != 'details')
                         <h3>{{ $member['statusID'] == 8 ? 'Notes/Remarks' : 'CI Notes'}}</h3>
+                        @endif
                         <div class="btn-wrapper">
                             @if($usertype != 2)
                                 @if($member['statusID'] == 8)
@@ -92,13 +94,15 @@
 
                                 @endif
                             @endif
-                            @if($member['statusID'] == 14)
+                            @if($member['statusID'] == 14 && $type != 'details')
                                 <button type="button" style="font-size: 1.8rem;" class="viewLoanDetailsButton" data-open-receipt-voucher>View Loan Summary</button>
                                 @include('livewire.transactions.application.application-loan-summary');
                             @endif
                         </div>
                     </div>
+                    @if($member['statusID'] == 14 && $type != 'details')
                     <textarea wire:model.lazy="loanDetails.remarks" style="font-size: 1.4rem;"  {{ $member['statusID'] == 8 ? '' : 'readonly' }} {{ $usertype != 2 ? '' : 'disabled' }} class="wrapper-2"></textarea>
+                    @endif
                 </div>
     @endif            
     @if(in_array($member['statusID'], [9, 10, 15]))
