@@ -42,7 +42,7 @@
                                     </th>
                                 </tr>
                                 <tr style=" border-bottom: 1px solid #000000;">            
-                                    <th>Application Reference</th>
+                                    <th>Reference #</th>
                                     <th>Member Name</th>
                                     <th>Co Borrower</th>
                                     <th>Area</th>
@@ -82,7 +82,7 @@
 
                                     <!-- * Loan Amount -->
                                     <td>
-                                        <span class="td-name">{{ number_format($member->detail->LoanAmount, 2) }}</span> 
+                                        <span class="td-name">{{ number_format(($member->detail->ApprovedLoanAmount + $member->detail->ApproveedInterest), 2)}}</span> 
                                     </td>
 
                                     <!-- * Advance Payment -->
@@ -109,7 +109,14 @@
                                 @endforeach
                             @endif
                             </tbody>
-
+                            <tfoot style="margin-top:2rem">
+                                <td><b>Total</b></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><b>{{number_format($totalLoanAmount,2)}}</b></td>
+                            </tfoot>
                         </table>
                     
                     </div>

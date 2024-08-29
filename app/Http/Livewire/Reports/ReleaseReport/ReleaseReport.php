@@ -39,7 +39,7 @@ class ReleaseReport extends Component
                 'co_Borrower' => $member->comaker->Lnam . $member->comaker->full_name,
                 'area' => !empty($member->areaName) ? $member->areaName : 'N/A',
                 'loanType' => $member->loantype->LoanTypeName,
-                'loanAmount' => number_format($member->detail->LoanAmount, 2),
+                'loanAmount' => number_format($member->detail->ApprovedLoanAmount + $member->detail->ApproveedInterest, 2),
                 'advancePayment' => !empty($member->detail->ApprovedAdvancePayment) ? number_format($member->detail->ApprovedAdvancePayment, 2) : 0.00,
                 'terms' => !empty($member->termsofpayment->NameOfTerms) ? $member->termsofpayment->NameOfTerms : 'No terms',
                 'dueDate' => !empty($member->loanHistory->DueDate) ? date('Y-m-d', strtotime($member->loanHistory->DueDate)) : 'Empty date',
@@ -57,6 +57,7 @@ class ReleaseReport extends Component
             'members' => $data,
             'datestart' => $this->datestart,
             'dateend' => $this->dateend,
+            'totalLoanAmount'=>$this->totalLoanAmount,
         ])->render();
 
         $this->emit('printReport', ['data' => $printhtml]);
@@ -91,6 +92,9 @@ class ReleaseReport extends Component
         
          $this->totalLoanAmount = 0;
        // dd( $this->selectArea);
+
+     
+
        if($this->selectArea =='All'){
             $members = Application::with(['member', 'detail', 'loantype', 'loanhistory', 'termsofpayment'])
                 ->when(!$includeInactive, function ($query) {
@@ -101,8 +105,8 @@ class ReleaseReport extends Component
                 })
                 ->get();
             }else{
-                $members = Application::with([ 'detail', 'loantype', 'loanhistory', 'termsofpayment'])
-                ->with('member',function($query){
+                $members = Application::with([ 'member','detail', 'loantype', 'loanhistory', 'termsofpayment'])
+               ->whereHas('member', function ($query) {
                     $getAreas = Area::where('Id',$this->selectArea)->first();
                     $areas = explode('|', $getAreas->City);
                     $city=[];
@@ -122,7 +126,7 @@ class ReleaseReport extends Component
                     $query->whereBetween('DateCreated', [$this->datestart, $this->dateend]);
                 })
                 ->get();
-                dd($members);
+            
             }
           
             $members->map(function ($application) {

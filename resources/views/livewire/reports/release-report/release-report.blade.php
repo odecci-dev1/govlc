@@ -55,7 +55,7 @@
                                 <!-- <th><input type="checkbox" class="checkbox" data-select-all-checkbox></th> -->
 
                                 <!-- * Application Reference -->
-                                <th><span class="th-name">Application Reference</span></th>
+                                <th><span class="th-name">Reference #</span></th>
 
                                 <!-- * Member Name -->
                                 <th><span class="th-name">Member Name</span></th>
