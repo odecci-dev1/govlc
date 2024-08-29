@@ -34,10 +34,13 @@
                             <!-- * Table Header -->
                             <thead>
                                 <tr>
-                                    <th colspan="5">
+                                    <th colspan="4">
                                         <h3>RELEASING REPORT</h4>                                        
                                     </th>
-                                    <th colspan="5" style="text-align: right;">                                      
+                                    <th colspan="2">
+                                        <h3>{{$area}}</h4>                                        
+                                    </th>
+                                    <th colspan="4" style="text-align: right;">                                      
                                         <h4>From {{ $datestart }} To {{ $dateend }}</h4>
                                     </th>
                                 </tr>

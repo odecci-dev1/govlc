@@ -26,8 +26,19 @@
                         <input type="date" wire:model.lazy="dateend" class="">
                         @error('loanDetails.loanAmount') <span class="text-required">{{ $message }}</span> @enderror              
                     </div>                                     
-                </div>              
+                </div>      
+                <div class="btn-wrapper">                                
+                    <select  id="selectarea" wire:loading.attr="disabled" wire:model='selectArea' style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
+                        <option value="All">All Areas</option> 
+                        @if($area)
+                            @foreach($area as $area)
+                                <option value="{{ $area['Id'] }}">{{ $area['Area'] }}</option> 
+                            @endforeach
+                        @endif                                   
+                    </select>          
+                      </div>          
             </div>
+        
         <div class="body-wrapper" style="gap: 0; height:clamp(100% - 21rem, 40rem, 80vh); overflow-y: auto;">
             <!-- * Container: Reports Table -->
             <div class="reports-table-container">
@@ -70,10 +81,10 @@
                                 <span class="th-name">Total Advances</span> 
                             </th>
 
-                            <!-- * Cash Remit -->
+                            {{-- <!-- * Cash Remit -->
                             <th style="text-align: right;">
                                 <span class="th-name">Cash Remitted</span> 
-                            </th>
+                            </th> --}}
 
                             <!-- * Total NP -->
                             <th style="text-align: center;">
@@ -108,9 +119,9 @@
                                         <span class="td-name">{{ isset($totals[$d->Id]['totalAdvances']) ? number_format($totals[$d->Id]['totalAdvances'], 2) : '0.00' }}</span>
                                     </td>
 
-                                    <td style="text-align: right;">
+                                    {{-- <td style="text-align: right;">
                                         <span class="td-name">{{ isset($totals[$d->Id]['totalCollection']) ? number_format($totals[$d->Id]['totalCollection'], 2) : '0.00' }}</span>
-                                    </td>
+                                    </td> --}}
 
                                     <td  style="text-align: center;">
                                         <span class="td-name">{{ $totals[$d->Id]['totalNP'] ?? 0 }}</span>

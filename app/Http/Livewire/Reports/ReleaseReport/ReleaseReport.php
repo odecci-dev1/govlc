@@ -52,12 +52,13 @@ class ReleaseReport extends Component
     public function print()
     {
         $data = $this->getMembers(false,true);
-     
+        $area = Area::where('AreaID',$this->selectArea)->first();
         $printhtml = view('livewire.reports.release-report.release-report-print', [
             'members' => $data,
             'datestart' => $this->datestart,
             'dateend' => $this->dateend,
             'totalLoanAmount'=>$this->totalLoanAmount,
+            'area'=>$this->selectArea == 'All' ? 'All Areas':$area->Area,
         ])->render();
 
         $this->emit('printReport', ['data' => $printhtml]);

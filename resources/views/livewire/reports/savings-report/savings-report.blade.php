@@ -175,8 +175,19 @@
                                 </svg>
                             </div>
                             @error('member') <span class="text-required">{{ $message }}</span> @enderror              
-                        </div>    
-                    </div>              
+                        </div>  
+                        
+                    </div>  
+                    <div class="btn-wrapper">                                
+                        <select  id="selectarea" wire:loading.attr="disabled" wire:model='selectArea' style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
+                            <option value="All">All Areas</option> 
+                            @if($area)
+                                @foreach($area as $area)
+                                    <option value="{{ $area['Id'] }}">{{ $area['Area'] }}</option> 
+                                @endforeach
+                            @endif                                   
+                        </select>          
+                          </div>              
                 </div>
             <div class="body-wrapper" style="gap: 0; height:clamp(100% - 21rem, 40rem, 80vh); overflow-y: auto;">
                 <!-- * Container: Reports Table -->
