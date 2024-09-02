@@ -34,10 +34,13 @@
                             <!-- * Table Header -->
                             <thead>
                                 <tr>
-                                    <th colspan="2">
-                                        <h3>SAVINGS REPORT</h4>                                        
+                                    <th>
+                                        <h3>SAVINGS REPORT</h3>                                        
                                     </th>
-                                    <th colspan="1" style="text-align: right;">                                      
+                                    <th>
+                                        <h3>{{$area}}</h3>    
+                                    </th>
+                                    <th  style="text-align: right;">                                      
                                         <h4>From {{ $datestart }} To {{ $dateend }}</h4>
                                     </th>
                                 </tr>
@@ -59,7 +62,7 @@
                                     <td style="text-align: right;">
                                         <span class="td-name">
                                             {{ 
-                                                number_format($data->memberSavings->sum('TotalSavingsAmount'), 2) ?? '0.00'
+                                                number_format($data->savingsRunning->sum('Savings'), 2) ?? '0.00'
                                             }}
                                         </span>
                                     </td>
@@ -67,6 +70,11 @@
                                 @endforeach
                             @endif
                             </tbody>
+                            <tfoot>
+                                <td><b>Total</b></td>
+                                <td></td>
+                                <td style="text-align: right;"><b>{{ number_format($totalSavings,2)}}</b></td>
+                            </tfoot>
 
                         </table>
                     

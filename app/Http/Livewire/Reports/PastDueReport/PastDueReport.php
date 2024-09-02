@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\PastDueExport;
 use App\Models\Application;
+use App\Models\Area;
 use App\Models\LoanHistory;
 use App\Models\Members;
 
@@ -21,7 +22,8 @@ class PastDueReport extends Component
     public $paginate = [];
     public $paginationPaging = [];
     public $newappmodelkeyword = '';
-
+    public $sample = []; 
+    public $selectArea='All'; 
     public function mount()
     {
         $this->dateend = date('Y-m-d');      
@@ -89,15 +91,40 @@ class PastDueReport extends Component
 
     private function getMembers($paginate = true, $includeInactive = true)
     {
-        $members = LoanHistory::with(['member', 'collectionareamember'])
-            ->whereHas('member', function ($query) {
-                $query->where('Fname', 'like', '%' . $this->keyword . '%')
+        if($this->selectArea =='All'){
+            $members = LoanHistory::with(['member', 'collectionareamember'])
+              ->whereHas('member', function ($query) {
+                    $query->where('Fname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('Lname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('MemId', 'like', '%' . $this->keyword . '%');
             })
             //->whereBetween('DateCreated', [$this->datestart, $this->dateend])
             ->whereNotNull('Penalty')
             ->get();
+        }
+        else{
+            $members = LoanHistory::with(['member', 'collectionareamember'])
+              
+            ->whereHas('member', function ($query) {
+                $getAreas = Area::where('Id',$this->selectArea)->first();
+                $areas = explode('|', $getAreas->City);
+                $city=[];
+                $barangay=[];
+                foreach ($areas as $area) {
+                    $loc =  explode(',',$area);
+                    $barangay []= trim($loc[0],' ');
+                    $city []= trim($loc[1],' ');
+                }
+                $query->whereIn('Barangay',$barangay)->whereIn('City',$city)->
+                    where('Fname', 'like', '%' . $this->keyword . '%')
+                    ->orWhere('Lname', 'like', '%' . $this->keyword . '%')
+                    ->orWhere('MemId', 'like', '%' . $this->keyword . '%');
+            })
+            //->whereBetween('DateCreated', [$this->datestart, $this->dateend])
+            ->whereNotNull('Penalty')
+            ->get();
+        }
+    
 
 
         if ($paginate) {

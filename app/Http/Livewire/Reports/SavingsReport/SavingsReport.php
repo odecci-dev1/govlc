@@ -33,6 +33,8 @@ class SavingsReport extends Component
     public $totalSavingsAmount = 0; 
     public $runningSavings;
     public $showModal = false;
+    public $area;
+    public $selectArea='All'; 
 
     public function mount()
     {
@@ -89,13 +91,16 @@ class SavingsReport extends Component
 
     public function print()
     {
+       
         $data = $this->getMembers(false, false);
-
+        $area = Area::where('AreaID',$this->selectArea)->first();
         $printhtml = view('livewire.reports.savings-report.savings-report-print', [
             'data' => $data,
             'datestart' => $this->datestart,
             'dateend' => $this->dateend,
-            'member' => $this->member
+            'member' => $this->member,
+            'area'=> $this->selectArea == 'All' ? 'All Areas':$area->Area,
+            'totalSavings' => $this->totalSavingsAmount,
         ])->render();
 
         $this->emit('printReport', ['data' => $printhtml]);
@@ -152,21 +157,21 @@ class SavingsReport extends Component
     {
         $members = $this->getMembers();
         $this->totalSavingsAmount = $this->getTotalSavingsAmount();
-
+        $this->area = Area::where('Status',1)->whereNotNull('Area')->get(); 
         return view('livewire.reports.savings-report.savings-report', [
             'totalSavings' => $this->totalSavingsAmount,
             'members' => $members,
-            'runningSavings' => $this->runningSavings
+            'runningSavings' => $this->runningSavings,
+         
         ]);
     }
 
     private function getMembers($paginate = true, $includeInactive = true)
     {
-        //$membersWithSavings = Members::with(['savingsRunning','memberArea'])
-       $membersWithSavings = Members::with(['memberSavings', 'memberArea'])
+        if($this->selectArea == 'All'){
+            $membersWithSavings = Members::with(['memberSavings', 'memberArea'])
             ->with('savingsRunning', function ($query) {
                 $query->whereBetween('Date', [$this->datestart, $this->dateend]);
-                //$query->where('Date','>', '2024-08-22')->where('Date','<=', '2024-08-23');
             })
             ->when(!$includeInactive, function ($query) {
                 $query->where('Status', '!=', 2);
@@ -175,21 +180,14 @@ class SavingsReport extends Component
                 $query->where('Fname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('Lname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('MemId', 'like', '%' . $this->keyword . '%');
-            })
-            // ->whereHas('memberSavings', function ($query) {
-            //     $query->whereBetween('DateUpdated', [$this->datestart, $this->dateend]);
-            // })
-           
-            ->whereHas('savingsRunning', function ($query) {
+            })->whereHas('savingsRunning', function ($query) {
                 $query->whereBetween('Date', [$this->datestart, $this->dateend]);
              })
             ->when($this->member, function ($query) {
                 $query->where('MemId', $this->member);  
             })
             ->get();
-   
-            //dd($membersWithSavings);
-        $membersWithoutSavings = Members::with(['memberArea'])
+            $membersWithoutSavings = Members::with(['memberArea'])
             ->when(!$includeInactive, function ($query) {
                 $query->where('Status', '!=', 2);
             })
@@ -203,10 +201,73 @@ class SavingsReport extends Component
                 $query->where('MemId', $this->member);  
             })
             ->get();
+        }else{
 
-        $members = $membersWithSavings->concat($membersWithoutSavings)->unique('MemId');
+            $membersWithSavings = Members::with(['memberSavings', 'memberArea'])
+            ->with('savingsRunning', function ($query) {
+                $query->whereBetween('Date', [$this->datestart, $this->dateend]);
+            })
+            ->when(!$includeInactive, function ($query) {
+                $query->where('Status', '!=', 2);
+            })
+            ->where(function ($query) {
+                $query->where('Fname', 'like', '%' . $this->keyword . '%')
+                    ->orWhere('Lname', 'like', '%' . $this->keyword . '%')
+                    ->orWhere('MemId', 'like', '%' . $this->keyword . '%');
+            })->where(function ($query) {
+                $getAreas = Area::where('AreaID',$this->selectArea)->first();
+                $areas = explode('|', $getAreas->City);
+                $city=[];
+                $barangay=[];
+                foreach ($areas as $area) {
+                    $loc =  explode(',',$area);
+                    $barangay []= trim($loc[0],' ');
+                    $city []= trim($loc[1],' ');
+                }
+                $query->whereIn('Barangay',$barangay)->whereIn('City',$city);
+                
+            })->whereHas('savingsRunning', function ($query) {
+                $query->whereBetween('Date', [$this->datestart, $this->dateend]);
+             })
+            ->when($this->member, function ($query) {
+                $query->where('MemId', $this->member);  
+            })
+            ->get();
 
-        $areas = Area::all();
+            $membersWithoutSavings = Members::with(['memberArea'])
+            ->when(!$includeInactive, function ($query) {
+                $query->where('Status', '!=', 2);
+            })->where(function ($query) {
+                $getAreas = Area::where('AreaID',$this->selectArea)->first();
+                $areas = explode('|', $getAreas->City);
+                $city=[];
+                $barangay=[];
+                foreach ($areas as $area) {
+                    $loc =  explode(',',$area);
+                    $barangay []= trim($loc[0],' ');
+                    $city []= trim($loc[1],' ');
+                }
+                $query->whereIn('Barangay',$barangay)->whereIn('City',$city);
+                
+            })
+            ->where(function ($query) {
+                $query->where('Fname', 'like', '%' . $this->keyword . '%')
+                    ->orWhere('Lname', 'like', '%' . $this->keyword . '%')
+                    ->orWhere('MemId', 'like', '%' . $this->keyword . '%');
+            })
+            ->whereDoesntHave('memberSavings')
+            ->when($this->member, function ($query) {
+                $query->where('MemId', $this->member);  
+            })
+            ->get();
+        }
+       
+   
+      
+       
+
+         $members = $membersWithSavings->concat($membersWithoutSavings)->unique('MemId');
+            $areas = Area::all();
 
         $members->map(function ($member) use ($areas) {
             $memberFullLocation = "{$member->Barangay}, {$member->City}";
@@ -263,7 +324,7 @@ class SavingsReport extends Component
     }
 
     private function getTotalSavingsAmount()
-    {
+    {   if($this->selectArea == 'All'){
         $membersQuery = Members::with('memberSavings')->with('savingsRunning',function($query) {
             $query->whereBetween('Date', [$this->datestart, $this->dateend]);
              })
@@ -281,6 +342,39 @@ class SavingsReport extends Component
             })->get()->flatMap(function ($member) {
                 return $member->savingsRunning;
             })->sum('Savings');
+        }else{
+            $membersQuery = Members::with('memberSavings')->with('savingsRunning',function($query) {
+                $query->whereBetween('Date', [$this->datestart, $this->dateend]);
+                 })
+                ->where(function ($query) {
+                    $query->where('Fname', 'like', '%' . $this->keyword . '%')
+                        ->orWhere('Lname', 'like', '%' . $this->keyword . '%')
+                        ->orWhere('MemId', 'like', '%' . $this->keyword . '%');
+                })
+                ->when($this->member, function ($query) {
+                    $query->where('MemId', $this->member);  
+                })   ->where(function ($query) {
+                    $getAreas = Area::where('AreaID',$this->selectArea)->first();
+                    $areas = explode('|', $getAreas->City);
+                    $city=[];
+                    $barangay=[];
+                    foreach ($areas as $area) {
+                        $loc =  explode(',',$area);
+                        $barangay []= trim($loc[0],' ');
+                        $city []= trim($loc[1],' ');
+                    }
+                    $query->whereIn('Barangay',$barangay)->whereIn('City',$city);
+                    
+                });
+    
+                return $membersQuery->whereHas('savingsRunning', function ($query) {
+                    $query->whereBetween('Date', [$this->datestart, $this->dateend]);
+                })->get()->flatMap(function ($member) {
+                    return $member->savingsRunning;
+                })->sum('Savings');
+        }
+     
+        
         // ->with('savingsRunning')->get()->flatMap(function ($member) {
          
         //     return $member->savingsRunning;

@@ -17,7 +17,8 @@ class CollectionReport extends Component
     public $totals = [];
     public $paginate = [];
     public $paginationPaging = [];
-
+    public $area;
+    public $selectArea='All'; 
     public function mount()
     {
         $this->dateend = date('Y-m-d');      
@@ -30,27 +31,33 @@ class CollectionReport extends Component
     {
         $data = $this->getAreas(false, false);
         $exportData = $data->map(function ($d) {
+
             return [ 
                 'area' =>  $d->Area,
                 'fieldOffice' =>  $d->fieldOfficer->full_name,
-                'totalCollections' =>  isset($totals[$d->id]['totalCollection']) ? number_format($totals[$d->id]['totalCollection'], 2) : '0.00',
-                'totalSavings' =>  isset($totals[$d->id]['totalSavings']) ? number_format($totals[$d->id]['totalSavings'], 2) : '0.00',
-                'totalLapses' =>  isset($totals[$d->id]['totalLapses']) ? number_format($totals[$d->id]['totalLapses'], 2) : '0.00',
-                'totalAdvances' =>  isset($totals[$d->id]['totalAdvances']) ? number_format($totals[$d->id]['totalAdvances'], 2) : '0.00',
-                'cashRemitted' =>  isset($totals[$d->id]['totalCollection']) ? number_format($totals[$d->id]['totalCollection'], 2) : '0.00',
-                'totalNP' =>  $totals[$d->id]['totalNP'] ?? '0',
+                'totalCollections' =>  isset($this->totals[$d->Id]['totalCollection']) ? number_format($this->totals[$d->Id]['totalCollection'], 2) : '0.00',
+                'totalSavings' =>  isset($this->totals[$d->Id]['totalSavings']) ? number_format($this->totals[$d->Id]['totalSavings'], 2) : '0.00',
+                'totalLapses' =>  isset($this->totals[$d->Id]['totalLapses']) ? number_format($this->totals[$d->Id]['totalLapses'], 2) : '0.00',
+                'totalAdvances' =>  isset($this->totals[$d->Id]['totalAdvances']) ? number_format($this->totals[$d->Id]['totalAdvances'], 2) : '0.00',
+                'cashRemitted' =>  isset($this->totals[$d->Id]['totalCollection']) ? number_format($this->totals[$d->Id]['totalCollection'], 2) : '0.00',
+                'totalNP' =>  $this->totals[$d->id]['totalNP'] ?? '0',
             ];
         });
+        //dd($exportData);
         return Excel::download(new CollectedExport( $exportData ), 'Collection_Report_'. $this->datestart . '_' . 'to' . '_' .  $this->dateend .'.xlsx');
     }
     
     public function print()
     {
-        $data = $this->getAreas(false, false);
+        $data = $this->getAreas();
+        
+        $area = Area::where('AreaID',$this->selectArea)->first();
         $printhtml = view('livewire.reports.collection-report.collection-report-print', [ 
             'data' => $data, 
+            'totals' => $this->totals, 
             'datestart' => $this->datestart, 
-            'dateend' => $this->dateend 
+            'dateend' => $this->dateend,
+            'area'=> $this->selectArea == 'All' ? 'All Areas':$area->Area,
         ])->render();    
         $this->emit('printReport', ['data' => $printhtml]);
     }
@@ -73,22 +80,42 @@ class CollectionReport extends Component
     public function render()
     {
         $this->data = $this->getAreas();
-
+   
+        $this->area = Area::where('Status',1)->whereNotNull('Area')->get();  
         return view('livewire.reports.collection-report.collection-report', [
             'totals' => $this->totals,
         ]);
     }
 
     public function getAreas($paginate = true, $includeInactive = true)
-    {
-        $areas = Area::with(['fieldOfficer', 'collectionAreas.areaMembers', 'loanhistory'])
+    {   if($this->selectArea == 'All'){
+            $areas = Area::with(['fieldOfficer', 'loanhistory'])->with( 'collectionAreas.areaMembers',function($query){
+                $query->whereBetween('DateCollected',[$this->datestart, $this->dateend]);
+            })
             ->whereHas('fieldOfficer', function ($query) {
                 $query->where('Fname', 'like', '%' . $this->keyword . '%')
                     ->orWhere('Lname', 'like', '%' . $this->keyword . '%');
             })
             ->get();
+        }else{
+            $areas = Area::with(['fieldOfficer', 'loanhistory'])->with( 'collectionAreas.areaMembers',function($query){
+                $query->whereBetween('DateCollected',[$this->datestart, $this->dateend]);
+            })->whereHas('collectionAreas', function($query){
+                $query->where('AreaID',$this->selectArea);
+            })
+            ->whereHas('fieldOfficer', function ($query) {
+                $query->where('Fname', 'like', '%' . $this->keyword . '%')
+                    ->orWhere('Lname', 'like', '%' . $this->keyword . '%');
+            })
+            ->get();
+        }
+        
         
         $grandTotalCollection = 0;
+        $grandTotalSavings = 0;
+        $grandTotalLapses = 0;
+        $grandTotalAdvances = 0;
+        $grandTotalNP = 0;
          
         foreach ($areas as $area) {
            
@@ -124,9 +151,17 @@ class CollectionReport extends Component
             ];
 
             $grandTotalCollection += $totalCollection;
+            $grandTotalSavings += $totalSavings;
+            $grandTotalLapses += $totalLapses;
+            $grandTotalAdvances += $totalAdvances;
+            $grandTotalNP += $totalNP;
         }
       
         $this->totals['grandTotalCollection'] = $grandTotalCollection;
+        $this->totals['grandTotalSavings'] = $grandTotalSavings;
+        $this->totals['grandTotalLapses'] = $grandTotalLapses;
+        $this->totals['grandTotalAdvances'] = $grandTotalAdvances;
+        $this->totals['grandTotalNP'] = $grandTotalNP;
 
         if ($paginate) {
             $totalItems = $areas->count();

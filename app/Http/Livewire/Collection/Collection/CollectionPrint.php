@@ -43,7 +43,8 @@ class CollectionPrint extends Component
             foreach($collectionAreaMembers as $collectionAreaMember){
             
                 $details=[];
-              
+                $lapses =0;
+                $advance =0;
                 $getColectionArea = CollectionArea::where('Area_RefNo',$collectionAreaMember->Area_RefNo)->first();
                 $getArea = Area::where('AreaID',$getColectionArea->AreaId)->first();
                 $getFO = FieldOfficer::where('FOID',$getArea->FOID)->first();
@@ -57,11 +58,13 @@ class CollectionPrint extends Component
                // dd($getprviousCollectionRecord->sum('LapsePayment'));
                 if($collectionAreaMember->NAID == $application->NAID){
                     $totalAdvance += $getprviousCollectionRecord->sum('AdvancePayment');
+                    $advance += $getprviousCollectionRecord->sum('AdvancePayment');
                     //$totalAdvance += $collectionAreaMember->AdvancePayment;
                 }
                 if($collectionAreaMember->NAID == $application->NAID){
                    
                     $totalLapses += $getprviousCollectionRecord->sum('LapsePayment');
+                    $lapses += $getprviousCollectionRecord->sum('LapsePayment');
                    //$totalLapses += $collectionAreaMember->LapsePayment;
                 }
                 if($collectionAreaMember->NAID == $application->NAID){
@@ -83,8 +86,8 @@ class CollectionPrint extends Component
                 $details['dailyCollectibles']= $application->detail->ApprovedDailyAmountDue;
                 $details['amountDue']= $application->loanhistory->OutstandingBalance;
                 $details['totalSavingsAmount']=  $Membersavings;
-                $details['advancePayment']=  $totalAdvance;
-                $details['lapsePayment']=  $totalLapses;
+                $details['advancePayment']=  $advance;
+                $details['lapsePayment']=  $lapses;
                 $details['loanPrincipal']=  $application->detail->ApprovedLoanAmount;
                 $details['typeOfCollection']=  $application->termsofpayment->collectionType->TypeOfCollection;
                

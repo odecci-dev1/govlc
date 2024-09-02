@@ -34,10 +34,13 @@
                             <!-- * Table Header -->
                             <thead>
                                 <tr>
-                                    <th colspan="5">
+                                    <th colspan="4">
                                         <h3>COLLECTION REPORT</h4>                                        
                                     </th>
-                                    <th colspan="5" style="text-align: right;">                                      
+                                    <th colspan="2">
+                                        <h3>{{$area}}</h4>                                        
+                                    </th>
+                                    <th colspan="4" style="text-align: right;">                                      
                                         <h4>From {{ $datestart }} To {{ $dateend }}</h4>
                                     </th>
                                 </tr>
@@ -48,7 +51,7 @@
                                     <th  style="text-align: right;">Total Savings</th>
                                     <th  style="text-align: right;">Total Lapses</th>
                                     <th  style="text-align: right;">Total Advances</th>
-                                    <th  style="text-align: right;">Cash Remitted</th>
+                                    {{-- <th  style="text-align: right;">Cash Remitted</th> --}}
                                     <th  style="text-align: center;">Total NP</th>                                                             
                                 </tr>
                             </thead>
@@ -63,34 +66,46 @@
                                     <td><span class="td-name">{{ $d->fieldOfficer->full_name }}</span></td>
                                 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($d['totalCollection']) ? number_format($d['totalCollection'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($totals[$d->Id]['totalCollection']) ? number_format($totals[$d->Id]['totalCollection'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($d['totalSavings']) ? number_format($d['totalSavings'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($totals[$d->Id]['totalSavings']) ? number_format($totals[$d->Id]['totalSavings'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($d['totalLapses']) ? number_format($d['totalLapses'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($totals[$d->Id]['totalLapses']) ? number_format($totals[$d->Id]['totalLapses'], 2) : '0.00' }}</span>
                                     </td>
 
                                     <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($d['totalAdvance']) ? number_format($d['totalAdvance'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ !empty($totals[$d->Id]['totalAdvances']) ? number_format($totals[$d->Id]['totalAdvances'], 2) : '0.00' }}</span>
                                     </td>
 
-                                    <td style="text-align: right;">
-                                        <span class="td-name">{{ !empty($d['cashRemit']) ? number_format($d['cashRemit'], 2) : '0.00' }}</span>
-                                    </td>
+                                    {{-- <td style="text-align: right;">
+                                        <span class="td-name">{{ !empty($totals[$d->Id]['cashRemit']) ? number_format($totals[$d->Id]['cashRemit'], 2) : '0.00' }}</span>
+                                    </td> --}}
 
                                     <td  style="text-align: center;">
-                                        <span class="td-name">{{ !empty($d['totalNP']) ? $d['totalNP'] : 0 }}</span>
+                                        <span class="td-name">{{ !empty($totals[$d->Id]['totalNP']) ? $totals[$d->Id]['totalNP'] : 0 }}</span>
                                     </td>
 
                                 </tr>
                                 @endforeach
                             @endif
                             </tbody>
-
+                            <tfoot style="margin-top:2rem">
+                                <td><b>Total</b></td>
+                                <td></td>
+                                <td style="text-align: right;"><b>{{number_format($totals['grandTotalCollection'],2)}}</b></td>
+                                <td style="text-align: right;"><b>{{number_format($totals['grandTotalSavings'],2)}}</b></td>
+                                <td style="text-align: right;"><b>{{number_format($totals['grandTotalLapses'],2)}}</b></td>
+                                <td style="text-align: right;"><b>{{number_format($totals['grandTotalAdvances'],2)}}</b></td>
+                                <td style="text-align: center;"><b>{{$totals['grandTotalNP']}}</b></td>
+                           
+                               
+                             
+                         
+                            </tfoot>
                         </table>
                     
                     </div>

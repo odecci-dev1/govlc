@@ -65,7 +65,7 @@ class Dashboard extends Component
     {
        
         $members = Members::select('id', 'Status')->where('Status', 1)->get();
-        $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment','UsedAdvancePayment','LapsePayment')->get();
+        $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment','UsedAdvancePayment','LapsePayment')->whereNotNull('Area_RefNo')->get();
         $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->whereIn('Status',[14,9,15])->get();
         $totalMemberSavings = MembersSavings::select('TotalSavingsAmount')->get();
         
@@ -114,6 +114,7 @@ class Dashboard extends Component
             });
 
         $monthlyCollection = $collectionAreaMembers
+           
             ->groupBy(function ($item) {
                 return Carbon::parse($item->DateCollected)->format('Y-m');
             })
