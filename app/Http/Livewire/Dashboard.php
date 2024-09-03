@@ -193,12 +193,12 @@ class Dashboard extends Component
             ->where('Status', 1)
             ->whereNotNull('FOID')
             ->get();
-            foreach( $activeAreas as $activeArea ){
-                $collectionArea = CollectionArea::where('AreaID',$activeArea->AreaID)->get();
-            }
-        $newAccounts = Application::with(['collectionareamember', 'loanhistory'])
-            ->where('Status', 7)
-            ->get();
+           
+       
+          //  dd($collectionArea);
+        // $newAccounts = Application::with(['collectionareamember', 'loanhistory'])
+        //     ->where('Status', 7)
+        //     ->get();
         //$result = $activeAreas->map(function ($area) use ($newAccounts) {
         //dd($collectionArea);
         // if(empty($collectionArea)){
@@ -211,9 +211,9 @@ class Dashboard extends Component
         // }
 
         //dd($activeAreas);
-        $activeAreas = Area::where('Status', 1)
-            ->whereNotNull('FOID')
-            ->get();
+        // $activeAreas = Area::where('Status', 1)
+        //     ->whereNotNull('FOID')
+        //     ->get();
 
         foreach($activeAreas as $area) {
             $details=[];
@@ -273,25 +273,24 @@ class Dashboard extends Component
 
         
 
-            $noPayment =0;
-            $collections = CollectionAreaMember::where('Area_RefNo', $area->Area_RefNo)->get();
-            foreach( $collections as $collection) {
-                if($collection->Payment_Status == 2){
-                    $noPayment += 1;
-                }
+          
+            $areaNoPayment =0;
+            $collectionArea = CollectionArea::where('AreaID',$area->AreaID)->get();
+                foreach($collectionArea as $col){
+                    $collections = CollectionAreaMember::where('Area_RefNo', $col->Area_RefNo)->where('Payment_Status',2)->get();
+                    $areaNoPayment += $collections->count();
             }
-           // return [
-            
+            $detailResult[] = $areaNoPayment;
             $details['area'] = $area->Area;
             $details['activeCollection'] = $sumCollectedAmount;
             $details['newAccount'] =$totalNewAccount;
-            $details['noPayment'] = $noPayment;
+            $details['noPayment'] = $areaNoPayment;
             $details['pastDueCollection'] = $totalPastDueCollection;
             $result[]= $details;
         }
         //$result[] =  $detailResult;
         //});
-        //dd( $result);
+        //dd( $detailResult);
         return $result;
     }
 
