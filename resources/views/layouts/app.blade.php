@@ -313,8 +313,10 @@
             @endphp
             
             <div style="position: relative;">           
-            <img onclick="showNoti()" style="cursor: pointer;" src="{{ URL::to('/') }}/assets/icons/bell.svg" alt="Bell" />
-            <span id="noti-count" style="{{ session()->get('noti_count') == '0' || session()->get('noti_count') == '' ? 'display: none' : '' }}">{{ session()->get('noti_count') }}</span>
+                <img onclick="showNoti()" style="cursor: pointer;" src="{{ URL::to('/') }}/assets/icons/bell.svg" alt="Bell" />
+                <span id="noti-count" style="{{ session()->get('noti_count') == '0' || session()->get('noti_count') == '' ? 'display: none' : '' }}">
+                    {{ session()->get('noti_count') }}
+                </span>
             </div>
             @if(file_exists(public_path('storage/users_profile/'.$profilepic)))                                  
                 <img src="{{ asset('storage/users_profile/'.$profilepic) }}" alt="upload-image" style="height: 5rem; width: 5rem; cursor: pointer;  border-radius: 50%" id="profileImg" onclick="openProfile()"/>                                                                                                                 
@@ -344,7 +346,7 @@
     </div>
     <div class='div-noti hide-me' id='div-noti'></div>
     <script>         
-        window.openProfile = function($cnt){                    
+        window.openProfile = function($cnt) {                    
             const profileImg = document.getElementById("profileImg");
             const profileLink = document.getElementById("profileLink");
             if(profileLink.classList.contains("hide-me")){
@@ -354,7 +356,7 @@
                 profileLink.classList.add("hide-me");     
             }          
         };   
-        window.showNoti = function(){      
+        window.showNoti = function() {      
             
             var elementExists = document.getElementById("div-noti");    
             if(elementExists.classList.contains('hide-me')){
@@ -391,7 +393,16 @@
             //     xmlhttp.send();
             // }
         }
-    
+        window.markNotification = function(notiid) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Notification marked as read.", this.responseText);
+                }
+            }
+            xmlhttp.open("GET", "{{ url('/notification/mark') }}/" + notiid, true);
+            xmlhttp.send();
+        }
         var intervalId = window.setInterval(function(){
             //  
             var notihttp = new XMLHttpRequest();

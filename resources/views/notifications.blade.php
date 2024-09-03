@@ -4,10 +4,19 @@
             <tr>
                 <th></th>
             </tr>
-            @foreach($noti as $mnoti)
-            <tr>
-                <td><a href="{{ route('viewNotification', ['reference' => $mnoti['reference'], 'id' => $mnoti['id'] ]) }}">{{ $mnoti['actions'] }}</a></td>
-                <td onclick="markNoti('{{ $mnoti['id'] }}')">mark as read</td>
+            @foreach($noti as $notification)
+            <tr x-data="{ notiid: {{ $notification->id }} }">
+                <td>
+                    <a href="{{ route('viewNotification', [$notification->Reference, $notification->Id]) }}">
+                        {{ $notification->Actions }}
+                    </a>
+                </td>
+                {{-- <td onclick="markNotification({{ $notification->Id }})"> --}}
+                <td>
+                    <a style="" href="{{ route('markNotification', $notification->Id) }}">
+                        Mark as Read
+                    </a>
+                </td>
             </tr>
              @endforeach
         @endif

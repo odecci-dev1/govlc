@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\URL;
 use Livewire\Component;
-use DB;
+// use DB;
 
 use App\Models\Application;
 use App\Models\Holiday;
@@ -41,6 +41,7 @@ use App\Models\CollectionArea;
 use App\Models\FieldOfficer;
 use App\Models\Area;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class CreateApplication extends Component
 {
@@ -1130,11 +1131,14 @@ class CreateApplication extends Component
         
             $getnaid = Application::where('id', $app->id)->select('NAID')->first();
            // dd($mem->Id);
-            $this->resetValidation();         
+            $this->resetValidation();       
+            $this->notifyUser(
+                'Application',
+                'Created',
+                session()->get('auth_userid'),
+                $getnaid->NAID,
+            );  
             return redirect()->to('/tranactions/application/view/'.$getnaid->NAID)->with(['mmessage'=> 'Application successfully saved', 'mword'=> 'Success']);    
-
-          
-            
         }
         catch (\Exception $e) {           
             DB::rollback();        
@@ -1176,6 +1180,13 @@ class CreateApplication extends Component
                 'EmailAddress' => $this->member['emailAddress'],
              
             ]);
+
+            $this->notifyUser(
+                'Application',
+                'Updated Info',
+                session()->get('auth_userid'),
+                $this->searchedmemId,
+            );
             return redirect()->to('/tranactions/application/details/'.$this->searchedmemId)->with(['mmessage'=> 'Application successfully updated', 'mword'=> 'Success']);  
         
     }
@@ -1510,6 +1521,13 @@ class CreateApplication extends Component
                     // $extension = $request->file('filename')->getClientOriginalExtension();                    
                     //dd( json_encode($data));
               
+                    $this->notifyUser(
+                        'Application',
+                        'Updated',
+                        session()->get('auth_userid'),
+                        $this->appnaid,
+                    );
+
                     $this->resetValidation();         
                     return redirect()->to('/tranactions/application/view/'.$this->appnaid)->with(['mmessage'=> 'Application successfully updated', 'mword'=> 'Success']);    
 
@@ -1560,6 +1578,12 @@ class CreateApplication extends Component
             ]);
             // $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Credit/CreditSubmitforApproval', $data);  
             //dd($crt);
+            $this->notifyUser(
+                'Credit Investigation',
+                'Submit For Approval',
+                session()->get('auth_userid'),
+                $this->naID,
+            );
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully submited', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -1629,7 +1653,13 @@ class CreateApplication extends Component
                             'Status' => $this->loanDetails['notes'] == '' ? 9:10,
                         ]);
                     }
-
+            
+            $this->notifyUser(
+                'Approval',
+                'Approve For Releasing',
+                session()->get('auth_userid'),
+                $this->naID,
+            );
             // $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Approval/ApproveReleasing', $data);          
             //dd($crt);
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully approve for releasing', 'mword'=> 'Success']);
@@ -1684,7 +1714,12 @@ class CreateApplication extends Component
                     ]);
      
             $this->emit('openUrlPrintingVoucher', ['url' => URL::to('/').'/tranactions/application/printing/'.$this->naID , 'title' => 'This is the title', 'message' => 'This is the message']);
-
+            $this->notifyUser(
+                'Approval',
+                'Sign For Releasing',
+                session()->get('auth_userid'),
+                $this->naID,
+            );
             return redirect()->to('/tranactions/application/view/'.$this->naID)->with(['mmessage'=> 'Application successfully signed for releasing', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -1791,6 +1826,13 @@ class CreateApplication extends Component
                     ]);
            
             
+            
+            $this->notifyUser(
+                'Releasing',
+                'Completed Application',
+                session()->get('auth_userid'),
+                $this->naID,
+            );
             return redirect()->to('tranactions/application/releasing/list')->with(['mmessage'=> 'Application has been completed', 'mword'=> 'Success']);
         }
         catch (\Exception $e) {           
@@ -1837,6 +1879,12 @@ class CreateApplication extends Component
             'Status'=> 2,
         ]);                    
         //dd($data);
+        $this->notifyUser(
+            'Application',
+            'Declined',
+            session()->get('auth_userid'),
+            $this->naID,
+        );
         return redirect()->to('/tranactions/application/list')->with(['mmessage'=> 'Application has been declined', 'mword'=> 'Success']);
     }
 
@@ -3298,15 +3346,97 @@ class CreateApplication extends Component
         return view('livewire.transactions.application.create-application');        
     }
 
-    public function notifyUser($action,$module,$name,$userId,$reference){
+    // public function notifyUser($action,$module,$name,$userId,$reference)
+    // {
+    //     dd($action,$module,$name,$userId,$reference);
+    //     switch ($module) {
+    //         case 'Application':
+    //         case 'Credit Investigation':
+    //         case 'Approval':
+    //         case 'Releasing':
+    //         default:
+    //     }
+
+    //     $users = User::where('Status',1)->get();
+    // }
+
+    public function notifyUser($module, $action, $userId, $reference)
+    {
+        $user = User::where('UserId', $userId)->first();
+        $name = $user->Lname;
+        $message = '';
         switch ($module) {
             case 'Application':
+                switch ($action) {
+                    case 'Created':
+                        $message = "New application has been created by $name. Reference: $reference.";
+                        break;
+                    case 'Updated':
+                        $message = "Application $reference has been updated by $name.";
+                        break;
+                    case 'Updated Info':
+                        $message = "Application $reference information has been updated by $name.";
+                        break;
+                    case 'Archived':
+                        $message = "Application $reference has been archived by $name.";
+                        break;
+                    case 'Declined':
+                        $message = "$name Declined Application $reference.";
+                        break;
+                }
+                break;
             case 'Credit Investigation':
+                switch ($action) {
+                    case 'Started':
+                        $message = "Credit Investigation started for application $reference. By $name";
+                        break;
+                    case 'Submit For Approval':
+                        $message = "Application $reference has been Submitted For Approval. By $name";
+                        break;
+                    case 'Declined':
+                        $message = "$name Declined Application $reference within Credit Investigation.";
+                        break;
+                }
+                break;
             case 'Approval':
-            case 'Realising':
+                switch ($action) {
+                    case 'Approve For Releasing':
+                        $message = "Application $reference is on Approved For Releasing. By $name";
+                        break;
+                    case 'Sign For Releasing':
+                        $message = "Application $reference is on Sign For Releasing. By $name";
+                        break;
+                    case 'Declined':
+                        $message = "$name Declined Application $reference within Approval.";
+                        break;
+                }
+                break;
+            case 'Releasing':
+                switch ($action) {
+                    case 'Complete Application':
+                        $message = "Application $reference has now Completed The Application. By $name";
+                        break;
+                    case 'Released':
+                        $message = "$name has released the funds. Reference: $reference.";
+                        break;
+                }
+                break;
             default:
+                $message = "An action ($action) has been performed on $module by $name. Reference: $reference.";
+                break;
         }
 
-        $users = User::where('Status',1)->get();
+        // dd($action, $module, $user->Lname, $userId, $reference, $message);
+
+        DB::table('tbl_Notifications_Model')->insert([
+            'Actions' => $message,
+            'DateCreated' => Carbon::now(),
+            'Module' => $module,
+            'Name' => $name,
+            'isRead' => 0,
+            'UserId' => $userId,
+            'Reference' => $reference,
+        ]);
     }
+
 }

@@ -22,36 +22,51 @@ use App\Models\BusinessFileUpload;
 use App\Models\ChildInfo;
 use App\Models\FamBackground;
 use App\Models\MonthlyBills;
+use App\Models\Notification;
 use App\Models\Properties;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class NotificationController extends Controller
 {
-    public function notifications(){      
-        $noti = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Notification/NotificationListFilterbyUserId', ['userid' => session()->get('auth_userid')]);     
-        $noti = $noti->json();
+    public function notifications()
+    {
+        $userId = session()->get('auth_userid');
+        $noti = Notification::where('UserId', $userId)
+            ->where('isRead', 0)
+            ->get();
         return view('notifications', ['noti' => $noti]);
     }
 
-    public function getnoticount(){
-        $noti = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Notification/NotificationCount', ['userid' => session()->get('auth_userid')]);     
-        $noti = $noti->json();
+    public function getnoticount()
+    {
+        $userId = session()->get('auth_userid');
+        $notiCount = Notification::where('UserId', $userId)
+            ->where('isRead', false)
+            ->count();
 
-        session()->put('noti_count', $noti); 
-        return $noti;
+        session()->put('noti_count', $notiCount);
+        return $notiCount;
     }
 
-    public function viewNotification(Request $request){   
-        $noticount = session()->get('noti_count');    
-        $noti = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Notification/UpdateReadNotification', ['id' => $request['id']]);             
-        session()->put('noti_count', $noticount - 1); 
-        return redirect()->to('/tranactions/application/view/'.$request['reference']);
+    public function viewNotification($ref, $id)
+    {
+        $notification = Notification::where('Id', $id);
+        $notification->update(['isRead' => 1]);
+
+        $notiCount = session()->get('noti_count');
+        session()->put('noti_count', $notiCount - 1);
+
+        return redirect()->to('/tranactions/application/view/' . $ref);
     }
 
-    public function markNotification(Request $request){          
-        $noticount = session()->get('noti_count');    
-        $noti = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Notification/UpdateReadNotification', ['id' => $request['notiid']]);             
-        session()->put('noti_count', $noticount - 1);        
+    public function markNotification($notiid)
+    {
+        $notification = Notification::where('Id', $notiid);
+        $notification->update(['isRead' => 1]);
+
+        $notiCount = session()->get('noti_count');
+        session()->put('noti_count', $notiCount - 1);
+        return redirect()->back();
     }
 
     public function testMe(){
@@ -60,9 +75,9 @@ class NotificationController extends Controller
         //     dd('okds');
         // } catch (\Exception $e) {
         //     die("Could not connect to the database.  Please check your configuration. error:" . $e );
-        // }asdasdas
+        // }
 
-        //DB::connection('sqlsrv')->table('tbl_Application_Model')->where('id', 1)->get();
+        // DB::connection('sqlsrv')->table('tbl_Application_Model')->where('id', 1)->get();
         return Members::get();
    
         // $users = DB::select('select * from tbl_Application_Model ');
