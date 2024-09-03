@@ -122,6 +122,7 @@ class CollectionRemittance extends Component
                     "userId"=> session()->get('auth_userid'),
                     "foid"=> $this->foid
                 ];
+            $useAdvancePayment = 0;
             if($this->appdtl['advancePayment'] == 0 && $this->reminfo['amntCollected'] == 0){
              $this->remitUsingAdvanceValidation = 'No Advance Payment Available';
             }else if($this->reminfo['amntCollected'] == 0 && $this->appdtl['advancePayment'] < $this->appdtl['dailyCollectibles']){
@@ -137,7 +138,7 @@ class CollectionRemittance extends Component
                 }if($this->reminfo['amntCollected'] == 0 && $this->appdtl['advancePayment'] != 0){
                     $useAdvancePayment = $this->appdtl['dailyCollectibles'];
                 }
-                
+            }
                  CollectionAreaMember::where("Area_RefNo",$this->areaRefNo)->where('NAID',$this->appdtl['naid'])->update([
                 'CollectedAmount' => $this->reminfo['amntCollected'],
                 'AdvancePayment' =>  $this->reminfo['advance'],
@@ -156,7 +157,7 @@ class CollectionRemittance extends Component
                 // MembersSavings::where('MemId',$this->appdtl['memId'])->update([
                 //     'TotalSavingsAmount'=> $this->reminfo[''],
                 // ]);
-            }
+           
         //dd($this->reminfo['amntCollected']);
        
            
@@ -270,7 +271,7 @@ class CollectionRemittance extends Component
         $locations = explode("|",$area->City);
         $persons=[];
 
-         $collectionAreaMembers = CollectionAreaMember::where("Area_RefNo",$this->areaRefNo)->where('Payment_Status',2)->get();
+         $collectionAreaMembers = CollectionAreaMember::where("Area_RefNo",$this->areaRefNo)->where('Payment_Status',2)->whereNull('Payment_Method')->get();
          $collectibles=0;
          $loanHistory=0;
          $totalSavings=0;

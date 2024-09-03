@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Settings;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use App\Traits\Common;
+use App\Models\Settings as Setting;
 
 class Settings extends Component
 {
@@ -27,9 +28,20 @@ class Settings extends Component
                     "companyAddress" => $this->company_address,
                     "companyEmail" => $this->company_email
                 ];
-        $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Settings/UpdateSettings', $data);        
-        $apiresp = $crt->getStatusCode();                
-        if($apiresp == 200){     
+
+        
+        // $crt = Http::withToken(getenv('APP_API_TOKEN'))->post(getenv('APP_API_URL').'/api/Settings/UpdateSettings', $data);        
+        // $apiresp = $crt->getStatusCode();        
+        
+        $update = Setting::where('Id',1)->update([
+            "MonthlyTarget" =>  $this->monthly_target,
+            "DisplayReset" =>  $this->display_reset,
+            "CompanyCno" =>  $this->company_number,
+            "CompanyAddress" => $this->company_address,
+            "CompanyEmail" => $this->company_email
+            
+        ]);
+        if($update){     
             return redirect()->to('/settings')->with('mmessage', 'Settings successfully updated');    
         }
         else{
@@ -37,7 +49,9 @@ class Settings extends Component
             session()->flash('erroraction', 'update');
             session()->flash('errormessage', 'Operation Failed. Retry ?');                                
             $this->emit('EMIT_ERROR_ASKING_DIALOG');
-        }            
+        } 
+        
+        
     }
 
     public function mount(){

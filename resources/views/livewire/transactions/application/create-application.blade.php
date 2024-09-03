@@ -100,7 +100,7 @@
                             @endif
                         </div>
                     </div>
-                    @if($member['statusID'] == 14 && $type != 'details')
+                    @if($member['statusID'] == 14)
                     <textarea wire:model.lazy="loanDetails.remarks" style="font-size: 1.4rem;"  {{ $member['statusID'] == 8 ? '' : 'readonly' }} {{ $usertype != 2 ? '' : 'disabled' }} class="wrapper-2"></textarea>
                     @endif
                 </div>
