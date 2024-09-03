@@ -288,9 +288,7 @@ class Dashboard extends Component
             $details['pastDueCollection'] = $totalPastDueCollection;
             $result[]= $details;
         }
-        //$result[] =  $detailResult;
-        //});
-        //dd( $detailResult);
+
         return $result;
     }
 
@@ -326,7 +324,7 @@ class Dashboard extends Component
                     ->with('areaMembers')
                     ->get()
                     ->sum(function($collectionArea) use ($sumType) {
-                        return  $collectionArea->areaMembers->sum($sumType)  - $collectionArea->areaMembers->sum('AdvancePayment') ;
+                        return  $collectionArea->areaMembers->sum($sumType)  - $collectionArea->areaMembers->sum('UsedAdvancePayment') ;
                     });
             }
        
