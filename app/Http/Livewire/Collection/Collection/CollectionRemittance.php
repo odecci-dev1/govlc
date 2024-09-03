@@ -123,22 +123,22 @@ class CollectionRemittance extends Component
                     "foid"=> $this->foid
                 ];
             $useAdvancePayment = 0;
-            if($this->appdtl['advancePayment'] == 0 && $this->reminfo['amntCollected'] == 0){
-             $this->remitUsingAdvanceValidation = 'No Advance Payment Available';
-            }else if($this->reminfo['amntCollected'] == 0 && $this->appdtl['advancePayment'] < $this->appdtl['dailyCollectibles']){
-                $this->remitUsingAdvanceValidation = 'Insufficient Advance Payment';
-            }else{
+            // if($this->appdtl['advancePayment'] == 0 && $this->reminfo['amntCollected'] == 0){
+            //  $this->remitUsingAdvanceValidation = 'No Advance Payment Available';
+            // }else if($this->reminfo['amntCollected'] == 0 && $this->appdtl['advancePayment'] < $this->appdtl['dailyCollectibles']){
+            //     $this->remitUsingAdvanceValidation = 'Insufficient Advance Payment';
+            // }else{
                 $useAdvancePayment =  $this->reminfo['amntCollected'];
                 if($this->reminfo['amntCollected'] != 0){
                     $useAdvancePayment =0;
                     if($this->reminfo['amntCollected'] < $this->appdtl['dailyCollectibles']){
-                        $useAdvancePayment = ($this->appdtl['dailyCollectibles'] > $this->appdtl['advancePayment']) ? $this->appdtl['advancePayment']:$this->appdtl['dailyCollectibles'];
+                        $useAdvancePayment = ($this->appdtl['amntCollected'] > $this->appdtl['advancePayment']) ? $this->appdtl['amntCollected']:$this->appdtl['dailyCollectibles'];
                     }
                   
                 }if($this->reminfo['amntCollected'] == 0 && $this->appdtl['advancePayment'] != 0){
-                    $useAdvancePayment = $this->appdtl['dailyCollectibles'];
+                    $useAdvancePayment = ($this->appdtl['dailyCollectibles'] > $this->appdtl['advancePayment']) ? $this->appdtl['dailyCollectibles']:$this->appdtl['dailyCollectibles'];
                 }
-            }
+            //}
                  CollectionAreaMember::where("Area_RefNo",$this->areaRefNo)->where('NAID',$this->appdtl['naid'])->update([
                 'CollectedAmount' => $this->reminfo['amntCollected'],
                 'AdvancePayment' =>  $this->reminfo['advance'],
