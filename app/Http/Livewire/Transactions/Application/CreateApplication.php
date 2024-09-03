@@ -41,6 +41,7 @@ use App\Models\CollectionArea;
 use App\Models\FieldOfficer;
 use App\Models\Area;
 use App\Models\User;
+use App\Models\UserModule;
 use Illuminate\Support\Facades\DB;
 
 class CreateApplication extends Component
@@ -3426,17 +3427,74 @@ class CreateApplication extends Component
                 break;
         }
 
-        // dd($action, $module, $user->Lname, $userId, $reference, $message);
+        $users = User::all();
+        foreach($users as $user){
+            if($user->UTID == 1 || $user->UTID == 2){
+                DB::table('tbl_Notifications_Model')->insert([
+                    'Actions' => $message,
+                    'DateCreated' => Carbon::now(),
+                    'Module' => $module,
+                    'Name' => $name,
+                    'isRead' => 0,
+                    'UserId' => $user->Id,
+                    'Reference' => $reference,
+                ]);
+            }
+            if($user->UTID == 3){
+               
+                $hasAccess = false;
+                switch ($module) {
+                    case 'Application':
+                        $userModules =UserModule::where('user_id',$user->Id)->where('module_code','Module-08')->first();
+                            if($userModules){
+                                $hasAccess = true;
+                            }
+                        break;
+                    case 'Credit Investigation':
+                        $userModules =UserModule::where('user_id',$user->Id)->where('module_code','Module-09')->first();
+                                if($userModules){
+                                    $hasAccess = true;
+                                }
+                        break;
+                    case 'Approval':
+                        $userModules =UserModule::where('user_id',$user->Id)->where('module_code','Module-010')->first();
+                            if($userModules){
+                                $hasAccess = true;
+                            }
+                        break;
+                    case 'Releasing':
+                        $userModules =UserModule::where('user_id',$user->Id)->where('module_code','Module-011')->first();
+                            if($userModules){
+                                $hasAccess = true;
+                            }
+                        break;
+                    default:
+                        $hasAccess = false;
+                        break;
 
-        DB::table('tbl_Notifications_Model')->insert([
-            'Actions' => $message,
-            'DateCreated' => Carbon::now(),
-            'Module' => $module,
-            'Name' => $name,
-            'isRead' => 0,
-            'UserId' => $userId,
-            'Reference' => $reference,
-        ]);
+                }
+              
+                if($hasAccess)
+                {
+                    DB::table('tbl_Notifications_Model')->insert([
+                        'Actions' => $message,
+                        'DateCreated' => Carbon::now(),
+                        'Module' => $module,
+                        'Name' => $name,
+                        'isRead' => 0,
+                        'UserId' => $user->Id,
+                        'Reference' => $reference,
+                    ]);
+                }          
+               
+          
+                    
+   
+                
+              
+            }
+        }
+      
     }
 
 }
