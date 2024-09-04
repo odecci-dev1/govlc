@@ -36,10 +36,10 @@
                 </div>
 
                 <!-- * Primary Search Bar -->
-                <div class="primary-search-bar" style="display: inline; font-size: 1.2rem !important;">
+                {{-- <div class="primary-search-bar" style="display: inline; font-size: 1.2rem !important;">
                     <input wire:model="displayrecent" type="checkbox" id="displayrecent" name="displayrecent" value="1" style="margin-right: 4px !important;">
                     <label for="displayrecent"> Display only collections for the last seven (7) days</label><br>
-                </div>
+                </div> --}}
 
                 <div class="primary-search-bar">
                     <div class="row">
@@ -105,7 +105,7 @@
 
                     <!-- * Table Data -->
                     @if($list)
-                        @foreach($list as $collection)
+                        @foreach(array_reverse($list) as $collection)
                         <tr>
                             @php
                                 $DateCreated = new DateTime($collection['DateCreated']);

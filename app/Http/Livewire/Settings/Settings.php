@@ -55,18 +55,20 @@ class Settings extends Component
     }
 
     public function mount(){
-        $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Settings/SettingList'); 
+        // $data = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Settings/SettingList'); 
         
-        $this->data = $data->json();     
-        if(isset($this->data[0])){
+        // $this->data = $data->json();     
+        // if(isset($this->data[0])){
             //dd($this->data[0]);
-            $this->monthly_target = $this->data[0]['monthlyTarget'];
-            $this->company_address = $this->data[0]['companyAddress'];
-            $this->company_number = $this->data[0]['companyCno'];
-            $this->company_email = $this->data[0]['companyEmail'];
-            $this->display_reset = $this->data[0]['displayReset'];
-            $this->company_name = '';
-        }      
+
+            $settings = Setting::where('Id',1)->first();
+            $this->monthly_target = $settings->MonthlyTarget;
+            $this->company_address = $settings->CompanyAddress;
+            $this->company_number = $settings->CompanyCno;
+            $this->company_email = $settings->CompanyEmail;
+            $this->display_reset = $settings->DisplayReset;
+            $this->company_name = 'Gold One Victory';
+        //}      
     }
 
     public function render()
