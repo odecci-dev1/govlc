@@ -132,7 +132,7 @@ class Dashboard extends Component
 
         $totalInterest = $loanDetails->sum('ApproveedInterest');
         $lapses = $collectionAreaMembers->sum('LapsePayment') - $collectionAreaMembers->sum('UsedAdvancePayment');
-        $totalAdvancePayment = $collectionAreaMembers->sum('AdvancePayment') -  $collectionAreaMembers->sum('UsedAdvancePayment') -$lapses ;
+        $totalAdvancePayment = $collectionAreaMembers->sum('AdvancePayment') -  $collectionAreaMembers->sum('UsedAdvancePayment')  ;
         $totalNotarialFee = $loanDetails->sum('ApprovedNotarialFee');
         $totalOtherDeductions = $totalLoanInsurance + $totalLifeInsurance + $totalNotarialFee;
     
@@ -155,7 +155,7 @@ class Dashboard extends Component
             'totalLoanBalance' => $totalLoanBalance,
             'totalInterest' => $totalInterest,
             'totalLoanCollection' => $totalCollected,
-            'totalAdvancePayment' => $totalAdvancePayment,
+            'totalAdvancePayment' => ($totalAdvancePayment < 0) ? 0:$totalAdvancePayment,
             'totalOtherDeductions' => $totalOtherDeductions,
             'totalActiveStanding' => 0,
             'totalFullPayment' => $totalFullPayments,
