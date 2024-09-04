@@ -68,6 +68,8 @@ class CollectionList extends Component
                 $totalMemberSavings =0;
                 $totalBalance =0;
                 $totalCollected=0;
+                $total_CurrentBalance=0;
+                $totalBeginningBalance=0;
                 foreach($collection->collectionAreas->flatMap->areaMembers as $member){
                   
                     $details=[];
@@ -79,12 +81,16 @@ class CollectionList extends Component
                     $totalMemberSavings+=$member->Savings;
                     $totalBalance +=  $getLoanDetails->BeginningBalance - $member->CollectedAmount;
                     $totalCollected += $member->CollectedAmount;
+                    $total_CurrentBalance += $getLoanHistory->OutstandingBalance;
+                    $totalBeginningBalance += $getLoanDetails->BeginningBalance;
 
                     $details['total_advance'] = $totalAdvance;
                     $details['total_lapses'] = $totalLapses;
                     $details['totalCollectible'] = $totalCollectible;
                     $details['total_savings'] = $totalMemberSavings;
-                    $details['total_Balance'] =($runningBalance == 0) ? $totalBalance:$runningBalance - $totalCollected ;//$key;
+                    //$details['total_Balance'] =$total_CurrentBalance ;//$key;
+                    $details['total_currentBalance'] = $total_CurrentBalance ;//$key;
+                    $details['total_Balance'] =($runningBalance == 0) ? $totalBalance : $runningBalance - $totalCollected ;//$key;
                     $details['total_Collected'] = $totalCollected ;//$key;
                     $details['previous_Balance'] = ($runningBalance == 0) ? $getLoanDetails->BeginningBalance:$runningBalance ;//$key;
                     $carry = $details;

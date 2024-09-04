@@ -75,7 +75,9 @@
                         <th>
                             <span class="th-name">Total Collectible</span>
                         </th>
-
+                        <th>
+                            <span class="th-name">Total Collected</span>
+                        </th>
                         <!-- * Total Balance -->
                         <th>
                             <span class="th-name">Total Balance</span>
@@ -87,12 +89,12 @@
                         </th>
 
                         <!-- * Total Advance -->
-                        <th>
+                        <th style="text-align: right;">
                             <span class="th-name">Total Advance</span>
                         </th>
 
                         <!-- * Total Lapses -->
-                        <th style="padding-left: 5rem;">
+                        <th style="text-align: right;">
                             <span class="th-name">Total Lapses</span>
                         </th>
 
@@ -105,7 +107,7 @@
 
                     <!-- * Table Data -->
                     @if($list)
-                        @foreach($list as $collection)
+                        @foreach(array_reverse($list) as $collection)
                         <tr>
                             @php
                                 $DateCreated = new DateTime($collection['DateCreated']);
@@ -125,9 +127,15 @@
                                 {{ number_format($collection->totals['totalCollectible'], 2) }}
                             </td>
 
+                            <!-- * Total Collected -->
+                            <td>
+                                {{ number_format($collection->totals['total_Collected'], 2) }}
+                            </td>
+                            
                             <!-- * Total Balance -->
                             <td>
-                                {{ number_format($collection->totals['total_Balance'], 2) }}
+                                {{-- {{ number_format($collection->totals['total_Balance'], 2) }}<br> --}}
+                                {{ number_format($collection->totals['total_currentBalance'], 2) }}
                             </td>
 
                             <!-- * Total Savings -->
@@ -136,12 +144,12 @@
                             </td>
 
                             <!-- * Total Advance -->
-                            <td>
+                            <td style="text-align: right;">
                                 {{ number_format($collection->totals['total_advance'], 2) }}
                             </td>
 
                             <!-- * Total Lapses -->
-                            <td style="padding-left: 5rem;">
+                            <td     style="text-align: right;">
                                 {{ number_format($collection->totals['total_lapses'], 2) }}
                             </td>
 
