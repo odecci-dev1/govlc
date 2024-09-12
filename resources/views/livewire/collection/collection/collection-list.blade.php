@@ -134,8 +134,8 @@
                             
                             <!-- * Total Balance -->
                             <td>
-                                {{-- {{ number_format($collection->totals['total_Balance'], 2) }}<br> --}}
-                                {{ number_format($collection->totals['total_currentBalance'], 2) }}
+                                {{ number_format($collection->totals['total_Balance'], 2) }}<br>
+                                {{-- {{ number_format($collection->totals['total_currentBalance'], 2) }} --}}
                             </td>
 
                             <!-- * Total Savings -->

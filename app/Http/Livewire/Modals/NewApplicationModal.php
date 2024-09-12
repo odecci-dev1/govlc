@@ -156,8 +156,7 @@ class NewApplicationModal extends Component
 
     public function getmemberList()
     {
-        $this->memberlist = Members::where('Status', 1)
-            ->where(function ($query) {
+        $this->memberlist = Members::where(function ($query) {
                 $query->where('Fname', 'like', '%' . $this->newappmodelkeyword . '%')
                       ->orWhere('Lname', 'like', '%' . $this->newappmodelkeyword . '%')
                       ->orWhere('Mname', 'like', '%' . $this->newappmodelkeyword . '%');

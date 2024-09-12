@@ -61,7 +61,7 @@ class CollectionList extends Component
          foreach($collections as $collection){
         // $this->list = $collections->map(function ($collection,$key){
 
-                $carry=[];
+                $applications=[];
                 $totalAdvance=0;
                 $totalLapses=0;
                 $totalCollectible =0;
@@ -70,6 +70,7 @@ class CollectionList extends Component
                 $totalCollected=0;
                 $total_CurrentBalance=0;
                 $totalBeginningBalance=0;
+                $ActiveApplications = [];
                 foreach($collection->collectionAreas->flatMap->areaMembers as $member){
                   
                     $details=[];
@@ -82,7 +83,11 @@ class CollectionList extends Component
                     $totalBalance +=  $getLoanDetails->BeginningBalance - $member->CollectedAmount;
                     $totalCollected += $member->CollectedAmount;
                     $total_CurrentBalance += $getLoanHistory->OutstandingBalance;
-                    $totalBeginningBalance += $getLoanDetails->BeginningBalance;
+                  
+                   if(!in_array($member->NAID,$ActiveApplications)){
+                      $ActiveApplications[]=$member->NAID;
+                      $totalBeginningBalance += $getLoanDetails->BeginningBalance;
+                   } 
 
                     $details['total_advance'] = $totalAdvance;
                     $details['total_lapses'] = $totalLapses;
@@ -90,21 +95,24 @@ class CollectionList extends Component
                     $details['total_savings'] = $totalMemberSavings;
                     //$details['total_Balance'] =$total_CurrentBalance ;//$key;
                     $details['total_currentBalance'] = $total_CurrentBalance ;//$key;
-                    $details['total_Balance'] =($runningBalance == 0) ? $totalBalance : $runningBalance - $totalCollected ;//$key;
+                    //$details['total_Balance'] =$totalBalance ;//$key;
+                    $details['total_Balance'] =($runningBalance == 0) ? $totalBalance :  $runningBalance - $totalCollected ;//$key;
                     $details['total_Collected'] = $totalCollected ;//$key;
                     $details['previous_Balance'] = ($runningBalance == 0) ? $getLoanDetails->BeginningBalance:$runningBalance ;//$key;
-                    $carry = $details;
+                    $applications = $details;
                    
                      //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
                 }
                 //dd($carry['total_Balance']);
-                $runningBalance = $carry['total_Balance'];
-                $collection->totals = $carry;
+                $runningBalance = $applications['total_Balance'];
+                $collection->totals = $applications;
+                $collection->activeApplications = $ActiveApplications;
                 $this->list[] = $collection;
                 //return $collection;
+
        // });
         };
-       //dd($this->list);
+       // dd($this->list);
       // dd($collections[0]->totals['total_Balance']);
         //dd($collections);
         // $one = $this->list = $collections->map(function ($collection) {
