@@ -95,8 +95,8 @@ class CollectionList extends Component
                     $details['total_savings'] = $totalMemberSavings;
                     //$details['total_Balance'] =$total_CurrentBalance ;//$key;
                     $details['total_currentBalance'] = $total_CurrentBalance ;//$key;
-                    //$details['total_Balance'] =$totalBalance ;//$key;
-                    $details['total_Balance'] =($runningBalance == 0) ? $totalBalance :  $runningBalance - $totalCollected ;//$key;
+                    $details['total_Balance'] =$totalBalance ;//$key;
+                   // $details['total_Balance'] =($runningBalance == 0) ? $totalBalance :  $runningBalance - $totalCollected ;//$key;
                     $details['total_Collected'] = $totalCollected ;//$key;
                     $details['previous_Balance'] = ($runningBalance == 0) ? $getLoanDetails->BeginningBalance:$runningBalance ;//$key;
                     $applications = $details;
