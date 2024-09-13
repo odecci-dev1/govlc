@@ -91,7 +91,7 @@ class CollectionPrint extends Component
                 $details['dailyCollectibles']= $application->detail->ApprovedDailyAmountDue;
                 $details['amountDue']= $application->loanhistory->OutstandingBalance;
                 $details['totalSavingsAmount']=  $Membersavings;
-                $details['advancePayment']=  $advance - $lapses - $usedAdvancePayment;
+                $details['advancePayment']=  $advance  - $usedAdvancePayment;
                 $details['lapsePayment']=  ($lapses - $usedAdvancePayment < 0) ? 0:$lapses - $usedAdvancePayment;
                 $details['loanPrincipal']=  $application->detail->ApprovedLoanAmount;
                 $details['typeOfCollection']=  $application->termsofpayment->collectionType->TypeOfCollection;
