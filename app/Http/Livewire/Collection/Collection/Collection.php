@@ -295,7 +295,7 @@ class Collection extends Component
                     $details['total_Balance']= 0;
                     $details['total_savings']=   0;
                     $details['total_advance']= 0;
-                    $applicationData['lapsePayment']= 0;
+                    //$applicationData['lapsePayment']= 0;
                     $details['total_collectedAmount']= 0;
                     $details['total_FieldExpenses']= 0;
                     $details['daily_savings']= 0;
@@ -402,13 +402,15 @@ class Collection extends Component
                         $applicationData['naid'] = $application->NAID;
                         $applicationData['dailySavings'] = $application->termsofpayment->loantype->Savings;
                         $applicationData['lapsePayment'] = ($totalApplicationLapses - $totalApplicationAdvance < 0) ? 0:$totalApplicationLapses - $totalApplicationAdvance;
-                        $applicationData['advancePayment'] = $totalApplicationAdvance - $totalApplicationUsedAdvance - $totalApplicationLapses;
+                        $applicationData['advancePayment'] = $totalApplicationAdvance  - $totalApplicationUsedAdvance;
+                        $applicationData['advanceUsed'] = $totalApplicationUsedAdvance;
                         $applicationData['interestAmount'] = $application->detail->ApproveedInterest ;
                         $this->areaDetails[] = $applicationData; 
                     }
 
                     }
                  }
+                
                
                         $this->areaDetailsFooter[$this->areaID] = [               
                                                         'areaID' => $this->areaID,                                                        

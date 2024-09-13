@@ -128,11 +128,11 @@ class CollectionRemittance extends Component
             // }else if($this->reminfo['amntCollected'] == 0 && $this->appdtl['advancePayment'] < $this->appdtl['dailyCollectibles']){
             //     $this->remitUsingAdvanceValidation = 'Insufficient Advance Payment';
             // }else{
-                $useAdvancePayment =  $this->reminfo['amntCollected'];
+                $useAdvancePayment =  0;
                 if($this->reminfo['amntCollected'] != 0){
                     $useAdvancePayment =0;
                     if($this->reminfo['amntCollected'] < $this->appdtl['dailyCollectibles']){
-                        $useAdvancePayment = ($this->appdtl['amntCollected'] > $this->appdtl['advancePayment']) ? $this->appdtl['amntCollected']:$this->appdtl['dailyCollectibles'];
+                        $useAdvancePayment = ($this->reminfo['amntCollected'] > $this->appdtl['advancePayment']) ? $this->reminfo['amntCollected']:$this->appdtl['dailyCollectibles'];
                     }
                   
                 }if($this->reminfo['amntCollected'] == 0 && $this->appdtl['advancePayment'] != 0){
