@@ -107,7 +107,7 @@
 
                     <!-- * Table Data -->
                     @if($list)
-                        @foreach(array_reverse($list) as $collection)
+                        @foreach($list as $collection)
                         <tr>
                             @php
                                 $DateCreated = new DateTime($collection['DateCreated']);

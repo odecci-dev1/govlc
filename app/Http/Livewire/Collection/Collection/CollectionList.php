@@ -52,11 +52,11 @@ class CollectionList extends Component
         if ($this->displayrecent) {
             $query->whereDate('DateCreated', $date);
         } else {
-            $query->orderBy('DateCreated', 'asc');
+            $query->orderBy('DateCreated', 'desc');
         }
    
          $collections = $query->paginate($this->paginate['pageSize'], ['*'], 'page', $this->paginate['page']);
-    
+      
         $runningBalance = 0;
          foreach($collections as $collection){
         // $this->list = $collections->map(function ($collection,$key){
@@ -112,6 +112,7 @@ class CollectionList extends Component
 
        // });
         };
+
        // dd($this->list);
       // dd($collections[0]->totals['total_Balance']);
         //dd($collections);
