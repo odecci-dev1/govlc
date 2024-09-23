@@ -55,8 +55,8 @@ class CollectionList extends Component
             $query->orderBy('DateCreated', 'desc');
         }
    
-         $collections = $query->paginate($this->paginate['pageSize'], ['*'], 'page', $this->paginate['page']);
-      
+        $collections = $query->paginate($this->paginate['pageSize'], ['*'], 'page', $this->paginate['page']);
+        $this->list =[];
         $runningBalance = 0;
          foreach($collections as $collection){
         // $this->list = $collections->map(function ($collection,$key){
@@ -112,7 +112,7 @@ class CollectionList extends Component
 
        // });
         };
-
+     
        // dd($this->list);
       // dd($collections[0]->totals['total_Balance']);
         //dd($collections);
@@ -165,7 +165,8 @@ class CollectionList extends Component
 
         // Check if there's an entry for the current date
        // $this->check = $this->list->where('DateCreated', $date)->first();
-        //dd($this->list[0]->totals);
+      
+      
         return view('livewire.collection.collection.collection-list', [
             'collections' => $this->list,
         ]);
