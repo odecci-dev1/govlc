@@ -288,10 +288,13 @@ class CollectionRemittance extends Component
                 $collectionAreaMembers = CollectionAreaMember::where('NAID',$application->NAID)->where('AdvanceStatus',0)->get();
                 $totalLapses =0;
                 $totalAdvance = 0;
+                $totalUsedAvance = 0;
                 if($collectionAreaMembers){
                     foreach($collectionAreaMembers as $collectionAreaMember){
-                        $totalLapses +=  $collectionAreaMember->LapsePayment;
-                        $totalAdvance +=  $collectionAreaMember->AdvancePayment;
+                  
+                        $totalUsedAvance += $collectionAreaMember->UsedAdvancePayment;
+                        $totalAdvance +=  $collectionAreaMember->AdvancePayment -  $collectionAreaMember->UsedAdvancePayment;
+                        $totalLapses +=  $collectionAreaMember->LapsePayment - $collectionAreaMember->AdvancePayment;
                     }
                 }
                
@@ -337,8 +340,8 @@ class CollectionRemittance extends Component
                 $applicationData['typeOfCollection'] = $application->termsofpayment->collectionType->TypeOfCollection ;
                 $applicationData['naid'] = $application->NAID;
                 $applicationData['dailySavings'] = $application->termsofpayment->loantype->Savings;
-                $applicationData['lapsePayment'] = $totalLapses;
-                $applicationData['advancePayment'] = $totalAdvance;
+                $applicationData['lapsePayment'] = $totalLapses < 0 ? 0:$totalLapses;
+                $applicationData['advancePayment'] = $totalAdvance < 0 ? 0:$totalAdvance;
                 $applicationData['naid'] = $application->NAID;
                 $applicationData['memId'] = $application->MemId;
                 $this->list[] = $applicationData; 
