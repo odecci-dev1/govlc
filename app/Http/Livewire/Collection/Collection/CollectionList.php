@@ -90,7 +90,7 @@ class CollectionList extends Component
                    } 
 
                     $details['total_advance'] = $totalAdvance;
-                    $details['total_lapses'] = $totalLapses;
+                    $details['total_lapses'] = $totalLapses < 0 ? 0:$totalLapses;
                     $details['totalCollectible'] = $totalCollectible;
                     $details['total_savings'] = $totalMemberSavings;
                     //$details['total_Balance'] =$total_CurrentBalance ;//$key;
