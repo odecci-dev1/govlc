@@ -83,7 +83,7 @@
 
                             {{-- <!-- * Cash Remit -->
                             <th style="text-align: right;">
-                                <span class="th-name">Cash Remitted</span> 
+                                <span class="th-name">Field Expenses</span> 
                             </th> --}}
 
                             <!-- * Total NP -->
@@ -120,7 +120,7 @@
                                     </td>
 
                                     {{-- <td style="text-align: right;">
-                                        <span class="td-name">{{ isset($totals[$d->Id]['totalCollection']) ? number_format($totals[$d->Id]['totalCollection'], 2) : '0.00' }}</span>
+                                        <span class="td-name">{{ isset($totals[$d->Id]['totalFE']) ? number_format($totals[$d->Id]['totalFE'], 2) : '0.00' }}</span>
                                     </td> --}}
 
                                     <td  style="text-align: center;">

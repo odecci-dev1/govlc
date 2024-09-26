@@ -27,7 +27,7 @@
             <div class="box-wrapper">
                 <!-- * Box-1 -->
                 <div class="box">
-                    <p>NAME: <span id="printClientName"> {{ $member['fname'] }}, {{ $member['lname'] }} {{ mb_substr($member['mname'], 0, 1) }}.</span></p>
+                    <p>NAME: <span id="printClientName"> {{ $member['lname'] }}, {{ $member['fname'] }} {{ mb_substr($member['mname'], 0, 1) }}.</span></p>
                     <p class="p-bold">{{ isset($loansummary['areaName']) ? $loansummary['areaName'] : '' }}</p>
                     <div class="box-inner">
                         <div class="box-inner-wrapper">

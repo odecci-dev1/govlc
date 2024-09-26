@@ -100,6 +100,7 @@ class CollectionReport extends Component
         }else{
             $areas = Area::with(['fieldOfficer', 'loanhistory'])->with( 'collectionAreas.areaMembers',function($query){
                 $query->whereBetween('DateCollected',[$this->datestart, $this->dateend]);
+                
             })->whereHas('collectionAreas', function($query){
                 $query->where('AreaID',$this->selectArea);
             })
@@ -116,7 +117,8 @@ class CollectionReport extends Component
         $grandTotalLapses = 0;
         $grandTotalAdvances = 0;
         $grandTotalNP = 0;
-         
+        
+
         foreach ($areas as $area) {
            
             $totalCollection = $area->collectionAreas->sum(function ($collectionArea) {
@@ -130,24 +132,28 @@ class CollectionReport extends Component
         
             $totalLapses = $area->collectionAreas->sum(function ($collectionArea) {
 
-                return $collectionArea->areaMembers->sum('LapsePayment') - $collectionArea->areaMembers->sum('UsedAdvancePayment');
+                return $collectionArea->areaMembers->sum('LapsePayment') - $collectionArea->areaMembers->sum('AdvancePayment');
             });
         
             $totalAdvances = $area->collectionAreas->sum(function ($collectionArea) {
-                $lapse =  $collectionArea->areaMembers->sum('LapsePayment') - $collectionArea->areaMembers->sum('UsedAdvancePayment');
-                return $collectionArea->areaMembers->sum('AdvancePayment') - $collectionArea->areaMembers->sum('UsedAdvancePayment') - $lapse;
+                return $collectionArea->areaMembers->sum('AdvancePayment') - $collectionArea->areaMembers->sum('UsedAdvancePayment');
             });
 
             $totalNP = $area->collectionAreas->sum(function ($collectionArea) {
                 return $collectionArea->areaMembers->where('Payment_Status', 2)->count();
             });
 
+            $totaFieldExpenses = $area->collectionAreas->sum('FieldExpenses');
+       
+       
+
             $this->totals[$area->Id] = [
                 'totalCollection' => $totalCollection,
                 'totalSavings' => $totalSavings,
-                'totalLapses' => $totalLapses,
-                'totalAdvances' => $totalAdvances,
+                'totalLapses' => $totalLapses < 0 ? 0:$totalLapses,
+                'totalAdvances' => $totalAdvances <0 ?0:$totalAdvances,
                 'totalNP' => $totalNP,
+                'totalFE'=>$totaFieldExpenses,
             ];
 
             $grandTotalCollection += $totalCollection;
