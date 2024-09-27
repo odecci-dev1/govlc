@@ -158,8 +158,8 @@ class CollectionReport extends Component
 
             $grandTotalCollection += $totalCollection;
             $grandTotalSavings += $totalSavings;
-            $grandTotalLapses += $totalLapses;
-            $grandTotalAdvances += $totalAdvances;
+            $grandTotalLapses += $totalLapses < 0 ? 0:$totalLapses;
+            $grandTotalAdvances += $totalAdvances <0 ?0:$totalAdvances;
             $grandTotalNP += $totalNP;
         }
       

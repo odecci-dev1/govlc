@@ -277,7 +277,7 @@ class SavingsReport extends Component
             $member->areaName = $matchingArea ? $matchingArea->Area : 'N/A';
             return $member;
         });
-
+       
         if ($paginate) {
             $totalItems = $members->count();
     
@@ -294,10 +294,10 @@ class SavingsReport extends Component
             $this->paginationPaging['endItem'] = $endItem;
     
             $paginatedMembers = $members->slice(($this->paginate['page'] - 1) * $this->paginate['pageSize'], $this->paginate['pageSize']);
-    
+         
             return $paginatedMembers;
         }
-
+       
         return $members;
     }
 
