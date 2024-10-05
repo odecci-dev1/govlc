@@ -158,10 +158,11 @@
                             <!-- * Savings -->
                             <th>
                                 <div class="th-wrapper">
-                                    <span class="th-name"> Savings</span>
+                                    <span class="th-name">Overall  Savings</span>
                                 </div>
                             </th>
-
+                        </th>
+            
                             <!-- * Collection -->
                             <th>
                                 <div class="th-wrapper">
@@ -236,14 +237,9 @@
                                     <td>
                                         <div class="td-wrapper">
                                             <span>
-                                                Over All:
+                                               {{ number_format($mdetails['totalSavingsAmount'], 2) }}
                                             </span>
-                                            <span>
-                                                Balance
-                                            </span>
-                                            <span>
-                                                Payment:
-                                            </span>
+                                     
 
                                         </div>
                                     </td>
@@ -257,15 +253,15 @@
                                             <span>
                                                 {{ $mdetails['typeOfCollection'] }}
                                             </span>
-                                            <span>
+                                            {{-- <span>
                                                 Daily Savings: <span id="printDailySavings"></span>
-                                            </span>
+                                            </span> --}}
                                         </div>
                                     </td>
 
                                     <!-- * Advance / Lapses -->
                                     <td id="printAdvanceAndLapses">
-                                        <p>
+                                        <p style="{{ $mdetails['advancePayment'] > 0 ? 'color:green;' :'color:red;' }}">
                                             {{ $mdetails['advancePayment'] > 0 ? number_format($mdetails['advancePayment'], 2) : number_format($mdetails['lapsePayment'], 2) }}
                                         </p>
                                     </td>
