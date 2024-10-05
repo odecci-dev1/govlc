@@ -2909,7 +2909,7 @@ class CreateApplication extends Component
                    
                     $getHolidays = Holiday::whereBetween('Date',[$loanStart,$loanEndWithSundays])->count();
                     $loanEndWithHolidays = date_create(date_format(date_add( $loanEndWithSundays, date_interval_create_from_date_string($getHolidays." Days")),'Y-m-d'));
-                    $this->dueDate = $loanEndWithHolidays;
+                    $this->dueDate = $loanEndWithSundays;
                     $this->currentDate = Carbon::now();
                    
                     $this->holidayPayment = $getHolidays * $this->calculatedResult['collectible'];
