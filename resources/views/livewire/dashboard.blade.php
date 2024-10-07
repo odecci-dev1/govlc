@@ -43,6 +43,16 @@
                     <p>Total ending active member</p>
                     <p>{{ isset($data['totalEndingActiveMember']) ? $data['totalEndingActiveMember'] : 0 }}</p>
                 </div>
+                {{-- <div>
+                    <select  id="selectarea" wire:loading.attr="disabled" onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
+                        <option value="All">All Areas</option> 
+                        @if($area)
+                            @foreach($area as $area)
+                                <option value="{{ $area['Id'] }}">{{ $area['Area'] }}</option> 
+                            @endforeach
+                        @endif                                   
+                    </select> 
+                </div> --}}
             </div>
 
             <!-- * Wrapper for Container 1 & 2-->

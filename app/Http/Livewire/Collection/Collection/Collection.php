@@ -544,13 +544,14 @@ class Collection extends Component
                             $totalUsedAdvance +=  ($savings) ? $savings->TotalSavingsAmount:0;
                             $totalLapses += $totalCollecitonLapses;
                             $totalAdvance += $totalCollectionAdvance;
-                            $totalCollectedAmount += $totalCollected;
+                            $totalCollectedAmount = $totalCollected;
                             
                             $totalItems +=  1;
                             
                          
                             $details['expectedCollection']= $collectibles;
                             $details['totalCollectible']= $collectibles;
+                            $details['collectedAmount']= $totalCollected;
                             $details['total_collectedAmount']= $totalCollectedAmount;
                             $details['penalty']= $newPenalty;
                             $details['Area']= $area->Area;
@@ -570,7 +571,7 @@ class Collection extends Component
                             $details['total_FieldExpenses']= 0;
                             $details['total_Balance']=  $application->loanhistory->OutstandingBalance;
                             $details['total_savings']= $totalSavings ;
-                            $details['total_advance']= $totalAdvance -$totalLapses ;
+                            $details['total_advance']= $totalAdvance - $totalLapses ;
                             $details['total_lapses']= $totalAdvance > $totalLapses ? 0:$totalLapses ;
                             $appDetails[]=$printStatus;
                             $details['application'] = $appDetails;

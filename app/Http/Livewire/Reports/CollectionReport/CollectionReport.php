@@ -140,7 +140,7 @@ class CollectionReport extends Component
             });
 
             $totalNP = $area->collectionAreas->sum(function ($collectionArea) {
-                return $collectionArea->areaMembers->where('Payment_Status', 2)->count();
+                return $collectionArea->areaMembers->where('Payment_Status', 2)->where('UsedAdvancePayment',0)->count();
             });
 
             $totaFieldExpenses = $area->collectionAreas->sum('FieldExpenses');

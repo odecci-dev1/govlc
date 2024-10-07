@@ -30,6 +30,8 @@ class Dashboard extends Component
     public $toplapses = [];
     public $activecollections = [];
 
+    public $monthTransactions=[];
+
     public function mount()
     {
         // $this->data = Cache::remember('dashboard_data', 1, function () {
@@ -194,27 +196,7 @@ class Dashboard extends Component
             ->whereNotNull('FOID')
             ->get();
            
-       
-          //  dd($collectionArea);
-        // $newAccounts = Application::with(['collectionareamember', 'loanhistory'])
-        //     ->where('Status', 7)
-        //     ->get();
-        //$result = $activeAreas->map(function ($area) use ($newAccounts) {
-        //dd($collectionArea);
-        // if(empty($collectionArea)){
-        //     $details['area'] = '';
-        //     $details['activeCollection'] = '';
-        //     $details['newAccount'] = '';
-        //     $details['noPayment'] = '';
-        //     $details['pastDueCollection'] = 0;
-        //     $detailResult= $details;
-        // }
-
-        //dd($activeAreas);
-        // $activeAreas = Area::where('Status', 1)
-        //     ->whereNotNull('FOID')
-        //     ->get();
-
+     
         foreach($activeAreas as $area) {
             $details=[];
             $sumCollectedAmount =0;
@@ -225,11 +207,14 @@ class Dashboard extends Component
                         $address = explode(",",$location);
                         $barangay = trim($address[0],' ');
                         $city = trim($address[1],' ');
-                        $member = Members::where('Barangay', $barangay)->where('City',$city)->first();
-                        $application = Application::where('MemID',$member->Id)->with('detail')->with('loanhistory')->first();
-                     
-                        $sumCollectedAmount += ($application->loanhistory->Penalty != 0) ? $application->loanhistory->OutstandingBalance:$application->detail->ApprovedDailyAmountDue;
+                        $members = Members::where([['Barangay','LIKE','%'.$barangay.'%'],['City','LIKE','%'.$city.'%'],['Status','=',1]])->get();
+        
+                        foreach($members as $member){
+                            $application = Application::where('MemID',$member->Id)->with('detail')->with('loanhistory')->first();
+                            $sumCollectedAmount += ($application->loanhistory->Penalty != 0) ? $application->loanhistory->OutstandingBalance:$application->detail->ApprovedDailyAmountDue;
+                        }
                         $getApplicationCount = Application::where('MemId',$member->Id)->get()->count();
+                        //add filter based on month
                         if( $getApplicationCount == 1){
                                      $totalNewAccount += 1;
                          }
@@ -237,47 +222,13 @@ class Dashboard extends Component
                          if($loanhistory){
                             $totalPastDueCollection += ($loanhistory->Penalty) ? $loanhistory->OutstandingBalance:0;
                          }
-                       
-
             }
-            // Sum collected amounts for the area
-            // $getArea = Area::where('AreaID', $area->AreaId)->first();
-            // $collections = CollectionAreaMember::where('Area_RefNo', $area->Area_RefNo)->get();
-            // $sumCollectedAmount =0;
-            // $totalNewAccount = 0;
-            // $totalPastDueCollection = 0;
-            // foreach( $collections as $collection ) {
-            //     $dailyCollectible = LoanDetails::where('NAID',$collection->NAID)->first();
-            //     $loanhistory = LoanHistory::where('NAID',$collection->NAID)->first();
-            //     //$sumCollectedAmount += $collections->sum('CollectedAmount');
-            //     $sumCollectedAmount += ($loanhistory->Penalty == 0 ) ? $dailyCollectible->ApprovedDailyAmountDue:$loanhistory->OutstandingBalance;
-            //     $totalPastDueCollection += ($loanhistory->Penalty == 0 ) ? 0:$loanhistory->OutstandingBalance;
-            //     $getMember = Application::where('NAID',$collection->NAID)->first();
-            //     $getApplicationCount = Application::where('MemId',$getMember->MemId)->get()->count();
-            //     if( $getApplicationCount == 1){
-            //         $totalNewAccount += 1;
-            //     }
-             //}
-            
-
-
-           
-    
-            // // Count new accounts for the area
-            // $newAccountsCount = $newAccounts->filter(function ($account) use ($area) {
-            //   //  dd($area->Area_RefNo);
-            //     // dd($area->collectionAreas->pluck('Area_RefNo'));
-
-            //     // return $account->collectionareamember->Area_RefNo === $area->collectionAreas->Area_RefNo;
-            // })->count();
-
-        
-
-          
+         
             $areaNoPayment =0;
             $collectionArea = CollectionArea::where('AreaID',$area->AreaID)->get();
                 foreach($collectionArea as $col){
-                    $collections = CollectionAreaMember::where('Area_RefNo', $col->Area_RefNo)->where('Payment_Status',2)->get();
+                    $collections = CollectionAreaMember::where('Area_RefNo', $col->Area_RefNo)->where('Payment_Status',2)->where('UsedAdvancePayment',0)->get();
+                    // add filter based on month
                     $areaNoPayment += $collections->count();
             }
             $detailResult[] = $areaNoPayment;
@@ -295,7 +246,9 @@ class Dashboard extends Component
 
       // Area	   Active Collection	New Account	  # NPS	  Past Due Collection
     // Next is get activeCollection from the sum of the OutstandingBalance of member per Area. And then count the newAccount from the Application with a Status of 7 meaning new application. And then for the numberOfNoPayment count the CollectionArea that has Collection_Status of 2 meaning no payment from the CollectionArea. Next is PastDueCollection you can get it from LoanHistory OutstandingBalance and the multiply it by 20% + the Outstanding Balance. All this should be is monthly data per Area.
-
+    // private function getTransactionMonths(){
+    //     $applications = Application::
+    // }
     private function computeTopValues($sumType)
     {
         $activeAreas = Area::where('Status', 1)
@@ -312,9 +265,12 @@ class Dashboard extends Component
                         $address = explode(",",$location);
                         $barangay = trim($address[0],' ');
                         $city = trim($address[1],' ');
-                        $member = Members::where('Barangay', $barangay)->where('City',$city)->first();
-                        $application = Application::where('MemID',$member->Id)->with('detail')->with('loanhistory')->first();
-                        $sumAmount += ($application->loanhistory->Penalty != 0) ? $application->loanhistory->OutstandingBalance:$application->detail->ApprovedDailyAmountDue;
+                        $members = Members::where([['Barangay','LIKE','%'.$barangay.'%'],['City','LIKE','%'.$city.'%'],['Status','=',1]])->get();
+                        foreach($members as $member){
+                            $application = Application::where('MemID',$member->Id)->with('detail')->with('loanhistory')->first();
+                            $sumAmount += ($application->loanhistory->Penalty != 0) ? $application->loanhistory->OutstandingBalance:$application->detail->ApprovedDailyAmountDue;
+                        }
+                     
 
                     }
             }
@@ -322,6 +278,7 @@ class Dashboard extends Component
                       $sumAmount = CollectionArea::where('AreaID', $area->AreaID)
                     ->where('Collection_Status', 7)
                     ->with('areaMembers')
+                    //add filter by month collected
                     ->get()
                     ->sum(function($collectionArea) use ($sumType) {
                         return  $collectionArea->areaMembers->sum($sumType)  - $collectionArea->areaMembers->sum('UsedAdvancePayment') ;

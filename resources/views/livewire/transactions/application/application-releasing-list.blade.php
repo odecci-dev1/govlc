@@ -183,7 +183,7 @@
 
                         <!-- * Loan Amount -->
                         <td>
-                            {{ $mlist->detail->LoanAmount }}
+                            {{ $mlist->detail->ApprovedLoanAmount }}
                         </td>
         
                         <!-- * Terms of Payment -->
