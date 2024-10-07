@@ -710,7 +710,7 @@ class CreateApplication extends Component
                 
         if($mem){
          
-            $checkapplication = LoanDetails::where('MemId', $mem->id)->where('Status', '!=', 14)->get();                          
+            $checkapplication = LoanDetails::where('MemId', $mem->id)->whereNotIn('Status', [14,11])->get();                          
             if($checkapplication->count() > 0){
              
                 session()->flash('errmmessage', 'Member has an existing application for approval'); 
