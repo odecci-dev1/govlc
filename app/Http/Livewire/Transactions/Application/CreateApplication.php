@@ -717,14 +717,14 @@ class CreateApplication extends Component
                 return false;
             }
             
-            $checkapplicationbalance = LoanDetails::leftJoin('tbl_Collection_AreaMember_Model as collection', 'tbl_LoanDetails_Model.id', 'collection.NAID')
-                ->select(DB::raw('(sum(tbl_LoanDetails_Model.LoanAmount) - sum(collection.CollectedAmount)) as balance'))->where('MemId', $mem->id)
-                ->havingRaw('(sum(tbl_LoanDetails_Model.LoanAmount) - sum(collection.CollectedAmount)) > 0')->groupBy('tbl_LoanDetails_Model.id')->get();                          
-            if($checkapplicationbalance->count() > 0){
+            // $checkapplicationbalance = LoanDetails::leftJoin('tbl_Collection_AreaMember_Model as collection', 'tbl_LoanDetails_Model.id', 'collection.NAID')
+            //     ->select(DB::raw('(sum(tbl_LoanDetails_Model.LoanAmount) - sum(collection.CollectedAmount)) as balance'))->where('MemId', $mem->id)
+            //     ->havingRaw('(sum(tbl_LoanDetails_Model.LoanAmount) - sum(collection.CollectedAmount)) > 0')->groupBy('tbl_LoanDetails_Model.id')->get();                          
+            // if($checkapplicationbalance->count() > 0){
               
-                session()->flash('errmmessage', 'Member already has an existing loan'); 
-                return false;
-            }          
+            //     session()->flash('errmmessage', 'Member already has an existing loan'); 
+            //     return false;
+            // }          
                       
         }
      
