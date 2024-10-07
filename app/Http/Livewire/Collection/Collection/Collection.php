@@ -616,6 +616,7 @@ class Collection extends Component
                  $fo = FieldOfficer::where('FOID',$area->FOID)->first();
                  $details['expectedCollection']= 0;
                  $details['totalCollectible']= 0;
+                 $details['collectedAmount']= 0;
                  $details['total_collectedAmount']= 0;
                  $details['penalty']= 0;
                  $details['Area']= $area->Area;
