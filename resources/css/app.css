@@ -1516,7 +1516,7 @@ table .td-btn-wrapper .a-btn-view-3.remitted::after {
   background: none !important;
   border-bottom: 2px solid #29292B !important;
   padding: 0 0 0.2rem 0.2rem;
-  font-size: 1rem;
+  font-size: .8rem;
 }
 
 .input-wrapper {
