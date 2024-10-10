@@ -524,7 +524,7 @@
                         </div>
                     </div>
                     <div class="page page-2 passbook"  data-printables>
-                        <div class="passbook-container">
+                        <div class="passbook-container"  style="width:4.5in;margin:.2in;">
                             <div class="passbook p-back">
                                 <div class="header-wrapper">
                                     <div class="box">
