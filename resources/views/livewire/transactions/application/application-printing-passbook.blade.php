@@ -42,7 +42,7 @@
 
                     <!-- * Page 1 -->
                     <div class="page page-1 passbook show"  data-printables>
-                        <div class="passbook-container" style="width:4.5in;margin:0 .2in;">
+                        <div class="passbook-container" style="width:4.5in;margin:.1in .2in 0 .2in; ">
                             <div class="passbook p-front">
                                 <div class="header-wrapper">
                                     <div class="box">
@@ -524,7 +524,7 @@
                         </div>
                     </div>
                     <div class="page page-2 passbook"  data-printables>
-                        <div class="passbook-container"  style="width:4.5in;margin:.2in;">
+                        <div class="passbook-container"  style="width:4.5in;margin:.1in .2in 0 .2in; ">
                             <div class="passbook p-back">
                                 <div class="header-wrapper">
                                     <div class="box">
