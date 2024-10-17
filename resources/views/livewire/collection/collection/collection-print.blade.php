@@ -261,8 +261,8 @@
 
                                     <!-- * Advance / Lapses -->
                                     <td id="printAdvanceAndLapses">
-                                        <p style="{{ $mdetails['advancePayment'] > 0 ? 'color:green;' :'color:red;' }}">
-                                            {{ $mdetails['advancePayment'] > 0 ? number_format($mdetails['advancePayment'], 2) : number_format($mdetails['lapsePayment'], 2) }}
+                                        <p style="{{ $mdetails['advancePayment'] > $mdetails['lapsePayment'] ? 'color:green;' :'color:red;' }}">
+                                            {{ $mdetails['advancePayment'] > $mdetails['lapsePayment'] ? number_format($mdetails['advancePayment'], 2) : number_format($mdetails['lapsePayment'], 2) }}
                                         </p>
                                     </td>
 
