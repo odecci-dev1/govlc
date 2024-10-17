@@ -286,7 +286,7 @@
                             </td>
 
                             <!-- * Advance / Lapses -->
-                            <td  style="color: {{ $mdetails['advancePayment'] > 0 ? 'green' : ($mdetails['lapsePayment'] > 0 ? 'red' : '') }};">
+                            <td  style="color: {{ $mdetails['advancePayment'] > $mdetails['lapsePayment'] ? 'green' :  'red' }};">
                                 {{ $mdetails['advancePayment'] > $mdetails['lapsePayment'] ? number_format($mdetails['advancePayment'], 2) : number_format($mdetails['lapsePayment'], 2) }}
                             </td>
 
