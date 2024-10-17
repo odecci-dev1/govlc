@@ -50,7 +50,7 @@ class ApplicationPrintingVoucher extends Component
         $sundays = intval($days / 7) + ($loanStart->format('N') + $days % 7 >= 7);
         $loanEndWithSundays = date_create(date_format(date_add( $loanEnd, date_interval_create_from_date_string($sundays." Days")),'Y-m-d'));
        
-        $getHolidays = Holiday::whereBetween('Date',[$loanStart,$loanEndWithSundays])->count();
+        $getHolidays = Holiday::whereBetween('Date',[$loanStart,$loanEndWithSundays])->where('status',1)->count();
         $loanEndWithHolidays = date_format(date_add( $loanEndWithSundays, date_interval_create_from_date_string($getHolidays." Days")),'Y-m-d');
         $this->loansummary['dueDate'] = $loanEndWithHolidays;
         $this->loansummary['releasingDate'] = $res->ReleasingDate;
