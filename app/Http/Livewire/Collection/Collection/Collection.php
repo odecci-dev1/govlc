@@ -299,10 +299,10 @@ class Collection extends Component
                     $details['total_collectedAmount']= 0;
                     $details['total_FieldExpenses']= 0;
                     $details['daily_savings']= 0;
-               
+
                  foreach($collectionAreaMembers as $collectionAreaMember){
                   
-                     $application= Application::where(($collectionAreaMember->NAID) ? 'NAID':'MemId',($collectionAreaMember->NAID) ? $collectionAreaMember->NAID : $collectionAreaMember->MemId )->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
+                     $application= Application::where(($collectionAreaMember->NAID) ? 'NAID':'MemId',($collectionAreaMember->NAID) ? $collectionAreaMember->NAID : $collectionAreaMember->MemId )->where('Status',14)->orderBy('ReleasingDate','DESC')->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
        
                     if(!is_null($application)) {
                         $savings= MembersSavings::where('MemId',$application->MemId)->first();

@@ -1764,14 +1764,15 @@ class CreateApplication extends Component
                     if(!$checkMemberSavings){
                         MembersSavings::create([
                             'MemId'=>  $this->memberId,
-                            'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                            'TotalSavingsAmount'=>  0,
                             'DateUpdated'=>Carbon::now(),
                             'UpdatedFrom'=>'Updated from new application with NAID='.$this->naID,
                             'UpdateBy'=>session()->get('auth_userid'),
                         ]);
                     }else{
                         MembersSavings::where('MemId',$this->memberId)->update([
-                            'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                           // 'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
+                            'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? ($this->loanDetails['totalSavingsAmount'] -   $this->loanDetails['totalSavingUsed']) : $this->loanDetails['totalSavingsAmount']),
                             'DateUpdated'=>Carbon::now(),
                             'UpdatedFrom'=>'Updated from new application with NAID='.$this->naID,
                             'UpdateBy'=>session()->get('auth_userid'),
