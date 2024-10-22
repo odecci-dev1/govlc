@@ -259,7 +259,7 @@
             <div class="input-wrapper">
                 <span>Total Savings</span>
                 <input wire:model.lazy="loanDetails.totalSavingsAmount" readonly type="text">
-                @error('loanDetails.totalSavingsAmount') <span class="text-required">{{ $message }}</span> @enderror
+                @error('loanDetails.totalSavings') <span class="text-required">{{ $message }}</span> @enderror
             </div>
 
             <!-- * Number of Loans -->
