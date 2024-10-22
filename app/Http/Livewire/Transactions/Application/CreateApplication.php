@@ -2935,7 +2935,7 @@ class CreateApplication extends Component
                     $this->loanDetails['noofnopayment'] = $collectionData['noPayments']; 
                     $this->loanDetails['totalSavingUsed'] = number_format( is_null($loanHistory) ? 0:$loanHistory->UsedSavings,2);
                     //$this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
-                    $this->loanDetails['totalSavingsAmount'] = $memberSavings->TotalSavingsAmount;
+                    $this->loanDetails['totalSavingsAmount'] = ($memberSavings) ? $memberSavings->TotalSavingsAmount:0;
                    // $this->loanDetails['totalSavingsAmount'] = number_format($collectionData['totalSavings']-  is_null($loanHistory)? 0:$loanHistory->UsedSavings,2,'.','');
                     //$this->loanDetails['notarialFee'] = isset($getloansummary[0]) ? ($this->loansummary['app_ApprovedBy_1_UserId'] == '' ? $this->loansummary['notarialFee'] :  $this->loansummary['approvedNotarialFee']) : ''; 
                     $this->loanDetails['notarialFee'] = number_format($this->notarialFee,2,'.','');
@@ -2947,7 +2947,7 @@ class CreateApplication extends Component
                     $this->loanDetails['total_LoanReceivable'] = number_format($this->loanReceivables,2,'.',''); 
                     $this->loanDetails['dailyCollectibles'] = number_format($this->calculatedResult['collectible'],2,'.','');
                     //$this->loanDetails['dailyCollectibles'] = isset($getloansummary[0]) ? ((!empty($this->loansummary['approvedDailyAmountDue']) ? $this->loansummary['approvedDailyAmountDue'] : 0) > 0 ? $this->loansummary['approvedDailyAmountDue'] :  $this->loansummary['dailyCollectibles']) : ''; 
-                    $this->loanDetails['totalSavings'] = $memberSavings->TotalSavingsAmount;
+                    $this->loanDetails['totalSavings'] = ($memberSavings) ? $memberSavings->TotalSavingsAmount:0;
                    // $this->loanDetails['totalSavings'] = number_format($collectionData['totalSavings']- is_null($loanHistory) ? 0:$loanHistory->UsedSavings,2,'.','');
                     //totalSavingUsed, totalSavingsAmount, notarialFee, advancePayment, total_InterestAmount, total_LoanReceivable, total_LoanReceivable, dailyCollectibles, totalSavings
                     
