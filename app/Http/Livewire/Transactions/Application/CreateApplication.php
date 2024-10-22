@@ -1772,7 +1772,7 @@ class CreateApplication extends Component
                     }else{
                         MembersSavings::where('MemId',$this->memberId)->update([
                            // 'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : 0),
-                            'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? ($this->loanDetails['totalSavingsAmount'] -   $this->loanDetails['totalSavingUsed']) : $this->loanDetails['totalSavingsAmount']),
+                            'TotalSavingsAmount'=>  (isset($this->loanDetails['totalSavingUsed']) ? $this->loanDetails['totalSavingUsed'] : $this->loanDetails['totalSavingsAmount']),
                             'DateUpdated'=>Carbon::now(),
                             'UpdatedFrom'=>'Updated from new application with NAID='.$this->naID,
                             'UpdateBy'=>session()->get('auth_userid'),
@@ -2933,7 +2933,7 @@ class CreateApplication extends Component
                    //----Formula---//
                    $this->loanDetails['outstandingBalance']= is_null($loanHistory) ? 0:$loanHistory->OutstandingBalance;
                     $this->loanDetails['noofnopayment'] = $collectionData['noPayments']; 
-                    $this->loanDetails['totalSavingUsed'] = number_format( is_null($loanHistory) ? 0:$loanHistory->UsedSavings,2);
+                    $this->loanDetails['totalSavingUsed'] =is_null($loanHistory) ? 0:$loanHistory->UsedSavings;
                     //$this->loanDetails['totalSavingsAmount'] = isset($getloansummary[0]) ? $this->loansummary['totalSavingsAmount'] : '';
                     $this->loanDetails['totalSavingsAmount'] = ($memberSavings) ? $memberSavings->TotalSavingsAmount:0;
                    // $this->loanDetails['totalSavingsAmount'] = number_format($collectionData['totalSavings']-  is_null($loanHistory)? 0:$loanHistory->UsedSavings,2,'.','');
