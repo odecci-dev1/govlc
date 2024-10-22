@@ -77,8 +77,8 @@
                                             <p>Balance: <span id="printBalance">{{ number_format($dtl['amountDue'], 2) }}</span></p>
                                             <p>Overall Savings: <span id="printOverallSavings">{{ number_format($dtl['totalSavingsAmount'], 2) }}</span> </p>
                                          
-                                            <p>Advance / Lapses: <span style="{{ $dtl['advancePayment'] > 0 ? 'color:green;' :'color:red;' }}"
-                                                    id="printAdvanceOrLapses">{{ $dtl['advancePayment'] > 0 ? number_format($dtl['advancePayment'], 2) : number_format($dtl['lapsePayment'], 2) }}</span>
+                                            <p>Advance / Lapses: <span style="{{ $dtl['advancePayment'] > $dtl['lapsePayment'] ? 'color:green;' :'color:red;' }}"
+                                                    id="printAdvanceOrLapses">{{ $dtl['advancePayment'] > $dtl['lapsePayment'] ? number_format($dtl['advancePayment'], 2) : number_format($dtl['lapsePayment'], 2) }}</span>
                                             </p>
                                         @endif
                                     </div>
