@@ -828,8 +828,8 @@ class CreateApplication extends Component
             $isAreaExist = false;
             foreach($areas as $area){
                 $address = explode(",",$area);
-                $barangay = $address[0];
-                $city = $address[1];
+                $barangay = trim($address[0],' ');
+                $city = trim($address[1],' ');
 
                 if( $input['member']['barangay'] == $barangay && $input['member']['city'] == $city){
                     $isAreaExist = true;

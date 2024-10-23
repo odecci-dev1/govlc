@@ -491,13 +491,14 @@ class Collection extends Component
                  $details['total_advance']= 0;
                  $details['total_lapses']= 0;
                  $newPenalty = 0;
+                 $test=[];
                  foreach($persons as $person){
-                    $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
+                    $application= Application::where('MemId',$person->MemId)->where('Status',14)->orderBy('ReleasingDate','DESC')->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
                     $savings= MembersSavings::where('MemId',$person->MemId)->first();
-                   
+                 
                     if(!is_null($application)) {
                         if($application->loanhistory->OutstandingBalance != 0){
-
+                            $test[] = $application->NAID.' '.$application->detail->ApprovedDailyAmountDue .' '.$application->member->Lname.', '.$application->member->Fname;
                             //Get back to you//
                             //get updated lapses, advance and collected amount within this collection//
                             $collectionAreasMembers = CollectionAreaMember::where('NAID',$application->NAID)->get();
@@ -510,8 +511,7 @@ class Collection extends Component
                                     $totalUsedAdvance += $collectionAreaMember->UsedAdvancePayment;
                                     $totalCollectionAdvance += $collectionAreaMember->AdvancePayment - $collectionAreaMember->UsedAdvancePayment;
                                     $totalCollecitonLapses += $collectionAreaMember->LapsePayment - $collectionAreaMember->UsedAdvancePayment;
-                                    
-                                 
+                                   
                                 }
                             }
                             if($collectionArea){
@@ -534,15 +534,13 @@ class Collection extends Component
                                 }
 
                             }
-
-                         
                             $collectionAreaMember = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
                            // $collectionArea = CollectionAreaMember::where('NAID',$application->NAID)->where('Area_RefNo', ($collectionArea) ? $collectionArea->Area_RefNo:'')->first();
                             $paymentStatus = ($collectionAreaMember)  ? CollectionStatus::where('Id',$collectionAreaMember->Payment_Status)->first()->Status:'';
                             $collectibles +=  $application->detail->ApprovedDailyAmountDue;
                             $loanHistory +=  $application->loanhistory->OutstandingBalance;
-                            $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
-                            $totalUsedAdvance +=  ($savings) ? $savings->TotalSavingsAmount:0;
+                            $totalSavings +=  ($collectionAreaMember) ? $collectionAreaMember->Savings:0;
+                            $totalUsedAdvance +=  ($collectionAreaMember) ? $collectionAreaMember->UsedAdvancePayment:0;
                             $totalLapses += $totalCollecitonLapses;
                             $totalAdvance += $totalCollectionAdvance;
                             $totalCollectedAmount = $totalCollected;
@@ -580,11 +578,11 @@ class Collection extends Component
                         }
                     }
                 }
-               
+       
             $this->areas[]=$details;
 
             } 
-            //  dd($this->areas);
+      
             //$this->areas = Area::whereNotNull('FOID')->where('Status',1)->get();
             //$this->areas = Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Collection/CollectionDetailsViewbyRefno', ['colrefno' => $this->colrefNo]);  
         }
@@ -637,7 +635,7 @@ class Collection extends Component
                  $details['total_lapses']= 0;
 
                  foreach($persons as $person){
-                    $application= Application::where('MemId',$person->MemId)->where('Status',14)->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
+                    $application= Application::where('MemId',$person->MemId)->where('Status',14)->orderBy('ReleasingDate','DESC')->with('member')->with('termsofpayment')->with('detail')->with('loanhistory')->first();
                     $savings= MembersSavings::where('MemId',$person->MemId)->first();
                    
                     if(!is_null($application)) {
