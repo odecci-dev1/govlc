@@ -63,7 +63,7 @@
                                         <span class="td-name">
                                             {{ 
                                                 //number_format($data->savingsRunning->sum('Savings'), 2) ?? '0.00'
-                                                number_format($member->MemberSavings[0]->TotalSavingsAmount, 2) ?? '0.00'
+                                               $member->MemberSavings[0]->TotalSavingsAmount ?? '0.00'
                                             }}
                                         </span>
                                     </td>

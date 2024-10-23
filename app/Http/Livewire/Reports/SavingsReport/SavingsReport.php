@@ -130,6 +130,7 @@ class SavingsReport extends Component
     public function goToFirstPageModal()
     {
         $this->paginateModal['pageModal'] = 1;
+  
         $this->getRunningSavings();
     }
 
@@ -156,6 +157,7 @@ class SavingsReport extends Component
     public function render()
     {
         $members = $this->getMembers();
+        //dd($members);
         $this->totalSavingsAmount = $this->getTotalSavingsAmount();
         $this->area = Area::where('Status',1)->whereNotNull('Area')->get(); 
         return view('livewire.reports.savings-report.savings-report', [
@@ -187,7 +189,7 @@ class SavingsReport extends Component
                 $query->where('MemId', $this->member);  
             })
             ->get();
-            $membersWithoutSavings = Members::with(['memberArea'])
+            $membersWithoutSavings = Members::with(['memberSavings','memberArea'])
             ->when(!$includeInactive, function ($query) {
                 $query->where('Status', '!=', 2);
             })
@@ -234,7 +236,7 @@ class SavingsReport extends Component
             })
             ->get();
 
-            $membersWithoutSavings = Members::with(['memberArea'])
+            $membersWithoutSavings = Members::with(['memberSavings','memberArea'])
             ->when(!$includeInactive, function ($query) {
                 $query->where('Status', '!=', 2);
             })->where(function ($query) {
