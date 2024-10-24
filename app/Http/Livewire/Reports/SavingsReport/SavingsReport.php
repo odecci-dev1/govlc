@@ -157,8 +157,9 @@ class SavingsReport extends Component
     public function render()
     {
         $members = $this->getMembers();
-        //dd($members);
+      
         $this->totalSavingsAmount = $this->getTotalSavingsAmount();
+   
         $this->area = Area::where('Status',1)->whereNotNull('Area')->get(); 
         return view('livewire.reports.savings-report.savings-report', [
             'totalSavings' => $this->totalSavingsAmount,
@@ -368,7 +369,7 @@ class SavingsReport extends Component
                     $query->whereIn('Barangay',$barangay)->whereIn('City',$city);
                     
                 });
-    
+       
                 return $membersQuery->whereHas('savingsRunning', function ($query) {
                     $query->whereBetween('Date', [$this->datestart, $this->dateend]);
                 })->get()->flatMap(function ($member) {
