@@ -10,10 +10,12 @@ use App\Models\LoanDetails;
 use App\Models\LoanHistory;
 use App\Models\Members;
 use App\Models\MembersSavings;
+use App\Models\SavingsRunningBalance;
 use App\Models\Settings;
 use App\Models\TermsOfPayment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 use Livewire\Component;
@@ -30,7 +32,8 @@ class Dashboard extends Component
     public $toplapses = [];
     public $activecollections = [];
 
-    public $monthTransactions=[];
+    public $selectedMonth;
+    public $monthsTransaction;
 
     public function mount()
     {
@@ -45,6 +48,9 @@ class Dashboard extends Component
         $this->toplapses = $this->computeTopValues('LapsePayment');
         $this->data = $this->prepareData();
         $this->activecollections = $this->activeCollectionData();
+
+  
+
         return $this->data;
         //return $this->prepareData();
        
@@ -55,8 +61,18 @@ class Dashboard extends Component
         // TODO: In-progress
         // $activecollections =  Http::withToken(getenv('APP_API_TOKEN'))->get(getenv('APP_API_URL').'/api/Dashbaord/ActiveCollection');      
         // $this->activecollections = $activecollections->json();   
+        $this->monthsTransaction = Application::select(
+            DB::raw("FORMAT(DateCreated, 'yyyy-MM') as new_date"), 
+            DB::raw('YEAR(DateCreated) as year'), 
+            DB::raw('MONTH(DateCreated) as month')
+        )
+        ->groupBy(DB::raw("FORMAT(DateCreated, 'yyyy-MM')"), DB::raw('YEAR(DateCreated)'), DB::raw('MONTH(DateCreated)'))
+        ->orderBy(DB::raw('YEAR(DateCreated)'), 'DESC') // Order by year descending
+        ->orderBy(DB::raw('MONTH(DateCreated)'), 'DESC') // Order by month descending
+        ->get();
         $this->area = Area::where('Status',1)->whereNotNull('Area')->get();      
         $this->activeCollectionData();
+        $this->data = $this->prepareData();
 
 
 
@@ -65,23 +81,59 @@ class Dashboard extends Component
 
     private function prepareData()
     {
-       
-        $members = Members::select('id', 'Status')->where('Status', 1)->get();
-        $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment','UsedAdvancePayment','LapsePayment')->whereNotNull('Area_RefNo')->get();
-        $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->whereIn('Status',[14,9,15])->get();
-        $totalMemberSavings = MembersSavings::select('TotalSavingsAmount')->get();
+   
+        if($this->selectedMonth != "0"){
+            $thisMonth = Carbon::now();
+     
+            $monthYear = is_null($this->selectedMonth) ?  $thisMonth->format('Y-m'):$this->selectedMonth; // Example input
+    
+            $startDate = Carbon::createFromFormat('Y-m', $monthYear)->startOfMonth();
+            $endDate = Carbon::createFromFormat('Y-m', $monthYear)->endOfMonth();
+    
+            $totalActiveMember = Members::select('id', 'Status')->where('Status', 1)->whereBetween('DateCreated', [$startDate, $endDate])->get();  
+            $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment','UsedAdvancePayment','LapsePayment')->whereNotNull('Area_RefNo')->whereBetween('DateCollected', [$startDate, $endDate])->get();
+            $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->whereIn('Status',[14,9,15])->whereBetween('DateCreated', [$startDate, $endDate])->get();
+            $totalMemberSavings = SavingsRunningBalance::select('Savings')->whereBetween('Date', [$startDate, $endDate])->get();
+            $application = Application::select('Status')->whereBetween('DateCreated', [$startDate, $endDate])->get();
+            
+            //$currentDate = Carbon::now();
+            $startDay = $startDate;
+            $endDay = $endDate;
+           
+                $currentMonth = is_null($this->selectedMonth) ? $thisMonth->format('Y-m'):$monthYear;
+                $previousMonth = is_null($this->selectedMonth) ? $thisMonth->subMonth()->format('Y-m'): Carbon::createFromFormat('Y-m',  $monthYear)->subMonth()->format('Y-m');
+           
+        }else{
+            $totalActiveMember = Members::select('id', 'Status')->where('Status', 1)->get();  
+            $collectionAreaMembers = CollectionAreaMember::select('DateCollected', 'CollectedAmount', 'AdvancePayment','UsedAdvancePayment','LapsePayment')->whereNotNull('Area_RefNo')->get();
+            $loanDetails = LoanDetails::select('ApprovedLoanAmount', 'ApproveedInterest', 'ApprovedNotarialFee','ApprovedDailyAmountDue','TermsOfPayment')->whereIn('Status',[14,9,15])->get();
+            $totalMemberSavings = SavingsRunningBalance::select('Savings')->get();
+            $application = Application::select('Status')->get();
+
+            $currentDate = Carbon::now();
         
+            $startDay = $currentDate->copy()->startOfDay();
+            $endDay = $currentDate->copy();
+            $currentMonth = $currentDate->format('Y-m');
+            $previousMonth = $currentDate->subMonth()->format('Y-m');
+      
+        }
+    
+     
+        $members = Members::select('id', 'Status')->where('Status', 1)->get();  
         $loanHistory = LoanHistory::select('OutstandingBalance')->get();
-        $application = Application::select('Status')->get();
         $settings = Settings::select('MonthlyTarget')->first();
 
-        $currentDate = Carbon::now();
-        $startDay = $currentDate->copy()->startOfDay();
-        $endDay = $currentDate->copy();
-        $currentMonth = $currentDate->format('Y-m');
-        $previousMonth = $currentDate->subMonth()->format('Y-m');
-
+        
+    //   $currentDate = Carbon::now();
+        
+    //         $startDay = $currentDate->copy()->startOfDay();
+    //         $endDay = $currentDate->copy();
+    //         $currentMonth = $currentDate->format('Y-m');
+    //         $previousMonth = $currentDate->subMonth()->format('Y-m');
+        
         $activeMemberCount = $members->count();
+        $monthlyActiveMember = $totalActiveMember->count(); 
         $totalLoanInsurance =0;
         $totalLifeInsurance = 0;
         
@@ -106,14 +158,14 @@ class Dashboard extends Component
             }
         }
        
-        $dailyCollections = $collectionAreaMembers
-            ->whereBetween('DateCollected', [$startDay, $endDay])
-            ->groupBy(function ($item) {
-                return $item->DateCollected->format('Y-m-d');
-            })
-            ->map(function ($group) {
-                return $group->sum('CollectedAmount');
-            });
+        // $dailyCollections = $collectionAreaMembers
+        //     ->whereBetween('DateCollected', [$startDay, $endDay])
+        //     ->groupBy(function ($item) {
+        //         return $item->DateCollected->format('Y-m-d');
+        //     })
+        //     ->map(function ($group) {
+        //         return $group->sum('CollectedAmount');
+        //     });
 
         $monthlyCollection = $collectionAreaMembers
            
@@ -123,7 +175,7 @@ class Dashboard extends Component
             ->map(function ($group) {
                 return $group->sum('CollectedAmount');
             });
-      
+   
         $previousMonthCollected = $monthlyCollection[$previousMonth] ?? 0;
         $totalCollected = $monthlyCollection[$currentMonth] ?? 0;
        // dd($totalCollected );
@@ -138,19 +190,31 @@ class Dashboard extends Component
         $totalNotarialFee = $loanDetails->sum('ApprovedNotarialFee');
         $totalOtherDeductions = $totalLoanInsurance + $totalLifeInsurance + $totalNotarialFee;
     
-        $totalSavingsOutstanding = $totalMemberSavings->sum('TotalSavingsAmount');
+        $totalSavingsOutstanding = $totalMemberSavings->sum('Savings');
         $totalDailyOverallCollection = $loanDetails->sum('ApprovedDailyAmountDue');
        
         $totalNewAccountsOverall = $totalOfNewAccounts;
         $totalApplicationforApproval = $application->where('Status', 9)->count();
         $totalCurrentReleased = $application->where('Status', 14)->count();
         $totalIncome = $settings->MonthlyTarget;
+        
+      
+
+        $currentDate = Carbon::now();
+        $totalIncomePercentage = $totalIncome ? $totalCollected : 0;
+        $endOfMonth = clone $currentDate;
+        $endOfMonth->modify('last day of this month');
+        $interval = $currentDate->diff($endOfMonth);
+        $totalDaysLeft = $interval->days;
+        $totalPercentOfLastEntry = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
 
        // $totalIncomePercentage = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
-        $totalIncomePercentage = $totalIncome ? $totalCollected : 0;
-        $totalDaysLeft = Carbon::now()->endOfMonth()->diffInDays($currentDate);
-        $totalPercentOfLastEntry = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
+       
+
         $targetStatus = $previousMonthCollected >= $totalIncome;
+
+        //$targetStatus = $totalCollected >= $totalIncome;
+
      
         return  [
             'activeMemberCount' => $activeMemberCount,
@@ -162,7 +226,7 @@ class Dashboard extends Component
             'totalActiveStanding' => 0,
             'totalFullPayment' => $totalFullPayments,
             'totalCR' => $totalCurrentReleased,
-            'totalEndingActiveMember' => 0,
+            'totalEndingActiveMember' => $monthlyActiveMember,
             'totalSavingsOutstanding' => $totalSavingsOutstanding,
             'totalDailyOverallCollection' => $totalDailyOverallCollection,
             'totalNewAccountsOverall' => $totalNewAccountsOverall,
@@ -177,6 +241,8 @@ class Dashboard extends Component
             'totalLapsesArea' => 0,
             'topCollectiblesAreas' => 0,
             'areaActiveCollection' => 0,
+            'currentMonth'=>$currentDate->format('m'),
+         
 
         
         ];
@@ -246,9 +312,9 @@ class Dashboard extends Component
 
       // Area	   Active Collection	New Account	  # NPS	  Past Due Collection
     // Next is get activeCollection from the sum of the OutstandingBalance of member per Area. And then count the newAccount from the Application with a Status of 7 meaning new application. And then for the numberOfNoPayment count the CollectionArea that has Collection_Status of 2 meaning no payment from the CollectionArea. Next is PastDueCollection you can get it from LoanHistory OutstandingBalance and the multiply it by 20% + the Outstanding Balance. All this should be is monthly data per Area.
-    // private function getTransactionMonths(){
-    //     $applications = Application::
-    // }
+     private function getTransactionMonths(){
+       
+    }
     private function computeTopValues($sumType)
     {
         $activeAreas = Area::where('Status', 1)

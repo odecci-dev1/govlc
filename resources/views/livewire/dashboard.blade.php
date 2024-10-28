@@ -43,6 +43,14 @@
                     <p>Total ending active member</p>
                     <p>{{ isset($data['totalEndingActiveMember']) ? $data['totalEndingActiveMember'] : 0 }}</p>
                 </div>
+                <div>
+                <select  wire:model='selectedMonth' style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
+                    @foreach ($monthsTransaction as $month )
+                    <option value="{{ $month->new_date}}" {{$data['currentMonth']== $month->month ? 'selected':''}}>{{ $data['currentMonth']== $month->month ? 'Current':\Carbon\Carbon::createFromFormat('Y-m', $month->new_date)->format('F Y')  }}</option>
+                    @endforeach
+                    <option value="0">All Time</option>
+                </select>   
+                </div>
                 {{-- <div>
                     <select  id="selectarea" wire:loading.attr="disabled" onchange="updateSalesChartData()" style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 25rem" class="select-option button">
                         <option value="All">All Areas</option> 
