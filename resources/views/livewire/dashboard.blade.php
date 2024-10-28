@@ -44,7 +44,7 @@
                     <p>{{ isset($data['totalEndingActiveMember']) ? $data['totalEndingActiveMember'] : 0 }}</p>
                 </div>
                 <div>
-                <select  wire:model='selectedMonth' style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
+                <select  id="selectMonth" wire:model.live='selectedMonth' style="height: 4.4rem; background-color: #D6A330; font-size: 1.3rem; min-width: 20rem" class="select-option button">
                     @foreach ($monthsTransaction as $month )
                     <option value="{{ $month->new_date}}" {{$data['currentMonth']== $month->month ? 'selected':''}}>{{ $data['currentMonth']== $month->month ? 'Current':\Carbon\Carbon::createFromFormat('Y-m', $month->new_date)->format('F Y')  }}</option>
                     @endforeach
@@ -138,9 +138,9 @@
                         </div>
                         <div class="divider"></div>
                         <div class="div-2">
-                            <div class="circle-div" id="circle-div">
+                            <div class="circle-div" id="circle-div" da>
                                 <div class="progress-value" id="progress-value">
-                                    <p>{{ !empty($data['totalPercentOfLastEntry']) ? number_format($data['totalPercentOfLastEntry'], 2) : 0 }}%</p>
+                                    <p id="totalPercent">{{ !empty($totalPercent) ? number_format($totalPercent, 2) : 0 }}%</p>
                                     <p>{{ !empty($data['totalIncomePercentage']) ? number_format($data['totalIncomePercentage'], 2) : '0.00' }}</p>
                                     <p>As of last entry</p>
                                 </div>
@@ -291,19 +291,38 @@
 </div>
 
 <style>
-    .main-dashboard .con-wrapper .md-con-3 .card-2:first-of-type .div-2 .circle-div::before {
-        content: "";
-        position: absolute;
-        z-index: 1;
-        aspect-ratio: 1/1;
-        height: 100%;
-        width: 100%;
-        border-radius: 50%;
-        background: conic-gradient(#D6A330 {{ !empty($data['totalPercentOfLastEntry']) ? $data['totalPercentOfLastEntry'] : 0 }}%, #FFFF4E 0%);
-    }
+  
 </style>
+
 <script>
+   
+
+
+
      document.addEventListener('livewire:load', function () {   
+        const percentageValueElement  = document.getElementById('totalPercent');
+        const circleDiv = document.querySelector('.main-dashboard .con-wrapper .md-con-3 .card-2:first-of-type .div-2 .circle-div');
+
+        const style = document.createElement('style');
+        document.head.appendChild(style);
+
+        function updateGradient() {    
+            const pValue = Math.min(Math.max(parseInt(percentageValueElement.textContent, 10), 0), 100);
+            const gradient = `conic-gradient(#43d630 ${pValue}%, #FFFF4E 0%)`;
+
+            // Update the background of the ::before pseudo-element
+            style.innerHTML = `.main-dashboard .con-wrapper .md-con-3 .card-2:first-of-type .div-2 .circle-div::before { background: ${gradient}; }`;
+        }
+        // Initial call to set the gradient based on the current value
+        
+       
+        setInterval(() => {
+            updateGradient();
+        }, 500);
+
+
+
+
         var ctx = document.getElementById("myChart").getContext("2d");
         const chartData = { 
             labels: [], // conditions to made //labels horizontal

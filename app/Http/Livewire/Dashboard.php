@@ -35,6 +35,8 @@ class Dashboard extends Component
     public $selectedMonth;
     public $monthsTransaction;
 
+    public $totalPercent=0;
+
     public function mount()
     {
         // $this->data = Cache::remember('dashboard_data', 1, function () {
@@ -55,6 +57,8 @@ class Dashboard extends Component
         //return $this->prepareData();
        
     }
+
+   
 
     public function render()
     {
@@ -79,6 +83,8 @@ class Dashboard extends Component
         return view('livewire.dashboard');
     }
 
+
+ 
     private function prepareData()
     {
    
@@ -206,7 +212,7 @@ class Dashboard extends Component
         $endOfMonth->modify('last day of this month');
         $interval = $currentDate->diff($endOfMonth);
         $totalDaysLeft = $interval->days;
-        $totalPercentOfLastEntry = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
+        $this->totalPercent = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
 
        // $totalIncomePercentage = $totalIncome ? ($totalCollected / $totalIncome) * 100 : 0;
        
@@ -235,7 +241,7 @@ class Dashboard extends Component
             'totalIncomePercentage' => $totalIncomePercentage,
             'totalDailyCollection' => 0,
             'totalDaysLeft' => $totalDaysLeft,
-            'totalPercentOfLastEntry' => $totalPercentOfLastEntry,
+            'totalPercentOfLastEntry' => $this->totalPercent,
             'targetStatus' => $targetStatus,
             'activeMember' => 0,
             'totalLapsesArea' => 0,
@@ -308,7 +314,7 @@ class Dashboard extends Component
 
         return $result;
     }
-
+ 
 
       // Area	   Active Collection	New Account	  # NPS	  Past Due Collection
     // Next is get activeCollection from the sum of the OutstandingBalance of member per Area. And then count the newAccount from the Application with a Status of 7 meaning new application. And then for the numberOfNoPayment count the CollectionArea that has Collection_Status of 2 meaning no payment from the CollectionArea. Next is PastDueCollection you can get it from LoanHistory OutstandingBalance and the multiply it by 20% + the Outstanding Balance. All this should be is monthly data per Area.
@@ -365,5 +371,7 @@ class Dashboard extends Component
 
         return $topValues;
     }
+
+
 
 }
