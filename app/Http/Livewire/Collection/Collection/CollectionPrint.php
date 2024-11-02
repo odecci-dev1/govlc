@@ -87,7 +87,7 @@ class CollectionPrint extends Component
               
                 $this->areaDetails[] = $details;
             }
-            dd($this->areaDetails);
+
             
             // $this->details['areaName'] = $areaName;
             // $this->details['area_RefNo']= $this->areaRefNo;
