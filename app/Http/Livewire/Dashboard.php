@@ -117,7 +117,7 @@ class Dashboard extends Component
                 return Carbon::parse($item->DateCollected)->format('Y-m');
             })
             ->map(function ($group) {
-                return $group->sum('CollectedAmount') + $group->sum('AdvancePayment');
+                return $group->sum('CollectedAmount');
             });
        
         $previousMonthCollected = $monthlyCollection[$previousMonth] ?? 0;
