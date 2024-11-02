@@ -75,7 +75,7 @@ class CollectionPrint extends Component
                 $details['releasingDate']= $application->loanhistory->DateReleased;
                 $details['dueDate']= $application->loanhistory->DueDate;
                 $details['dailyCollectibles']= $application->detail->ApprovedDailyAmountDue;
-                $details['amountDue']= $application->loanhistory->OutstandingBalance;
+                $details['amountDue']= $application->loanhistory->OutstandingBalance + ($application->loanhistory->Penalty) ? $application->loanhistory->Penalty:0;
                 $details['totalSavingsAmount']=  $totalSavings;
                 $details['advancePayment']=  $totalAdvance;
                 $details['lapsePayment']=  $totalLapses;
