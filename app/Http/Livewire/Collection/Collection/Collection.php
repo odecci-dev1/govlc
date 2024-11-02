@@ -107,7 +107,7 @@ class Collection extends Component
                     $collectedAdvancePayment=($getCollection->AdvancePayment) ? $getCollection->AdvancePayment:0;
                     $usedAdvancePayment=($getCollection->UsedAdvancePayment) ? $getCollection->UsedAdvancePayment:0;
 
-                    $newOutStaingBalance = $currentOutStanding - ($usedAdvancePayment+ $collectedAmount + $collectedAdvancePayment); 
+                    $newOutStaingBalance = $currentOutStanding - ($usedAdvancePayment+ $collectedAmount); 
                     LoanHistory::where('NAID', $getCollection->NAID)->update([
                         'OutstandingBalance'=>$newOutStaingBalance,
                         'DateOfFullPayment'=>($newOutStaingBalance == 0) ? Carbon::now():NULL,
