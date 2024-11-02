@@ -353,7 +353,7 @@ class Collection extends Component
                                   
                                 }
                             }else{
-                                $newPenalty = $getLoanHistory->penalty;
+                                $newPenalty = $getLoanHistory->Penalty;
                                 $pastDue = $getLoanHistory->Penalty + $getLoanHistory->OutstandingBalance;
 
                             }
