@@ -345,18 +345,21 @@ class Collection extends Component
                         $pastDue=0;
                         $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
                         if($getLoanHistory){
-                            if($getLoanHistory->penalty == 0){
+                            
+                            if($getLoanHistory->Penalty == 0){
                                 if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
                                     $newPenalty = $getLoanHistory->OutstandingBalance * .20;
                                     $pastDue = $newPenalty + $getLoanHistory->OutstandingBalance;
+                                  
                                 }
                             }else{
                                 $newPenalty = $getLoanHistory->penalty;
-                                $pastDue = $getLoanHistory->penalty + $getLoanHistory->OutstandingBalance;
+                                $pastDue = $getLoanHistory->Penalty + $getLoanHistory->OutstandingBalance;
+
                             }
                             
                         }
-                       
+                      
                         $details['totalCollectible']= $collectibles;
                         $details['total_Balance']= $loanHistory;
                         $details['total_savings']=   $totalAreaSavings;
@@ -502,12 +505,12 @@ class Collection extends Component
                             $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
                             
                             if($getLoanHistory){
-                                if($getLoanHistory->penalty == 0){
+                                if($getLoanHistory->Penalty == 0){
                                     if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
                                         $newPenalty += $getLoanHistory->OutstandingBalance * .20;
                                     }
                                 }else{
-                                    $newPenalty += $getLoanHistory->penalty;
+                                    $newPenalty += $getLoanHistory->Penalty;
                                 }
 
                             }
