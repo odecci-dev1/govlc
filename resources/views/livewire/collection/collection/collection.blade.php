@@ -234,7 +234,8 @@
                         @php
                             $cnt = $cnt + 1;
                         @endphp
-                        <tr data-area-menu-toggle data-details-wrapper-dropdown onclick="showDetails('{{ $cnt }}')" class="{{ $areaID != '' ? ($mdetails['areaID'] == $areaID ? 'show-area-details' : '') : '' }}" style="{{ $areaID != '' ? ($mdetails['areaID'] == $areaID ? '' : 'display:none;') : 'display:none;' }}">
+                        <tr data-area-menu-toggle data-details-wrapper-dropdown onclick="showDetails('{{ $cnt }}')" class="{{ $areaID != '' ? ($mdetails['areaID'] == $areaID ? 'show-area-details' : '') : '' }}" 
+                        style="{{ $areaID != '' ? ($mdetails['areaID'] == $areaID ? ($mdetails['pastDue'] != 0 ? 'background:#ff9120;color:white;':'') : 'display:none;') : 'display:none;' }}">
 
                             <td>
                                 @if(file_exists(public_path('storage/members_profile/'.(isset($mdetails['filePath']) ? $mdetails['filePath'] : 'xxxx'))))
@@ -245,7 +246,7 @@
                             </td>
 
                             <td>
-                                <span class="td-num">{{ $cnt }}</span>
+                                <span><b>{{ $cnt }}</b></span>
                             </td>
 
                             <td>

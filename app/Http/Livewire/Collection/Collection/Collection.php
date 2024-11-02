@@ -350,6 +350,9 @@ class Collection extends Component
                                     $newPenalty = $getLoanHistory->OutstandingBalance * .20;
                                     $pastDue = $newPenalty + $getLoanHistory->OutstandingBalance;
                                 }
+                            }else{
+                                $newPenalty = $getLoanHistory->penalty;
+                                $pastDue = $getLoanHistory->penalty + $getLoanHistory->OutstandingBalance;
                             }
                             
                         }
@@ -503,6 +506,8 @@ class Collection extends Component
                                     if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
                                         $newPenalty += $getLoanHistory->OutstandingBalance * .20;
                                     }
+                                }else{
+                                    $newPenalty += $getLoanHistory->penalty;
                                 }
 
                             }

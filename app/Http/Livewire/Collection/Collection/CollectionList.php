@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Collection\Collection;
 
 use App\Models\Collection;
+use App\Models\LoanHistory;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
@@ -58,7 +59,8 @@ class CollectionList extends Component
                 $carry['total_lapses'] += $member->LapsePayment;
                 $carry['totalCollectible'] += $member->CollectedAmount;
                 $carry['total_savings'] += $member->Savings;
-                $carry['total_Balance'] += $member->CollectedAmount - $member->AdvancePayment - $member->LapsePayment;
+                $carry['total_Balance'] += LoanHistory::where('NAID',$member->NAID)->first()->OutstandingBalance -  ( $member->CollectedAmount + $member->AdvancePayment);
+                //$carry['total_Balance'] += $member->CollectedAmount + $member->AdvancePayment + $member->LapsePayment;
                 return $carry;
             }, [
                 'total_advance' => 0, 
