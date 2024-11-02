@@ -626,8 +626,12 @@ class Collection extends Component
                             $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
                             
                             if($getLoanHistory){
-                                if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
-                                    $newPenalty += $getLoanHistory->OutstandingBalance * .20;
+                                if($getLoanHistory->Penalty == 0){
+                                    if(date_format(Carbon::now(),'Y-m-d') > $getLoanHistory->DueDate){
+                                        $newPenalty += $getLoanHistory->OutstandingBalance * .20;
+                                    }
+                                }else{
+                                    $newPenalty += $getLoanHistory->Penalty;
                                 }
                             }
                             $details['expectedCollection']= $collectibles;
