@@ -95,7 +95,7 @@
                         </p>
                     </div>
                     <div class="footer-wrapper">
-                        <p>Total Collection:</p> 
+                        <p>Total Past Due:</p> 
                         {{-- <span>{{ number_format($totalSavings, 2) }}</span> --}}
                     </div>
                 </div>

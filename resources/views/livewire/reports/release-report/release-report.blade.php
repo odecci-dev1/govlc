@@ -134,12 +134,12 @@
 
                                     <!-- * Due Date -->
                                     <td>
-                                        <span class="td-name">{{ !empty($member->loanHistory->DueDate) ? date('Y-m-d', strtotime($member->loanHistory->DueDate)) : 'Empty date' }}</span> 
+                                        <span class="td-name">{{ !empty($member->loanHistory->DueDate) ? date('m-d-Y', strtotime($member->loanHistory->DueDate)) : 'Empty date' }}</span> 
                                     </td>
 
                                     <!-- * Date Released -->
                                     <td>
-                                        <span class="td-name">{{ !empty($member->loanHistory->DateReleased) ? date('Y-m-d', strtotime($member->loanHistory->DateReleased)) : 'Empty date' }}</span> 
+                                        <span class="td-name">{{ !empty($member->loanHistory->DateReleased) ? date('m-d-Y', strtotime($member->loanHistory->DateReleased)) : 'Empty date' }}</span> 
                                     </td>
 
                                 </tr>

@@ -180,7 +180,7 @@
                             @if($imgprofile)
                                 <img type="image" class="profile" style="width: 70%;" src="{{ $imgprofile->temporaryUrl() }}" alt="upload-image" data-field-officer-image-container>
                             @else
-                                @if(file_exists(public_path('storage/users_profile/'.(isset($profilePath) ? $profilePath : 'xxxx'))))
+                                @if(asset('storage/users_profile/'.(isset($profilePath) ? $profilePath : 'xxxx')))
                                     <img type="image" class="profile" style="width: 70%;" src="{{ asset('storage/users_profile/'.$profilePath) }}" alt="upload-image" />                                                                     
                                 @else
                                     <img type="image" class="profile" style="width: 70%;" src="{{ URL::to('/') }}/assets/icons/upload-image.svg" alt="upload-image" />                                               
@@ -194,7 +194,7 @@
                           <!-- * Upload Button -->
                           <input type="file" wire:model="imgprofile" class="input-image upload-profile-image-btn" accept=".jpg, .jpeg, .png, .gif, .svg" data-upload-field-officer-image-btn></input>
                           <!-- * Update Button -->
-                          <button type="button" class="button" wire:click="register">Update</button>                        
+                          <button type="button" class="button" wire:click="update">Update</button>                        
                         </div>
                       </div>
                     </div>

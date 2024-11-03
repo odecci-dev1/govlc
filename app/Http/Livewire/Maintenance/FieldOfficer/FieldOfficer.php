@@ -32,19 +32,18 @@ class FieldOfficer extends Component
 
     public function rules()
     {
-        // TODO: At least 18 is required for FO Creation
         $rules = [
-            'officer.Fname' => 'required',
-            'officer.Mname' => '',
-            'officer.Lname' => 'required',
-            'officer.Suffix' => '',
+            'officer.Fname' => 'required|regex:/^[A-Za-z]+(?:\s[A-Za-z]+)*$/',
+            'officer.Mname' => 'nullable|regex:/^[A-Za-z]+(?:\s[A-Za-z]+)*$/',
+            'officer.Lname' => 'required|regex:/^[A-Za-z]+(?:\s[A-Za-z]+)*$/',
+            'officer.Suffix' => 'nullable|regex:/^[A-Za-z]+(?:\s[A-Za-z]+)*$/',
             'officer.Gender' => 'required',
-            'officer.DOB' => 'required',
+            'officer.DOB' => ['required', 'date', 'before:-18 years'],
             'officer.Age' => 'required',
             'officer.POB' => 'required',
             'officer.CivilStatus' => 'required',
             'officer.Cno' => 'required',
-            'officer.EmailAddress' => '',
+            'officer.EmailAddress' => 'nullable|email',
             'officer.HouseNo' => 'required',
             'officer.Barangay' => 'required',
             'officer.City' => 'required',
@@ -80,11 +79,15 @@ class FieldOfficer extends Component
     {
         $messages = [
             'officer.Fname.required' => 'First name is required',
+            'officer.Fname.regex' => 'First name should be a word with a single space between names if applicable',
             'officer.Lname.required' => 'Last name is required',
+            'officer.Lname.regex' => 'Last name should be a word with a single space between names if applicable',
             'officer.Mname.required' => 'Middle name is required',
+            'officer.Mname.regex' => 'Middle name should be a word with a single space between names if applicable',
             'officer.Suffix.required' => 'Suffix is required',
             'officer.Gender.required' => 'Gender is required',
             'officer.DOB.required' => 'Date of birth is required',
+            'officer.DOB.before' => 'The officer must be at least 18 years old',
             'officer.Age.required' => 'Age is required',
             'officer.POB.required' => 'Place of birth is required',
             'officer.CivilStatus.required' => 'Civil status is required',
@@ -163,29 +166,25 @@ class FieldOfficer extends Component
     // {
     //     $newAttachments = [];
 
-    //     if ($this->officer['Attachments'] == $this->officer['Old_Attachments']) {
-    //         $newAttachments = $this->officer['Attachments'];
-    //     } else {
-    //         if (isset($this->officer['Old_Attachments'])) {
-    //             foreach ($this->officer['Old_Attachments'] as $oldFile) {
-    //                 Storage::delete('officer_attachments/' . $oldFile['FilePath']);
-    //             }
+    //     if (isset($this->officer['Old_Attachments'])) {
+    //         foreach ($this->officer['Old_Attachments'] as $oldFile) {
+    //             Storage::delete('officer_attachments/' . $oldFile['FilePath']);
     //         }
+    //     }
 
-    //         if (isset($this->officer['Attachments'])) {
-    //             foreach ($this->officer['Attachments'] as $attachment) {
-    //                 $time = time();
-    //                 $filename = 'officer_attachments_' . $time . '_' . $attachment->getClientOriginalName();
+    //     if (isset($this->officer['Attachments'])) {
+    //         foreach ($this->officer['Attachments'] as $attachment) {
+    //             $time = time();
+    //             $filename = 'officer_attachments_' . $time . '_' . $attachment->getClientOriginalName();
+                
+    //             $attachment->storeAs('officer_attachments', $filename, 'public');
 
-    //                 $attachment->storeAs('officer_attachments', $filename, 'public');
-
-    //                 $newAttachments[] = [
-    //                     'FOID' => $foid,
-    //                     'FilePath' => $filename,
-    //                     'FileType' => $attachment->getClientOriginalExtension(),
-    //                     'DateCreated' => now(),
-    //                 ];
-    //             }
+    //             $newAttachments[] = [
+    //                 'FOID' => $foid,
+    //                 'FilePath' => $filename,  // Store only the filename, not the full URL
+    //                 'FileType' => $attachment->getClientOriginalExtension(),
+    //                 'DateCreated' => now(),
+    //             ];
     //         }
     //     }
 
@@ -204,38 +203,46 @@ class FieldOfficer extends Component
 
         if (isset($this->officer['Attachments'])) {
             foreach ($this->officer['Attachments'] as $attachment) {
-                $time = time();
-                $filename = 'officer_attachments_' . $time . '_' . $attachment->getClientOriginalName();
-                
-                $attachment->storeAs('officer_attachments', $filename, 'public');
+                if ($attachment instanceof UploadedFile) {
+                    $time = time();
+                    $filename = 'officer_attachments_' . $time . '_' . $attachment->getClientOriginalName();
+                    
+                    $attachment->storeAs('officer_attachments', $filename, 'public');
 
-                $newAttachments[] = [
-                    'FOID' => $foid,
-                    'FilePath' => $filename,  // Store only the filename, not the full URL
-                    'FileType' => $attachment->getClientOriginalExtension(),
-                    'DateCreated' => now(),
-                ];
+                    $newAttachments[] = [
+                        'FOID' => $foid,
+                        'FilePath' => $filename,
+                        'FileType' => $attachment->getClientOriginalExtension(),
+                        'DateCreated' => now(),
+                    ];
+                }
             }
         }
 
         return $newAttachments;
     }
 
-    public function confirmRemoveAttachment($foid)
+    public function removeTmpAttachment($temporaryUrl)
     {
-        $this->foFileToDelete = $foid;
-        $this->dispatchBrowserEvent('showDeleteModal');
+        $parsedUrl  = parse_url($temporaryUrl, PHP_URL_PATH);
+        $filePath = basename($parsedUrl);
+
+        if (Storage::exists($parsedUrl)) {
+            Storage::delete($parsedUrl);
+        }
+
+        $this->officer['Attachments'] = collect($this->officer['Attachments'])->filter(function ($attachment) use ($filePath) {
+            return $attachment->getFilename() !== $filePath;
+        })->values()->toArray();
     }
 
-    public function deleteAttachment()
+    public function removeAttachment($filePath, $foid)
     {
-        if ($this->foidToDelete) {
-            $file = FOFile::where('FOID', $this->foFileToDelete)->first();
-            if ($file) {
-                $file->delete();
-            }
-        }
-        $this->dispatchBrowserEvent('hideDeleteModal');
+        FOFile::where('FilePath', $filePath)
+            ->where('FOID', $foid)
+            ->delete();
+        
+        $this->officer['Attachments'] = FOFile::where('FOID', $foid)->get()->toArray();
     }
 
     public function store()
@@ -269,6 +276,7 @@ class FieldOfficer extends Component
 
                 'FrontID_Path' => $this->storeFrontIdImage(),
                 'BackID_Path' => $this->storeBackIdImage(),
+                
                 'ID_Number' => $input['officer']['ID_Number'] ?? null,
 
                 'SSS' => $input['officer']['SSS'] ?? '',
@@ -338,9 +346,26 @@ class FieldOfficer extends Component
                 ];
 
                 $officer->update($data);
+                
+                $existingAttachments = FOFile::where('FOID', $this->foid)->get();
 
-                $attachments = $this->storeAttachments($this->foid);
-                FOFile::insert($attachments);
+                $newAttachments = $this->storeAttachments($this->foid);
+
+                if (!empty($newAttachments)) {
+                    $filteredAttachments = array_filter($newAttachments, function($attachment) use ($existingAttachments) {
+                        foreach ($existingAttachments as $existingAttachment) {
+                            if ($existingAttachment->FilePath === $attachment['FilePath']) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    });
+    
+                    if (!empty($filteredAttachments)) {
+                        FOFile::insert($filteredAttachments);
+                    }
+                }
+    
 
                 $this->resetValidation();
 

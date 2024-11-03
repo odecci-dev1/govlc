@@ -27,14 +27,17 @@ class Holiday extends Component
         return [
             'HolidayName' => [
                 'required',
+                'regex:/^[A-Za-z]+(?:\s[A-Za-z]+)*$/',
                 function ($attribute, $value, $fail) {
                     $holiday = HolidayModel::whereRaw('LOWER(HolidayName) = ?', [strtolower($value)])
-                                           ->where('Date', date('Y-m-d', strtotime($this->Date)))
-                                           ->first();
+                                            ->where('HolidayID', '!=', $this->holid)
+                                            ->where('Date', date('Y-m-d', strtotime($this->Date)))
+                                            ->first();
                     if ($holiday) {
                         $fail('A holiday with the same name and date already exists.');
                     }
                 },
+                
             ],
             'Date' => 'required|date',
             'Location' => 'required',
@@ -45,6 +48,7 @@ class Holiday extends Component
     public function messages()
     {
         return [
+            'HolidayName.regex' => 'Holiday name should be a words with single space between if applicable',
             'Date.required' => 'Select a valid date',
         ];
     }

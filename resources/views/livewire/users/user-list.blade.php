@@ -110,7 +110,7 @@
 
                     <!-- * Contact Number -->
                     <td>
-                        {{ $l->CNO }}
+                        {{ $l->Cno }}
                     </td>
 
                     <!-- * Address -->
