@@ -211,7 +211,8 @@ class Collection extends Component
                         'AdvanceStatus'=> 0,
                         'Payment_Status'=> 2,
                     ]);
-                    if($detail['penalty'] != 0){
+                    $checkPenalty = LoanHistory::where('NAID',$detail['naid'])->first();
+                    if($detail['penalty'] != 0 && $checkPenalty->Penalty == 0){
                         LoanHistory::where('NAID',$detail['naid'])->update([
                             'Penalty'=>$detail['penalty'],
                             'OutstandingBalance'=>$detail['penalty'] + $detail['amountDue'],
