@@ -495,11 +495,12 @@ class Collection extends Component
                             $collectionAreasMembers = CollectionAreaMember::where('NAID',$application->NAID)->get();
                             $totalCollectionAdvance=0;
                             $totalCollecitonLapses=0;
-                            $totalCollecitonLapses=0;
+                            $totalCollected=0;
                             if($collectionAreasMembers){
                                 foreach( $collectionAreasMembers as $collectionAreaMember){
                                     $totalCollectionAdvance += $collectionAreaMember->AdvancePayment;
                                     $totalCollecitonLapses += $collectionAreaMember->LapsePayment;
+                                    $totalCollected += $collectionAreaMember->CollectedAmount;
                                 }
                             }
                             $getLoanHistory =  LoanHistory::where('NAID', $application->NAID)->first();
@@ -524,12 +525,14 @@ class Collection extends Component
                             $totalSavings +=  ($savings) ? $savings->TotalSavingsAmount:0;
                             $totalLapses += $totalCollecitonLapses;
                             $totalAdvance += $totalCollectionAdvance;
+                            $totalCollectedAmount += $totalCollected;
+                            
                             $totalItems +=  1;
                             
                          
                             $details['expectedCollection']= $collectibles;
                             $details['totalCollectible']= $collectibles;
-                            $details['total_collectedAmount']= 0;
+                            $details['total_collectedAmount']= $totalCollectedAmount;
                             $details['penalty']= $newPenalty;
                             $details['Area']= $area->Area;
                             $details['areaName']= $area->Area;
